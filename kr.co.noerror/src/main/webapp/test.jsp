@@ -8,7 +8,7 @@
 <title>테스트</title>
 </head>
 <body>
-테테테스트 <br>
+테테테스트2 <br>
 <%= user %>
 </body>
 </html>

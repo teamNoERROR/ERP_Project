@@ -2931,10 +2931,10 @@ textarea.form-control-lg {
 }
 
 .btn-info {
-  --bs-btn-color: #000;
+  --bs-btn-color: #fff;
   --bs-btn-bg: #0dcaf0;
   --bs-btn-border-color: #0dcaf0;
-  --bs-btn-hover-color: #000;
+  --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #31d2f2;
   --bs-btn-hover-border-color: #25cff2;
   --bs-btn-focus-shadow-rgb: 11, 172, 204;
@@ -10887,8 +10887,8 @@ textarea.form-control-lg {
 	color : white  !important;
 }
 
-.nav-item a {
-/* 	color: var(--text-color)  !important; */
+.nav-item > .lmenu {
+/* 	color: var(--secondary-text-color)  !important; */
 	color : white  !important;
 	text-decoration: none  !important;
 	padding: 10px 15px  !important;
@@ -10896,8 +10896,16 @@ textarea.form-control-lg {
 	margin-right: 90px !important;
 }
 
-.nav-item:hover {
-	color : #DDF2FD !important;
+.nav-item .dropdown-menu .dropdown-item  {
+	color: var(--secondary-text-color)  !important;
+	text-decoration: none  !important;
+	padding: 10px 15px  !important;
+	transition: color 0.3s  !important;
+	margin-right: 90px !important;
+}
+
+.nav-item .dropdown-menu .dropdown-item:hover {
+	color : white !important;
 }
 
 .dropdown-menu {
@@ -10907,7 +10915,7 @@ textarea.form-control-lg {
 
 
 .dropdown-item {
-	color : #9BBEC8 !important;
+	color : var(--bs-dropdown-link-color) !important;
 	background-color: #DDF2FD !important;
 }
 
@@ -10915,7 +10923,21 @@ textarea.form-control-lg {
 	color : #164863 !important;
 }
 
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 45px; /* 필요 시 위치 조정 */
+}
 
 
+
+button:focus,
+.btn:focus,
+input:focus,
+select:focus,
+textarea:focus,
+.page-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 /*# sourceMappingURL=bootstrap.css.map */

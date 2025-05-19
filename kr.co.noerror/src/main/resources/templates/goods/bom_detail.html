@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+
+
+<div class="container py-4">
+    <h2 class="mb-4">BOM 상세 조회</h2>
+    <div class="my-3  d-flex gap-2"> 
+        <div class="ms-auto">
+            <button type="button"  class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal" id="openModalBtn"><i class="bi bi-pencil-square"></i>BOM 수정</button>
+            <button class="btn btn-danger"><i class="bi bi-trash"></i> BOM 삭제</button>
+        </div>
+    </div>
+    <div class="row">
+        <!-- BOM 트리 -->
+        <div class="col-md-5">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    BOM 트리
+                </div>
+                <div class="card-body tree">
+                    <ul id="bomTree">
+                        <li>
+                            <strong>완제품 A</strong>
+                            <ul>
+                                <li data-id="1">부자재 1</li>
+                                <li data-id="2">부자재 2</li>
+                                <li data-id="3">부자재 3</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 부자재 상세보기 -->
+        <div class="col-md-7">
+            <!-- 박스 1 -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    부자재 상세보기 1
+                </div>
+                <div class="card-body bom-detail " id="bomDetail">
+                <h5 class="mb-3">부자재 소요 리스트</h5>
+				<div class="table-responsive">
+                <table class="table table-bordered">
+				<thead>
+				    <tr class="text-center">
+				      <th scope="col" style="width: 5%;">#</th>
+				      <th scope="col" style="width: 20%;">제품코드</th>
+				      <th scope="col" style="width: 30%;">자재명</th>
+				      <th scope="col" style="width: 30%;">제품유형</th>
+					  <th scope="col" style="width: 30%;">대분류</th>
+					  <th scope="col" style="width: 30%;">소분류</th>
+					  <th scope="col" style="width: 30%;">규격</th>
+					  <th scope="col" style="width: 30%;">소요량</th>
+					  <th scope="col" style="width: 30%;">단위</th>
+					  <th scope="col" style="width: 30%;">가격</th>
+					  <th scope="col" style="width: 30%;">사용여부</th>
+					  <th scope="col" style="width: 30%;">매입처</th>
+					  <th scope="col" style="width: 30%;">비고</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  <tr>
+				  	<td>1</td>
+					<td>코드</td> 
+					<td>수량 </td>
+					<td>규격</td>
+					<td>단위</td>
+					<td>비고</td>		                    	                    							
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+				  </tr>
+				  <tr>
+				  	<td>1</td>
+					<td>코드</td> 
+					<td>수량 </td>
+					<td>규격</td>
+					<td>단위</td>
+					<td>비고</td>		                    	                    							
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+				  </tr>
+				  <tr>
+				  	<td>1</td>
+					<td>코드</td> 
+					<td>수량 </td>
+					<td>규격</td>
+					<td>단위</td>
+					<td>비고</td>		                    	                    							
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+					<td>비고</td>
+				  </tr>
+				  
+					</tbody>
+					
+                </table>
+				</div>
+                </div>
+            </div>
+
+            <!-- 박스 2 -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    부자재 상세보기 2
+                </div>
+                <div class="card-body bom-detail" id="bomDetail2">
+                    <div class="text-muted">부자재를 선택하세요.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</main>
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+</body>
+</html>

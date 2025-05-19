@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+	<header th:replace="~{/common/header.html :: header}"></header>
+
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+		<section class="container ">
+			<!-- Title -->
+			<div
+				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<h2 class="mb-1">창고 관리</h2>
+			</div>
+
+			<!-- Search Bar -->
+			<form class="row g-2 my-4 justify-content-end">
+				<div class="col-auto">
+					<div class="input-group input-group-sm">
+						<select class="form-select" style="max-width: 120px;">
+							<option selected>전체</option>
+							<option value="1">창고코드</option>
+							<option value="2">창고명</option>
+						</select> <input type="text" class="form-control" placeholder="검색">
+						<button class="btn btn-primary" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+
+			<!-- Client List Table -->
+			<div class="table-responsive  rounded">
+				<table class="table table-hover align-middle table-bordered">
+					<thead class="table-light text-center">
+						<tr>
+							<th scope="col"><input type="checkbox"></th>
+							<th scope="col">번호</th>
+							<th scope="col">창고코드</th>
+							<th scope="col">창고명</th>
+							<th scope="col">창고구분</th>
+							<th scope="col">위치</th>
+							<th scope="col">대표관리자</th>
+							<th scope="col">연락처</th>
+							<th scope="col">사용여부</th>
+							<th scope="col">비고</th>
+							<th scope="col">등록일</th>
+	
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="modal-trigger" th:data-modal-url="@{/modals/warehouse_modal.html}" data-modal-id="wh_modal" id="warehouse_md" style="cursor: pointer;">
+							<td><input type="checkbox"></td>
+							<td>5</td>
+							<td>WH-001</td>
+							<td>입고1창고</td>
+							<td>입고창고</td>
+							<td>경기도 어쩌고</td>
+							<td>서태웅</td>
+							<td>031-123-4567</td>
+							<td>Y</td>
+							<td>-</td>
+							<td>2010-05-18</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>4</td>
+							<td>WH-002</td>
+							<td>출고13창고</td>
+							<td>출고창고</td>
+							<td>경기도 어쩌고</td>
+							<td>강백호</td>
+							<td>031-234-5678</td>
+							<td>Y</td>
+							<td>-</td>
+							<td>2010-05-18</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>5</td>
+							<td>WH-003</td>
+							<td>출고12창고</td>
+							<td>출고창고</td>
+							<td>경기도 어쩌고</td>
+							<td>채치수</td>
+							<td>031-345-6789</td>
+							<td>N</td>
+							<td>비고란엔 뭘 쓰나요?</td>
+							<td>2010-05-18</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>2</td>
+							<td>WH-004</td>
+							<td>완제품21창고</td>
+							<td>완제품창고</td>
+							<td>경기도 어쩌고</td>
+							<td>송태섭</td>
+							<td>031-123-4567</td>
+							<td>Y</td>
+							<td>-</td>
+							<td>2010-05-18</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>1</td>
+							<td>WH-005</td>
+							<td>부자재11창고</td>
+							<td>부자재창고</td>
+							<td>경기도 어쩌고</td>
+							<td>정대만</td>
+							<td>031-123-4567</td>
+							<td>Y</td>
+							<td>-</td>
+							<td>2010-05-18</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div
+				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<!-- Pagination -->
+				<div class="mt-4 d-flex justify-content-center"
+					aria-label="Page navigation">
+					<ul class="pagination">
+						<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
+						<li class="page-item active"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#">다음</a></li>
+					</ul>
+				</div>
+				<!-- Action Buttons -->
+				<div class="mt-4 d-flex gap-2">
+					<div class="ms-auto">
+						<button type="button" class="btn btn-success">
+							<i class="bi bi-plus-lg"></i> 추가
+						</button>
+						<button class="btn btn-danger">
+							<i class="bi bi-trash"></i> 삭제
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</main>
+
+
+	<div id="modalContainer"></div>
+
+	<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+	<header th:replace="~{/common/header.html :: header}"></header>
+
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+		<section class="container ">
+			<!-- Title -->
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<h2 class="mb-1">생산 계획 관리</h2>
+				
+			</div>
+
+			<!-- Search Bar -->
+			<form class="row g-2 my-4 justify-content-end">
+				<div class="col-auto">
+					<div class="input-group input-group-sm">
+						<select class="form-select" style="max-width: 120px;">
+							<option selected>전체</option>
+							<option value="1">창고코드</option>
+							<option value="2">창고명</option>
+						</select> <input type="text" class="form-control" placeholder="검색">
+						<button class="btn btn-primary" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+
+			<!-- Client List Table -->
+			<div class="table-responsive  rounded">
+				<table class="table table-hover align-middle table-bordered">
+					<thead class="table-ligh text-center">
+						<tr>
+							<th scope="col"><input type="checkbox"></th>
+							<th scope="col">#</th>
+							<th scope="col">생산제품명</th> 
+							<th scope="col">제품코드</th>
+							<th scope="col">생산예정수량</th>
+							<th scope="col">생산단위</th>  <!-- ea, g 등 -->
+							<th scope="col">생산상태</th>  <!-- 계획, 확정, 진행중, 생산완료  -->
+							<th scope="col">작성자</th>	<!-- 계획수립 담당자명 -->
+							<th scope="col">mrp여부</th>  <!-- mrp계산완료여부 (계산전,완료) -->
+							<th scope="col">등록일</th>   <!-- 생산계획수립일자 -->
+	
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>2</td>
+							<td>오렌지주스</td>
+							<td>051816</td>
+							<td>100</td>
+							<td>ea</td>
+							<td>계획</td>
+							<td>김길동</td>
+							<td>완료</td>
+							<td>2025-05-18</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>1</td>
+							<td>김밥</td>
+							<td>051096</td>
+							<td>100</td>
+							<td>ea</td>
+							<td>확정</td>
+							<td>김길동</td>
+							<td>완료</td>
+							<td>2025-05-18</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+			<div
+				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<!-- Pagination -->
+				<div class="mt-4 d-flex justify-content-center"
+					aria-label="Page navigation">
+					<ul class="pagination">
+						<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
+						<li class="page-item active"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#">다음</a></li>
+					</ul>
+				</div>
+				<!-- Action Buttons -->
+				<div class="mt-4 d-flex gap-2">
+					<div class="ms-auto">
+						<button type="button" class="btn btn-success">
+							<i class="bi bi-plus-lg"></i> 추가
+						</button>
+						<button class="btn btn-danger">
+							<i class="bi bi-trash"></i> 삭제
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</main>
+
+
+	<div id="modalContainer"></div>
+
+	<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

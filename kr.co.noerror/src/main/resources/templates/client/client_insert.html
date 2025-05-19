@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+        <!-- Title -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        	<h2 class="mb-1">거래처 등록</h2>
+        </div>
+        
+        
+<div class="form-section">
+      <div class="row">
+        <!-- 이미지 업로드 -->
+	<div class="col-md-3 d-flex flex-column align-items-end">
+			<!-- 미리보기 네모칸 -->
+		  <div class="image-box mb-2" >
+		    <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
+		  </div>
+		
+		  <!-- 파일 선택 input -->
+		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+	
+	</div>
+
+        <!-- 거래처 정보 입력 -->
+        <div class="col-md-9">
+        
+          <div class="row  mb-3 gap-0">
+          	   <!-- 거래처 정보 -->
+            <div class="col-md-2">
+              <label class="form-label">거래처 유형</label>
+              <select class="form-select" required>
+                <option value="">선택</option>
+                <option>자재 구매처 (발주처) </option>
+                <option>제품 판매처 (거래처) </option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">회사명</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">사업자번호</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">업종</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">업태</label>
+              <input type="text" class="form-control">
+            </div>
+           </div>
+        
+            
+            
+            <div class="row  mb-3">
+ 			<div class="col-md-3">
+              <label class="form-label">대표자명</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">거래중 여부</label>
+              <div class="radio-group">
+                <input type="radio" id="useY" name="use" value="Y">
+                <label for="useY"> 사용 </label>
+                <input type="radio" id="useN" name="use" value="N">
+                <label for="useN"> 미사용 </label>
+              </div>
+            </div>
+        </div>
+        <!--거래처 주소 라인  -->
+<div class="row  mb-3">
+  <label class="form-label">주소</label>
+  <div class="row gx-1 align-items-center  ms-1">
+  <div class="col-auto d-flex align-items-center">
+    <button class="btn btn-primary" type="button">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+  <div class="col ">
+    <div class="row gx-2  align-items-center">
+      <div class="col-md-5 d-flex align-items-center">
+        <input type="text" class="form-control" >
+      </div>
+      <div class="col-md-2 d-flex align-items-center">
+        <input type="text" class="form-control" >
+      </div>
+      <div class="col-md-2 d-flex align-items-center">
+        <input type="text" class="form-control"  >
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- 거래처 비고라인 -->
+          <div class="row mb-4">
+            
+            <div class="col-md-12">
+              <label class="form-label">비고</label>
+              <textarea class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+          
+          <hr> 
+          
+          <!-- 거래처 담당자 라인 -->
+          <div class="row my-4">
+          
+          	<div class="col-md-3">
+              <label class="form-label">담당자명</label>
+              <input type="text" class="form-control"  >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">부서</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">직급</label>
+              <input type="text" class="form-control"  >
+            </div>
+             <div class="col-md-3">
+              <label class="form-label">이메일</label>
+              <input type="text" class="form-control"  >
+            </div>
+            </div>
+            
+            <div class="row mb-3">
+            
+            <div class="col-md-3">
+              <label class="form-label">직통번호</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">휴대폰번호</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">팩스번호</label>
+              <input type="text" class="form-control"  >
+            </div>
+          </div>
+          
+           <div class="row mb-3">
+            
+            <div class="col-md-12">
+              <label class="form-label">비고</label>
+              <textarea class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+          
+      </div>
+          </div>
+          
+
+
+
+<!-- Action Buttons -->
+<div class="d-flex justify-content-end  gap-2 mt-4">
+<button type="button" class="btn btn-primary"><i class="bi bi-check2-square"></i> 저장</button>
+<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+</section>
+</main>
+
+
+<div id="modalContainer"></div>
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

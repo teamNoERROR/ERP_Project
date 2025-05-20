@@ -30,4 +30,25 @@ public class TestController {
 		return "/test_mysql.html";
 	}
 	
+	@GetMapping("/production/mrp.do")
+	public String test_mrp(Model m) {
+		m.addAttribute("lmenu","생산 관리");
+		m.addAttribute("smenu","mrp 계산");
+		return "/production/mrp_list.html";
+	}
+	
+	@GetMapping("/production/order.do")
+	public String test_order(Model m) {
+		
+//		return "/order_list.html";
+		return "/production/order_detail.html";
+	}
+	
+	@GetMapping("/production/purchase.do")
+	public String test_purchase(Model m) {
+		return "/production/purchase_insert.html";
+//		return "/purchase_list.html";
+//		return "/purchase_detail.html";
+	}
+	
 }

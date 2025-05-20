@@ -10,7 +10,7 @@ public class controller {
 	//메인화면
 	@GetMapping("/")
 	public String main(Model m) {
-		return "/common/main.html";
+		return "/member/login.html";
 	}
 		
 	//거래처관리
@@ -137,9 +137,8 @@ public class controller {
 	
 	@GetMapping("/test.do")
 	public String test(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		return "/temp/warehouse_insert_test.html";
+	
+		return "/member/member_modify.html";
 	}
 
 	

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/" class="login_html">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body class="login_body">
+<!-- <header th:replace="~{/common/header.html :: header}"></header> -->
+
+<main class="index_main">
+<section class="center-container">
+        <div class="d-flex justify-content-center mb-4">
+        	<h2 class="mb-2 search_title">비밀번호 수정</h2>
+        </div>
+        <div style="width:400px;" >
+                     <form>
+                <div class="d-flex align-items-end">
+                    <div class="flex-grow-1">
+                        <div class="mb-2">
+                            <input type="text" class="form-control "  placeholder="사원번호를 입력하세요" requierd>
+                        </div>
+                       
+                        <div>
+                            <input type="password" class="form-control" id="userPw" placeholder="이메일을 입력하세요">
+                        </div>
+                    </div>
+                    <div class="ms-3" style="min-width: 100px;">
+                        <button type="submit" class="btn btn-primary w-100" style="height: 85px;">수정하기</button>
+                    </div>
+                </div>
+            </form>
+                
+                <!-- 조회결과가 0일경우  -->
+<!--                  <div class="d-flex align-items-center justify-content-center"> -->
+<!--                     <h5 class="search_title"> 등록된 사원번호가 없습니다. </h5> -->
+<!--                 </div> -->
+<!--             <div class="find-links"> -->
+<!--                 <a href="#" id="idsearch"> 로그인 하기 </a> -->
+<!--                 <a href="#" id=""> 비밀번호 찾기 </a> -->
+<!--             </div> -->
+        </div>
+</section>
+</main>
+
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+</body>
+</html>

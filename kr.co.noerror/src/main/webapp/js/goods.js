@@ -33,5 +33,10 @@ insertBtn.addEventListener("click", function(){
 	location.href="./goods_insert.do";
 });
 
+let modifyBtn = document.querySelector("#goodsInsert");
+insertBtn.addEventListener("click", function(){
+	location.href="./goods_insert.do";
+});
+
 
 

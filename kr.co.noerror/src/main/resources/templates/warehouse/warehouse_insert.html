@@ -7,143 +7,141 @@
 
 <main class="main">
 <section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
-<section class="container ">
-        <!-- Title -->
-        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">창고 등록</h2>
-        </div>
-<div class="form-section">
+<section class="container">
+  <!-- Title -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <h2 class="mb-1">창고 등록</h2>
+  </div>
+
+  <form id="frm" th:action="@{./warehouse_save.do}" th:object="${wareInsertDTO}" method="post" enctype="multipart/form-data">
+    <div class="form-section">
       <div class="row">
         <!-- 이미지 업로드 -->
-	<div class="col-md-3 d-flex flex-column align-items-end">
-			<!-- 미리보기 네모칸 -->
-		  <div class="image-box mb-2" >
-		    <img id="previewImage" src="" alt="창고 사진" style="max-width: 100%; max-height: 100%;">
-		  </div>
-		
-		  <!-- 파일 선택 input -->
-		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()"  style="width: 250px; ">
-	
-	</div>
-
+        <div class="col-md-3 d-flex flex-column align-items-end">
+          <div class="image-box mb-2">
+            <img id="previewImage" src="" alt="창고 사진" style="max-width: 100%; max-height: 100%;">
+          </div>
+          <input type="file" id="productImage" th:field="*{wh_file}" class="form-control" accept="image/*" onchange="previewFile()" style="width: 250px;">
+        </div>
+        
+       
         <!-- 창고 정보 입력 -->
         <div class="col-md-9">
           <div class="row">
             <div class="col-md-3 mb-3">
               <label class="form-label">창고유형</label>
-              <select class="form-select" required>
+              <select class="form-select" th:field="*{wh_type}" required>
                 <option value="">선택</option>
-                <option>입고창고</option>
-                <option>출고창고</option>
-                <option>완제품창고</option>
-                <option>부자재창고</option>
+                <option value="입고창고">입고창고</option>
+                <option value="출고창고">출고창고</option>
+                <option value="완제품창고">완제품창고</option>
+                <option value="부자재창고">부자재창고</option>
               </select>
             </div>
             <div class="col-md-4">
               <label class="form-label">창고명</label>
-              <input type="text" class="form-control" required>
+              <input type="text" class="form-control" th:field="*{wh_name}" required>
             </div>
-             <div class="col-md-3">
+            <div class="col-md-3">
               <label class="form-label">전화번호</label>
-              <input type="text" class="form-control" required>
+              <input type="text" class="form-control" th:field="*{wh_number}" required>
             </div>
             <div class="col-md-2">
               <label class="form-label">사용 여부</label>
               <div class="radio-group">
-                <input type="radio" id="useY" name="use" value="Y">
-                <label for="useY"> 사용 </label>
-                <input type="radio" id="useN" name="use" value="N">
-                <label for="useN"> 미사용 </label>
+                <input type="radio" id="useY" th:field="*{wh_use_flag}" value="Y">
+                <label for="useY">사용</label>
+                <input type="radio" id="useN" th:field="*{wh_use_flag}" value="N">
+                <label for="useN">미사용</label>
               </div>
             </div>
           </div>
 
-<!-- 창고주소 라인 -->
-<div class="row  mb-3">
-  <label class="form-label">창고주소</label>
-  <div class="row gx-1 align-items-center  ms-1">
-  <div class="col-auto d-flex align-items-center">
-    <button class="btn btn-primary" type="button">
-      <i class="bi bi-search"></i>
-    </button>
-  </div>
-  <div class="col ">
-    <div class="row gx-2  align-items-center">
-      <div class="col-md-4 d-flex align-items-center">
-        <input type="text" class="form-control" placeholder="도로명주소">
-      </div>
-      <div class="col-md-5 d-flex align-items-center">
-        <input type="text" class="form-control" placeholder="상세주소">
-      </div>
-      <div class="col-md-3 d-flex align-items-center">
-        <input type="text" class="form-control" placeholder="우편번호">
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-
- <!-- 창고관리자 라인 -->
-<div class="row  mb-3 ">
-  <label class="form-label">창고관리자</label>
-  <div class="row gx-1 align-items-center ms-1">
-   <div class="col-auto d-flex align-items-center">
-    <button class="btn btn-primary " type="button">
-        <i class="bi bi-search"></i>
-    </button>
-  </div>
-  <div class="col">
-    <div class="row gx-2">
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="관리자명">
-      </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control" placeholder="사원번호">
-      </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control " placeholder="부서/직급">
-      </div>
-      <div class="col-md-3">
-        <input type="text" class="form-control " placeholder="연락처">
-      </div>
-    </div>
-  </div>
-</div>
-
-        </div>
- <!-- 창고비고라인 -->
-  		<div class="row mb-3">
-            <div class="col-md-12">
-              <label class="form-label">설명</label>
-              <textarea class="form-control" rows="2"></textarea>
+          <!-- 창고주소 -->
+          <div class="row mb-3">
+            <label class="form-label">창고주소</label>
+            <div class="row gx-1 align-items-center ms-1">
+              <div class="col-auto d-flex align-items-center">
+                <button class="btn btn-primary" type="button">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+              <div class="col">
+                <div class="row gx-2 align-items-center">
+                  <div class="col-md-4 d-flex align-items-center">
+                    <input type="text" class="form-control" placeholder="도로명주소" th:field="*{wh_addr1}">
+                  </div>
+                  <div class="col-md-5 d-flex align-items-center">
+                    <input type="text" class="form-control" placeholder="상세주소" th:field="*{wh_addr2}">
+                  </div>
+                  <div class="col-md-3 d-flex align-items-center">
+                    <input type="text" class="form-control" placeholder="우편번호" th:field="*{wh_zipcode}">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
+          <!-- 창고 관리자 -->
+          <div class="row mb-3">
+            <label class="form-label">창고관리자</label>
+            <div class="row gx-1 align-items-center ms-1">
+              <div class="col-auto d-flex align-items-center">
+                <button class="btn btn-primary" type="button">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+              <div class="col">
+                <!-- 
+                 -->
+                <div class="row gx-2">
+                  <div class="col-md-3">
+              		 <input type="text" class="form-control" placeholder="관리자명" th:field="*{wh_mg_name}">               
+                  </div>
+                  <div class="col-md-3">
+            		  <input type="text" class="form-control" placeholder="사원번호" th:field="*{wh_mg_id}">
+                   </div>
+                  <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="부서/직급" th:field="*{wh_mg_mp}">              
+                  </div>
+                  <div class="col-md-3">
+             		   <input type="text" class="form-control" placeholder="연락처" th:field="*{wh_mg_ph}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 설명 -->
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label">설명</label>
+              <textarea class="form-control" rows="2" th:field="*{wh_desc}"></textarea>
+            </div>
+          </div>
+
+          <!-- 비고 -->
           <div class="row mb-3">
             <div class="col-md-12">
               <label class="form-label">비고</label>
-              <textarea class="form-control" rows="2"></textarea>
+              <textarea class="form-control" rows="2" th:field="*{wh_note}"></textarea>
             </div>
           </div>
+
+          <!-- 액션 버튼 -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-primary" onclick="wh_save()"><i class="bi bi-check2-square"></i> 저장</button>
+            <button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+          </div>
+
+        </div>
       </div>
-
-
-<!-- Action Buttons -->
-<div class="d-flex justify-content-end  gap-2 mt-4">
-<button type="button" class="btn btn-primary"><i class="bi bi-check2-square"></i> 저장</button>
-<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
-</div>
-
-</div>
-</div>
+    </div>
+  </form>
 </section>
 </main>
 
-
 <div id="modalContainer"></div>
-
 <footer th:replace="~{/common/footer.html :: footer}"></footer>
-
 </body>
 </html>

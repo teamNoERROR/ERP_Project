@@ -6,6 +6,7 @@
 	--secondary-color: #82CCDD;
 	--text-color: #0080c0;
 	--secondary-text-color : #60A3BC;
+	--third-text-color : #fff;
 	--background-color: #e6e6e6;
 	--hover-color: #60A3BC;
 }
@@ -83,17 +84,21 @@ body {
 	background-color: var(--primary-color);
 	padding: 20px 0;
 	text-align: center;
-	color: var(--text-color);
+	color: var(--third-text-color);
 }
 
-.footer a {
-	color: var(--secondary-color);
-	text-decoration: none;
+
+
+.readonly_text{
+	
+	
+color : grey;	
+pointer-events: none;	
+	
 }
 
-.footer a:hover {
-	color: var(--hover-color);
-}
+
+
 
 
 /*--------------------------------------------------------------

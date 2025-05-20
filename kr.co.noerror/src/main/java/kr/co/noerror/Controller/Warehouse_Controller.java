@@ -1,16 +1,13 @@
 package kr.co.noerror.Controller;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,8 +31,8 @@ public class Warehouse_Controller {
     @Resource(name="Warehouse_Save_Service")
     Warehouse_Save_Service ws_service;
 
-	@Resource(name="M_File_rename")
-    M_File_Rename fname;
+//	@Resource(name="M_File_rename")
+//    M_File_Rename fname;
 	
 	
 	@Resource(name="Warehouse_Fiile_VO")

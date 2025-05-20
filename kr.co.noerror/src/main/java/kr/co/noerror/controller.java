@@ -124,14 +124,7 @@ public class controller {
 		m.addAttribute("mmenu","생산계획등록");
 		return "/production/production_plan_insert.html";
 	}
-	
-	
-	@GetMapping("/order.do")
-	public String order(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","주문관리");
-		return "/production/order_list.html";
-	}
+
 	
 	@GetMapping("/purchase.do")
 	public String purchase(Model m) {
@@ -139,6 +132,7 @@ public class controller {
 		m.addAttribute("smenu","발주관리");
 		return "/production/purchase_list.html";
 	}
+
 	
 	
 	@GetMapping("/test.do")
@@ -147,7 +141,7 @@ public class controller {
 		m.addAttribute("smenu","발주관리");
 		return "/temp/warehouse_insert_test.html";
 	}
-		
+
 	
 }
 

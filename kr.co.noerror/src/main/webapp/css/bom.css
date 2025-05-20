@@ -50,38 +50,5 @@
 	display: none;
 }
 
-th {
-	text-align: center;
-}
 
-table td.info-label {
-  background-color: #f1f3f6 ; 
-  font-weight: bold;
-  text-align: center;
-}
 
- .search_div {
-    position: relative;
-/*     width: 250px; */
-/*     height: 40px; */
-}
-
-.search_div > input {
-/* 	height: 40px; */
-/*     width: 100%; */
-    padding: 8px 40px 10px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    font-size : 15px;
-}
-
-.search_div > i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}

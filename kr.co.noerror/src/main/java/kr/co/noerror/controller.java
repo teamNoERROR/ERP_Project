@@ -8,12 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class controller {
 
 	//거래처관리
-	@GetMapping("/")
-	public String main(Model m) {
-		return "/common/main.html";
-	}
-		
-	//거래처관리
 	@GetMapping("/client.do")
 	public String client_list(Model m) {
 		m.addAttribute("lmenu","기준정보관리");
@@ -139,22 +133,7 @@ public class controller {
 		m.addAttribute("smenu","발주관리");
 		return "/production/purchase_list.html";
 	}
-	
-	
-	@GetMapping("/production_plan_insert.do")
-	public String production_plan_insert(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		return "/production/purchase_insert.html";
-	}
-	
-	
-	@GetMapping("/test.do")
-	public String test(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		return "/warehouse/warehouse_in.html";
-	}
+
 		
 	
 }

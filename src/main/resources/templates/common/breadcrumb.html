@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<body>
+<section class="mx-5"  th:fragment="breadcrumb">
+  	<div class="text-end " style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" >
+	<ol class="breadcrumb justify-content-end" style="width: 100%;">
+  	<li class="breadcrumb-item"><a href="./"><i class="bi bi-house-fill"></i></a></li>
+  	<li class="breadcrumb-item active" aria-current="page" >[[${lmenu}]]</li>
+  	<li class="breadcrumb-item active" aria-current="page" th:if="${smenu}">[[${smenu}]]</li>
+  	<li class="breadcrumb-item active" aria-current="page" th:if="${mmenu}">[[${mmenu}]]</li>
+	</ol>
+	</div>
+</section>
+</body>
+</html>

@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class controller {
 
+	//메인화면
+	@GetMapping("/")
+	public String main(Model m) {
+		return "/common/main.html";
+	}
+		
 	//거래처관리
 	@GetMapping("/client.do")
 	public String client_list(Model m) {
@@ -41,14 +47,7 @@ public class controller {
 		return "/goods/items_list.html";
 	}
 	
-	//품목 등록 
-	@GetMapping("/goods_insert.do")
-	public String goods_insert(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","품목 등록");
-		return "/goods/goods_insert.html";
-	}
+
 	
 	//BOM 등록하기
 	@GetMapping("/bom.do")
@@ -139,6 +138,14 @@ public class controller {
 		m.addAttribute("lmenu","구매영업관리");
 		m.addAttribute("smenu","발주관리");
 		return "/production/purchase_list.html";
+	}
+	
+	
+	@GetMapping("/test.do")
+	public String test(Model m) {
+		m.addAttribute("lmenu","구매영업관리");
+		m.addAttribute("smenu","발주관리");
+		return "/temp/warehouse_insert_test.html";
 	}
 		
 	

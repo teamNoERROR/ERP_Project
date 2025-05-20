@@ -43,3 +43,27 @@ function removeProductRow(btn) {
 	const row = btn.closest('tr');
 	row.parentNode.removeChild(row);
 }
+
+
+/*
+document.getElementById("warehouseTitle").addEventListener("click", function () {
+    const info = document.getElementById("warehouseInfo");
+    info.classList.toggle("d-none");
+  });
+ */ 
+  
+  
+  document.getElementById("warehouseTitle").addEventListener("click", function () {
+      const info = document.getElementById("warehouseInfo");
+      const icon = document.getElementById("toggleIcon");
+	  info.classList.toggle("d-none");
+      if (info.style.display === "none" || window.getComputedStyle(info).display === "none") {
+        // 보이게 만들기
+        info.style.display = "flex";
+        icon.textContent = "▷";
+      } else {
+        // 숨기기
+        info.style.display = "none";
+        icon.textContent = "▽";
+      }
+    });

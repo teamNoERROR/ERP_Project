@@ -1,24 +1,24 @@
-<div class="modal fade"  id="in_modal"  tabindex="-1" aria-labelledby="in_modal_label" aria-hidden="true">
+<div class="modal fade"  id="out_modal"  tabindex="-1" aria-labelledby="out_modal_label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">입고건 상세보기</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">출고건 상세보기</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body row justify-content-center d-flex gap-3  mt-3 ">
        
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-				<h2 class="mb-1">입고번호 : IN-10101 </h2>
+				<h2 class="mb-1">출고번호 : OUT-10101 </h2>
 				<button type="button" class="btn btn-success">
-					<i class="bi bi-pencil-square"></i> 입고완료처리  	<!--  입고완료상태에서는 disabled 처리 -->
+					<i class="bi bi-pencil-square"></i> 출고완료처리  	<!--  출고완료상태에서는 disabled 처리 -->
 				</button> 
 			</div>
 			<div class="table-responsive  rounded">
 				<table class="table table-bordered align-middle">
 					<thead class="table-light text-center">
 						<tr>
-							<th class="info-label table-light" colspan="5">발주처 정보</th>
+							<th class="info-label table-light" colspan="5">거래처 정보</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -51,13 +51,13 @@
 				<h5 class="">주문정보</h5>
 				<table class="table align-middle table-bordered">
 					<tr>
-						<td class="info-label">발주번호</td>
-						<td class="value-cell">PCH-12345</td>
+						<td class="info-label">주문번호</td>
+						<td class="value-cell">ORD-12345</td>
 						<td class="info-label">주문상태</td>
 						<td class="value-cell">생산완료</td>
 					</tr>
 					<tr>
-						<td class="info-label">발주일자</td>
+						<td class="info-label">주문일자</td>
 						<td class="value-cell">2025-05-18</td>
 						<td class="info-label">납기요청일</td>
 						<td class="value-cell">2025-06-18</td>
@@ -69,10 +69,10 @@
 						<td class="value-cell">외상ㅋ</td>
 					</tr>
 					<tr>
-						<td class="info-label">입고처리자</td>
+						<td class="info-label">출고처리자</td>
 						<td class="value-cell">김빠빠</td>
 						<td class="info-label">담당자 코드</td>
-						<td class="value-cell"></td>
+						<td class="value-cell">뜨</td>
 					</tr>
 					<tr>
 						<td class="info-label">비고</td>
@@ -83,9 +83,9 @@
 				</table>
 			</div>
 
-			<!-- 발주항목 List Table -->
+			<!-- 주문항목 List Table -->
 			<div class="table-responsive  rounded">
-				<h5 class="">입고 제품 내역</h5>
+				<h5 class="">출고 제품 내역</h5>
 				<table class="table table-hover align-middle table-bordered">
 					<thead class="table-light text-center">
 						<tr>

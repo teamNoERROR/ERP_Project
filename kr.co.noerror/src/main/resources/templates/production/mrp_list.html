@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container">
+  <!-- Title -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <h2 class="mb-1">MRP 계산</h2>
+  </div>
+
+  <div class="table-responsive rounded">
+    <div class="card shadow">
+      <div class="card-body">
+        <form class="row g-3 align-items-center mb-3">
+        
+
+  <!-- 2단: 품목 ~ 소분류 -->
+  <div class="col-12 d-flex align-items-center flex-wrap gap-2">
+    <label class="fw-semibold">품목명</label>
+    <input type="text" class="form-control" style="max-width: 150px;">
+    <button class="btn btn-outline-primary" type="button">
+      <i class="bi bi-search"></i>
+    </button>
+    <label class="fw-semibold ms-3">제품코드</label>
+    <input type="text" class="form-control" style="max-width: 150px;">
+    <label class="fw-semibold ms-2">대분류</label>
+    <input type="text" class="form-control" style="max-width: 150px;">
+    <label class="fw-semibold ms-2">소분류</label>
+    <input type="text" class="form-control" style="max-width: 150px;">
+     <label class="fw-semibold ms-2">제품규격</label>
+    <input type="text" class="form-control" style="max-width: 100px;">
+     <label class="fw-semibold ms-1">단위</label>
+    <input type="text" class="form-control" style="max-width: 50px;">
+  </div>
+        </form>
+
+        <!--  BOM 테이블 -->
+         <div class="mb-2 fw-semibold">▷ BOM 리스트</div>
+        <table class="table align-middle table-bordered text-center">
+          <thead class="table-light">
+            <tr>
+              <th>번호</th>
+              <th>완제품명</th>
+              <th>부자재명</th>
+              <th>대분류</th>
+              <th>소분류</th>
+              <th>규격</th>
+              <th>소요량</th>
+              <th>단위</th>
+              <th>가격(원)</th>
+              <th>매입처</th>
+              <th>재고합계</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>5</td>
+              <td>김밥</td>
+              <td>김</td>
+              <td>식품</td>
+              <td>식자재</td>
+              <td>-</td>
+              <td>1</td>
+              <td>ea</td>
+              <td>100</td>
+              <td>(주)바다김</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>김밥</td>
+              <td>밥</td>
+              <td>식품</td>
+              <td>식자재</td>
+              <td>-</td>
+              <td>10</td>
+              <td>g</td>
+              <td>50</td>
+              <td>쌀농장</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 버튼 영역 -->
+        <div class="mb-3 d-flex gap-2 align-items-center justify-content-end">
+          <button type="button" class="btn btn-warning"><span class="me-1">🔄</span>MRP 계산 실행</button>
+          <button type="button" class="btn btn-info text-white"><span class="me-1">📄</span>MRP 결과 저장</button>
+          <button type="button" class="btn btn-outline-success"><span class="me-1">⬇️</span>엑셀 다운로드</button>
+        </div>
+
+        <!-- 계산 결과 테이블 -->
+        <div class="mb-2 fw-semibold">▷ MRP 계산 결과 리스트</div>
+        <div class="table-responsive">
+          <table class="table table-hover  table-bordered align-middle text-center">
+            <thead class="table-light">
+              <tr>
+                <th style="width:10px;"><input type="checkbox" ></th>
+                <th style="width:30px;">No</th>
+                <th style="width:120px;">품목코드</th>
+                <th style="width:100px;">품명</th>
+                <th style="width:100px;">필요수량</th>
+                <th style="width:50px;">단위</th>
+                <th style="width:120px;">전체재고수량</th>
+                <th style="width:120px;">가용수량</th>  <!-- 전체수량 - 기예약수량  -->
+                <th style="width:100px;">부족수량</th> <!-- 가용수량 - 필요수량  -->
+<!--                 <th style="width:100px;">발주요청</th> -->
+
+<!-- 				<th style="width:10px;"><input type="checkbox" ></th> -->
+<!--                 <th style="width:30px;">No</th> -->
+<!--                 <th style="width:120px;">mrp코드</th> -->
+<!--                 <th style="width:100px;">품명</th> -->
+<!--                 <th style="width:100px;">필요수량</th> -->
+<!--                 <th style="width:120px;">현재고수량</th> -->
+<!--                 <th style="width:100px;">부족수량</th> -->
+<!--                 <th style="width:100px;">발주요청</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td>1</td>
+                <td>RM001</td>
+                <td>김</td>
+                <td>100</td>
+                <th>ea</th>
+                <td>40 </td>
+                <td>20
+                <button type="button" class="btn btn-success">
+					<i class="bi bi-box-seam"></i> 예약
+				</button>
+				</td>
+                <td class="text-danger fw-bold">80  <button type="button" class="btn btn-success">
+					<i class="bi bi-box-seam"></i> 발주
+				</button></td>
+<!--                 <td> -->
+<!--                 <button type="button" class="btn btn-success"> -->
+<!-- 					<i class="bi bi-box-seam"></i> 발주 -->
+<!-- 				</button> -->
+<!--                 </td> -->
+              </tr>
+              <tr>
+              	<td><input type="checkbox"></td>
+                <td>2</td>
+                <td>RM002</td>
+                <td>밥</td>
+                <td>50</td>
+                <th>g</th>
+                 <td>50 </td>
+                <td>50
+                <button type="button" class="btn btn-success">
+					<i class="bi bi-box-seam"></i> 예약
+				</button>
+				</td>
+                <td class="text-danger fw-bold">0  <button type="button" class="btn btn-success">
+					<i class="bi bi-box-seam"></i> 발주
+				</button></td>
+<!--                 <td> -->
+<!--                 <button type="button" class="btn btn-success"> -->
+<!-- 					<i class="bi bi-box-seam"></i> 발주 -->
+<!-- 				</button> -->
+<!--                 </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    </main>
+    <footer th:replace="~{/common/footer.html :: footer}"></footer>
+</body>
+</html>

@@ -21,4 +21,9 @@
 select count(*) as total from order_request
 </select>
 
+<!-- 제품 목록 출력 -->
+<select id="products_list" resultType="kr.co.noerror.DTO.temp_products_DTO">
+	SELECT * FROM TEMP_PRODUCTS
+</select>
+
 </mapper>

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DTO.order_DTO;
+import kr.co.noerror.DTO.temp_products_DTO;
 
 @Service
 public class order_DAO {
@@ -25,5 +26,10 @@ public class order_DAO {
 	public int order_count() {
 		int cnt = this.sql.selectOne("order_count");
 		return cnt;
+	}
+	
+	public List<temp_products_DTO> products_list(){
+		List<temp_products_DTO> all = this.sql.selectList("products_list");
+		return all;
 	}
 }

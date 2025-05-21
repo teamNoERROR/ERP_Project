@@ -10,7 +10,7 @@ public class controller {
 	//메인화면
 	@GetMapping("/")
 	public String main(Model m) {
-		return "/member/login.html";
+		return "/member/member_login.html";
 	}
 		
 	//거래처관리
@@ -29,14 +29,7 @@ public class controller {
 		return "/client/client2_list.html";
 	}
 	
-	//픔목관리 > 완제품리스트 
-	@GetMapping("/goods.do")
-	public String products_list(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","완제품 리스트");
-		return "/goods/products_list.html";
-	}
+
 	
 	//품목관리 > 부자재리스트 
 	@GetMapping("/items.do")
@@ -138,7 +131,7 @@ public class controller {
 	@GetMapping("/test.do")
 	public String test(Model m) {
 	
-		return "/member/member_modify.html";
+		return "/temp/warehouse_insert_test.html";
 	}
 
 	

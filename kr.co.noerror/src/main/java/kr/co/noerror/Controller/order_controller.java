@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.noerror.DAO.order_DAO;
+import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.order_DTO;
+import kr.co.noerror.DTO.temp_products_DTO;
 
 @Controller
 public class order_controller {
@@ -25,7 +27,21 @@ public class order_controller {
 	@Autowired
 	order_DAO odao;
 
-
+	@GetMapping("/temp_products_list.do")
+	public String temp_product_list(Model m) {
+		List<temp_products_DTO> products = this.odao.products_list();
+		
+		m.addAttribute("products",products);
+		
+		return  "/modals/temp_products_list_modal.html";
+	}
+	
+	@GetMapping("/order_insert.do")
+	public String order_insert(Model m) {
+		
+		return "/production/order_insert.html";
+	}
+	
 	@GetMapping("/order.do")
 	public String order(Model m,
 			@RequestParam(name="search_column", defaultValue="ORDER_CODE", required=false) String search_column,

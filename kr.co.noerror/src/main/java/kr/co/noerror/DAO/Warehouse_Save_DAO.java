@@ -15,7 +15,7 @@ import kr.co.noerror.Mapper.Warehouse_Save_Mapper;
 @Repository("Warehouse_Save_DAO")
 public class Warehouse_Save_DAO implements Warehouse_Save_Mapper{
 	
-	@Resource(name = "template")
+	@Resource(name = "sqltemplate_oracle")
 	private SqlSessionTemplate whs_st;
 		
 	

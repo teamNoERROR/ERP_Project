@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+
+.login_body, .login_html{
+	
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	
+	
+}
+
+
+.index_main {
+	min-height: calc(100vh - 60px); /* 푸터 높이만큼 빼기 */
+	padding-top: 50px;
+	padding-bottom: 60px; /* 푸터가 가려지지 않도록 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
+
+	background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.index_main::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02)
+		0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 10px);
+	z-index: 1;
+}
+
+.center-container{
+	
+	z-index: 10;
+}
+
+
+.search_title {
+	color : var(--third-text-color);
+}
+
+
+
+.find-links {
+	margin-top: 1rem;
+	text-align: center;
+}
+
+
+
+#idsearch::after, #pwsearch::after  {
+	content: "|";
+/* 	position: absolute; */
+	margin-left: 10px;
+	cursor: default;
+	pointer-events: none;
+}
+
+
+.find-links a {
+	margin: 0 0.5em;
+	color: var(--third-text-color);
+	text-decoration: none;
+}
+

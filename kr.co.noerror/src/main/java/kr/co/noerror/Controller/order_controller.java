@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.noerror.DAO.order_DAO;
 import kr.co.noerror.DTO.order_DTO;
-import kr.co.noerror.test.TestOracleDAO;
-import kr.co.noerror.test.TestOracleDTO;
 
 @Controller
 public class order_controller {
@@ -26,9 +24,7 @@ public class order_controller {
 	
 	@Autowired
 	order_DAO odao;
-	
-	@Autowired
-	TestOracleDAO oracledao;
+
 
 	@GetMapping("/order.do")
 	public String order(Model m,

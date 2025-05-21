@@ -22,8 +22,8 @@ import kr.co.noerror.Model.M_File_Rename;
 @Repository("Warehouse_Save_Service")
 public class Warehouse_Save_Service {
 
-	@Resource(name="M_File_rename")
-    M_File_Rename fname;
+//	@Resource(name="M_File_rename")
+//    M_File_Rename fname;
 	
 	@Resource(name="Warehouse_Fiile_VO")
 	Warehouse_Fiile_VO wh_file_vo;
@@ -44,7 +44,7 @@ public class Warehouse_Save_Service {
 		if(wh_file.getSize() > 0) {
 			
 			try {
-				file_new = this.fname.rename(wh_file.getOriginalFilename());
+//				file_new = this.fname.rename(wh_file.getOriginalFilename());
 				//웹 디렉토리 생성한 파일명으로 저장하는 코드
 				String url = req.getServletContext().getRealPath("/mini_mdw_upload/");
 				

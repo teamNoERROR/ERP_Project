@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+            <!-- Title -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        	<h2 class="mb-1">사원 등록</h2>
+        
+        </div>
+        
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+<button type="button" class="btn-close" aria-label="Close"></button>
+</div>
+        
+<div class="form-section">
+      <div class="row">
+        <!-- 이미지 업로드 -->
+	<div class="col-md-3 d-flex flex-column align-items-end">
+			<!-- 미리보기 네모칸 -->
+		  <div class="image-box mb-2 mt-4" >
+		    <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
+		  </div>
+		
+		  <!-- 파일 선택 input -->
+		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+	
+	</div>
+
+        <!-- 사원 정보 입력 -->
+        <div class="col-md-9">
+        
+          <div class="row  mb-3 gap-0">
+          	   <!-- 계약형태 정보 -->
+            <div class="col-md-2">
+              <label class="form-label">고용형태</label>
+              <select class="form-select" required>
+                <option value="">선택</option>
+                <option>정규직</option>
+                <option>인턴</option>
+                <option>계약직</option>
+                <option>아르바이트</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">사원명</label>
+              <input type="text" class="form-control" >
+            </div>
+            
+            <div class="col-md-2">
+              <label class="form-label">부서</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">직급</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">전화번호</label>
+              <input type="text" class="form-control">
+            </div>
+           </div>
+        
+            
+            
+            <div class="row  mb-3">
+ 			<div class="col-md-3">
+              <label class="form-label">휴대폰번호</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">이메일</label>
+              <input type="text" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">팩스번호</label>
+              <input type="text" class="form-control" >
+            </div>
+            
+        </div>
+        <!--사원 주소 라인  -->
+<div class="row  mb-3">
+
+<div class="col-md-9 gx-1 align-items-center  ms-2">
+
+<label class="form-label">주소</label>
+<div class="col-md-9 gap-2 d-flex align-items-center">
+<button class="btn btn-primary" type="button">
+<i class="bi bi-search"></i>
+</button>
+<!-- </div> -->
+<!-- <div class="col-md-8"> -->
+<!-- <div class="row gx-2  align-items-center "> -->
+<div class="col-md-6">
+<input type="text" class="form-control" placeholder="도로명주소" readonly>
+</div>
+<div class="col-md-4 " >
+<input type="text" class="form-control" placeholder="상세주소" readonly>
+</div>
+<div class="col-md-4 ">
+<input type="text" class="form-control"  placeholder="우편번호" readonly>
+</div>
+<!-- </div> -->
+</div>   
+</div>
+
+<div class="col-md-2">
+<label class="form-label">근무 여부</label>
+<div class="radio-group py-1">
+<label class="me-2"> <input type="radio" id="useY" name="use" value="Y"> 재직 </label>
+<label> <input type="radio" id="useN" name="use" value="N"> 휴직 </label>
+</div>
+</div>
+
+
+</div>
+
+<!--  직원 접근권한 여부 -->
+<div class="row  mb-3">
+  <label class="form-label">접근권한</label>
+         <div class="checkbox-group">
+           
+			<label class="form-check-label me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 입고관리
+			</label>
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 출고관리
+			</label>
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 생산관리
+			</label>
+		
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 발주관리
+			</label>
+			
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 주문관리
+			</label>
+			
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 거래처관리
+			</label>
+			
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 품목관리 
+			</label>
+			
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 창고관리
+			</label>
+			
+			
+			<label class="form-check-label  me-2" >
+  				<input class="form-check-input" type="checkbox" value="" id=""> 사원 관리
+			</label>
+			
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> All
+			</label>
+			
+		
+			
+			
+			</div>
+			
+</div>
+
+<!-- 사원 비고라인 -->
+          <div class="row mb-4">
+            
+            <div class="col-md-12">
+              <label class="form-label">비고</label>
+              <textarea class="form-control" rows="2"></textarea>
+            </div>
+          </div>
+          
+          
+   
+        
+          
+      </div>
+          </div>
+          
+
+
+
+<!-- Action Buttons -->
+<div class="d-flex justify-content-end  gap-2 mt-4">
+<button type="button" class="btn btn-primary"><i class="bi bi-check2-square"></i> 저장</button>
+<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+</section>
+</main>
+
+
+<div id="modalContainer"></div>
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

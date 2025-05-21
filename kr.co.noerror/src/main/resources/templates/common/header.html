@@ -3,7 +3,7 @@
 
 <body>
 <header class="header d-flex align-items-center justify-content-between px-4" th:fragment="header">
-	<div class="logo">NoError</div>
+	<div class="logo" onclick="location.href='./'">NoError</div>
 	<nav class="navbar navbar-expand-lg bg-light">
 		<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 			<li class="nav-item dropdown">
@@ -13,30 +13,31 @@
 					<li><a class="dropdown-item" href="./p_client.do">발주처 관리</a></li>
 					<li><a class="dropdown-item" href="./goods.do">품목 관리</a></li>
 					<li><a class="dropdown-item" href="./warehouse.do">창고 관리</a></li>
+					<li><a class="dropdown-item" href="./employee.do">사용자 관리</a></li>
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 입출고 관리 </a>
 				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="#">자재 입고</a></li>
-					<li><a class="dropdown-item" href="#">제품 출고</a></li>
+					<li><a class="dropdown-item" href="./inbound.do">자재 입고</a></li>
+					<li><a class="dropdown-item" href="./outbound.do">제품 출고</a></li>
 					<li><a class="dropdown-item" href="#">재고 관리</a></li>
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 생산 관리 </a>
 				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="#">생산 계획</a></li>
+					<li><a class="dropdown-item" href="./production.do">생산 계획</a></li>
 					<li><a class="dropdown-item" href="#">작업 관리</a></li>
-					<li><a class="dropdown-item" href="#">생산계획 등록</a></li>
-					<li><a class="dropdown-item" href="#">MRP 계산</a></li>
+					<li><a class="dropdown-item" href="./production_in.do">생산계획 등록</a></li>
+					<li><a class="dropdown-item" href="./mrp.do">MRP 계산</a></li>
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 구매 영업 관리 </a>
 				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" href="#">발주 관리</a></li>
-					<li><a class="dropdown-item" href="#">주문 관리</a></li>
+					<li><a class="dropdown-item" href="./purchase.do">발주 관리</a></li>
+					<li><a class="dropdown-item" href="./order.do">주문 관리</a></li>
 				</ul>
 			</li>
 		</ul>

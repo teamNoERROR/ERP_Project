@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/" class="login_html">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body class="login_body">
+<!-- <header th:replace="~{/common/header.html :: header}"></header> -->
+
+<main class="index_main">
+<section class="center-container">
+        <div class="d-flex justify-content-center mb-4">
+        	<h2 class="mb-2 search_title">조회 결과</h2>
+        </div>
+        <div style="width:400px;" >
+                <div class="d-flex  justify-content-center">
+                    <h5 class="search_title">사원번호  : </h5> <p class="search_title ms-3">EMP-01010</p>
+                </div>
+                
+                <!-- 조회결과가 0일경우  -->
+<!--                  <div class="d-flex align-items-center justify-content-center"> -->
+<!--                     <h5 class="search_title"> 조회 결과가 없습니다 </h5> -->
+<!--                 </div> -->
+            <div class="find-links">
+                <a href="#" id="idsearch"> 로그인 하기 </a>
+                <a href="#" id=""> 비밀번호 찾기 </a>
+            </div>
+        </div>
+</section>
+</main>
+
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+</body>
+</html>

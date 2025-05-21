@@ -15,7 +15,17 @@
 			</div>
 
 			<!-- 창고이동버튼 -->
-			<form class=" d-flex flex-column flex-md-row align-items-center  justify-content-end  mb-4">
+				<form class=" d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
+				<div class="d-flex gap-2 align-items-center" >
+					<select class="form-select" aria-label="Default select example">
+						<option selected>입고상태</option>
+						<option value="1">가입고</option>
+						<option value="2">입고취소</option>
+						<option value="3">입고완료</option>
+					</select>
+					<button type="button"  class="btn btn-info d-flex align-items-center px-2" style="white-space: nowrap; min-width: 70px;"><i class="bi bi-arrow-bar-right"></i> 변경</button>
+					
+				</div>
 				
 				<!-- Search Bar -->
 				<div class="col-auto">
@@ -59,7 +69,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="modal-trigger" th:data-modal-url="@{/modals/wh_in_modal.html}" data-modal-id="wh_in_modal" id="wh_in_md" style="cursor: pointer;">							
+						<tr class="modal-trigger" th:data-modal-url="@{/modals/inbound_modal.html}" data-modal-id="in_modal" id="wh_in_md" style="cursor: pointer;">							
 							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
 							<td >5</td>
 							<td>IN-004</td>

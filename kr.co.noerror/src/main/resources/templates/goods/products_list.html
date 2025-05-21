@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="~{/config.html :: config}">
+<head th:replace="~{/common/config.html :: config}">
 </head>
 <body>
-<header th:replace="~{/header.html :: header}"></header>
+<header th:replace="~{/common/header.html :: header}"></header>
 
 <main class="main">
-<section th:replace="~{/breadcrumb.html :: breadcrumb}"></section>
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 <section class="container ">
         <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
@@ -18,9 +18,9 @@
   <!-- 토글 버튼 영역 -->
   <div class="col-auto  mb-3">
     <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
-      <button id="product-list" class="btn-get-started btns" onclick="toggleButton(1)" style="background: #82CCDD; color: #fff;">완제품</button>
-      <button id="item-list" class="btn-get-started btns" onclick="toggleButton(2)"  style="background: transparent; color: #000;">부자재</button>
-      <button id="consum-list" class="btn-get-started btns" onclick="toggleButton(3)"  style="background: transparent; color: #000;">소모품</button>
+      <button id="product-list" class="toggle_btns" onclick="toggleButton(1)" style="background: #82CCDD; color: #fff;">완제품</button>
+      <button id="item-list" class="toggle_btns" onclick="toggleButton(2)"  style="background: transparent; color: #000;">부자재</button>
+      <button id="consum-list" class="toggle_btns" onclick="toggleButton(3)"  style="background: transparent; color: #000;">소모품</button>
     </div>
   </div>
 
@@ -44,99 +44,45 @@
   </div>
 </div>
 
-<div id="list_container3">
+<div >
 
-        <!-- Client List Table -->
+        <!-- 제품 List Table -->
         <div id="table-container" class="table-responsive  rounded">
-            <table class="table table-hover align-middle table-bordered">
-                <thead class="table-light">
+            <table class="table table-hover align-middle table-bordered text-center">
+                <thead class="table-light" >
                     <tr>
                         <th scope="col"><input type="checkbox"></th>
-                        <th scope="col">번호</th>
-                        <th scope="col">이미지</th>
+                        <th scope="col">#</th>
+                        <th scope="col">제품사진</th>
                         <th scope="col">제품명</th>
                         <th scope="col">제품유형</th>
                         <th scope="col">대분류</th>
                         <th scope="col">소분류</th>
                         <th scope="col">규격</th>
                         <th scope="col">단위</th>
-                        <th scope="col">단가</th>
-                        <th scope="col">판매가</th>
+                        <th scope="col">단가 (원)</th>
+                        <th scope="col">판매가 (원)</th>
                         <th scope="col">재고합계</th>
-                        <th scope="col">사용여부</th>
+                        <th scope="col">사용</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr onclick="showDetail()">
+                    <tr class="modal-trigger"  th:data-modal-url="@{/goods_detail.do}" data-modal-id="goods_detail" style="cursor: pointer;">
                         <td><input type="checkbox"></td>
-                        <td>5</td>
-                        <td>삼성전자</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                        <td>-</td>
-                         <td>4</td>
-                        <td>홍길동</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
+                        <td >번호</td>
+                        <td><img src=""></td>
+                        <td class="text-start">제품명</td>
+                        <td>제품유형</td>
+                        <td>대분류</td>
+                        <td>소분류</td>
+                         <td>규격</td>
+                        <td>단위</td>
+                        <td class="text-end">단가</td>
+                        <td class="text-end">판매가</td>
+                        <td>재고합계</td>
+                        <td>사용</td>
                     </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>4</td>
-                        <td>LG전자</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                        <td>-</td>
-                         <td>삼성전자</td>
-                        <td>홍길동</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>5</td>
-                        <td>현대</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                        <td>-</td>
-                         <td>삼성전자</td>
-                        <td>홍길동</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>2</td>
-                        <td>네이버</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                        <td>-</td>
-                         <td>삼성전자</td>
-                        <td>홍길동</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>1</td>
-                        <td>홍길동</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                        <td>-</td>
-                         <td>삼성전자</td>
-                        <td>홍길동</td>
-                        <td>010-1234-5678</td>
-                        <td>hong@samsung.com</td>
-                        <td>서울특별시 강남구</td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>
@@ -155,7 +101,7 @@
         <!-- Action Buttons -->
         <div class="mt-4 d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button"  class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal" id="openModalBtn"><i class="bi bi-plus-lg"></i> 추가</button>
+                <button type="button"  class="btn btn-success" id="goodsInsert"><i class="bi bi-plus-lg"></i> 추가</button>
                 <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>
@@ -168,7 +114,7 @@
 
 <div id="modalContainer"></div>
 
-<footer th:replace="~{/footer.html :: footer}"></footer>
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
 
 </body>
 </html>

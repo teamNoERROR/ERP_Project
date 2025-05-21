@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="~{/config.html :: config}">
+<head th:replace="~{/common/config.html :: config}">
 </head>
 <body>
-<header th:replace="~{/header.html :: header}"></header>
+<header th:replace="~{/common/header.html :: header}"></header>
 
 <main class="main">
-<section th:replace="~{/breadcrumb.html :: breadcrumb}"></section>
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 <section class="container ">
         <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
@@ -33,6 +33,7 @@
 			<select class="form-select" required>
 				<option value="">선택</option>
 				<option>완제품</option>
+				<option>반제품</option>
 				<option>부자재</option>
 				<option>소모품</option>
 			</select>
@@ -69,17 +70,21 @@
 		</div>
 		<div class="col-md-2">
 			<label  class="form-label">제품단위</label>
-			<input type="text" class="form-control">
+			<select class="form-select" required>
+				<option>ea</option>
+				<option>g</option>
+				<option>ml</option>
+			</select>
 		</div>
 		<div class="col-md-2">
 			<label  class="form-label">적정재고</label>
-			<input type="text" class="form-control">
+			<input type="number" min="1" class="form-control">
 		</div>
 		
 	</div>
 
 	<div class="row mb-3">
-		<div class="col-md-2">
+		<div class="col-md-3">
 			<label  class="form-label">사용여부</label>
 			<div>
 				<input type="radio" id="useY" name="use" value="Y">
@@ -88,7 +93,7 @@
 				<label for="useN"> 미사용 </label>
 			</div>
 		</div>
-		<div class="col-md-2">
+		<div class="col-md-3">
 			<label  class="form-label">유통기한</label> 
 			<div>
 				<input type="radio" id="expireY" name="expire" value="Y">
@@ -97,25 +102,45 @@
 				<label for="expireN"> 미사용 </label>
 			</div>
 		</div>
-		<div class="col-md-2">
-			<label  class="form-label">제품단가</label>
-			<input type="number" class="form-control">
+		<div class="col-md-2 me-3">
+			<label  class="form-label">제품단가 (원)</label>
+			<input type="text" class="form-control">  
 		</div>
+		
+		
 		<div class="col-md-2">
-			<label  class="form-label">판매가</label>	<!-- 완제품 등록일 경우 노출 -->
-			<input type="number" class="form-control">
-		</div>
-	</div>
-	<div class="row mb-3">	<!-- 부자재 등록일 경우 노출 -->
-		<div class="col-md-2">
-			<label class="form-label">거래처고유코드</label> 
+			<label  class="form-label">판매가 (원)</label>	<!-- 완제품 등록일 경우 노출 -->
 			<input type="text" class="form-control">
 		</div>
-		<div class="col-md-4">
-			<label class="form-label">거래처명</label> 
-			<input type="text" class="form-control">
-		</div>
+		
+		
 	</div>
+	<!-- 부자재 등록일 경우 노출 -->
+	
+<!-- 	<div class="row mb-3 ">	 -->
+<!-- 		<div class="col-auto d-flex align-items-end pe-0"> -->
+<!--                 <button class="btn btn-primary" type="button"> -->
+<!--                   <i class="bi bi-search"></i> -->
+<!--                 </button> -->
+<!--               </div> -->
+<!-- 		<div class="col-md-2"> -->
+<!-- 			<label class="form-label">거래처코드</label>  -->
+<!-- 			<input type="text" class="form-control"> -->
+<!-- 		</div> -->
+<!-- 		<div class="col-md-3"> -->
+<!-- 			<label class="form-label">거래처명</label>  -->
+<!-- 			<input type="text" class="form-control"> -->
+<!-- 		</div> -->
+<!-- 		<div class="col-md-3"> -->
+<!-- 			<label class="form-label">담당자명</label>  -->
+<!-- 			<input type="text" class="form-control"> -->
+<!-- 		</div> -->
+<!-- 		<div class="col-md-3"> -->
+<!-- 			<label class="form-label">연락처</label>  -->
+<!-- 			<input type="text" class="form-control"> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+	 
 	
 	<div class="row mb-3">
 		<label class="form-label">비고</label>
@@ -127,18 +152,16 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-4">
-	<button type="button" class="btn btn-primary">저장</button>
-	<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+	<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
+	<button type="reset" class="btn btn-outline-secondary ms-2" id="resetBtn">초기화</button>
 	</div>
-
 </div>
 </section>
 </main>
 
 
-<div id="modalContainer"></div>
 
-<footer th:replace="~{/footer.html :: footer}"></footer>
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
 
 </body>
 </html>

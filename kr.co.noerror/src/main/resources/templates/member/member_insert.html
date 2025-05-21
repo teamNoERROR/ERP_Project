@@ -85,87 +85,94 @@
         </div>
         <!--사원 주소 라인  -->
 <div class="row  mb-3">
-  <label class="form-label">주소</label>
-  <div class="row gx-1 align-items-center  ms-2">
-  <div class="col-auto d-flex align-items-center">
-    <button class="btn btn-primary" type="button">
-      <i class="bi bi-search"></i>
-    </button>
-  </div>
-  <div class="col ">
-    <div class="row gx-2  align-items-center ">
-      <div class="col-md-5 d-flex align-items-center">
-        <input type="text" class="form-control" placeholder="도로명주소" readonly>
-      </div>
-      <div class="col-md-2 d-flex align-items-center" >
-        <input type="text" class="form-control" placeholder="상세주소" readonly>
-      </div>
-      <div class="col-md-2 d-flex align-items-center">
-        <input type="text" class="form-control"  placeholder="우편번호" readonly>
-      </div>
-      <div class="col-md-2 ms-4">
-         <label class="form-label">근무 여부</label>
-         <div class="radio-group">
-           <input type="radio" id="useY" name="use" value="Y">
-           <label for="useY"> 재직 </label>
-           <input type="radio" id="useN" name="use" value="N">
-           <label for="useN"> 휴직 </label>
-         </div>
-       </div>
-    </div>
-    
-  </div>
+
+<div class="col-md-9 gx-1 align-items-center  ms-2">
+
+<label class="form-label">주소</label>
+<div class="col-md-9 gap-2 d-flex align-items-center">
+<button class="btn btn-primary" type="button">
+<i class="bi bi-search"></i>
+</button>
+<!-- </div> -->
+<!-- <div class="col-md-8"> -->
+<!-- <div class="row gx-2  align-items-center "> -->
+<div class="col-md-6">
+<input type="text" class="form-control" placeholder="도로명주소" readonly>
 </div>
+<div class="col-md-4 " >
+<input type="text" class="form-control" placeholder="상세주소" readonly>
+</div>
+<div class="col-md-4 ">
+<input type="text" class="form-control"  placeholder="우편번호" readonly>
+</div>
+<!-- </div> -->
+</div>   
+</div>
+
+<div class="col-md-2">
+<label class="form-label">근무 여부</label>
+<div class="radio-group py-1">
+<label class="me-2"> <input type="radio" id="useY" name="use" value="Y"> 재직 </label>
+<label> <input type="radio" id="useN" name="use" value="N"> 휴직 </label>
+</div>
+</div>
+
+
 </div>
 
 <!--  직원 접근권한 여부 -->
 <div class="row  mb-3">
   <label class="form-label">접근권한</label>
          <div class="checkbox-group">
-           <input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label me-2" for="checkDefault">
-  				입고관리
+           
+			<label class="form-check-label me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 입고관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				출고관리
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 출고관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				생산관리
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 생산관리
+			</label>
+		
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 발주관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				발주관리
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 주문관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				주문관리
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 거래처관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				거래처관리
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 품목관리 
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				품목관리 
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> 창고관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				창고관리
+			
+			<label class="form-check-label  me-2" >
+  				<input class="form-check-input" type="checkbox" value="" id=""> 사원 관리
 			</label>
 			
-			<input class="form-check-input" type="checkbox" value="" id="">
-			<label class="form-check-label  me-2" for="checkDefault">
-  				All
+			
+			<label class="form-check-label  me-2">
+  				<input class="form-check-input" type="checkbox" value="" id=""> All
 			</label>
+			
+		
 			
 			
 			</div>

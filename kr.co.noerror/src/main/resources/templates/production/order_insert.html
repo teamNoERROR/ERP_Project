@@ -21,7 +21,6 @@
 				<table class="table table-bordered align-middle" style="white-space: nowrap;">
 					<thead class="table-light">
 						<tr class="text-center">
-							<th style="width: 1%;">찾기</th>
 							<th style="width: 10%;">제품 코드</th>
 							<th style="width: 20%;">제품명</th>
 							<th style="width: 15%;">대분류</th>
@@ -35,34 +34,24 @@
 						</tr>
 					</thead>
 					<tbody id="products">
-						<tr>
-							<td style="text-align: center; vertical-align: middle;">
-								<button
-									class="btn btn-primary d-flex justify-content-center align-items-center"
-									type="button" style="width: 40px; height: 40px;">
-									<i class="bi bi-search"></i>
-								</button>
-							</td>
-							<td><input type="text" class="form-control"
+						<tr class="total-delete">
+							<td><input type="text" class="form-control" id="product_code"
 								placeholder="제품 코드" readonly></td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" id="product_name"
 								placeholder="제품명" readonly></td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" id="product_class1"
 								placeholder="대분류" readonly></td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" id="product_class2"
 								placeholder="소분류" readonly></td>
-							<td><input type="number" class="form-control" min="1"
+							<td><input type="text" class="form-control" id="product_spec" min="1"
 								placeholder="규격" readonly></td>
 							<td><input type="number" class="form-control" min="1"
 								placeholder="주문수량"></td>
-							<td><select class="form-select">
-									<option>ea</option>
-									<option>g</option>
-									<option>ml</option>
-							</select></td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" id="product_unit"  
+							    placeholder="단위"readonly></td>
+							<td><input type="text" class="form-control" id="product_cost"
 								placeholder="제품단가" readonly></td>
-							<td><input type="text" class="form-control"
+							<td><input type="text" class="form-control" id="product_price"
 								placeholder="판매가" readonly></td>
 							<td class="text-center">
 								<button type="button" class="btn btn-danger btn-sm"
@@ -70,28 +59,15 @@
 							</td>
 						</tr>
 					</tbody>
-					<tfoot>
-					<tr>
-							<td style="text-align: center; vertical-align: middle;"> 계 </td>
-							<td colspan="10"></td>
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-<!-- 							<td></td> -->
-							
-						</tr>
-					
-					</tfoot>
 				</table>
 				</div>
-				<button type="button" class="btn btn-secondary mb-3"
-					onclick="addProductRow()">주문품목 추가</button>
+				<button 
+					class="btn btn-primary modal-trigger" 
+					type="button" th:data-modal-url="@{/temp_products_list.do}" data-modal-id="products_list" style="cursor: pointer;">
+    				주문종목 찾기
+				</button>
 				<div class="d-flex justify-content-end">
-					<button type="button" class="btn btn-primary"><i class="bi bi-bookmark-check"></i> 저장</button>
+					<button type="button" class="btn btn-primary" onclick="order_save()"><i class="bi bi-bookmark-check"></i> 저장</button>
 					<button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>
 				</div>
 			</form>
@@ -99,4 +75,5 @@
 	</main>
 	<footer th:replace="~{/common/footer.html :: footer}"></footer>
 </body>
+
 </html>

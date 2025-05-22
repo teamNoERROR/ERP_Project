@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class controller {
 
-	//거래처관리
+	//메인화면
 	@GetMapping("/")
 	public String main(Model m) {
-		return "/common/main.html";
+		return "/member/member_login.html";
 	}
 		
 	//거래처관리
@@ -29,14 +29,7 @@ public class controller {
 		return "/client/client2_list.html";
 	}
 	
-	//픔목관리 > 완제품리스트 
-	@GetMapping("/goods.do")
-	public String products_list(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","완제품 리스트");
-		return "/goods/products_list.html";
-	}
+
 	
 	//품목관리 > 부자재리스트 
 	@GetMapping("/items.do")
@@ -47,14 +40,7 @@ public class controller {
 		return "/goods/items_list.html";
 	}
 	
-	//품목 등록 
-	@GetMapping("/goods_insert.do")
-	public String goods_insert(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","품목 등록");
-		return "/goods/goods_insert.html";
-	}
+
 	
 	//BOM 등록하기
 	@GetMapping("/bom.do")
@@ -131,14 +117,7 @@ public class controller {
 		m.addAttribute("mmenu","생산계획등록");
 		return "/production/production_plan_insert.html";
 	}
-	
-	
-	@GetMapping("/order.do")
-	public String order(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","주문관리");
-		return "/production/order_list.html";
-	}
+
 	
 	@GetMapping("/purchase.do")
 	public String purchase(Model m) {
@@ -146,15 +125,15 @@ public class controller {
 		m.addAttribute("smenu","발주관리");
 		return "/production/purchase_list.html";
 	}
+
 	
 	
 	@GetMapping("/test.do")
 	public String test(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		return "/warehouse/warehouse_in.html";
+	
+		return "/temp/warehouse_insert_test.html";
 	}
-		
+
 	
 }
 

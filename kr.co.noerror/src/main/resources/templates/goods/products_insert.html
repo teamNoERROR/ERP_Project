@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<title>제품 등록</title>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+	<!-- Title -->
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		<h2 class="mb-1">제품 등록</h2>
+	</div>
+	
+ <form id="frm" method="post" action="./cdn_uploadok.do" enctype="multipart/form-data">
+<div class="form-section">
+<div class="row">
+	    <!-- 이미지 업로드 -->
+	<div class="col-md-3 d-flex flex-column align-items-end">
+			<!-- 미리보기 네모칸 -->
+		  <div class="image-box mb-2" >
+		    <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
+		  </div>
+		
+		  <!-- 파일 선택 input -->
+		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+	</div>
+
+<!-- 제품 정보 입력 -->
+<div class="col-md-9">
+	<div class="row mb-3">
+		<div class="col-md-4">
+			<label class="form-label">제품유형</label>
+			<select class="form-select" id="product_type">
+				<option value="">선택</option>
+				<option value="완제품">완제품</option>
+				<option value="반제품">반제품</option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">대분류</label>
+			<select class="form-select" name="products_class1" id="products_class1" onchange="lg_class()">
+				<option value="" >선택</option>
+				<option th:value="${l_class}" th:each="l_class : ${l_class}">[[${l_class}]]</option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">소분류</label>
+			 <select class="form-select" id="products_class2">
+				<option value="">선택</option>
+				<option th:value="${s_class}" th:each="s_class : ${s_class}">[[${s_class}]]</option>
+			</select>
+		</div>
+	</div>
+
+
+	<div class="row mb-3">
+		<div class="col-md-5">
+			 <label class="form-label">제품명</label>
+			<input type="text" class="form-control" id="product_name">
+		</div>
+		<div class="col-md-2">
+			<label class="form-label">제품규격</label>
+	        <input type="text" class="form-control" id="product_spec">
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">제품단위</label>
+			<select class="form-select" id="product_unit">
+				<option value="ea">ea</option>
+				<option value="g">g</option>
+				<option value="ml">ml</option>
+			</select>
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">안전재고</label>
+			<input type="text" class="form-control" id="pd_safe_stock">
+		</div>
+		
+	</div>
+
+	<!-- 사용여부라인 -->
+	<div class="row mb-3">
+		<div class="col-md-2">
+			<label  class="form-label">사용여부</label>
+			<div>
+				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 </label>
+				<label ><input type="radio" id="useN" name="use_flag" value="N"> 미사용 </label>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">유통기한</label> 
+			<div>
+				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 </label>
+				<label><input type="radio" id="expireN" name="exp_flag" value="N"> 미사용 </label>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">제품단가</label>
+			<input type="text" class="form-control" id="product_cost">
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">판매가</label>	
+			<input type="text" class="form-control" id="product_price">
+		</div>
+	</div>
+	
+	
+	 
+	
+	<div class="row mb-3">
+		<label class="form-label">비고</label>
+		<textarea class="form-control" rows="2" id="memo"></textarea>
+	</div>
+	
+	
+</div>
+</div>
+<!-- Action Buttons -->
+	<div class="d-flex justify-content-end  gap-2 mt-4">
+	<button type="button" class="btn btn-primary" onclick="insert_pd()">저장</button>
+	<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()">초기화</button>
+	</div>
+</div>
+</form>
+</section>
+</main>
+
+
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

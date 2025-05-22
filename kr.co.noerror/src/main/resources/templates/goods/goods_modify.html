@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="~{/config.html :: config}">
+<head th:replace="~{/common/config.html :: config}">
 </head>
 <body>
-<header th:replace="~{/header.html :: header}"></header>
+<header th:replace="~{/common/header.html :: header}"></header>
 
 <main class="main">
-<section th:replace="~{/breadcrumb.html :: breadcrumb}"></section>
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 <section class="container ">
         <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
@@ -33,6 +33,7 @@
 			<select class="form-select" required>
 				<option value="">선택</option>
 				<option>완제품</option>
+				<option>반제품</option>
 				<option>부자재</option>
 				<option>소모품</option>
 			</select>
@@ -127,8 +128,8 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-4">
-	<button type="button" class="btn btn-primary">저장</button>
-	<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+	<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
+	<button type="reset" class="btn btn-outline-secondary ms-2" id="resetBtn">초기화</button>
 	</div>
 
 </div>
@@ -136,9 +137,8 @@
 </main>
 
 
-<div id="modalContainer"></div>
 
-<footer th:replace="~{/footer.html :: footer}"></footer>
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
 
 </body>
 </html>

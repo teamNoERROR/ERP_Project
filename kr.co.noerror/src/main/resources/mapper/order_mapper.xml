@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.order_mapper">
+
+
+<select id="order_list" resultType="kr.co.noerror.DTO.order_DTO" parameterType="Map">
+  SELECT * FROM (
+    SELECT inner_result.*, ROWNUM rnum
+    FROM (
+      SELECT * FROM order_request
+      WHERE ${scolumn} LIKE '%' || #{sword} || '%'
+      ORDER BY oidx DESC
+    ) inner_result
+    WHERE ROWNUM &lt; #{end}  <!-- 종료 행 번호 -->
+  )
+  WHERE rnum &gt; #{start}    <!-- 시작 행 번호 -->
+</select>
+
+<!-- 전체 데이터 갯수 쿼리문 -->
+<select id="order_count" resultType="int">
+select count(*) as total from order_request
+</select>
+
+<!-- 제품 목록 출력 -->
+<select id="products_list" resultType="kr.co.noerror.DTO.temp_products_DTO">
+	SELECT * FROM TEMP_PRODUCTS
+</select>
+
+</mapper>

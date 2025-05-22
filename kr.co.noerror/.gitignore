@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 HELP.md
 .gradle
 build/
@@ -35,3 +36,6 @@ out/
 
 ### VS Code ###
 .vscode/
+=======
+/.metadata/
+>>>>>>> branch 'yeomsinyeong' of https://github.com/teamNoERROR/ERP_Project.git

@@ -1,4 +1,52 @@
-var product_select = function () {
+//주문처 선택 및 정보 작성
+function client_select() {
+  // 선택된 라디오 버튼 찾기
+  const selectedRadio = document.querySelector('input[name="client_check"]:checked');
+  
+  if (!selectedRadio) {
+    alert("거래처를 선택하세요.");
+    return;
+  }
+  
+  // 선택된 라디오 버튼의 부모 <tr> 찾기
+  const selectedRow = selectedRadio.closest('tr');
+  if (!selectedRow) {
+    alert("선택된 거래처 행을 찾을 수 없습니다.");
+    return;
+  }
+  
+  // data-* 속성 가져오기
+  const company_code = selectedRow.getAttribute('data-company_code');
+  const company_name = selectedRow.getAttribute('data-company_name');
+  const biz_num = selectedRow.getAttribute('data-biz_num');
+  const manager_name = selectedRow.getAttribute('data-manager_name');
+  const phone_num = selectedRow.getAttribute('data-phone_num');
+
+  // 각 input 요소에 값 설정
+  // 부모 페이지에서 거래처 정보 input들이 순서대로 위치하므로, 아래와 같이 선택
+  const inputs = window.parent.document.querySelectorAll('.row.mb-3 input.form-control[readonly]');
+  if (inputs.length < 5) {
+    alert("거래처 정보를 표시할 input 요소를 찾을 수 없습니다.");
+    return;
+  }
+  
+  inputs[0].value = company_code;
+  inputs[1].value = company_name;
+  inputs[2].value = biz_num;
+  inputs[3].value = manager_name;
+  inputs[4].value = phone_num;
+
+  // 모달 닫기 (Bootstrap 5 기준)
+  const modalEl = document.getElementById('client_list');
+  const modalInstance = bootstrap.Modal.getInstance(modalEl);
+  if (modalInstance) {
+    modalInstance.hide();
+  }
+}
+
+
+//주문 품목 목록 선택 및 작성
+function product_select() {
   // 모든 체크된 체크박스를 찾음
   const checkboxes = document.querySelectorAll('input[name="product_check"]:checked');
 
@@ -30,30 +78,13 @@ var product_select = function () {
 	 	
     // 부모 화면에 반영
 	appendProductRow(tbody, product);
-	
-	/*
-	if (count == 1) { //부모 화면 해당 라인에 작성
-		document.getElementById('product_code').value = product.code;
-	    document.getElementById('product_name').value = product.name;
-	    document.getElementById('product_class1').value = product.class1;
-	    document.getElementById('product_class2').value = product.class2;
-	    document.getElementById('product_spec').value = product.spec;
-	    document.getElementById('product_unit').value = product.unit;
-	    document.getElementById('product_cost').value = product.cost;
-	    document.getElementById('product_price').value = product.price;
-	}
-	else {  //부모 화면에 행 추가
-		appendProductRow(tbody, product);
-	}
-	count++;
-	*/
   });
 
   // 모달 닫기
   const modalEl = document.getElementById('products_list');
   const modalInstance = bootstrap.Modal.getInstance(modalEl);
   modalInstance.hide();
-};
+}
 
 function appendProductRow(tbody, product) {
   const tr = document.createElement('tr');
@@ -75,46 +106,81 @@ function appendProductRow(tbody, product) {
   tbody.appendChild(tr);
 }
 
+//주문 정보 저장
+function order_save() {
+  // 주문처 정보 읽기 (부모 페이지에서 readonly input 5개)
+  const companyCode = document.getElementById('company_code').value.trim();
+  const companyName = document.getElementById('company_name').value.trim();
+  const managerName = document.getElementById('manager_name').value.trim();
+  
+  // 예시: 주문코드, 주문상태, 요청일자, 납기일 등은 임의값 혹은 별도 UI에서 받아야 함
+  const orderCode = generateOrderCode(); // 임의 생성 함수 혹은 서버에서 발급받음
+  const orderStatus = "주문요청";
+  const dueDate = "";     // 필요시 폼에서 받아오세요
+  const memo = "";        // 필요시 폼에서 받아오세요
+  const requestDate = new Date().toISOString().slice(0,10); // 오늘 날짜, yyyy-MM-dd 형식
+  const modifyDate = requestDate;
 
-function submitOrder() {
-  const rows = document.querySelectorAll('#products tr');
-  const productList = [];
+  const productsRows = document.querySelectorAll('#products tr.total-delete');
+  if (productsRows.length === 0) {
+    alert("주문 품목을 추가하세요.");
+    return;
+  }
 
-  rows.forEach(row => {
-    const inputs = row.querySelectorAll('input');
+  const orderItems = [];
+  for (const row of productsRows) {
+    const inputs = row.querySelectorAll('input.form-control');
 
-    const product = {
-      code: inputs[0].value,
-      name: inputs[1].value,
-      class1: inputs[2].value,
-      class2: inputs[3].value,
-      spec: inputs[4].value,
-      quantity: inputs[5].value,
-      unit: inputs[6].value,
-      cost: inputs[7].value,
-      price: inputs[8].value
-    };
+    const productCode = inputs[0].value.trim();
+    const orderQtyStr = inputs[5].value.trim();
 
-    productList.push(product);
-  });
+    if (!orderQtyStr || isNaN(orderQtyStr) || Number(orderQtyStr) <= 0) {
+      alert("주문 수량을 1 이상으로 입력해주세요.");
+      inputs[5].focus();
+      return;
+    }
 
-  // AJAX로 서버에 전송
-  fetch('/saveOrder', {
+	orderItems.push({
+	  orderCode: orderCode,
+	  productCode: productCode,
+	  orderQty: parseInt(orderQtyStr, 10),
+	  companyCode: companyCode,
+	  companyName: companyName,
+	  managerName: managerName,
+	  orderStatus: orderStatus,
+	  dueDate: dueDate,
+	  memo: memo,
+	  requestDate: requestDate,
+	  modifyDate: modifyDate
+	});
+  }
+
+  // AJAX 예시 (fetch API)
+  fetch('/order_save.do', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ products: productList })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderItems)
   })
-  .then(response => {
-    if (!response.ok) throw new Error('저장 실패');
-    return response.json();
+  .then(res => {
+    if (!res.ok) throw new Error("서버 에러");
+    return res.json();
   })
   .then(data => {
-    alert('저장 성공!');
-    // 페이지 새로고침 또는 이동 등
+    alert("주문 저장 성공");
+    // 필요시 화면 초기화 또는 리다이렉트
   })
-  .catch(error => {
-    alert('저장 중 오류 발생: ' + error.message);
+  .catch(err => {
+    alert("저장 실패: " + err.message);
   });
+}
+
+// 주문코드 임의 생성 예시
+function generateOrderCode() {
+  const now = new Date();
+  return "ORD" + now.getFullYear() + 
+         (now.getMonth()+1).toString().padStart(2,'0') + 
+         now.getDate().toString().padStart(2,'0') +
+         now.getHours().toString().padStart(2,'0') + 
+         now.getMinutes().toString().padStart(2,'0') + 
+         now.getSeconds().toString().padStart(2,'0');
 }

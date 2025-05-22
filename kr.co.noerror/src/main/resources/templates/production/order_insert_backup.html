@@ -12,48 +12,16 @@
 		<div class="container mt-5">
 			<h2 class="mb-4">주문 등록</h2>
 			
-			<h5 class="mt-4">주문처 정보</h5>
-			<div class="row mb-3  ">
-				<div class="col-auto d-flex align-items-end ">
-				<button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/temp_client_list.do}" data-modal-id="client_list" style="cursor: pointer;">
-					<i class="bi bi-search"></i>
-				</button>
-				</div>
-				<div class="form-group" style="flex: 1.5">
-					<label class="form-label">거래처코드</label> 
-					<input type="text" class="form-control" id="company_code" readonly>
-				</div>
-				<div class="form-group" style="flex: 2.3">
-					<label class="form-label">거래처명</label> 
-					<input type="text" class="form-control" id="company_name" readonly>
-				</div>
-				<div class="form-group" style="flex: 1.8">
-					<label class="form-label">사업자번호</label> 
-					<input type="text" class="form-control" id="biz_num" readonly>
-				</div>
-				<div class="form-group" style="flex: 1.5">
-					<label class="form-label">담당자코드</label> 
-					<input type="text" class="form-control" id="manager_code" readonly>
-				</div>			
-				<div class="form-group" style="flex: 1.5">
-					<label class="form-label">담당자명</label> 
-					<input type="text" class="form-control" id="manager_name" readonly>
-				</div>
-				<div class="form-group" style="flex: 2.0">
-					<label class="form-label">연락처</label> 
-					<input type="text" class="form-control" id="phone_num" readonly>
-				</div>
-			</div>
 	
-	
-	<hr class="my-4">
 			<form>
-				<!--  주문 완제품 정보 테이블 -->
+								
+					<!--  주문 완제품 정보 테이블 -->
 				<h5 class="mt-4">주문 품목 목록</h5>
 				<div class="table-responsive  rounded">
 				<table class="table table-bordered align-middle" style="white-space: nowrap;">
 					<thead class="table-light">
 						<tr class="text-center">
+							<th style="width: 1%;">찾기</th>
 							<th style="width: 10%;">제품 코드</th>
 							<th style="width: 20%;">제품명</th>
 							<th style="width: 15%;">대분류</th>
@@ -67,7 +35,26 @@
 						</tr>
 					</thead>
 					<tbody id="products">
-						<tr class="total-delete">
+						<tr>
+						    
+							<td style="text-align: center; vertical-align: middle;"> 
+								<!-- 
+								<button
+									class="btn btn-primary d-flex justify-content-center align-items-center"
+									type="button" style="width: 40px; height: 40px;">
+									<i class="bi bi-search"></i>
+								</button> 
+								-->
+								
+								<button 
+									class="btn btn-primary modal-trigger" 
+									type="button" th:data-modal-url="@{/temp_products_list.do}" data-modal-id="products_list" style="cursor: pointer;">
+        							<i class="bi bi-search"></i>
+   								</button>
+   							
+							
+							</td>
+							
 							<td><input type="text" class="form-control" id="product_code"
 								placeholder="제품 코드" readonly></td>
 							<td><input type="text" class="form-control" id="product_name"
@@ -92,20 +79,32 @@
 							</td>
 						</tr>
 					</tbody>
+					 
+					<tfoot>
+					<tr>
+							<td style="text-align: center; vertical-align: middle;"> 계 </td>
+							<td colspan="10"></td>
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+<!-- 							<td></td> -->
+							
+ 						</tr>
+					
+					</tfoot> 
 				</table>
 				</div>
-				
-				<button 
-					class="btn btn-primary modal-trigger" 
-					type="button" th:data-modal-url="@{/temp_products_list.do}" data-modal-id="products_list" style="cursor: pointer;">
-    				주문종목 찾기
-				</button>
+				<button type="button" class="btn btn-secondary mb-3"
+					onclick="addProductRow()">주문품목 추가</button>
 				<div class="d-flex justify-content-end">
-					<button type="button" class="btn btn-primary" onclick="order_save()"><i class="bi bi-bookmark-check"></i> 저장</button>
+					<button type="button" class="btn btn-primary"><i class="bi bi-bookmark-check"></i> 저장</button>
 					<button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>
 				</div>
 			</form>
-		</div>
 		</div>
 	</main>
 	<footer th:replace="~{/common/footer.html :: footer}"></footer>

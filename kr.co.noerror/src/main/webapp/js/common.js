@@ -44,10 +44,7 @@ function previewFile() {
 
     // 파일명 표시
     fileNameDisplay.textContent = file.name;
-  } else {
-    preview.src = '';
-    fileNameDisplay.textContent = '';
-  }
+  } 
 }
 
 

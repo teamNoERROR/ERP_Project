@@ -14,18 +14,18 @@
 		<h2 class="mb-1">제품 등록</h2>
 	</div>
 	
- <form id="frm" method="post" action="./cdn_uploadok.do" enctype="multipart/form-data">
+<!--  <form id="frm" method="post" action="./cdn_uploadok.do" enctype="multipart/form-data"> -->
 <div class="form-section">
 <div class="row">
 	    <!-- 이미지 업로드 -->
 	<div class="col-md-3 d-flex flex-column align-items-end">
 			<!-- 미리보기 네모칸 -->
 		  <div class="image-box mb-2" >
-		    <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
+		    <img id="previewImage" src="./img/no-image.svg" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
 		  </div>
 		
 		  <!-- 파일 선택 input -->
-		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+		  <input type="file" id="productImage" name = "productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
 	</div>
 
 <!-- 제품 정보 입력 -->
@@ -50,7 +50,7 @@
 			<label class="form-label">소분류</label>
 			 <select class="form-select" id="products_class2">
 				<option value="">선택</option>
-				<option th:value="${s_class}" th:each="s_class : ${s_class}">[[${s_class}]]</option>
+<!-- 				<option th:value="${s_class}" th:each="s_class : ${s_class}">[[${s_class}]]</option> -->
 			</select>
 		</div>
 	</div>
@@ -68,6 +68,7 @@
 		<div class="col-md-2">
 			<label  class="form-label">제품단위</label>
 			<select class="form-select" id="product_unit">
+				<option value="">선택</option>
 				<option value="ea">ea</option>
 				<option value="g">g</option>
 				<option value="ml">ml</option>
@@ -81,7 +82,7 @@
 	</div>
 
 	<!-- 사용여부라인 -->
-	<div class="row mb-3">
+	<div class="row ">
 		<div class="col-md-2">
 			<label  class="form-label">사용여부</label>
 			<div>
@@ -123,8 +124,10 @@
 	<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()">초기화</button>
 	</div>
 </div>
-</form>
+<input type="hidden" id="url">
+<!-- </form> -->
 </section>
+
 </main>
 
 

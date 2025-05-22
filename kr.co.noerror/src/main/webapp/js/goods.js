@@ -38,7 +38,6 @@ var insertBtn = function(){
 }
 
 
-var productImage = document.querySelector("#productImage");
 var product_type = document.querySelector("#product_type");
 var products_class1 = document.querySelector("#products_class1");
 var products_class2 = document.querySelector("#products_class2");
@@ -46,28 +45,17 @@ var product_name = document.querySelector("#product_name");
 var product_spec = document.querySelector("#product_spec");
 var product_unit = document.querySelector("#product_unit");
 var pd_safe_stock = document.querySelector("#pd_safe_stock");
-var use_flag = document.getElementsByName("use_flag");
-var exp_flag = document.getElementsByName("exp_flag");
+
+//var useY = document.querySelector("#useY");
+//var useN = document.querySelector("#useN");
+//var expireY = document.querySelector("#expireY");
+//var expireN = document.querySelector("#expireN");
+
 var product_cost = document.querySelector("#product_cost");
 var product_price = document.querySelector("#product_price");
 var memo = document.querySelector("#memo");
-var productImage = productImage.files[0];
-var useChecked = false;
-var expChecked = false;
-for (let i = 0; i < use_flag.length; i++) {
-    if (use_flag[i].checked) {
-        useChecked = true;
-        break;
-    } 
-}
-for (var j=0; j <exp_flag.length; j++){
-	if(expChecked[j].checked){
-		expChecked = true;
-		break;
-	}
-}
-console.log(useChecked);
-console.log(expChecked);
+var productImage = document.querySelector("#productImage").files[0];
+var url = document.querySelector("#url");
 
 //제품 등록하기
 function insert_pd(){
@@ -106,18 +94,16 @@ function insert_pd(){
 					
 					
 	}
-	/*else if(!useChecked){ 
+	else if(useY.checked == false && useN.checked == false){ 
 		alert("사용유무를 선택하세요");
-		use_flag[0].focus();			
 					
 					
 	}
-	else if(!expChecked){ 
+	else if(expireY.checked == false && expireN.checked == false){ 
 		alert("유통기한 사용유무를 선택하세요");
-		exp_flag[0].focus();					
 						
 						
-	}*/
+	}
 	else if(product_cost.value ==""){ 
 		alert("단가를 입력하세요");
 		product_cost.focus();					
@@ -150,7 +136,10 @@ function insert_pd(){
 	}
 }
 
+//제품 등록
 function insertProduct(){
+	var use_flag = document.querySelector('input[name="use_flag"]:checked');
+	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
 	
 	var formData = new FormData();
 	formData.append("PRODUCT_TYPE", product_type.value);
@@ -164,27 +153,24 @@ function insertProduct(){
 	formData.append("PD_SAFE_STOCK", pd_safe_stock.value);
 	formData.append("USE_FLAG", use_flag.value);
 	formData.append("EXP_FLAG", exp_flag.value);
+	formData.append("MEMO", memo.value);
 	
-	if(memo.value != ""){
-		formData.append("MEMO", memo.value);
-	}
-
 	if (productImage) { //새로 파일 첨부를 한 경우 
     	formData.append("productImage", productImage);
+		formData.append("url", "아이피써놓기");
 	}
 	
 	fetch("./products_insertok.do", {
 
 		method: "POST",
-		body : formData
+		body : new URLSearchParams(formData)
 		
-		
-
 	}).then(function(data) {
 		return data.text();
 
 	}).then(function(result) {
-		console.log(result)
+		console.log("result : " + result)
+		
 
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
@@ -195,8 +181,23 @@ function insertProduct(){
 }
 var resetBtn = function(){
 	
+	//document.querySelector("#productImage").value=""
+	//document.querySelector('#previewImage').src = "./img/no-image.svg";
+	//product_type.value="";
+	//products_class1.value="";
+	//products_class2.value="";
+	//product_name.value="";
+	//product_spec.value="";
+	//product_unit.value="";
+	//pd_safe_stock.value="";
+	//use_flag.value="";
+	//exp_flag.value="";
+	//product_cost.value="";
+	//product_price.value="";
+	//memo.value="";
+	//productImage.value="";
 	
-	
+	location.reload();
 }
 
 
@@ -207,27 +208,25 @@ var resetBtn = function(){
 function lg_class() {
 
 	var pd_class = document.querySelector("#products_class1");
-	console.log("pd_class.value:", pd_class.value);
-	fetch("./products_insert.do?products_class1=" + pd_class.value, {
-
+	fetch("./goods_class.do?products_class1=" + pd_class.value, {
 		method: "GET"
-
+		
 	}).then(function(data) {
-		return data.text();;
+		return data.json();
 
-	}).then(function(result) {
-		/*
-		var select_sc = document.querySelector("#pd_class2");
+	}).then(function(s_class) {
+		
+		var select_sc = document.querySelector("#products_class2");
+		select_sc.innerHTML = "";
 		var w=0;
-		while(w<sc_list.length){
-			var option = document.createElement("option");
-			option.innerHTML = sc_list[w];
-			option.value = sc_list[w];
-			select_sc.append(option);
+		var sclass = "";
+		sclass = `<option value="">`+"선택"+`</option>`;
+		while(w< s_class.length){
+			sclass += `<option value="${s_class[w]}">`+s_class[w]+`</option>`;
 			w++;
 		}
-		*/
-
+			select_sc.innerHTML=sclass;
+		
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	});

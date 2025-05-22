@@ -13,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.goods_DAO;
+import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Service.goods_service;
 
 @Controller
@@ -45,51 +48,47 @@ public class goods_controller {
 		return "/goods/products_list.html";
 	}
 	
-	//품목 등록하기 화면이동 
-	@GetMapping("/goods_insert.do")
-	public String goods_insert(Model m, @RequestParam(value="goods_class1", required=false) String goods_class1) {
+	//제품 등록하기 화면이동 
+	@GetMapping("/products_insert.do")
+	public String goods_insert(Model m, @RequestParam(value="products_class1", required=false) String products_class1) {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
 		m.addAttribute("mmenu","품목 등록");
 		
 		
-		System.out.println("goods_class1 : " + goods_class1);
+		System.out.println("pd_class_list : " + products_class1);
 		
 		this.list = new ArrayList<String>();  //완제품 식품분류 목록 가져오기 
-		this.list = this.g_svc.pd_class_list(goods_class1);
+		this.list = this.g_svc.pd_class_list(products_class1);
 		m.addAttribute("l_class",this.list);
 		System.out.println(this.list);
 //		JSONArray sc_list = new JSONArray();
 //		for(String a : this.list ) {
 //			sc_list.put(a);
 //		}
-//		m.addAttribute("s_class",this.list);
+//		m.addAttribute("s_class",sc_list);
 		
-		return "/goods/goods_insert.html";
+		return "/goods/products_insert.html";
 	}
 	
+	
+	@GetMapping("/products_insertok.do")
+	public String products_insertok(@ModelAttribute products_DTO pdto,
+			@RequestParam(value = "productImage", required = false) MultipartFile productImage,
+				HttpServletResponse res) {
+		
+		pdto.setPRODUCT_CLASS2("ff");
+		System.out.println("pdto : " + pdto);
+		
+		return null;
+	}
 
 	
 	
 	
 	
 	
-	//품목 상세보기 모달 
-	@GetMapping("/goods_type.do")
-	public String goods_type(HttpServletResponse res, @RequestParam(value="goods_type", required=false) String goods_type) throws IOException {
-		this.pw = res.getWriter();
-		try {
-			this.pw.print(goods_type);
-			
-		} catch (Exception e) {
-			this.pw.print("error");
-		} finally {
-			this.pw.close();
-		}
-		
-		
-		return null;
-	}
+	
 	
 	
 	
@@ -136,7 +135,28 @@ public class goods_controller {
 	
 	
 	
-	
+	//자재 등록하기 화면이동 
+	@GetMapping("/items_insert.do")
+	public String items_insert(Model m, @RequestParam(value="goods_class1", required=false) String goods_class1) {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","품목 관리");
+		m.addAttribute("mmenu","자재 등록");
+		
+		
+//		System.out.println("goods_class1 : " + goods_class1);
+		
+//		this.list = new ArrayList<String>();  //완제품 식품분류 목록 가져오기 
+//		this.list = this.g_svc.pd_class_list(goods_class1);
+//		m.addAttribute("l_class",this.list);
+//		System.out.println(this.list);
+//			JSONArray sc_list = new JSONArray();
+//			for(String a : this.list ) {
+//				sc_list.put(a);
+//			}
+//			m.addAttribute("s_class",this.list);
+		
+		return "/goods/items_insert.html";
+	}
 	
 	
 	

@@ -29,10 +29,13 @@ public class goods_service {
 	public List<String> pd_class_list(String pd_class1){
 		this.list = new ArrayList<>();
 		this.map = new HashMap<>();
+		
 		if(pd_class1==null) {
-			this.map.put("key", null);
+			this.map.put("key", "aa");
+			
 		}else if(pd_class1!=null) {
 			this.map.put("key", pd_class1);
+			
 		}
 		this.list = this.g_dao.pd_class_list(this.map);
 		

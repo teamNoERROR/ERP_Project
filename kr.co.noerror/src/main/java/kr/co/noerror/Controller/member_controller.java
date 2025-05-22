@@ -10,6 +10,6 @@ public class member_controller {
 	@GetMapping("/employee.do")
 	public String test(Model m) {
 	
-		return "/member/member_list.html";
+		return "/member/member_insert.html";
 	}
 }

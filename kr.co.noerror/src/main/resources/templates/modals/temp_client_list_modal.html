@@ -17,6 +17,7 @@
 								<th scope="col">거래처코드</th>
 								<th scope="col">거래처명</th>
 								<th scope="col">사업자번호</th>
+								<th scope="col">담당자코드</th>
 								<th scope="col">담당자명</th>
 								<th scope="col">연락처</th>
 							</tr>
@@ -26,6 +27,7 @@
 							    th:attr="data-company_code=${c.company_code},
 							             data-company_name=${c.company_name},
 							             data-biz_num=${c.biz_num},
+							             data-manager_code=${c.manager_code},
 							             data-manager_name=${c.manager_name},
 							             data-phone_num=${c.phone_num}"
 							    style="cursor: pointer;">
@@ -34,6 +36,7 @@
 								<td>[[${c.company_code}]]</td>
 								<td>[[${c.company_name}]]</td>
 								<td>[[${c.biz_num}]]</td>
+								<td>[[${c.manager_code}]]</td>
 								<td>[[${c.manager_name}]]</td>
 								<td>[[${c.phone_num}]]</td>
 							</tr>

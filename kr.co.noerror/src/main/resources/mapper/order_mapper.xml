@@ -68,7 +68,7 @@ WHERE 1=1
     </if>
 </select>
 
-<!-- 거래처 목록 출력 -->
+<!-- 거래처 목록 출력 -->  
 <select id="client_list" resultType="kr.co.noerror.DTO.temp_client_DTO">
 SELECT
     comp.company_code,
@@ -88,14 +88,15 @@ JOIN
 	SELECT * FROM temp_products
 </select>
 
-<!-- 주문정보 저장 -->
-<insert id="insert_order" parameterType="kr.co.noerror.DTO.order_DTO" useGeneratedKeys="true" keyProperty="OIDX">
-  INSERT INTO ORDERS (
+<!-- 주문정보 저장 -->  
+<insert id="insert_order" parameterType="kr.co.noerror.DTO.order_DTO">
+  INSERT INTO temp_order_request (
     ORDER_CODE,
     PRODUCT_CODE,
     ORDER_QTY,
     COMPANY_CODE,
     COMPANY_NAME,
+    MANAGER_CODE,
     MANAGER_NAME,
     ORDER_STATUS,
     DUE_DATE,
@@ -103,18 +104,19 @@ JOIN
     REQUEST_DATE,
     MODIFY_DATE
   ) VALUES (
-    #{orderCode},
-    #{productCode},
-    #{orderQty},
-    #{companyCode},
-    #{companyName},
-    #{managerName},
-    #{orderStatus},
-    #{dueDate},
-    #{memo},
-    #{requestDate},
-    #{modifyDate}
-  )
+    #{ORDER_CODE},
+    #{PRODUCT_CODE},
+    #{ORDER_QTY},
+    #{COMPANY_CODE},
+    #{COMPANY_NAME},
+    #{MANAGER_CODE},
+    #{MANAGER_NAME},
+    #{ORDER_STATUS},
+    #{DUE_DATE},
+    #{MEMO},
+    #{REQUEST_DATE},
+    #{MODIFY_DATE} 
+  ) 
 </insert>
 
 </mapper>

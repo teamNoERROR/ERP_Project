@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.order_DAO;
 import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.temp_client_DTO;
@@ -28,9 +30,60 @@ public class order_controller {
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	@Resource(name="order_DTO")
+	order_DTO odto;
+	
 	@Autowired
 	order_DAO odao;
+	
+	@PostMapping("/order_save.do")
+	@ResponseBody
+    public Map<String, Object> saveOrder(@RequestBody List<Map<String, Object>> orders) {
+        Map<String, Object> response = new HashMap<>();
+        
+        System.out.println(orders);
+        System.out.println(orders.size());
 
+        try {
+        	int result = 0;
+            for (Map<String, Object> item : orders) {
+            	System.out.println("테스트 ");
+                this.odto.setORDER_CODE((String)item.get("ORDER_CODE"));
+                this.odto.setPRODUCT_CODE((String)item.get("PRODUCT_CODE"));
+                this.odto.setORDER_QTY((int)item.get("ORDER_QTY"));
+                this.odto.setCOMPANY_CODE((String)item.get("COMPANY_CODE"));
+                this.odto.setCOMPANY_NAME((String)item.get("COMPANY_NAME"));
+                this.odto.setMANAGER_CODE((String)item.get("MANAGER_CODE"));
+                this.odto.setMANAGER_NAME((String)item.get("MANAGER_NAME"));
+                this.odto.setORDER_STATUS((String)item.get("ORDER_STATUS"));
+                this.odto.setDUE_DATE((String)item.get("DUE_DATE"));
+                this.odto.setMEMO((String)item.get("MEMO"));
+                this.odto.setREQUEST_DATE((String)item.get("REQUEST_DATE"));
+                this.odto.setMODIFY_DATE((String)item.get("MODIFY_DATE"));
+ 
+                System.out.println(this.odto);
+                result += this.odao.insert_order(this.odto);
+            }
+            System.out.println(result);
+            System.out.println(orders.size());
+            if(result == orders.size()) {
+	            response.put("success", true);
+	            response.put("message", "주문 저장 성공");
+            }
+            else {
+            	response.put("success", false);
+                response.put("message", "저장 실패");
+            }
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "저장 실패: " + e.getMessage());
+        }
+
+        return response;
+    }
+
+	/*
 	@PostMapping("/order_save.do")
 	public ResponseEntity<?> saveOrders(@RequestBody List<order_DTO> orders) {
 	    // unique 제약: ORDER_CODE + PRODUCT_CODE
@@ -49,6 +102,7 @@ public class order_controller {
 	    }
 	    return ResponseEntity.ok().body(msg);
 	}
+	*/
 	
 	@GetMapping("/temp_products_list.do")
 	public String temp_product_list(Model m) {

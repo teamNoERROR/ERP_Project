@@ -2,17 +2,19 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
-<title>품목 등록</title>
+<title>제품 등록</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
 <main class="main">
 <section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 <section class="container ">
-        <!-- Title -->
-        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">품목 등록</h2>
-        </div>
+	<!-- Title -->
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		<h2 class="mb-1">제품 등록</h2>
+	</div>
+	
+ <form id="frm" method="post" action="./cdn_uploadok.do" enctype="multipart/form-data">
 <div class="form-section">
 <div class="row">
 	    <!-- 이미지 업로드 -->
@@ -31,24 +33,22 @@
 	<div class="row mb-3">
 		<div class="col-md-4">
 			<label class="form-label">제품유형</label>
-			<select class="form-select" id="goods_type" onchange="goods_type()">
+			<select class="form-select" id="product_type">
 				<option value="">선택</option>
 				<option value="완제품">완제품</option>
 				<option value="반제품">반제품</option>
-				<option value="부자재">부자재</option>
-				<option value="소모품">소모품</option>
 			</select>
 		</div>
 		<div class="col-md-4">
 			<label class="form-label">대분류</label>
-			<select class="form-select" name="goods_class1" id="goods_class1" onchange="lg_class()">
+			<select class="form-select" name="products_class1" id="products_class1" onchange="lg_class()">
 				<option value="" >선택</option>
 				<option th:value="${l_class}" th:each="l_class : ${l_class}">[[${l_class}]]</option>
 			</select>
 		</div>
 		<div class="col-md-4">
 			<label class="form-label">소분류</label>
-			 <select class="form-select" id="goods_class2">
+			 <select class="form-select" id="products_class2">
 				<option value="">선택</option>
 				<option th:value="${s_class}" th:each="s_class : ${s_class}">[[${s_class}]]</option>
 			</select>
@@ -59,63 +59,59 @@
 	<div class="row mb-3">
 		<div class="col-md-5">
 			 <label class="form-label">제품명</label>
-			<input type="text" class="form-control" required>
+			<input type="text" class="form-control" id="product_name">
 		</div>
 		<div class="col-md-2">
 			<label class="form-label">제품규격</label>
-	        <input type="text" class="form-control">
+	        <input type="text" class="form-control" id="product_spec">
 		</div>
 		<div class="col-md-2">
 			<label  class="form-label">제품단위</label>
-			<select class="form-select" required>
-				<option>ea</option>
-				<option>g</option>
-				<option>ml</option>
+			<select class="form-select" id="product_unit">
+				<option value="ea">ea</option>
+				<option value="g">g</option>
+				<option value="ml">ml</option>
 			</select>
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">적정재고</label>
-			<input type="number" min="1" class="form-control">
+			<label  class="form-label">안전재고</label>
+			<input type="text" class="form-control" id="pd_safe_stock">
 		</div>
 		
 	</div>
 
 	<!-- 사용여부라인 -->
-	<div class="row mb-3 open_price">
+	<div class="row mb-3">
 		<div class="col-md-2">
 			<label  class="form-label">사용여부</label>
 			<div>
-				
-				<label class="me-2"><input type="radio" id="useY" name="use" value="Y"> 사용 </label>
-				<label class="me-2"><input type="radio" id="useN" name="use" value="N"> 미사용 </label>
+				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 </label>
+				<label ><input type="radio" id="useN" name="use_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
 		<div class="col-md-2">
 			<label  class="form-label">유통기한</label> 
 			<div>
-				
-				<label class="me-2"><input type="radio" id="expireY" name="expire" value="Y"> 사용 </label>
-				<label class="me-2"><input type="radio" id="expireN" name="expire" value="N"> 미사용 </label>
+				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 </label>
+				<label><input type="radio" id="expireN" name="exp_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">제품단가 (원)</label>
-			<input type="text" class="form-control">  
+			<label  class="form-label">제품단가</label>
+			<input type="text" class="form-control" id="product_cost">
 		</div>
-
+		<div class="col-md-2">
+			<label  class="form-label">판매가</label>	
+			<input type="text" class="form-control" id="product_price">
+		</div>
 	</div>
 	
 	
-	<!-- 부자재 등록일 경우 노출 -->
-	
-	<div class="open_ccorp">
-	
-	</div>
 	 
 	
 	<div class="row mb-3">
 		<label class="form-label">비고</label>
-		<textarea class="form-control" rows="2"></textarea>
+		<textarea class="form-control" rows="2" id="memo"></textarea>
 	</div>
 	
 	
@@ -123,10 +119,11 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-4">
-	<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
-	<button type="reset" class="btn btn-outline-secondary ms-2" id="resetBtn">초기화</button>
+	<button type="button" class="btn btn-primary" onclick="insert_pd()">저장</button>
+	<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()">초기화</button>
 	</div>
 </div>
+</form>
 </section>
 </main>
 

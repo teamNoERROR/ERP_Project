@@ -25,5 +25,12 @@ public class M_File_Rename {
 		
 		return makefile;
 	}
-	
+	// 확장자 없는 파일명만 반환하는 메서드 (필요하면 사용)
+    public String getNameWithoutExt(String filenm) {
+        int dotIndex = filenm.lastIndexOf(".");
+        if(dotIndex > 0) {
+            return filenm.substring(0, dotIndex);
+        }
+        return filenm;
+    }
 }

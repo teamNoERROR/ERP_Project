@@ -3,6 +3,10 @@ package kr.co.noerror;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import kr.co.noerror.DTO.WareHouse_DTO;
 
 @Controller
 public class controller {
@@ -105,6 +109,10 @@ public class controller {
 //		return "/warehouse/warehouses_pd_list.html";
 		return "/warehouse/warehouses_it_list.html";
 	}
+	
+
+	
+	
 	
 	//mrp 계산
 	@GetMapping("/mrp.do")

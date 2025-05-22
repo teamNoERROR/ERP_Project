@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.noerror.DAO.client_dao">
+
+    <insert id="insertClient">
+        INSERT INTO clients (
+            type, company_name, business_number, industry, business_type,
+            ceo_name, status, zip_code, address1, address2,
+            memo, manager_name, department, position, email,
+            phone, mobile, fax, memo2
+        ) VALUES (
+            #{type}, #{companyName}, #{businessNumber}, #{industry}, #{businessType},
+            #{ceoName}, #{status}, #{zipCode}, #{address1}, #{address2},
+            #{memo}, #{managerName}, #{department}, #{position}, #{email},
+            #{phone}, #{mobile}, #{fax}, #{memo2}
+        )
+    </insert>
+
+    <select id="getClientList" resultType="kr.co.noerror.DTO.client_dto">
+        SELECT * FROM clients
+    </select>
+
+    <update id="updateClient">
+        UPDATE clients SET
+            type = #{type},
+            company_name = #{companyName},
+            business_number = #{businessNumber},
+            industry = #{industry},
+            business_type = #{businessType},
+            ceo_name = #{ceoName},
+            status = #{status},
+            zip_code = #{zipCode},
+            address1 = #{address1},
+            address2 = #{address2},
+            memo = #{memo},
+            manager_name = #{managerName},
+            department = #{department},
+            position = #{position},
+            email = #{email},
+            phone = #{phone},
+            mobile = #{mobile},
+            fax = #{fax},
+            memo2 = #{memo2}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteClient">
+        DELETE FROM clients WHERE id = #{id}
+    </delete>
+
+    <select id="searchClient" resultType="kr.co.noerror.DTO.Client_DTO">
+        SELECT * FROM clients
+        WHERE company_name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+</mapper>

@@ -40,14 +40,10 @@ public class order_controller {
 	@ResponseBody
     public Map<String, Object> saveOrder(@RequestBody List<Map<String, Object>> orders) {
         Map<String, Object> response = new HashMap<>();
-        
-        System.out.println(orders);
-        System.out.println(orders.size());
 
         try {
         	int result = 0;
             for (Map<String, Object> item : orders) {
-            	System.out.println("테스트 ");
                 this.odto.setORDER_CODE((String)item.get("ORDER_CODE"));
                 this.odto.setPRODUCT_CODE((String)item.get("PRODUCT_CODE"));
                 this.odto.setORDER_QTY((int)item.get("ORDER_QTY"));
@@ -61,11 +57,9 @@ public class order_controller {
                 this.odto.setREQUEST_DATE((String)item.get("REQUEST_DATE"));
                 this.odto.setMODIFY_DATE((String)item.get("MODIFY_DATE"));
  
-                System.out.println(this.odto);
                 result += this.odao.insert_order(this.odto);
             }
-            System.out.println(result);
-            System.out.println(orders.size());
+
             if(result == orders.size()) {
 	            response.put("success", true);
 	            response.put("message", "주문 저장 성공");
@@ -76,6 +70,7 @@ public class order_controller {
             }
 
         } catch (Exception e) {
+        	System.out.println(e);
             response.put("success", false);
             response.put("message", "저장 실패: " + e.getMessage());
         }

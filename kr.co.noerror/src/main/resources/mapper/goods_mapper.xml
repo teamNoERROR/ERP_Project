@@ -4,9 +4,9 @@
 
 <!-- 완제품 식품분류 목록 출력 -->
 <select id="pd_class_list" resultType="String" parameterType="Map">
-	SELECT 
+	SELECT
 	<choose>
-	<when test="key == 'aa'">
+	<when test="key == null">
 		DISTINCT PRODUCT_CLASS1 FROM PRODUCTS_CLASS 
 	</when>
 	<otherwise>
@@ -15,5 +15,12 @@
 	</choose>
 	
 </select>
+
+
+
+<!-- 완제품 등록  -->
+<insert id="pd_insert" >
+	INSERT INTO PRODUCTS VALUES (PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, #{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, #{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, #{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, #{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+</insert>
 
 </mapper>

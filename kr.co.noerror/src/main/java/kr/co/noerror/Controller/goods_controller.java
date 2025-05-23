@@ -65,15 +65,9 @@ public class goods_controller {
 		
 		int goods_total =  this.g_svc.pd_all_ea();   //제품 총개수 
 		List<products_DTO> goods_all_list = this.g_svc.pd_all_list();  //제품 리스트 출력 
-		
-		String no_goods = "등록된 제품이 없습니다";
-//		if(goods_all_list==null) {
-			m.addAttribute("no_goods", no_goods );
-			
-//		}else {
-			m.addAttribute("goods_all_list", goods_all_list);
-			m.addAttribute("goods_total", goods_total);
-//		}
+		m.addAttribute("no_goods", "등록된 제품이 없습니다" );
+		m.addAttribute("goods_all_list", goods_all_list);
+		m.addAttribute("goods_total", goods_total);
 		
 		return "/goods/products_list.html";
 	}

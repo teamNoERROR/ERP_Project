@@ -35,7 +35,7 @@
             <option value="2">담당자</option>
           </select>
           <input type="text" class="form-control" placeholder="검색">
-          <button class="btn btn-primary" type="submit">
+          <button class="btn btn-primary">
             <i class="bi bi-search"></i>
           </button>
         </div>
@@ -51,7 +51,7 @@
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
-                        <th scope="col"><input type="checkbox"></th>
+                        <th scope="col"><input type="checkbox" name="all_sel_box" onclick="all_sel()"></th>
                         <th scope="col">#</th>
                         <th scope="col">제품사진</th>
                         <th scope="col">제품코드</th>
@@ -74,7 +74,7 @@
                 	</tr>
                 	
                     <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" onclick="open_detail(event)"  style="cursor: pointer;">
-                        <td><input type="checkbox"></td>
+                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" ></td>
                         <td > [[${goods_total} - ${idx.index}]]</td>
                         <td><img src=""></td>
                         <td class="pd_code" >[[${pdlist.PRODUCT_CODE}]]</td>
@@ -89,7 +89,6 @@
                         <td>재고합계</td>
                         <td>[[${pdlist.USE_FLAG}]]</td>
                     </tr>
-                    
                 </tbody>
             </table>
         </div>
@@ -109,7 +108,7 @@
         <div class="mt-4 d-flex gap-2"> 
             <div class="ms-auto">
                 <button type="button"  class="btn btn-success" onclick="addBtn()"><i class="bi bi-plus-lg"></i> 추가</button>
-                <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button>
+                <button class="btn btn-danger"  onclick="deleteBtn()"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>
 	</div>

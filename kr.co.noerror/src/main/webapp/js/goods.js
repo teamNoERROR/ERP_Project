@@ -231,45 +231,73 @@ function open_detail(event){
 
 
 function deleteBtn(del_pd){
-	var idx = del_pd.getAttribute("data-idx");
-	var pd_code = del_pd.getAttribute("data-pdcode");
-	if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
-		
-		fetch("./goods_delete.do/"+idx+"_del", {
-				method: "DELETE",
-				headers: {"content-type": "application/json"},
-				body: JSON.stringify({
-				      	code: pd_code, 
-						idx : idx
-				  	})
-						
-				
-			}).then(function(data) {
-				return data.text();
+	var idx;
+	var pd_code;
 	
-			}).then(function(result) {
-				if(result=="ok"){
-					alert("삭제가 완료되었습니다.");
-					// 모달 닫기
-		            const modalElement = document.getElementById("goods_detail");
-		            const modal = bootstrap.Modal.getInstance(modalElement);
-		            if (modal) {
-		                modal.hide();
-		            }
-	
-		            //삭제, 모닫ㄹ 닫은 후 페이지 새로고침
-		            location.reload();
-				}else {
-					alert("시스템 문제로 삭제에 실패했습니다.")
-				}
-				
-				
-			}).catch(function(error) {
-				console.log("통신오류발생" + error);
-			});
+	if(del_pd){ //모달에서 삭제시 (del_pd가 전달되었을떄)
+		idx = del_pd.getAttribute("data-idx");
+		pd_code = del_pd.getAttribute("data-pdcode");
+		if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
+			del_ajax(idx,pd_code,1,1);	//모달 안에서 1개만 삭제 
+		}
+			
+	}else {
+		var checkboxes = document.querySelectorAll("input[name='selected_box']:checked");
+		if (checkboxes.length == 0) {
+			alert("삭제할 항목을 선택해주세요.");
+			
+		}else{
+			if (confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")) {
+				var count = 0;
+				checkboxes.forEach(chk => {
+					idx = chk.getAttribute("data-idx");		
+					pd_code = chk.getAttribute("data-pdcode");
+					
+					del_ajax(idx, pd_code, ++count, checkboxes.length);	//체크박스로 여러개 삭제 
+				});
+			}
+		}
 	}
 }
 
+function del_ajax(idx,pd_code,count,total){
+		
+	fetch("./goods_delete.do/"+idx+"_del", {
+		method: "DELETE",
+		headers: {"content-type": "application/json"},
+		body: JSON.stringify({
+		      	code: pd_code, 
+				idx : idx
+		  	})
+			
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+			
+			if (count == total) {
+				alert("삭제가 완료되었습니다.");
+				
+				// 모달 닫기
+	            const modalElement = document.getElementById("goods_detail");
+	            const modal = bootstrap.Modal.getInstance(modalElement);
+	            if (modal) {
+	                modal.hide();
+	            }
+				
+				//리스트 페이지 새로고침
+               	location.reload();
+       		
+		}else {
+			if(result=="ok"){
+				alert("시스템 문제로 제품번호 "+ pd_code +"번 제품 \n삭제 실패");
+			}
+		}
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
 
 
 

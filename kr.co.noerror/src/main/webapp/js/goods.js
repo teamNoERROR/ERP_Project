@@ -169,7 +169,8 @@ function insertProduct(){
 		return data.text();
 
 	}).then(function(result) {
-		console.log("result : " + result)
+		alert("제품 등록이 완료되었습니다.");
+		location.href="./goods.do";
 		
 
 	}).catch(function(error) {
@@ -179,6 +180,9 @@ function insertProduct(){
 	
 
 }
+
+
+//초기화 버튼 클릭 
 var resetBtn = function(){
 	
 	//document.querySelector("#productImage").value=""
@@ -199,6 +203,74 @@ var resetBtn = function(){
 	
 	location.reload();
 }
+
+
+function open_detail(event){
+	
+	var pd_code = event.currentTarget.querySelector(".pd_code").innerText;
+	fetch("./goods_detail.do", {
+		method: "POST",
+		headers: {"content-type": "application/x-www-form-urlencoded"},
+		body: "pd_code="+pd_code
+				
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		var modal = new bootstrap.Modal(document.getElementById("goods_detail"));
+		modal.show();
+		
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+
+function deleteBtn(del_pd){
+	var idx = del_pd.getAttribute("data-idx");
+	var pd_code = del_pd.getAttribute("data-pdcode");
+	if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
+		
+		fetch("./goods_delete.do/"+idx+"_del", {
+				method: "DELETE",
+				headers: {"content-type": "application/json"},
+				body: JSON.stringify({
+				      	code: pd_code, 
+						idx : idx
+				  	})
+						
+				
+			}).then(function(data) {
+				return data.text();
+	
+			}).then(function(result) {
+				if(result=="ok"){
+					alert("삭제가 완료되었습니다.");
+					// 모달 닫기
+		            const modalElement = document.getElementById("goods_detail");
+		            const modal = bootstrap.Modal.getInstance(modalElement);
+		            if (modal) {
+		                modal.hide();
+		            }
+	
+		            //삭제, 모닫ㄹ 닫은 후 페이지 새로고침
+		            location.reload();
+				}else {
+					alert("시스템 문제로 삭제에 실패했습니다.")
+				}
+				
+				
+			}).catch(function(error) {
+				console.log("통신오류발생" + error);
+			});
+	}
+}
+
+
 
 
 

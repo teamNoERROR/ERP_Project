@@ -47,5 +47,41 @@ public class goods_DAO implements goods_mapper {
 		int result = this.st.insert("pd_insert",pdto);
 		return result;
 	}
+
+
+
+	//제품 상세보기 
+	@Override
+	public products_DTO pd_one_detail(String pd_code) {
+		products_DTO goods_one = this.st.selectOne("pd_one_detail", pd_code);
+		return goods_one;
+	}
+
+
+
+	//제품 리스트 보기 
+	@Override
+	public List<products_DTO> pd_all_list() {
+		List<products_DTO> pd_list = this.st.selectList("pd_all_list");
+		return pd_list;
+	}
+
+
+
+	//제품 총개수 
+	@Override
+	public int pd_all_ea() {
+		int result = this.st.selectOne("pd_all_ea");
+		return result;
+	}
+
+
+
+	//제품 삭제 
+	@Override
+	public int pd_delete(Map<String, Object> p) {
+		int result = this.st.delete("pd_delete", p);
+		return result;
+	}
 	
 }

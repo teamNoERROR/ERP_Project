@@ -12,15 +12,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.goods_DAO;
+import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_file;
@@ -29,7 +34,6 @@ import kr.co.noerror.Service.goods_service;
 
 @Controller
 public class goods_controller {
-
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	PrintWriter pw = null;
 	
@@ -58,8 +62,23 @@ public class goods_controller {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
 		m.addAttribute("mmenu","완제품 리스트");
+		
+		int goods_total =  this.g_svc.pd_all_ea();   //제품 총개수 
+		List<products_DTO> goods_all_list = this.g_svc.pd_all_list();  //제품 리스트 출력 
+		
+		String no_goods = "등록된 제품이 없습니다";
+//		if(goods_all_list==null) {
+			m.addAttribute("no_goods", no_goods );
+			
+//		}else {
+			m.addAttribute("goods_all_list", goods_all_list);
+			m.addAttribute("goods_total", goods_total);
+//		}
+		
 		return "/goods/products_list.html";
 	}
+	
+	
 	
 	//제품 등록하기 화면이동 
 	@GetMapping("/products_insert.do")
@@ -67,8 +86,6 @@ public class goods_controller {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
 		m.addAttribute("mmenu","품목 등록");
-		
-	
 		
 		this.list = new ArrayList<String>();  //완제품 식품분류 목록 가져오기 
 		this.list = this.g_svc.pd_class_list(null);
@@ -101,16 +118,13 @@ public class goods_controller {
 	}
 	
 	
-	
+	//완제품 등록 
 	@PostMapping("/products_insertok.do")
 	public String products_insertok(@ModelAttribute products_DTO pdto,
 									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
 									@RequestParam(name = "url", required = false) String url,
 									HttpServletResponse res) {
 		
-		System.out.println("pdto : " + pdto);
-		System.out.println("pdto : " + pdto.getUSE_FLAG());
-		System.out.println("pdto : " + pdto.getUSE_FLAG().length());
 		System.out.println("이미지 : "+productImage);
 		
 		try {
@@ -127,10 +141,8 @@ public class goods_controller {
 				pdto.setFILE_RENM(this.f_dto.getFileRenm());
 				pdto.setAPI_FNM(this.f_dto.getApinm());
 				pdto.setIMG_SRC(this.f_dto.getImgPath());
-				System.out.println("pdtopdto : " + pdto.getFILE_NM());
 				
 				int result = this.g_svc.pd_insert(pdto);   //db에 데이터 저장 
-				System.out.println("result : " + result);
 				if(result > 0) {  
 					this.pw.write("ok");  //제품 등록 완료 
 				}
@@ -167,9 +179,7 @@ public class goods_controller {
 	
 	
 	
-	
-	
-	
+
 	
 	
 	
@@ -180,13 +190,64 @@ public class goods_controller {
 	
 	
 	//품목 상세보기 모달 
-	@GetMapping("/goods_detail.do")
-	public String goods_detail(Model m) {
+	@PostMapping("/goods_detail.do")
+	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code) {
+		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기
+		
+		if(goods_one == null) {
+			m.addAttribute("ssss", "ssss");
+			
+		}else {
+			m.addAttribute("goods_one", goods_one);
+		}
 		return "/modals/goods_detail_modal.html";
 	}
 	
 	
+	//제품 삭제 
+	@DeleteMapping("/goods_delete.do/{key}")
+	public String goods_delete(@PathVariable(name="key") String key,
+								@RequestBody del_DTO d_dto,
+								HttpServletRequest req, HttpServletResponse res) throws IOException {
+		this.pw = res.getWriter();
+		
+		try {
+			String del_key = d_dto.getIdx()+"_del";
+			String pd_code = d_dto.getCode();
+			int pidx = d_dto.getIdx();
+			
+			if(key.equals(del_key)) {
+//				products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기(이미지 삭제용)
+
+				int result =  this.g_svc.pd_delete(pidx, pd_code);
+				if(result > 0) {  //글삭제 완료 
+					this.pw.write("ok");
+					
+				}else {  //삭제실패 
+					this.pw.write("fail");
+				}
+			}
+			else {
+				this.pw.write("key error");
+			}
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 	
+	
+	
+	
+	
+//	@GetMapping("/goods_detail.do")
+//	public String goods_detail_get() {
+//	    return "redirect:/"; // 또는 빈 페이지, 에러 페이지
+//	}
+//	
 	
 	
 	

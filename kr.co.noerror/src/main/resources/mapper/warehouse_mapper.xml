@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.Warehouse_Mapper">
+
+  <!-- 창고 게시물 상세 조회 -->
+  <select id="view_wh_detail" parameterType="String" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+  	SELECT * FROM WAREHOUSE WHERE WH_CODE='${wh_code}' ORDER BY WIDX DESC
+  </select>
+
+
+  <!-- 창고 등록  -->
+  <insert id="warehouse_save" parameterType="map">
+    INSERT INTO WAREHOUSE (
+      WIDX, WH_CODE, WH_NAME, WH_NUMBER, WH_ZIPCODE, WH_ADDR1, WH_ADDR2, WH_TYPE,
+      WH_USE_FLAG, WH_FILE_ORI, WH_FILE_NEW, WH_FILE_URL, WH_MG_ID, WH_DESC, WH_NOTE,
+      WH_INSERT_DATE, WH_MODIFY_DATE
+    )
+    VALUES (
+      WAREHOUSE_SAVE.NEXTVAL, #{wh_dto.wh_code}, #{wh_dto.wh_name},
+      #{wh_dto.wh_number}, #{wh_dto.wh_zipcode}, #{wh_dto.wh_addr1},
+      #{wh_dto.wh_addr2}, #{wh_dto.wh_type}, #{wh_dto.wh_use_flag},
+      #{wh_dto.wh_file_ori}, #{wh_dto.wh_file_new}, #{wh_dto.wh_file_url},
+      #{wh_dto.wh_mg_id}, #{wh_dto.wh_desc}, #{wh_dto.wh_note},
+      SYSDATE, NULL
+    )
+  </insert>
+  
+  <!-- ******************** 창고 리스트 게시판 관련 쿼리 시작 ****************** -->
+
+  <!-- 전체 창고 수 -->
+  <select id="getTotalCount" resultType="int">
+      SELECT COUNT(*) FROM WAREHOUSE
+  </select>
+
+  <!-- 검색 조건에 따른 총 개수 -->
+  <select id="searchTotal" parameterType="String" resultType="int">
+      SELECT COUNT(*) 
+      FROM WAREHOUSE 
+      WHERE WH_NAME LIKE '%' || #{m_search} || '%' 
+         OR WH_CODE LIKE '%' || #{m_search} || '%'
+         OR WH_ADDR1 LIKE '%' || #{m_search} || '%'
+         OR WH_ADDR2 LIKE '%' || #{m_search} || '%'
+         OR WH_TYPE LIKE '%' || #{m_search} || '%'
+         OR WH_ZIPCODE LIKE '%' || #{m_search} || '%'
+  </select>
+
+  <!-- 페이지네이션 리스트 (전체 목록) -->
+<select id="select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+  <![CDATA[
+    SELECT *
+    FROM (
+      SELECT A.*, ROWNUM RNUM
+      FROM (
+        SELECT * FROM WAREHOUSE ORDER BY WH_INSERT_DATE DESC
+      ) A
+      WHERE ROWNUM <= #{startIndex} + #{pageSize}
+    )
+    WHERE RNUM > #{startIndex}
+  ]]>
+</select>
+  <!-- 검색 + 페이지네이션 -->
+  <select id="search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+   <![CDATA[
+    SELECT *
+    FROM (
+      SELECT A.*, ROWNUM RNUM
+      FROM (
+        SELECT *
+        FROM WAREHOUSE
+        WHERE WH_NAME LIKE '%' || #{m_search} || '%' 
+           OR WH_CODE LIKE '%' || #{m_search} || '%'
+           OR WH_ADDR1 LIKE '%' || #{m_search} || '%'
+           OR WH_ADDR2 LIKE '%' || #{m_search} || '%'
+           OR WH_TYPE LIKE '%' || #{m_search} || '%'
+           OR WH_ZIPCODE LIKE '%' || #{m_search} || '%'
+        ORDER BY WH_INSERT_DATE DESC
+      ) A
+      WHERE ROWNUM <= #{startIndex} + #{pageSize}
+    )
+    WHERE RNUM > #{startIndex}
+ ]]>
+  </select>
+  
+  
+	
+  <!-- ******************** 창고 리스트 게시판 관련 쿼리 끝 ****************** -->
+
+</mapper>

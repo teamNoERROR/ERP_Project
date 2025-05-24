@@ -100,14 +100,14 @@ public class controller {
 		return "/production/mrp_list.html";
 	}
 	
-	//생산계획등록
-	@GetMapping("/production.do")
-	public String production(Model m) {
-		m.addAttribute("lmenu","생산 관리");
-		m.addAttribute("smenu","생산계획리스트");
-		m.addAttribute("mmenu","생산계획등록");
-		return "/production/production_plan_list.html";
-	}
+//	//생산계획등록
+//	@GetMapping("/production.do")
+//	public String production(Model m) {
+//		m.addAttribute("lmenu","생산 관리");
+//		m.addAttribute("smenu","생산계획리스트");
+//		m.addAttribute("mmenu","생산계획등록");
+//		return "/production/production_plan_list.html";
+//	}
 	
 	//생산계획등록
 	@GetMapping("/production_in.do")

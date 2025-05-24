@@ -39,6 +39,16 @@ public class order_DAO {
 		return all;
 	}
 	
+	public 	int order_code_check(String order_code) {
+		int count = this.sql.selectOne("order_code_check", order_code);
+		return count;
+	}
+	
+	public int insert_order_header(String order_code) {
+		int result = this.sql.insert("insert_order_header", order_code);
+		return result;
+	}
+	
 	public int insert_order(order_DTO odto) {
 		int result = this.sql.insert("insert_order", odto);
 		return result;

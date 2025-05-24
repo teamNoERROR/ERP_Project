@@ -7,20 +7,20 @@
 SELECT * FROM (
     SELECT inner_result.*, ROWNUM rnum
     FROM (
-        SELECT ord.*, comp.company_name, mgr.manager_name
+        SELECT ord.*, cmp.company_name, mgr.manager_name
         FROM temp_order_request ord
-        JOIN temp_client_comp comp ON ord.company_code = comp.company_code
+        JOIN temp_client_comp cmp ON ord.company_code = cmp.company_code
         JOIN temp_client_manager mgr ON ord.manager_code = mgr.manager_code
         WHERE 1=1
         <choose>
 	        <when test="scolumn == 'all'">
 	            AND (
-	                comp.company_name LIKE '%' || #{sword} || '%' OR
+	                cmp.company_name LIKE '%' || #{sword} || '%' OR
 	                mgr.manager_name LIKE '%' || #{sword} || '%'
 	            )
 	        </when>
 	        <when test="scolumn == 'company_name'">
-	            AND comp.company_name LIKE '%' || #{sword} || '%'
+	            AND cmp.company_name LIKE '%' || #{sword} || '%'
 	        </when>
 	        <when test="scolumn == 'manager_name'">
 	            AND mgr.manager_name LIKE '%' || #{sword} || '%'
@@ -43,18 +43,18 @@ WHERE rnum &gt; #{start}
 <select id="order_count" resultType="int" parameterType="map">
 SELECT COUNT(*) AS total
 FROM temp_order_request ord
-JOIN temp_client_comp comp ON ord.company_code = comp.company_code
+JOIN temp_client_comp cmp ON ord.company_code = cmp.company_code
 JOIN temp_client_manager mgr ON ord.manager_code = mgr.manager_code
 WHERE 1=1
     <choose>
      <when test="scolumn == 'all'">
          AND (
-             comp.company_name LIKE '%' || #{sword} || '%' OR
+             cmp.company_name LIKE '%' || #{sword} || '%' OR
              mgr.manager_name LIKE '%' || #{sword} || '%'
          )
      </when>
      <when test="scolumn == 'company_name'">
-         AND comp.company_name LIKE '%' || #{sword} || '%'
+         AND cmp.company_name LIKE '%' || #{sword} || '%'
      </when>
      <when test="scolumn == 'manager_name'">
          AND mgr.manager_name LIKE '%' || #{sword} || '%'
@@ -71,16 +71,16 @@ WHERE 1=1
 <!-- 거래처 목록 출력 -->  
 <select id="client_list" resultType="kr.co.noerror.DTO.temp_client_DTO">
 SELECT
-    comp.company_code,
-    comp.company_name,
-    comp.biz_num,
+    cmp.company_code,
+    cmp.company_name,
+    cmp.biz_num,
     mgr.manager_code,
     mgr.manager_name,
     mgr.phone_num
 FROM
-    temp_client_comp comp
+    temp_client_comp cmp
 JOIN
-    temp_client_manager mgr ON comp.company_code = mgr.company_code
+    temp_client_manager mgr ON cmp.company_code = mgr.company_code
 </select>
 
 <!-- 제품 목록 출력 -->
@@ -88,7 +88,16 @@ JOIN
 	SELECT * FROM temp_products
 </select>
 
+<!-- order_code 중복체크 -->
+<select id="order_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM temp_order_header WHERE ORDER_CODE = #{ORDER_CODE}
+</select>
+
 <!-- 주문정보 저장 -->  
+<insert id="insert_order_header" parameterType="String">
+ INSERT INTO temp_order_header (ORDER_CODE) VALUES (#{ORDER_CODE})
+</insert>
+
 <insert id="insert_order" parameterType="kr.co.noerror.DTO.order_DTO">
   INSERT INTO temp_order_request (
     ORDER_CODE,

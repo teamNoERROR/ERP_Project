@@ -1,0 +1,51 @@
+<div class="modal fade" id="bom_items" tabindex="-1" aria-labelledby="client_list_label">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="staticBackdropLabel" th:text="'[' + ${product_name} + '] 소요자재 리스트'"></h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body row justify-content-center d-flex gap-3">
+				<!-- Client List Table -->
+				<div class="table-responsive  rounded">
+					<table class="table table-hover align-middle table-bordered">
+						<thead class="table-light">
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">BOM코드</th>
+								<th scope="col">자재코드</th>
+								<th scope="col">자재유형</th>
+								<th scope="col">자재명</th>
+								<th scope="col">자재단위</th>
+								<th scope="col">단가</th>
+								<th scope="col">소요량</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="i, no : ${bom_items}">
+								<td>[[${no.count}]]</td>
+								<td>[[${i.bom_code}]]</td>
+								<td>[[${i.item_code}]]</td>
+								<td>[[${i.item_type}]]</td>
+								<td>[[${i.item_name}]]</td>
+								<td>[[${i.item_unit}]]</td>
+								<td>[[${i.unit_price}]]</td>
+								<td>[[${i.quantity}]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+       <!-- Action Buttons -->
+        <div class="d-flex gap-2"> 
+            <div class="ms-auto">
+                <button type="button" class="btn btn-success selectBtn" onclick="close_modal()">닫기</button>
+            </div>
+        </div>
+
+      </div>
+		</div>
+	</div>
+</div>

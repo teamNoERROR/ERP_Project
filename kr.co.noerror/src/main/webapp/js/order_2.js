@@ -117,10 +117,9 @@ function order_save() {
   const managerName = document.getElementById('manager_name').value.trim();
   
   // 예시: 주문코드, 주문상태, 요청일자, 납기일 등은 임의값 혹은 별도 UI에서 받아야 함
-  const orderCode = generateOrderCode(); // 임의 생성 함수 혹은 서버에서 발급받음
   const orderStatus = "주문요청";
-  const dueDate = "2025-05-15";     // 필요시 폼에서 받아오세요
-  const memo = "메모";        // 필요시 폼에서 받아오세요
+  const dueDate = "2025-06-15";     // 필요시 폼에서 받아오세요
+  const memo = "특별한 사항 없음";        // 필요시 폼에서 받아오세요
   const requestDate = new Date().toISOString().slice(0,10); // 오늘 날짜, yyyy-MM-dd 형식
   const modifyDate = requestDate;
 
@@ -144,7 +143,6 @@ function order_save() {
     }
 
 	orderItems.push({
-	  ORDER_CODE: orderCode,
 	  PRODUCT_CODE: productCode,
 	  ORDER_QTY: parseInt(orderQtyStr, 10),
 	  COMPANY_CODE: companyCode,
@@ -172,20 +170,10 @@ function order_save() {
   })
   .then(data => {
     alert("주문 저장 성공");
-    // 필요시 화면 초기화 또는 리다이렉트
+	// 주문목록 페이지 이동	
+	window.location.href = "/order.do";
   })
   .catch(err => {
     alert("저장 실패: " + err.message);
   });
-}
-
-// 주문코드 임의 생성
-function generateOrderCode() {
-  const now = new Date();
-  return "ORD" + now.getFullYear() + 
-         (now.getMonth()+1).toString().padStart(2,'0') + 
-         now.getDate().toString().padStart(2,'0') +
-         now.getHours().toString().padStart(2,'0') + 
-         now.getMinutes().toString().padStart(2,'0') + 
-         now.getSeconds().toString().padStart(2,'0');
 }

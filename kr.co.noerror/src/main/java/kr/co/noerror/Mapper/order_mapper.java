@@ -15,5 +15,7 @@ public interface order_mapper {
 	int order_count(Map<String, Object> mparam);
 	List<temp_client_DTO> client_list();
 	List<temp_products_DTO> products_list();
+	int order_code_check(String order_code);
+	int insert_order_header(String order_code);
 	int insert_order(order_DTO odto);
 }

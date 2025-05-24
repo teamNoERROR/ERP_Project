@@ -15,14 +15,23 @@
 			</div>
 
 			<!-- Search Bar -->
-			<form class="row g-2 my-4 justify-content-end">
+			<form class="row g-2 my-4 justify-content-end"  method="get" action="/production.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<select class="form-select" style="max-width: 120px;">
-							<option selected>전체</option>
-							<option value="1">창고코드</option>
-							<option value="2">창고명</option>
-						</select> <input type="text" class="form-control" placeholder="검색">
+				        <input type="checkbox" name="plan_status" value="계획"> &nbsp;계획&nbsp;
+				        <input type="checkbox" name="plan_status" value="확정"> &nbsp;확정&nbsp;
+				        <input type="checkbox" name="plan_status" value="생산중"> &nbsp;생산중&nbsp;
+				        <input type="checkbox" name="plan_status" value="생산완료"> &nbsp;생산완료&nbsp;
+				        <input type="checkbox" name="plan_status" value="생산지연"> &nbsp;생산지연&nbsp;
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="input-group input-group-sm">
+						<select class="form-select"  name="search_column" style="max-width: 120px;">
+							<option selected value="all">전체</option>
+							<option value="product_name">제품명</option>
+							<option value="company_name">주문처</option>
+						</select> <input type="text" class="form-control" name="search_word" placeholder="검색">
 						<button class="btn btn-primary" type="submit">
 							<i class="bi bi-search"></i>
 						</button>
@@ -32,65 +41,82 @@
 
 			<!-- Client List Table -->
 			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bordered">
+				<table class="table table-hover align-middle table-bordered" th:fragment="tables">
 					<thead class="table-ligh text-center">
 						<tr>
 							<th scope="col"><input type="checkbox"></th>
 							<th scope="col">#</th>
-							<th scope="col">생산제품명</th> 
-							<th scope="col">제품코드</th>
-							<th scope="col">생산예정수량</th>
-							<th scope="col">생산단위</th>  <!-- ea, g 등 -->
-							<th scope="col">생산상태</th>  <!-- 계획, 확정, 진행중, 생산완료  -->
+							<th scope="col">관리번호</th> 
+							<th scope="col">우선순위</th> 
+							<th scope="col">제품명</th> 
+							<th scope="col">수량</th>
+							<th scope="col">단위</th> 
+							<th scope="col">생산기간</th>  
 							<th scope="col">작성자</th>	<!-- 계획수립 담당자명 -->
-							<th scope="col">mrp여부</th>  <!-- mrp계산완료여부 (계산전,완료) -->
+							<th scope="col">주문처</th>	<!-- 주문 고객사 -->
+							<th scope="col">소요자재</th>  <!-- 소요자재 리스트 -->
+							<th scope="col">생산상태</th>   <!-- 계획, 확정, 생산중, 생산완료, 생산지연  -->
 							<th scope="col">등록일</th>   <!-- 생산계획수립일자 -->
 	
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr th:each="p : ${all}">
 							<td><input type="checkbox"></td>
-							<td>2</td>
-							<td>오렌지주스</td>
-							<td>051816</td>
-							<td>100</td>
-							<td>ea</td>
-							<td>계획</td>
-							<td>김길동</td>
-							<td>완료</td>
-							<td>2025-05-18</td>
+							<td>[[${p.pidx}]]</td>
+							<td>[[${p.plan_code}]]</td>
+							<td>[[${p.priority}]]</td>
+							<td>[[${p.product_name}]]</td>
+							<td>[[${p.product_qty}]]</td>
+							<td>[[${p.product_unit}]]</td>
+							<td>[[${p.start_date.substring(0, 10)}]]~[[${p.due_date.substring(0, 10)}]]</td>
+							<td>[[${p.emp_name}]]</td>
+							<td>[[${p.company_name}]]</td>
+							<td align="center" style="cursor: pointer; color: blue;" class="modal-trigger" th:data-modal-url="@{'/bom_items.do?code='+${p.bom_code}}" data-modal-id="bom_items"><u>클릭</u></td>
+							<td>[[${p.plan_status}]]</td>
+							<td>[[${p.plan_date.substring(0, 10)}]]</td>
 						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>1</td>
-							<td>김밥</td>
-							<td>051096</td>
-							<td>100</td>
-							<td>ea</td>
-							<td>확정</td>
-							<td>김길동</td>
-							<td>완료</td>
-							<td>2025-05-18</td>
-						</tr>
-						
 					</tbody>
 				</table>
 			</div>
 			<div
 				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				<!-- Pagination -->
-				<div class="mt-4 d-flex justify-content-center"
-					aria-label="Page navigation">
+				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
 					<ul class="pagination">
-						<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-						<li class="page-item active"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">다음</a></li>
+						<li class="page-item" th:classappend="${pageno == 1} ? 'disabled'">
+						  <a class="page-link"
+						     th:href="@{'/production.do'(pageno=${pageno > 1 ? pageno - 1 : 1},
+						                          search_column=${search_column},
+						                          search_word=${search_word},
+						                          plan_status=${plan_statuses})}">
+						    이전
+						  </a>
+						</li>
+						
+						<li class="page-item"
+						    th:each="n : ${#numbers.sequence(1, page_cnt)}"
+						    th:classappend="${n == pageno} ? 'active'">
+						  <a class="page-link"
+						     th:href="@{'/production.do'(pageno=${n},
+						                          search_column=${search_column},
+						                          search_word=${search_word},
+						                          plan_status=${plan_statuses})}">
+						    [[${n}]]
+						  </a>
+						</li>
+						
+						<li class="page-item" th:classappend="${pageno == page_cnt} ? 'disabled'">
+						  <a class="page-link"
+						     th:href="@{'/production.do'(pageno=${pageno < page_cnt ? pageno + 1 : page_cnt},
+						                          search_column=${search_column},
+						                          search_word=${search_word},
+						                          plan_status=${plan_statuses})}">
+						    다음
+						  </a>
+						</li>
 					</ul>
-				</div>
-				<!-- Action Buttons -->
+				</div>				<!-- Action Buttons -->
 				<div class="mt-4 d-flex gap-2">
 					<div class="ms-auto">
 						<button type="button" class="btn btn-success">

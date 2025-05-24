@@ -22,6 +22,7 @@ import kr.co.noerror.DAO.order_DAO;
 import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.temp_client_DTO;
 import kr.co.noerror.DTO.temp_products_DTO;
+import kr.co.noerror.Model.M_random;
 
 @Controller
 public class order_controller {
@@ -36,15 +37,34 @@ public class order_controller {
 	@Autowired
 	order_DAO odao;
 	
+	@Resource(name="M_random")
+	M_random mrandom;
+	
 	@PostMapping("/order_save.do")
 	@ResponseBody
     public Map<String, Object> saveOrder(@RequestBody List<Map<String, Object>> orders) {
         Map<String, Object> response = new HashMap<>();
-
+        
+        //중복 없는 주문코드 생성
+        String ORDER_CODE = null;
+        int count = 0;
+        boolean is_duplicated = true;
+        while(is_duplicated) {
+        	ORDER_CODE = "ORD-" + this.mrandom.random_no();
+        	count = this.odao.order_code_check(ORDER_CODE);
+        	if(count == 0){
+        		is_duplicated = false;
+        	}
+        }
+        
         try {
-        	int result = 0;
+        	//order_header 테이블에 저장
+        	int result1 = this.odao.insert_order_header(ORDER_CODE);
+        	
+        	//order_request 테이블에 저장
+        	int result2 = 0;
             for (Map<String, Object> item : orders) {
-                this.odto.setORDER_CODE((String)item.get("ORDER_CODE"));
+                this.odto.setORDER_CODE(ORDER_CODE);
                 this.odto.setPRODUCT_CODE((String)item.get("PRODUCT_CODE"));
                 this.odto.setORDER_QTY((int)item.get("ORDER_QTY"));
                 this.odto.setCOMPANY_CODE((String)item.get("COMPANY_CODE"));
@@ -57,10 +77,10 @@ public class order_controller {
                 this.odto.setREQUEST_DATE((String)item.get("REQUEST_DATE"));
                 this.odto.setMODIFY_DATE((String)item.get("MODIFY_DATE"));
  
-                result += this.odao.insert_order(this.odto);
+                result2 += this.odao.insert_order(this.odto);
             }
 
-            if(result == orders.size()) {
+            if((result1==1) && (result2 == orders.size())) {
 	            response.put("success", true);
 	            response.put("message", "주문 저장 성공");
             }
@@ -77,27 +97,6 @@ public class order_controller {
 
         return response;
     }
-
-	/*
-	@PostMapping("/order_save.do")
-	public ResponseEntity<?> saveOrders(@RequestBody List<order_DTO> orders) {
-	    // unique 제약: ORDER_CODE + PRODUCT_CODE
-	    // DB insert or update 로직 구현
-		int result = 0;
-		String msg = "";
-	    for (order_DTO dto : orders) {
-	    	System.out.println(dto);
-	        //result += this.odao.insert_order(dto);
-	    }
-	    if(result == orders.size()) {
-	    	msg = "저장 성공";
-	    }
-	    else {
-	    	msg = "저장 실패";
-	    }
-	    return ResponseEntity.ok().body(msg);
-	}
-	*/
 	
 	@GetMapping("/temp_products_list.do")
 	public String temp_product_list(Model m) {

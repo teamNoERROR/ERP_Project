@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.plan_mapper">
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
+<select id="plan_list" resultType="kr.co.noerror.DTO.plan_DTO" parameterType="Map">
+SELECT * FROM (
+    SELECT inner_result.*, ROWNUM rnum
+    FROM (
+        SELECT pln.*, pdt.product_name, pdt.product_unit, cmp.company_name, emp.emp_name
+        FROM temp_production_plan pln
+        JOIN temp_products pdt ON pln.product_code = pdt.product_code
+        JOIN temp_client_comp cmp ON pln.company_code = cmp.company_code
+        JOIN temp_employ emp ON pln.emp_code = emp.emp_code
+        WHERE 1=1
+        <choose>
+	        <when test="scolumn == 'all'">
+	            AND (
+	               cmp.company_name LIKE '%' || #{sword} || '%' OR
+	               pdt.product_name LIKE '%' || #{sword} || '%'
+	            )
+	        </when>
+	        <when test="scolumn == 'company_name'">
+	            AND cmp.company_name LIKE '%' || #{sword} || '%'
+	        </when>
+	        <when test="scolumn == 'product_name'">
+	            AND pdt.product_name LIKE '%' || #{sword} || '%'
+	        </when>
+        </choose>
+        <if test="plan_statuses != null and plan_statuses.size > 0">
+            AND plan_status IN
+            <foreach item="status" index="index" collection="plan_statuses" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        ORDER BY pln.pidx DESC
+    ) inner_result
+    WHERE ROWNUM &lt; #{end}
+)
+WHERE rnum &gt; #{start}
+</select>
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
+<select id="plan_count" resultType="int" parameterType="map">
+SELECT COUNT(*) AS total
+	FROM temp_production_plan pln
+	JOIN temp_products pdt ON pln.product_code = pdt.product_code
+	JOIN temp_client_comp cmp ON pln.company_code = cmp.company_code
+	JOIN temp_employ emp ON pln.emp_code = emp.emp_code
+WHERE 1=1
+    <choose>
+     <when test="scolumn == 'all'">
+         AND (
+             cmp.company_name LIKE '%' || #{sword} || '%' OR
+             pdt.product_name LIKE '%' || #{sword} || '%'
+         )
+     </when>
+     <when test="scolumn == 'company_name'">
+         AND cmp.company_name LIKE '%' || #{sword} || '%'
+     </when>
+     <when test="scolumn == 'product_name'">
+         AND pdt.product_name LIKE '%' || #{sword} || '%'
+     </when>
+    </choose>
+    <if test="plan_statuses != null and plan_statuses.size > 0">
+        AND plan_status IN
+        <foreach item="status" index="index" collection="plan_statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </if>
+</select>
+
+<select id="bom_items" resultType="kr.co.noerror.DTO.temp_bom_DTO" parameterType="String">
+  SELECT 
+    bom.bom_code, 
+    pdt.product_name,
+    itm.item_code, 
+    itm.item_type, 
+    itm.item_name, 
+    itm.item_unit, 
+    itm.unit_price, 
+    bom.quantity 
+  FROM temp_bom_detail bom
+  JOIN temp_items itm ON bom.item_code = itm.item_code
+  JOIN temp_bom_header hdr ON bom.bom_code = hdr.bom_code
+  JOIN temp_products pdt ON hdr.product_code = pdt.product_code
+  WHERE bom.bom_code = #{bom_code}
+</select>
+
+
+</mapper>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import kr.co.noerror.Controller.order_controller;
 import kr.co.noerror.DAO.goods_DAO;
+import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.products_DTO;
 
 @Service
@@ -52,31 +53,48 @@ public class goods_service {
 		return result;
 	}
 	
-	//제품 리스트
-	public List<products_DTO> pd_all_list() {
-		List<products_DTO> goods_list = this.g_dao.pd_all_list();
+	//제품 리스트(완제품+부자재)
+	public List<products_DTO> gd_all_list(String type) {
+		List<products_DTO> goods_list = this.g_dao.pd_all_list(type);  
 		return goods_list;
 	}
 	
-	//완제품 총개수 
-	public int pd_all_ea() {
-		int result = this.g_dao.pd_all_ea();
-		return result;
+	//제품 총개수 
+	public int gd_all_ea(String type) {
+		int goods_total = this.g_dao.pd_all_ea(type);    
+		return goods_total;
 	}
 		
 		
 	//제품 상세보기
-	public products_DTO pd_one_detail(String pd_code) {
-		products_DTO goods_one = this.g_dao.pd_one_detail(pd_code);
+	public products_DTO pd_one_detail(String pd_code, String type) {
+		this.map = new HashMap<>();
+		if("product".equals(type)) {
+			this.map.put("type", type);
+			this.map.put("PRODUCT_CODE", pd_code);
+		}else if("item".equals(type)) {
+			this.map.put("type", type);
+			this.map.put("ITEM_CODE", pd_code);
+			
+		}
+		products_DTO goods_one = this.g_dao.pd_one_detail(this.map);
 		return goods_one;
 	}
 	
 	
 	//제품 삭제 
-	public int pd_delete(int pidx, String pd_code) {
+	public int pd_delete(del_DTO d_dto) {
 		Map<String, Object> p = new HashMap<>();
-		p.put("PIDX", pidx);
-		p.put("PRODUCT_CODE", pd_code);
+		if("product".equals(d_dto.getType())) {
+			p.put("type", d_dto.getType());
+			p.put("PIDX", d_dto.getIdx());
+			p.put("PRODUCT_CODE", d_dto.getCode());
+			
+		}else if("item".equals(d_dto.getType())) {
+			p.put("type", d_dto.getType());
+			p.put("IIDX", d_dto.getIdx());
+			p.put("ITEM_CODE", d_dto.getCode());
+		}
 		
 		int goods_del = this.g_dao.pd_delete(p);
 		return goods_del;

@@ -8,5 +8,5 @@ import lombok.Data;
 @Repository("del_DTO")
 public class del_DTO {
 	int idx;
-	String key, code;
+	String key, code, type;
 }

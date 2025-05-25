@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>완제품 등록</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
@@ -18,9 +19,9 @@
   <!-- 토글 버튼 영역 -->
   <div class="col-auto  mb-3">
     <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
-      <button id="product-list" class="toggle_btns" onclick="toggleButton(1)" style="background: #82CCDD; color: #fff;">완제품</button>
-      <button id="item-list" class="toggle_btns" onclick="toggleButton(2)"  style="background: transparent; color: #000;">부자재</button>
-      <button id="consum-list" class="toggle_btns" onclick="toggleButton(3)"  style="background: transparent; color: #000;">소모품</button>
+      <button id="product_list" class="toggle_btns" onclick="toggleButton('product')"  style="background: #82CCDD; color: #fff;">완제품</button>
+      <button id="item_list" class="toggle_btns" onclick="toggleButton('item')"  style="background: transparent; color: #000;">부자재</button>
+      <button id="consum_list" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
     </div>
   </div>
 
@@ -44,10 +45,10 @@
   </div>
 </div>
 
-<div >
 
         <!-- 제품 List Table -->
-        <div id="table-container" class="table-responsive  rounded">
+     	<div id="contents_container">
+        <div id="table-container" class="table-responsive  rounded" >
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
@@ -74,7 +75,7 @@
                 	</tr>
                 	
                     <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" onclick="open_detail(event)"  style="cursor: pointer;">
-                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" ></td>
+                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product"></td>
                         <td > [[${goods_total} - ${idx.index}]]</td>
                         <td><img src=""></td>
                         <td class="pd_code" >[[${pdlist.PRODUCT_CODE}]]</td>
@@ -92,7 +93,8 @@
                 </tbody>
             </table>
         </div>
-</div>
+       
+
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
   <!-- Pagination -->
         <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
@@ -111,6 +113,7 @@
                 <button class="btn btn-danger"  onclick="deleteBtn()"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>
+	</div>
 	</div>
     </section>
 

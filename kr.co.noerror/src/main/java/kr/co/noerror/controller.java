@@ -31,14 +31,7 @@ public class controller {
 	
 
 	
-	//품목관리 > 부자재리스트 
-	@GetMapping("/items.do")
-	public String item_list(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","부자재 리스트");
-		return "/goods/items_list.html";
-	}
+
 	
 
 	

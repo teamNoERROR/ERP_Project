@@ -3,10 +3,12 @@ package kr.co.noerror.Controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.goods_DAO;
+import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
@@ -52,24 +56,45 @@ public class goods_controller {
 	@Resource(name="file_DTO")  //파일첨부DTO
 	file_DTO f_dto;
 	
+	@Resource(name="products_DTO")
+	products_DTO p_dto;
+	
+	@Resource(name="del_DTO")
+	del_DTO d_dto;
+	
 	List<String> list = null; 
 	Map<String, String> map = null;
-
+	String url = "";
+	String msg = "";
 	
-	//픔목관리 > 완제품리스트 화면이동 
+	//픔목관리 > 리스트 화면이동 
 	@GetMapping("/goods.do")
-	public String products_list(Model m) {
+	public String products_list(Model m,@RequestParam(value = "type", required = false) String type) {
+		
+		int goods_total = this.g_svc.gd_all_ea(type); //제품 총개수
+		List<products_DTO> goods_all_list = this.g_svc.gd_all_list(type);  //제품 리스트 
+		
+		if("product".equals(type) || type==null) {
+			m.addAttribute("mmenu","완제품 리스트");
+			this.url = "/goods/products_list.html";
+			
+		}else if("item".equals(type)) {
+			m.addAttribute("mmenu","부자재 리스트");
+			this.url = "/goods/items_list.html";
+			
+		}else if("consume".equals(type)) {
+			m.addAttribute("mmenu","소모품 리스트");
+			this.url = "/goods/consum_list.html";
+			
+		}
+
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","완제품 리스트");
-		
-		int goods_total =  this.g_svc.pd_all_ea();   //제품 총개수 
-		List<products_DTO> goods_all_list = this.g_svc.pd_all_list();  //제품 리스트 출력 
 		m.addAttribute("no_goods", "등록된 제품이 없습니다" );
 		m.addAttribute("goods_all_list", goods_all_list);
 		m.addAttribute("goods_total", goods_total);
 		
-		return "/goods/products_list.html";
+		return this.url;
 	}
 	
 	
@@ -168,8 +193,7 @@ public class goods_controller {
 	
 	
 	
-	
-	
+
 	
 	
 	
@@ -185,46 +209,72 @@ public class goods_controller {
 	
 	//품목 상세보기 모달 
 	@PostMapping("/goods_detail.do")
-	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code) {
-		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기
+	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
+		
+		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
 		
 		if(goods_one == null) {
-			m.addAttribute("ssss", "ssss");
+			this.msg = "alert('시스템문제로 해당 제품의 상세페이지를 불러올 수 없습니다.');"
+					+ "history.go(-1);";
+			m.addAttribute("msg", msg);
+			this.url = "WEB-INF/views/message";
 			
 		}else {
-			m.addAttribute("goods_one", goods_one);
+			if("product".equals(type)) {
+				m.addAttribute("goods_one", goods_one);
+				this.url = "/modals/product_detail_modal.html";
+				
+			}else if("item".equals(type)) {
+				
+				m.addAttribute("goods_one", goods_one);
+				this.url = "/modals/item_detail_modal.html";
+			}
+			
 		}
-		return "/modals/goods_detail_modal.html";
+		return this.url;
 	}
+	
+	
+	
 	
 	
 	//제품 삭제 
 	@DeleteMapping("/goods_delete.do/{key}")
 	public String goods_delete(@PathVariable(name="key") String key,
-								@RequestBody del_DTO d_dto,
+								@RequestBody String data,
 								HttpServletRequest req, HttpServletResponse res) throws IOException {
 		this.pw = res.getWriter();
 		
 		try {
-			String del_key = d_dto.getIdx()+"_del";
-			String pd_code = d_dto.getCode();
-			int pidx = d_dto.getIdx();
+			JSONArray ja = new JSONArray(data);
+			int data_ea = ja.length();
+			int count = 0;
 			
-			if(key.equals(del_key)) {
-//				products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기(이미지 삭제용)
-
-				int result =  this.g_svc.pd_delete(pidx, pd_code);
-				if(result > 0) {  //글삭제 완료 
-					this.pw.write("ok");
-					
-				}else {  //삭제실패 
-					this.pw.write("fail");
+			for (int w = 0; w < data_ea; w++) {
+			    JSONObject jo = ja.getJSONObject(w);
+			    
+			    String del_key = jo.getString("type")+"_del";
+			    this.d_dto.setIdx(jo.getInt("idx"));
+			    this.d_dto.setCode(jo.getString("code"));
+			    this.d_dto.setType(jo.getString("type"));
+				
+				if(key.equals(del_key)) {
+	//				products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기(이미지 삭제용)
+	
+					int result =  this.g_svc.pd_delete(this.d_dto);
+					if(result >= 1) {
+						count++;
+					}
+				}else {
+					this.pw.write("key error");
 				}
 			}
-			else {
-				this.pw.write("key error");
+			if(data_ea == count ) {  //모든 글 삭제 완료 
+				this.pw.write("ok");
+				
+			}else {  //전체 삭제실패 
+				this.pw.write("fail");
 			}
-			
 		} catch (Exception e) {
 			this.log.error(e.toString());
 			e.printStackTrace();
@@ -236,12 +286,7 @@ public class goods_controller {
 	
 	
 	
-	
-//	@GetMapping("/goods_detail.do")
-//	public String goods_detail_get() {
-//	    return "redirect:/"; // 또는 빈 페이지, 에러 페이지
-//	}
-//	
+
 	
 	
 	
@@ -251,39 +296,7 @@ public class goods_controller {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//자재 등록하기 화면이동 
-	@GetMapping("/items_insert.do")
-	public String items_insert(Model m, @RequestParam(value="goods_class1", required=false) String goods_class1) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","자재 등록");
 		
-		
-//		System.out.println("goods_class1 : " + goods_class1);
-		
-//		this.list = new ArrayList<String>();  //완제품 식품분류 목록 가져오기 
-//		this.list = this.g_svc.pd_class_list(goods_class1);
-//		m.addAttribute("l_class",this.list);
-//		System.out.println(this.list);
-//			JSONArray sc_list = new JSONArray();
-//			for(String a : this.list ) {
-//				sc_list.put(a);
-//			}
-//			m.addAttribute("s_class",this.list);
-		
-		return "/goods/items_insert.html";
-	}
-	
-	
 	
 	
 	

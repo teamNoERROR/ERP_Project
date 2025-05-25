@@ -1,4 +1,4 @@
-<div class="modal fade" id="goods_detail" tabindex="-1" aria-labelledby="goods_detail_label" aria-hidden="true">
+<div class="modal fade" id="itm_detail" tabindex="-1" aria-labelledby="itm_detail_label" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -16,38 +16,38 @@
 
 				<!-- 제품 정보 -->
 				<div class="col-md-8">
-					<h4>제품 코드 : &nbsp;[[${goods_one.PRODUCT_CODE}]]</h4>
+					<h4>제품 코드 : &nbsp;[[${goods_one.ITEM_CODE}]]</h4>
 					<div class="table-responsive  rounded">
 						<table class="table align-middle table-bordered">
 							<tr>
 								<td class="info-label">제품유형</td>
-								<td class="value-cell"> [[${goods_one.PRODUCT_TYPE}]] </td>
+								<td class="value-cell"> [[${goods_one.ITEM_TYPE}]] </td>
 								<td class="info-label">제품명</td>
-								<td class="value-cell"> [[${goods_one.PRODUCT_NAME}]] </td>
+								<td class="value-cell"> [[${goods_one.ITEM_NAME}]] </td>
 							</tr>
 							<tr>
 								<td class="info-label">대분류</td>
-								<td class="value-cell">[[${goods_one.PRODUCT_CLASS1}]]</td>
+								<td class="value-cell">[[${goods_one.ITEM_CLASS1}]]</td>
 								<td class="info-label">소분류</td>
-								<td class="value-cell">[[${goods_one.PRODUCT_CLASS2}]]</td>
+								<td class="value-cell">[[${goods_one.ITEM_CLASS2}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">제품 규격</td>
-								<td class="value-cell">[[${goods_one.PRODUCT_SPEC}]]</td>
+								<td class="value-cell">[[${goods_one.ITEM_SPEC}]]</td>
 								<td class="info-label">제품 단위</td>
-								<td class="value-cell">[[${goods_one.PRODUCT_UNIT}]]</td>
+								<td class="value-cell">[[${goods_one.ITEM_UNIT}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">제품 단가</td>
-								<td class="value-cell">[[${goods_one.PRODUCT_COST}]]</td>
-								<td class="info-label">판매가</td>
-								<td class="value-cell">[[${goods_one.PRODUCT_PRICE}]]</td>
+								<td class="value-cell">[[${goods_one.ITEM_COST}]]</td>
+								<td class="info-label"></td>
+								<td class="value-cell"></td>
 							</tr>
 							<tr>
 								<td class="info-label">재고 합계</td>
 								<td class="value-cell"></td>
 								<td class="info-label">안전 재고수</td>
-								<td class="value-cell">[[${goods_one.PD_SAFE_STOCK}]]</td>
+								<td class="value-cell">[[${goods_one.ITM_SAFE_STOCK}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">사용여부</td>
@@ -67,13 +67,13 @@
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
 					<div class="ms-auto">
-						<button type="button" class="btn btn-info">
-							<i class="bi bi-card-list"></i> BOM조회
-						</button>
+<!-- 					    <button class="btn btn-primary" onclick="show_list_md()" > -->
+<!-- 					    	목록으로 -->
+<!-- 					    </button> -->
 						<button type="button" class="btn btn-success">
 							<i class="bi bi-pencil-square"></i> 수정
 						</button>
-						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" onclick="deleteBtn(this)">
+						<button class="btn btn-danger"  th:data-pdcode="${goods_one.ITEM_CODE}" th:data-idx="${goods_one.IIDX}" data-type="item" onclick="deleteBtn(this)">
 							<i class="bi bi-trash"></i> 삭제
 						</button>
 					</div>

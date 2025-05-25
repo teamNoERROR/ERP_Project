@@ -3,13 +3,39 @@
 <mapper namespace="kr.co.noerror.Mapper.bom_mapper">
 
 
-<!-- BOM등록여부 확인  -->
+<!-- BOM 등록여부 확인  -->
 <select id="bom_check" resultType="int" parameterType="String">
 	SELECT COUNT (*) AS CNT FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
 </select>
 
+<!-- BOM 상세보기 -->
 <select id="bom_detail" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="String">
 	SELECT * FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
 </select>
+
+
+<select id="bom_cd_ck" resultType="int">
+    SELECT BOM_NO.NEXTVAL FROM DUAL
+</select>
+
+
+<!-- BOM 등록하기 -->
+<insert id="list" parameterType="java.util.List">
+	INSERT INTO BOM 
+	(BIDX, BOM_CODE, PARENT_IDX, C_PRODUCT_CODE, C_ITEM_CODE,
+     BOM_LEVEL, SEQ_NO, BOM_QTY, UNIT, INSERT_DATE)
+    VALUES
+    <foreach collection="insert_item" item="bom" separator=",">
+<!--         (BOM_NO.NEXTVAL, #{bom.BOM_CODE}, #{bom.PARENT_IDX}, -->
+<!--          #{bom.C_PRODUCT_CODE}, #{bom.C_ITEM_CODE}, -->
+<!--          #{bom.BOM_LEVEL}, #{bom.SEQ_NO}, #{bom.BOM_QTY}, #{bom.UNIT}, SYSTIMESTAMP) -->
+ 		(BOM_NO.NEXTVAL, #{bom.bomCode}, #{bom.parentIdx},
+         #{bom.cProductCode}, #{bom.cItemCode},
+         #{bom.bomLevel}, #{bom.seqNo}, #{bom.bomQty}, #{bom.unit}, SYSTIMESTAMP)
+    </foreach>
+</insert>
+
+
+
 
 </mapper>

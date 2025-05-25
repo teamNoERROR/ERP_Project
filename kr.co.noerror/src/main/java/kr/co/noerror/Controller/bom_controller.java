@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
@@ -33,7 +37,7 @@ public class bom_controller {
 	private bom_service b_svc; 
 	
 	@Autowired
-	goods_service g_svc; 
+	private goods_service g_svc; 
 	
 	@Resource(name="goods_DAO")
 	goods_DAO g_dao;
@@ -103,7 +107,6 @@ public class bom_controller {
 		m.addAttribute("mmmenu","bom 등록하기");
 		
 		products_DTO result = this.g_svc.pd_one_detail(pd_code,"product");
-		this.log.info(result.toString());
 		m.addAttribute("bom_pd",result);
 		
 		
@@ -123,6 +126,19 @@ public class bom_controller {
 		
 		return "/modals/items_list_modal.html";
 	}
+	
+	
+	
+	//bom 등록하기 
+	@PutMapping("/bom_insertok.do")
+	public String bom_insertok(@RequestBody List<bom_DTO> insert_item, HttpServletResponse res) throws IOException  {
+		this.pw = res.getWriter();
+		
+		System.out.println("bomlist : " + insert_item);
+//		int result = this.b_svc.bom_insert(insert_item);  
+		return null;
+	}
+	
 	
 	
 }

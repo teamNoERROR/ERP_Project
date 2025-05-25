@@ -127,14 +127,11 @@ function open_item_list(){
 function select_items () {
   // 모든 체크된 체크박스를 찾음
   var selected_box = document.querySelectorAll('input[name="select"]:checked');
-  console.log(selected_box)
 
   if (selected_box.length == 0) {
 	alert("제품을 1개 이상 선택해 주세요.");
 	
   }else{
-	
-	
 	  // 부모 테이블 tbody
 	  var tbody = document.querySelector('#bom_items');
 	
@@ -179,20 +176,20 @@ function appendItemsRow(tbody, item) {
   const tr = document.createElement('tr');
   tr.className = "item_added"
   tr.innerHTML = `
-    <td><input type="text" class="form-control" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
     <td><input type="text" class="form-control" value="${item.name}" readonly></td>
     <td><input type="text" class="form-control" value="${item.class1}" readonly></td>
     <td><input type="text" class="form-control" value="${item.class2}" readonly></td>
     <td><input type="text" class="form-control" value="${item.spec}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
     <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
-	<td><input type="text" class="form-control" min="1" placeholder="주문수량"></td>
+	<td><input type="number" class="form-control item_qty"  value="" min="1"></td>
 	<td>
-		<select class="form-select">
-			<option>선택</option>
-			<option>ea</option>
-			<option>g</option>
-			<option>ml</option>
+		<select class="form-select select_unit">
+			<option value="" >선택</option>
+			<option value="ea" data-itemunit="ea">ea</option>
+			<option value="g" data-itemunit="g">g</option>
+			<option value="ml" data-itemunit="ml">ml</option>
 		</select>
 	</td>
     <td class="text-center">
@@ -203,22 +200,59 @@ function appendItemsRow(tbody, item) {
 }
 
 
-// 모달이 닫혔을 때 이벤트 감지
-var close_md = document.querySelector('#close_md');
-function show_list_md(){
-	var listModal = new bootstrap.Modal(document.querySelector('#items_list'));
-	listModal.show();
-	
-}
 
 
 
-
-
-
+//bom등록 저장
 function bom_save(){
+	var tbody = document.querySelector("#bom_items");
+	var rows = tbody.querySelectorAll('tr.item_added'); // 테이블에서 데이터가 있는 행만 선택
+	var pd_code = document.querySelector("#product_code");
+  	var items = [];
 	
-	
-	
-	
+	if (rows.length == 0) {
+        alert("BOM 등록을 위한 부자재를 선택하세요.");
+        return;
+    }
+  	rows.forEach(row => {
+	    // 각 컬럼에서 값을 읽어오기
+		var item_code = row.querySelector('.item_code');
+		var item_qty =  row.querySelector('.item_qty');
+		var item_unit = row.querySelector('.select_unit');
+		
+		if(item_qty.value == ""){
+			alert("소요수량을 입력해야 합니다.");
+			item_qty.focus();
+		}else if(item_unit.value == ""){
+			alert("단위를 입력해야 합니다.");
+			item_unit.focus();
+		}else{
+		    if(item_qty.value > 0 && item_unit.value != "") {
+				//다 입력했으면 배열에 넣기
+		      	items.push({
+					cProductCode : pd_code.value,
+			        cItemCode: item_code.value,
+					bomQty: Number(item_qty.value),
+					unit: item_unit.value,
+		      	});
+	    	}
+		}
+  	});
+	console.log(JSON.stringify(items))
+	fetch("./bom_insertok.do", {
+		method: "PUT",
+		headers: {'content-type': 'application/json'},
+		body : JSON.stringify(items)
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		console.log("result : " + result)
+		
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
 }
+

@@ -97,8 +97,7 @@ public class goods_controller {
 		return this.url;
 	}
 	
-	
-	
+
 	//제품 등록하기 화면이동 
 	@GetMapping("/products_insert.do")
 	public String goods_insert(Model m) throws IOException {
@@ -113,11 +112,11 @@ public class goods_controller {
 		return "/goods/products_insert.html";
 	}
 
+	
 	//소분류리스트 전달 api
 	@GetMapping("/goods_class.do")
 	public String pd_sclass(HttpServletResponse res, @RequestParam("products_class1") String products_class1) throws IOException {
 		this.pw = res.getWriter();
-		
 		try {
 			List<String> s_class = this.g_svc.pd_class_list(products_class1);
 			
@@ -125,6 +124,7 @@ public class goods_controller {
 			for(String a : s_class) {
 				sc_list.put(a);
 			}
+			
 			this.pw.print(sc_list);
 			
 		} catch (Exception e) {
@@ -185,28 +185,6 @@ public class goods_controller {
 	}
 
 	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	//품목 상세보기 모달 
 	@PostMapping("/goods_detail.do")
 	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
@@ -233,10 +211,7 @@ public class goods_controller {
 		}
 		return this.url;
 	}
-	
-	
-	
-	
+
 	
 	//제품 삭제 
 	@DeleteMapping("/goods_delete.do/{key}")
@@ -283,32 +258,7 @@ public class goods_controller {
 		return null;
 	}
 	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }

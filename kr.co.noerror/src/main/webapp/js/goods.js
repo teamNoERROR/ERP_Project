@@ -36,7 +36,6 @@ function toggleButton(type) {
 //추가 버튼 누른 경우 
 var addBtn = function(){
 	location.href="./products_insert.do";
-	
 }
 
 

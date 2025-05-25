@@ -1,5 +1,7 @@
 package kr.co.noerror.DTO;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import lombok.Data;
@@ -8,8 +10,12 @@ import lombok.Data;
 @Repository("bom_DTO")
 public class bom_DTO {
 	
-	int BIDX, PARENT_IDX;
-	String BOM_CODE, C_PRODUCT_CODE, C_ITEM_CODE, BOM_LEVEL, SEQ_NO, BOM_QTY, UNIT;
-	String INSERT_DATE, MODIFY_DATE;
-
+//	Integer BIDX, PARENT_IDX, BOM_LEVEL, SEQ_NO, BOM_QTY;
+//	String BOM_CODE, C_PRODUCT_CODE, C_ITEM_CODE, UNIT;
+//	String INSERT_DATE, MODIFY_DATE;
+//	List<bom_DTO> items;
+	
+	int bidx, parentIdx, bomLevel, seqNo, bomQty;
+	String bomCode, cProductCode, cItemCode, unit;
+	String insertDate, modifyDate;
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DTO.order_DTO;
+import kr.co.noerror.DTO.temp_client_DTO;
 import kr.co.noerror.DTO.temp_products_DTO;
 
 @Service
@@ -23,13 +24,33 @@ public class order_DAO {
 		return all;
 	}
 	
-	public int order_count() {
-		int cnt = this.sql.selectOne("order_count");
+	public int order_count(Map<String, Object> mparam) {
+		int cnt = this.sql.selectOne("order_count", mparam);
 		return cnt;
+	}
+	
+	public List<temp_client_DTO> client_list(){
+		List<temp_client_DTO> all = this.sql.selectList("client_list");
+		return all;
 	}
 	
 	public List<temp_products_DTO> products_list(){
 		List<temp_products_DTO> all = this.sql.selectList("products_list");
 		return all;
+	}
+	
+	public 	int order_code_check(String order_code) {
+		int count = this.sql.selectOne("order_code_check", order_code);
+		return count;
+	}
+	
+	public int insert_order_header(String order_code) {
+		int result = this.sql.insert("insert_order_header", order_code);
+		return result;
+	}
+	
+	public int insert_order(order_DTO odto) {
+		int result = this.sql.insert("insert_order", odto);
+		return result;
 	}
 }

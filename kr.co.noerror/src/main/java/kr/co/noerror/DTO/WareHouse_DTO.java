@@ -18,6 +18,9 @@ public class WareHouse_DTO {
 	//     관리자 이름	   관리자 아이디  관리자 직급   관리자 번호
 	String wh_mg_name, wh_mg_id,  wh_mg_mp,  wh_mg_ph;
 	
+	//  원본 파일명		 변경된 파일명 		파열 경로	  	
+	String wh_file_ori, wh_file_new, wh_file_url, wh_file_NoExt;
+	
 	// 				파일
 	MultipartFile wh_file;
 	//     창고 설명 	창고 비고

@@ -27,7 +27,7 @@ import kr.co.noerror.Model.M_random;
 @Controller
 public class order_controller {
 	
-	private static final int page_ea = 3; //한페이지당 3개씩 출력
+	private static final int page_ea = 5; //한페이지당 5개씩 출력
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -98,8 +98,8 @@ public class order_controller {
         return response;
     }
 	
-	@GetMapping("/temp_products_list.do")
-	public String temp_product_list(Model m) {
+	@GetMapping("/products_modal.do")
+	public String products_modal(Model m) {
 		List<temp_products_DTO> products = this.odao.products_list();
 		
 		m.addAttribute("products",products);
@@ -107,8 +107,8 @@ public class order_controller {
 		return  "/modals/temp_products_list_modal.html";
 	}
 	
-	@GetMapping("/temp_client_list.do")
-	public String temp_clent_list(Model m) {
+	@GetMapping("/clients_modal.do")
+	public String clients_modal(Model m) {
 		List<temp_client_DTO> clients = this.odao.client_list();
 		
 		m.addAttribute("clients",clients);

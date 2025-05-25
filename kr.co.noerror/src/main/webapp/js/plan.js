@@ -7,40 +7,45 @@ function close_modal() {
 	}
 }
 
-function product_select2() {
+function order_select() {
   // 선택된 라디오 버튼 찾기
-  const selectedRadio = document.querySelector('input[name="product_check"]:checked');
+  const selectedRadio = document.querySelector('input[name="order_check"]:checked');
   
   if (!selectedRadio) {
     alert("제품을 선택하세요.");
     return;
   }
   
-  // data-* 속성 가져오기
-  const product_name = selectedRow.getAttribute('data-product_name');
-  const product_class1 = selectedRow.getAttribute('data-product_class1');
-  const product_class2 = selectedRow.getAttribute('data-product_class2');
-  const product_spec = selectedRow.getAttribute('data-product_spec');
-  const product_unit = selectedRow.getAttribute('data-product_unit');
-  const product_cost = selectedRow.getAttribute('data-product_cost');
-
-  // 각 input 요소에 값 설정
-  // 부모 페이지에서 거래처 정보 input들이 순서대로 위치하므로, 아래와 같이 선택
-  const inputs = window.parent.document.querySelectorAll('.row.mb-3 input.form-control[readonly]');
-  if (inputs.length < 6) {
-    alert("거래처 정보를 표시할 input 요소를 찾을 수 없습니다.");
-    return;
-  }
+  // 선택된 라디오 버튼의 부모 <tr> 찾기
+  const selectedRow = selectedRadio.closest('tr');
   
-  inputs[0].value = company_code;
-  inputs[1].value = company_name;
-  inputs[2].value = biz_num;
-  inputs[3].value = manager_code;
-  inputs[4].value = manager_name;
-  inputs[5].value = phone_num;
+  // data-* 속성 가져오기
+  const order_code = selectedRow.getAttribute('data-order_code');
+  const product_code = selectedRow.getAttribute('data-product_code');
+  const product_name = selectedRow.getAttribute('data-product_name');
+  const bom_code = selectedRow.getAttribute('data-bom_code');
+  const company_name = selectedRow.getAttribute('data-company_name');
+  const order_qty = selectedRow.getAttribute('data-order_qty');
+  const product_spec = selectedRow.getAttribute('data-product_spec');
+  const due_date = selectedRow.getAttribute('data-due_date');
 
-  // 모달 닫기 (Bootstrap 5 기준)
-  const modalEl = document.getElementById('client_list');
+  console.log(order_code);
+  // 각 input 요소에 값 설정
+  // 부모 페이지에서 order 정보 input들이 순서대로 위치하므로, 아래와 같이 선택
+  const inputs_row1 = window.parent.document.querySelectorAll('.row.mb-3.row1 input.form-control[readonly]');
+  inputs_row1[0].value = order_code;
+  inputs_row1[1].value = product_code
+  inputs_row1[2].value = product_name;
+  inputs_row1[3].value = bom_code;
+  
+  const inputs_row2 = window.parent.document.querySelectorAll('.row.mb-3.row2 input.form-control[readonly]');
+  inputs_row2[0].value = company_name;
+  inputs_row2[1].value = order_qty;
+  inputs_row2[2].value = product_spec;
+  inputs_row2[3].value = due_date;
+
+  // 모달 닫기
+  const modalEl = document.getElementById('orders_modal');
   const modalInstance = bootstrap.Modal.getInstance(modalEl);
   if (modalInstance) {
     modalInstance.hide();

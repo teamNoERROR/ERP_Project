@@ -25,7 +25,7 @@ import kr.co.noerror.Model.M_random;
 
 @Controller
 public class plan_controller {
-	private static final int page_ea = 3; //한페이지당 3개씩 출력
+	private static final int page_ea = 5; //한페이지당 5개씩 출력
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -41,6 +41,7 @@ public class plan_controller {
 	@GetMapping("/orders_modal.do")
 	public String orders_modal(Model m) {
 		List<order_DTO> orders = this.pdao.orders_modal();
+		System.out.println(orders.get(0).getDUE_DATE());
 		m.addAttribute("orders",orders);
 		return  "/modals/temp_order_list_modal.html";
 	}

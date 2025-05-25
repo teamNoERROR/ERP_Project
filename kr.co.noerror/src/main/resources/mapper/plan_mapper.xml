@@ -87,5 +87,24 @@ WHERE 1=1
   WHERE bom.bom_code = #{bom_code}
 </select>
 
+<!-- 주문 목록 출력 -->  
+
+<select id="orders_modal" resultType="kr.co.noerror.DTO.order_DTO">
+SELECT
+    ord.order_code,
+    ord.product_code,
+    pdt.product_name,
+    ord.order_qty,
+    pdt.product_spec,
+    pdt.product_unit,
+    cmp.company_name,
+    ord.due_date,
+    hdr.bom_code
+FROM temp_order_request ord
+JOIN temp_products pdt ON ord.product_code = pdt.product_code
+JOIN temp_client_comp cmp ON ord.company_code = cmp.company_code
+JOIN temp_bom_header hdr ON pdt.product_code = hdr.product_code
+</select>
+
 
 </mapper>

@@ -21,5 +21,9 @@ public class order_DTO {
     private String MEMO;             // 비고
     private String REQUEST_DATE;   // 주문일자
     private String MODIFY_DATE;    // 수정일
+    private String BOM_CODE;       
+    private String PRODUCT_NAME;       
+    private String PRODUCT_SPEC;       
+    private String PRODUCT_UNIT;       
     
 }

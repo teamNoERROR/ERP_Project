@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
+import kr.co.noerror.DAO.order_DAO;
 import kr.co.noerror.DAO.plan_DAO;
+import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
 import kr.co.noerror.DTO.temp_client_DTO;
+import kr.co.noerror.DTO.temp_products_DTO;
 import kr.co.noerror.Model.M_random;
 
 @Controller
@@ -34,12 +37,26 @@ public class plan_controller {
 	
 	@Resource(name="M_random")
 	M_random mrandom;
+	
+	@GetMapping("/orders_modal.do")
+	public String orders_modal(Model m) {
+		List<order_DTO> orders = this.pdao.orders_modal();
+		m.addAttribute("orders",orders);
+		return  "/modals/temp_order_list_modal.html";
+	}
+	
+	@GetMapping("/production_in.do")
+	public String production2(Model m) {
+		m.addAttribute("lmenu","생산 관리");
+		m.addAttribute("smenu","생산계획리스트");
+		m.addAttribute("mmenu","생산계획등록");
+		return "/production/production_plan_insert.html";
+	}
 
 	@GetMapping("/bom_items.do")
 	public String bom_items(Model m, @RequestParam(name="code") String bom_code) {
 
 		List<temp_bom_DTO> bom_items = this.pdao.bom_items(bom_code);
-		System.out.println(bom_items);
 		m.addAttribute("bom_items",bom_items);
 		m.addAttribute("product_name",bom_items.get(0).getProduct_name());
 		return  "/modals/temp_bom_items_modal.html";
@@ -74,7 +91,6 @@ public class plan_controller {
 
 		m.addAttribute("lmenu","생산 관리");
 		m.addAttribute("smenu","생산계획리스트");
-		m.addAttribute("mmenu","생산계획등록");
 		
 		//데이터, 페이징 정보를 모델에 전달
 		m.addAttribute("all", all);

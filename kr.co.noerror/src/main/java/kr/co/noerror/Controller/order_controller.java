@@ -118,6 +118,9 @@ public class order_controller {
 	
 	@GetMapping("/order_insert.do")
 	public String order_insert(Model m) {
+		m.addAttribute("lmenu","구매영업관리");
+		m.addAttribute("smenu","주문관리");
+		m.addAttribute("mmenu","주문등록");
 		
 		return "/production/order_insert.html";
 	}

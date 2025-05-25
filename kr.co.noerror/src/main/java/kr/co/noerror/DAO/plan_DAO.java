@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
 
@@ -31,5 +32,10 @@ public class plan_DAO {
 	public List<temp_bom_DTO> bom_items(String bom_code){
 		List<temp_bom_DTO> bom_items = this.sql.selectList("bom_items", bom_code);
 		return bom_items;
+	}
+	
+	public List<order_DTO> orders_modal(){
+		List<order_DTO> orders = this.sql.selectList("orders_modal");
+		return orders;
 	}
 }

@@ -1,39 +1,41 @@
+function toggleButton(type) {
+	/*const buttons = [
+	    { id: 'product_list' },
+	    { id: 'item_list' },
+		{ id: 'consume_list' }
+	];
 
+	buttons.forEach(btn => {
+		const elm = document.getElementById(btn.id);
+		if (btn.id.includes(type)) {
+		  elm.style.background = '#82CCDD';
+		  elm.style.color = '#fff';
+		  
+		} else {
+		  elm.style.background = 'transparent';
+		  elm.style.color = '#000';
+		}
+	});*/
 
-function loadList(type) {
-	const table = document.getElementById('table-container');
-	const container = document.getElementById('list_container');
-
-	// 기존 테이블 숨기기
-	if (table) table.style.display = 'none';
-
-	// 리스트 타입에 따라 다른 내용 표시 (더미 데이터 사용 예시)
-	const dummyData = {
-		1: ['완제품 A', '완제품 B', '완제품 C'],
-		2: ['부자재 X', '부자재 Y'],
-		3: ['소모품 1', '소모품 2', '소모품 3']
-	};
-
-	const titles = ['완제품', '부자재', '소모품'];
-	const items = dummyData[type] || [];
-
-	container.innerHTML = `
-		<h4>${titles[type - 1]} 리스트</h4>
-		<ul style="list-style: none; padding: 0;">
-			${items.map(item => `<li style="padding: 5px 0;">${item}</li>`).join('')}
-		</ul>
-	`;
+  	let url = "";
+	if (type == 'product') {
+	     url = "/goods.do?type="+type;
+	} else if (type == 'item') {
+	     url = "/goods.do?type="+type;
+	} else if (type == 'consume') {
+	 	     url = "/goods.do?type="+type;
+	 	} 
+ 	location.href = url; // 전체 페이지 이동
 }
 
 
+
+
+
+
+//추가 버튼 누른 경우 
 var addBtn = function(){
 	location.href="./products_insert.do";
-	
-}
-
-//저장하기 버튼 누른 경우 
-var insertBtn = function(){
-	
 	
 }
 
@@ -169,7 +171,8 @@ function insertProduct(){
 		return data.text();
 
 	}).then(function(result) {
-		console.log("result : " + result)
+		alert("제품 등록이 완료되었습니다.");
+		location.href="./goods.do";
 		
 
 	}).catch(function(error) {
@@ -179,7 +182,10 @@ function insertProduct(){
 	
 
 }
-var resetBtn = function(){
+
+
+//초기화 버튼 클릭 
+function resetBtn(){
 	
 	//document.querySelector("#productImage").value=""
 	//document.querySelector('#previewImage').src = "./img/no-image.svg";
@@ -199,6 +205,122 @@ var resetBtn = function(){
 	
 	location.reload();
 }
+
+//상세보기
+function open_detail(event){
+	
+	var pd_code = event.currentTarget.querySelector(".pd_code").innerText;
+	var gd_type =event.currentTarget.querySelector(".sb").getAttribute("data-type");
+	
+	fetch("./goods_detail.do", {
+		method: "POST",
+		headers: {"content-type": "application/x-www-form-urlencoded"},
+		body: "pd_code="+pd_code+"&type="+gd_type
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		console.log(result)
+		var modal;
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		if(gd_type == "product"){
+			modal = new bootstrap.Modal(document.getElementById("pd_detail"));
+			
+		}else if(gd_type == "item"){
+			modal = new bootstrap.Modal(document.getElementById("itm_detail"));
+			
+		}	
+		modal.show();
+		
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+
+
+//삭제버튼 누른경우
+function deleteBtn(del_pd){
+	var idx;
+	var pd_code;
+	var gd_type;
+	var del_req = new Array();
+	
+	if(del_pd){ //모달에서 삭제시 (del_pd가 전달되었을떄)
+		idx = del_pd.getAttribute("data-idx");
+		pd_code = del_pd.getAttribute("data-pdcode");
+		gd_type= del_pd.getAttribute("data-type");
+		
+		if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
+			del_req = [{idx: idx, code: pd_code, type : gd_type}]
+			del_ajax(del_req);	//모달 안에서 1개만 삭제 
+		}
+			
+	}else {  //리스트에서 체크박스로 삭제시 (del_pd 전달x)
+		var checkboxes = document.querySelectorAll("input[name='selected_box']:checked");
+		
+		if (checkboxes.length == 0) {
+			alert("삭제할 항목을 선택해주세요.");
+			
+		}else{
+			if (confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")) {
+				
+				checkboxes.forEach(chk => {
+					idx = chk.getAttribute("data-idx");		
+					pd_code = chk.getAttribute("data-pdcode");
+					gd_type= chk.getAttribute("data-type");
+					
+					del_req.push({ idx: idx, code: pd_code, type : gd_type })
+				});
+				del_ajax(del_req); //체크박스로 1개~여러개 삭제 
+			}
+		}
+	}
+}
+
+//삭제 ajax
+function del_ajax(del_req){	
+	fetch("./goods_delete.do/"+del_req[0].type+"_del", {
+		method: "DELETE",
+		headers: {"content-type": "application/json"},
+		body: JSON.stringify(del_req)
+			
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		console.log("result : "+result);
+		if (result == "ok") {
+		
+			alert("삭제가 완료되었습니다.");
+				
+			// 모달 닫기
+	        const modalElement = document.getElementById("modal");
+	       	const modal = bootstrap.Modal.getInstance(modalElement);
+	        if (modal) {
+	            modal.hide();
+				setTimeout(() => {
+					document.activeElement.blur(); // 현재 포커스를 제거
+				}, 300);
+	        }
+			//리스트 페이지 새로고침
+	       	location.reload();
+			
+		}else if(result=="fail") {
+			alert("시스템 문제로 일부 제품 삭제에 실패했습니다.");
+		}else{
+			console.log(result);
+		}
+	}).catch(function(error) {
+		failCount++;
+		console.log("통신오류발생" + error);
+	});
+}
+
 
 
 

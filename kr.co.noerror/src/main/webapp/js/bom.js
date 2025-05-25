@@ -58,39 +58,167 @@ document.querySelectorAll('#bomTree li[data-id]').forEach(li => {
 
 
 
-
-
-
-
-function addRow() {
-	const tbody = document.getElementById('bomItems');
-	const row = document.createElement('tr');
-	row.innerHTML = `
-			<td style="text-align: center; vertical-align: middle;">
-				<button class="btn btn-primary d-flex justify-content-center align-items-center" type="button" style="width: 40px; height: 40px;">
-		        <i class="bi bi-search"></i>
-		    	</button>
-			</td>
-	        <td><input type="text" class="form-control" placeholder="자재 코드" readonly></td>
-	        <td><input type="text" class="form-control" placeholder="자재명" readonly></td>
-			<td><input type="number" class="form-control" min="1" placeholder="규격"></td>
-	        <td><input type="number" class="form-control" min="1" placeholder="수량"></td>
-	        <td>
-	            <select class="form-select">
-	                <option>ea</option>
-	                <option>g</option>
-	                <option>ml</option>
-	            </select>
-	        </td>
-	        <td class="text-center">
-	            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">삭제</button>
-	        </td>
-	    `;
-	tbody.appendChild(row);
-}
-
-
 function removeRow(btn) {
 	const row = btn.closest('tr');
 	row.parentNode.removeChild(row);
+}
+
+
+
+//bom조회하기로 이동 
+function bomBtn(bom_open){
+	var pd_code = bom_open.getAttribute("data-pdcode");
+	
+	fetch("./bom_check.do?pd_code="+pd_code, {
+		method: "GET"
+			
+	}).then(function(data) {
+		return data.text();
+	
+	}).then(function(result) {
+		if(result =="yes"){
+			location.href="./bom_detail.do?pd_code="+pd_code;
+			
+		}else if(result =="no"){
+			
+			if(confirm("등록된 BOM 자료가 없습니다. \n지금 등록 하시겠습니까?")){
+				location.href="./bom_insert.do?pd_code="+pd_code;
+			}else {
+				location.href="./goods.do";   //완제품 리스트로 이동 
+			}
+			
+		}else {
+			console.log(result);
+		}
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+
+//자재 추가 버튼 클릭 => 부자재리스트 모달 오픈 
+function open_item_list(){
+	fetch("./bom_item_list.do", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("items_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+
+
+
+
+//부자재리스트 모달에서 부자재 한번에 선택하기 
+function select_items () {
+  // 모든 체크된 체크박스를 찾음
+  var selected_box = document.querySelectorAll('input[name="select"]:checked');
+  console.log(selected_box)
+
+  if (selected_box.length == 0) {
+	alert("제품을 1개 이상 선택해 주세요.");
+	
+  }else{
+	
+	
+	  // 부모 테이블 tbody
+	  var tbody = document.querySelector('#bom_items');
+	
+	  //부모 테이블의 기존 행 전체 삭제
+	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+		
+	  selected_box.forEach(checkbox => {
+		
+	    var row = checkbox.closest('tr');
+	
+	    var item = {
+	      code: row.dataset.code,
+	      name: row.dataset.name,
+	      class1: row.dataset.class1,
+	      class2: row.dataset.class2,
+	      spec: row.dataset.spec,
+		  cost: row.dataset.cost,
+	      pcomp: row.dataset.company
+	    };
+		
+	    // 부모 화면에 반영
+		appendItemsRow(tbody, item);
+	
+	  });
+	
+	 // 모달 닫기
+  	var modalElement = document.getElementById("items_list");
+ 	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
+	}
+  }
+
+};
+
+
+//모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
+function appendItemsRow(tbody, item) {
+  const tr = document.createElement('tr');
+  tr.className = "item_added"
+  tr.innerHTML = `
+    <td><input type="text" class="form-control" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.class1}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.class2}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.spec}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
+	<td><input type="text" class="form-control" min="1" placeholder="주문수량"></td>
+	<td>
+		<select class="form-select">
+			<option>선택</option>
+			<option>ea</option>
+			<option>g</option>
+			<option>ml</option>
+		</select>
+	</td>
+    <td class="text-center">
+      <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">삭제</button>
+    </td>
+  `;
+  tbody.append(tr);
+}
+
+
+// 모달이 닫혔을 때 이벤트 감지
+var close_md = document.querySelector('#close_md');
+function show_list_md(){
+	var listModal = new bootstrap.Modal(document.querySelector('#items_list'));
+	listModal.show();
+	
+}
+
+
+
+
+
+
+function bom_save(){
+	
+	
+	
+	
 }

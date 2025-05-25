@@ -19,8 +19,79 @@
 
 
 <!-- 완제품 등록  -->
-<insert id="pd_insert" >
+<insert id="pd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
 	INSERT INTO PRODUCTS VALUES (PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, #{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, #{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, #{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, #{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+<!-- 	INSERT INTO PRODUCTS  -->
+<!-- 	(PIDX, PRODUCT_CODE, PRODUCT_NAME, PRODUCT_TYPE, PRODUCT_CLASS1, PRODUCT_CLASS2, -->
+<!--     PRODUCT_SPEC, PRODUCT_UNIT, PRODUCT_COST, PRODUCT_PRICE, PD_SAFE_STOCK, -->
+<!--     FILE_NM, FILE_RENM, API_FNM, IMG_SRC, -->
+<!--     USE_FLAG, EXP_FLAG, MEMO, INSERT_DATE, MODIFY_DATE)  -->
+<!--     VALUES (PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, #{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, #{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK},  -->
+<!-- 	#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM}, #{API_FNM}, #{IMG_SRC, jdbcType=CLOB},  -->
+<!-- 	#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB},  -->
+<!-- 	SYSDATE, NULL) -->
 </insert>
+
+
+
+<!-- 제품 총개수 보기 -->
+<select id="pd_all_ea" resultType="int">
+	SELECT COUNT (*) FROM 
+	<choose>
+		<when test="type=='product' or type==null">
+		PRODUCTS
+		</when>
+		<when test="type=='item'">
+		ITEMS
+		</when>
+		<when test="type=='consume'">
+		ITEMS
+		</when>
+	</choose>
+</select>
+
+
+<!-- 제품 리스트 보기 -->
+<select id="pd_all_list" resultType="kr.co.noerror.DTO.products_DTO">
+	SELECT * FROM 
+	<choose>
+		<when test="type=='product' or type==null">
+		PRODUCTS ORDER BY PIDX DESC
+		</when>
+		<when test="type=='item'">
+		ITEMS ORDER BY IIDX DESC
+		</when>
+		<when test="type=='consume'">
+		ITEMS ORDER BY IIDX DESC
+		</when>
+	</choose>
+</select>
+
+<!-- 제품 상세보기 -->
+<select id="pd_one_detail" resultType="kr.co.noerror.DTO.products_DTO" parameterType="Map">
+	SELECT * FROM 
+	<choose>
+		<when test="type=='product' or type==null">
+		PRODUCTS WHERE PRODUCT_CODE = #{PRODUCT_CODE}
+		</when>
+		<when test="type=='item'">
+		ITEMS WHERE ITEM_CODE = #{ITEM_CODE}
+		</when>
+	</choose>
+</select>
+
+<!-- 제품삭제 -->
+<delete id="pd_delete"  parameterType="Map">
+	DELETE FROM 
+	<choose>
+		<when test="type=='product'">
+		PRODUCTS WHERE PIDX = #{PIDX, jdbcType=INTEGER} AND PRODUCT_CODE = #{PRODUCT_CODE, jdbcType=VARCHAR}
+		</when>
+		<when test="type=='item'">
+		ITEMS WHERE IIDX = #{IIDX, jdbcType=INTEGER} AND ITEM_CODE = #{ITEM_CODE, jdbcType=VARCHAR}
+		</when>
+	</choose>
+
+</delete>
 
 </mapper>

@@ -20,9 +20,7 @@ public class goods_DAO implements goods_mapper {
 	@Resource(name = "sqltemplate_oracle")
 	private SqlSessionTemplate st;
 
-	List<Object> list = null;
-	Map<Object, Object> map = null;
-	Map<Object, List<Object>> map_list = null;
+	
 	
 	//완제품 대분류 리스트 
 	@Override
@@ -45,6 +43,42 @@ public class goods_DAO implements goods_mapper {
 	@Override
 	public int pd_insert(products_DTO pdto) {
 		int result = this.st.insert("pd_insert",pdto);
+		return result;
+	}
+
+
+
+	//제품 상세보기 
+	@Override
+	public products_DTO pd_one_detail(Map<String, String> map ) {
+		products_DTO goods_one = this.st.selectOne("pd_one_detail", map);
+		return goods_one;
+	}
+
+
+
+	//제품 리스트 보기 
+	@Override
+	public List<products_DTO> pd_all_list(String type) {
+		List<products_DTO> pd_list = this.st.selectList("pd_all_list",type);
+		return pd_list;
+	}
+
+
+
+	//제품 총개수 
+	@Override
+	public int pd_all_ea(String type) {
+		int result = this.st.selectOne("pd_all_ea",type);
+		return result;
+	}
+
+
+
+	//제품 삭제 
+	@Override
+	public int pd_delete(Map<String, Object> p) {
+		int result = this.st.delete("pd_delete", p);
 		return result;
 	}
 	

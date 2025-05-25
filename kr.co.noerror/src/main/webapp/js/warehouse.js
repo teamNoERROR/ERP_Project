@@ -1,5 +1,5 @@
 
-
+/*
 document.addEventListener('DOMContentLoaded', function() {
   // 모든 modal-trigger 클래스 tr에 클릭 이벤트 붙이기
   document.querySelectorAll('.modal-trigger').forEach(function(row) {
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+*/
 // ********************************************* 창고 저장 js ********************************************
 //창고 값 검증
 function wh_save() {

@@ -32,7 +32,7 @@
 	
      <div class="row justify-content-center">
                     <form class=" ">
-                        <div class="row mb-3">
+                        <div class="row mb-3 row1">
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">주문코드</label>
                                 <div class="input-group">
@@ -45,50 +45,43 @@
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">제품코드</label>
-                                <input type="text" class="form-control" placeholder="제품명" readonly>
-                            </div>
-                              <div class="col-md-3">
-                                <label class="form-label fw-semibold">제품명</label>
-                                <input type="text" class="form-control" placeholder="BOM 코드" readonly>
+                                <input type="text" class="form-control" placeholder="제품코드" readonly>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">BOM코드</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="예: 주문코드" readonly>
-                                    <button type="button" class="btn btn-outline-secondary">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
+                                <label class="form-label fw-semibold">제품명</label>
+                                <input type="text" class="form-control" placeholder="제품명" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">BOM 코드</label>
+                                <input type="text" class="form-control" placeholder="BOM 코드" readonly>
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3 row2">
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">주문업체명</label>
-                                <input type="number" class="form-control" placeholder="예: 1000" required>
+                                <input type="text" class="form-control" placeholder="주문업체명" readonly>
                             </div>
                       
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">주문수량(생산수량)</label>
-                                <input type="number" class="form-control" placeholder="예: 1000" required>
+                                <input type="number" class="form-control" placeholder="주문수량" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">단위</label>
-                                <select class="form-select">
-                                    <option>ea</option>
-                                    <option>g</option>
-                                    <option>ml</option>
-                                </select>
+                                <label class="form-label fw-semibold">제품규격</label>
+                                <input type="text" class="form-control" placeholder="제품규격" readonly>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold">납기일</label>
+                                <input type="text" class="form-control" placeholder="납기일" readonly>
                             </div>
                             
-                            
                         </div>
-                        <div class="row mb-3">
                         
-                        
+                        <div class="row mb-3 row3">
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">우선순위</label>
-                                <select class="form-select">
+                                <select class="form-select" >
                                     <option>보통</option>
                                     <option>높음</option>
                                     <option>긴급</option>
@@ -102,15 +95,14 @@
                                 <label class="form-label fw-semibold">생산완료예정일</label>
                                 <input type="date" class="form-control" required>
                             </div>
-                            </div>
-                            
+                        </div>                         
 						
-                        <div class="row mb-3">  
+                        <div class="row mb-3 row4">  
                         <!-- 계획수립자 라인 -->
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">사원코드</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" readonly>
+                                    <input type="text" class="form-control" placeholder="사원코드" readonly>
                                     <button type="button" class="btn btn-outline-secondary modal-trigger" 
                                             th:data-modal-url="@{/employ_list.do}" data-modal-id="employ_list" style="cursor: pointer;">
                                         <i class="bi bi-search"></i>
@@ -119,11 +111,11 @@
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">작성자</label>
-                                <input type="text" class="form-control" value="홍길동" readonly>
+                                <input type="text" class="form-control" placeholder="작성자" readonly>
                             </div>
                         </div>      
                	     <!-- 비고 라인 -->
-                     <div class="row">     
+                     <div class="row row5">     
 			            <div class="col-md-12">
 			              <label class="form-label">비고</label>
 			              <textarea class="form-control" rows="2"></textarea>

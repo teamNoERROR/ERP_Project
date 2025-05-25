@@ -98,7 +98,7 @@ SELECT
     pdt.product_spec,
     pdt.product_unit,
     cmp.company_name,
-    ord.due_date,
+    TO_CHAR(ord.due_date, 'YYYY-MM-DD') AS due_date,
     hdr.bom_code
 FROM temp_order_request ord
 JOIN temp_products pdt ON ord.product_code = pdt.product_code

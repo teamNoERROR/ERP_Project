@@ -39,7 +39,7 @@ function client_select() {
   inputs[5].value = phone_num;
 
   // 모달 닫기 (Bootstrap 5 기준)
-  const modalEl = document.getElementById('client_list');
+  const modalEl = document.getElementById('clients_modal');
   const modalInstance = bootstrap.Modal.getInstance(modalEl);
   if (modalInstance) {
     modalInstance.hide();
@@ -83,7 +83,7 @@ function product_select() {
   });
 
   // 모달 닫기
-  const modalEl = document.getElementById('products_list');
+  const modalEl = document.getElementById('products_modal');
   const modalInstance = bootstrap.Modal.getInstance(modalEl);
   modalInstance.hide();
 }

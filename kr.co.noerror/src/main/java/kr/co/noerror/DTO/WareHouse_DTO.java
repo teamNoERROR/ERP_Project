@@ -15,17 +15,27 @@ public class WareHouse_DTO {
 	//     창고 타입    사용 여부   		 생성일          수정일            창고 번호
 	String wh_type, wh_use_flag, wh_insert_date, wh_modify_date, wh_number;
 	
-	//     관리자 이름	   관리자 아이디  관리자 직급   관리자 번호
-	String wh_mg_name, wh_mg_id,  wh_mg_mp,  wh_mg_ph;
+	//    	관리자 사원번호  
+	String  wh_mg_id;
 	
 	//  원본 파일명		 변경된 파일명 		파열 경로	  	
 	String wh_file_ori, wh_file_new, wh_file_url, wh_file_NoExt;
 	
 	// 				파일
 	MultipartFile wh_file;
+	
 	//     창고 설명 	창고 비고
 	String wh_desc, wh_note;
 	
 	
+	/***********************************관리자 테이블 (JOIN)**********************************************/
+	// 관리자 자동 증가값
+	int EIDX;
+	
+	//    관리자이름  관리자 코드	 관리자 부서   관리자 직급	  	관리자 전화번호							
+	String ENAME,  ECODE,    EPART,    EPOSITION,   EPHONE,       
+	//     관리자 번호	 관리자 이메일   관리자 팩스	관리자 메모		관리자 생성 시간		
+		   ETEL, 	 EEMAIL, 	 EFAX, 		MEMO, 		INSERT_DATE;
+
 	
 }

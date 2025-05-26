@@ -31,14 +31,7 @@ public class controller {
 	
 
 	
-	//품목관리 > 부자재리스트 
-	@GetMapping("/items.do")
-	public String item_list(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","부자재 리스트");
-		return "/goods/items_list.html";
-	}
+
 	
 
 	
@@ -100,23 +93,23 @@ public class controller {
 		return "/production/mrp_list.html";
 	}
 	
-	//생산계획등록
-	@GetMapping("/production.do")
-	public String production(Model m) {
-		m.addAttribute("lmenu","생산 관리");
-		m.addAttribute("smenu","생산계획리스트");
-		m.addAttribute("mmenu","생산계획등록");
-		return "/production/production_plan_list.html";
-	}
+//	//생산계획등록
+//	@GetMapping("/production.do")
+//	public String production(Model m) {
+//		m.addAttribute("lmenu","생산 관리");
+//		m.addAttribute("smenu","생산계획리스트");
+//		m.addAttribute("mmenu","생산계획등록");
+//		return "/production/production_plan_list.html";
+//	}
 	
 	//생산계획등록
-	@GetMapping("/production_in.do")
-	public String production2(Model m) {
-		m.addAttribute("lmenu","생산 관리");
-		m.addAttribute("smenu","생산계획리스트");
-		m.addAttribute("mmenu","생산계획등록");
-		return "/production/production_plan_insert.html";
-	}
+//	@GetMapping("/production_in.do")
+//	public String production2(Model m) {
+//		m.addAttribute("lmenu","생산 관리");
+//		m.addAttribute("smenu","생산계획리스트");
+//		m.addAttribute("mmenu","생산계획등록");
+//		return "/production/production_plan_insert.html";
+//	}
 
 	
 	@GetMapping("/purchase.do")
@@ -131,7 +124,7 @@ public class controller {
 	@GetMapping("/test.do")
 	public String test(Model m) {
 	
-		return "/temp/warehouse_insert_test.html";
+		return "/temp/order_insert_test.html";
 	}
 
 	

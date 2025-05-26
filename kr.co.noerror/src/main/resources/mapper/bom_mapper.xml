@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.bom_mapper">
+
+
+<!-- BOM등록여부 확인  -->
+<select id="bom_check" resultType="int" parameterType="String">
+	SELECT COUNT (*) AS CNT FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
+</select>
+
+<select id="bom_detail" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="String">
+	SELECT * FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
+</select>
+
+</mapper>

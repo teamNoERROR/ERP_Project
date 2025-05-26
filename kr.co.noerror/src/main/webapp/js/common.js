@@ -1,11 +1,11 @@
 /*--------------------------------------------------------------
   Toggle 버튼 클릭시
 --------------------------------------------------------------*/
-function toggleButton(type) {
+
+function toggleButton2(type) {
 	const buttons = [
+		{ id: 'order-list', color: '#82CCDD' },
 		{ id: 'product-list', color: '#82CCDD' },
-		{ id: 'item-list', color: '#82CCDD' },
-		{ id: 'consum-list', color: '#82CCDD' }
 	];
 
 	// 버튼 스타일 초기화 및 선택한 버튼 강조
@@ -44,10 +44,7 @@ function previewFile() {
 
     // 파일명 표시
     fileNameDisplay.textContent = file.name;
-  } else {
-    preview.src = '';
-    fileNameDisplay.textContent = '';
-  }
+  } 
 }
 
 

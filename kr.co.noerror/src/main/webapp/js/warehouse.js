@@ -106,8 +106,46 @@ function deleteWarehouse(button) {
        });
    });
  });
+/*
+document.addEventListener('DOMContentLoaded', function() {
+  // 모든 modal-trigger 클래스 tr에 클릭 이벤트 붙이기
+  document.querySelectorAll('.modal-trigger').forEach(function(row) {
+    row.addEventListener('click', function(e) {
+      e.preventDefault();
 
+      const url = this.dataset.modalUrl;  // data-modal-url 속성 가져오기
+      if (!url) return;
 
+      // Fetch API로 모달 내용 받아오기
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error('네트워크 오류');
+          return response.text();
+        
+        .then(html => {
+          // 모달 컨테이너에 html 삽입
+          const modalContainer = document.getElementById('modalContainer');
+          modalContainer.innerHTML = html;
+
+          // Bootstrap 모달 객체 생성 및 띄우기
+          const modalElement = document.getElementById('wh_modal');
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+
+          // 모달 닫을 때 컨테이너 비우기
+          modalElement.addEventListener('hidden.bs.modal', () => {
+            modalContainer.innerHTML = '';
+          }, { once: true });
+        })
+        .catch(err => {
+          alert('모달 데이터를 불러오는데 실패했습니다.');
+          console.error(err);
+        });
+    });
+  });
+});
+*/
 // ********************************************* 창고 저장 js ********************************************
 //창고 값 검증
 function wh_save() {
@@ -171,7 +209,7 @@ function wh_save() {
     form.querySelector('[name="wh_addr1"]').focus();
     return;
   }
-
+  
   // 창고 주소 - 상세주소 필수
   const whAddr2 = form.querySelector('[name="wh_addr2"]').value.trim();
   if (!whAddr2) {

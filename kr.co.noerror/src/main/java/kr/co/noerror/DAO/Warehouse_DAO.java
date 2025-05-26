@@ -24,13 +24,22 @@ public class Warehouse_DAO implements Warehouse_Mapper{
 	
 	//게시물 저장
 	@Override
-	public int warehouse_save(Map<Object, Object> wh_map){
+	public int save_warehouse(Map<Object, Object> wh_map){
 		
-		int wh_save_result = this.whs_st.insert("warehouse_save", wh_map); 
+		int wh_save_result = this.whs_st.insert("save_warehouse", wh_map); 
 
 		return wh_save_result;
 	}
+
 	
+	// 창고 수정
+	@Override
+	public int modify_warehouse(Map<Object, Object> wh_map) {
+		
+		int wh_modify_result = this.whs_st.update("modify_warehouse", wh_map);
+		
+		return wh_modify_result;
+	}
 	
 	//검색된 결과 창고 리스트
 	@Override
@@ -75,18 +84,22 @@ public class Warehouse_DAO implements Warehouse_Mapper{
 	
 	//창고 게시물 상세 정보
 	@Override
-	public List<WareHouse_DTO> view_wh_detail(String wh_code) {
+	public List<WareHouse_DTO> wh_SelectWithWhCode(String wh_code) {
 		
-		System.out.println("dao =======" +wh_code+"======");
-		
-		
-		//params = new HashMap<>();
-		//params.put("code", wh_code);
-		List<WareHouse_DTO> wh_detail_result = this.whs_st.selectList("view_wh_detail",wh_code);
-		//System.out.println(wh_detail_result.get(0).getWh_code());
+		List<WareHouse_DTO> wh_detail_result = this.whs_st.selectList("wh_SelectWithWhCode",wh_code);
+
 		
 		return wh_detail_result;
 	}
 	
+	
+	//창고 게시물 삭제
+	@Override
+	public int delete_warehouses(String wh_code) {
+		
+		System.out.println("dao +++++++++++++++++"+wh_code+"++++++++");
+		int wh_delete_result = this.whs_st.delete("delete_warehouses",wh_code);
+		return wh_delete_result;
+	}
 	
 }

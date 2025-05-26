@@ -35,10 +35,10 @@ public class M_file {
 	
 	String file_rnm = null;
 	
-	final String host = "";
-	final String user="";  
-	final String pass="";
-	final int port = 0;
+	final String host = "210.178.108.186";
+	final String user="noerror";  
+	final String pass="noerror250513";
+	final int port = 60022;
 	
 	FTPClient fc = null;
 	FTPClientConfig fcc = null;

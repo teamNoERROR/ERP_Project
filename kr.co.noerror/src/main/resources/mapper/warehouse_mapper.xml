@@ -3,30 +3,89 @@
 <mapper namespace="kr.co.noerror.Mapper.Warehouse_Mapper">
 
   <!-- 창고 게시물 상세 조회 -->
-  <select id="view_wh_detail" parameterType="String" resultType="kr.co.noerror.DTO.WareHouse_DTO">
-  	SELECT * FROM WAREHOUSE WHERE WH_CODE='${wh_code}' ORDER BY WIDX DESC
+  <select id="wh_SelectWithWhCode" parameterType="String" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+  	SELECT 
+    W.WIDX,
+    W.WH_CODE, W.WH_NAME, W.WH_ZIPCODE, W.WH_ADDR1, W.WH_ADDR2,
+    W.WH_TYPE, W.WH_USE_FLAG, 
+    TO_CHAR(W.WH_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_INSERT_DATE,
+    TO_CHAR(W.WH_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_MODIFY_DATE,
+    W.WH_NUMBER,
+    W.WH_MG_ID,
+    W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
+    W.WH_DESC, W.WH_NOTE,
+
+    E.EIDX, E.ENAME, E.ECODE, E.EPART, E.EPOSITION, E.EPHONE, 
+    E.ETEL, E.EEMAIL, E.EFAX, E.MEMO,
+    TO_CHAR(E.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
+
+  FROM WAREHOUSE W
+  LEFT JOIN EMPLOYEE E ON W.WH_MG_ID = E.ECODE
+  WHERE W.WH_CODE = '${wh_code}'
   </select>
 
 
   <!-- 창고 등록  -->
-  <insert id="warehouse_save" parameterType="map">
+  <insert id="save_warehouse" parameterType="map">
     INSERT INTO WAREHOUSE (
-      WIDX, WH_CODE, WH_NAME, WH_NUMBER, WH_ZIPCODE, WH_ADDR1, WH_ADDR2, WH_TYPE,
-      WH_USE_FLAG, WH_FILE_ORI, WH_FILE_NEW, WH_FILE_URL, WH_MG_ID, WH_DESC, WH_NOTE,
-      WH_INSERT_DATE, WH_MODIFY_DATE
+      WIDX,
+      WH_CODE, 
+      WH_NAME, 
+      WH_NUMBER, 
+      WH_ZIPCODE, 
+      WH_ADDR1, 
+      WH_ADDR2, 
+      WH_TYPE,
+      WH_USE_FLAG, 
+      WH_FILE_ORI, 
+      WH_FILE_NEW, 
+      WH_FILE_URL, 
+      WH_MG_ID, 
+      WH_DESC, 
+      WH_NOTE,
+      WH_INSERT_DATE, 
+      WH_MODIFY_DATE
     )
     VALUES (
-      WAREHOUSE_SAVE.NEXTVAL, #{wh_dto.wh_code}, #{wh_dto.wh_name},
-      #{wh_dto.wh_number}, #{wh_dto.wh_zipcode}, #{wh_dto.wh_addr1},
-      #{wh_dto.wh_addr2}, #{wh_dto.wh_type}, #{wh_dto.wh_use_flag},
-      #{wh_dto.wh_file_ori}, #{wh_dto.wh_file_new}, #{wh_dto.wh_file_url},
-      #{wh_dto.wh_mg_id}, #{wh_dto.wh_desc}, #{wh_dto.wh_note},
+      WAREHOUSE_SAVE.NEXTVAL, 
+      #{wh_dto.wh_code},
+      #{wh_dto.wh_name},
+      #{wh_dto.wh_number},
+      #{wh_dto.wh_zipcode}, 
+      #{wh_dto.wh_addr1},
+      #{wh_dto.wh_addr2}, 
+      #{wh_dto.wh_type}, 
+      #{wh_dto.wh_use_flag},
+      #{wh_dto.wh_file_ori},
+      #{wh_dto.wh_file_new}, #{wh_dto.wh_file_url},
+      #{wh_dto.wh_mg_id},
+      #{wh_dto.wh_desc}, #{wh_dto.wh_note},
       SYSDATE, NULL
     )
   </insert>
   
-  <!-- ******************** 창고 리스트 게시판 관련 쿼리 시작 ****************** -->
-
+<!-- 창고 게시물 수정 -->
+<update id="modify_warehouse" parameterType="map">
+  UPDATE WAREHOUSE
+  SET 
+    WH_NAME = #{wh_dto.wh_name},
+    WH_NUMBER = #{wh_dto.wh_number},
+    WH_ZIPCODE = #{wh_dto.wh_zipcode},
+    WH_ADDR1 = #{wh_dto.wh_addr1},
+    WH_ADDR2 = #{wh_dto.wh_addr2},
+    WH_TYPE = #{wh_dto.wh_type},
+    WH_USE_FLAG = #{wh_dto.wh_use_flag},
+    WH_FILE_ORI = #{wh_dto.wh_file_ori},
+    WH_FILE_NEW = #{wh_dto.wh_file_new},
+    WH_FILE_URL = #{wh_dto.wh_file_url},
+    WH_MG_ID = #{wh_dto.wh_mg_id},
+    WH_DESC = #{wh_dto.wh_desc},
+    WH_NOTE = #{wh_dto.wh_note},
+    WH_MODIFY_DATE = SYSDATE
+ 	WHERE WH_CODE = #{wh_dto.wh_code}
+</update>
+  
+<!-- ************************************ 페이징 ****************************** -->
   <!-- 전체 창고 수 -->
   <select id="getTotalCount" resultType="int">
       SELECT COUNT(*) FROM WAREHOUSE
@@ -43,15 +102,31 @@
          OR WH_TYPE LIKE '%' || #{m_search} || '%'
          OR WH_ZIPCODE LIKE '%' || #{m_search} || '%'
   </select>
+ 
+ <!-- ************************************ 페이징 꿑****************************** --> 
 
-  <!-- 페이지네이션 리스트 (전체 목록) -->
+  <!-- 페이지네이션 리스트 (전체 목록)
+   -->
 <select id="select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
-  <![CDATA[
+   <![CDATA[
     SELECT *
     FROM (
       SELECT A.*, ROWNUM RNUM
       FROM (
-        SELECT * FROM WAREHOUSE ORDER BY WH_INSERT_DATE DESC
+        SELECT 
+          W.WIDX, W.WH_CODE, W.WH_NAME, W.WH_ZIPCODE, W.WH_ADDR1, W.WH_ADDR2,
+          W.WH_TYPE, W.WH_USE_FLAG, 
+          TO_CHAR(W.WH_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_INSERT_DATE,
+          TO_CHAR(W.WH_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_MODIFY_DATE,
+          W.WH_NUMBER, W.WH_MG_ID,
+          W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
+          W.WH_DESC, W.WH_NOTE,
+          E.EIDX, E.ENAME, E.ECODE, E.EPART, E.EPOSITION, E.EPHONE, 
+          E.ETEL, E.EEMAIL, E.EFAX, E.MEMO,
+          TO_CHAR(E.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
+        FROM WAREHOUSE W
+        LEFT JOIN EMPLOYEE E ON W.WH_MG_ID = E.ECODE
+        ORDER BY W.WH_INSERT_DATE DESC
       ) A
       WHERE ROWNUM <= #{startIndex} + #{pageSize}
     )
@@ -60,29 +135,43 @@
 </select>
   <!-- 검색 + 페이지네이션 -->
   <select id="search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
-   <![CDATA[
+  <![CDATA[
     SELECT *
     FROM (
       SELECT A.*, ROWNUM RNUM
       FROM (
-        SELECT *
-        FROM WAREHOUSE
-        WHERE WH_NAME LIKE '%' || #{m_search} || '%' 
-           OR WH_CODE LIKE '%' || #{m_search} || '%'
-           OR WH_ADDR1 LIKE '%' || #{m_search} || '%'
-           OR WH_ADDR2 LIKE '%' || #{m_search} || '%'
-           OR WH_TYPE LIKE '%' || #{m_search} || '%'
-           OR WH_ZIPCODE LIKE '%' || #{m_search} || '%'
-        ORDER BY WH_INSERT_DATE DESC
+        SELECT 
+          W.WIDX, W.WH_CODE, W.WH_NAME, W.WH_ZIPCODE, W.WH_ADDR1, W.WH_ADDR2,
+          W.WH_TYPE, W.WH_USE_FLAG, 
+          TO_CHAR(W.WH_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_INSERT_DATE,
+          TO_CHAR(W.WH_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_MODIFY_DATE,
+          W.WH_NUMBER, W.WH_MG_ID,
+          W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
+          W.WH_DESC, W.WH_NOTE,
+          E.EIDX, E.ENAME, E.ECODE, E.EPART, E.EPOSITION, E.EPHONE, 
+          E.ETEL, E.EEMAIL, E.EFAX, E.MEMO,
+          TO_CHAR(E.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
+        FROM WAREHOUSE W
+        LEFT JOIN EMPLOYEE E ON W.WH_MG_ID = E.ECODE
+        WHERE 
+            W.WH_NAME LIKE '%' || #{m_search} || '%' 
+         OR W.WH_CODE LIKE '%' || #{m_search} || '%'
+         OR W.WH_ADDR1 LIKE '%' || #{m_search} || '%'
+         OR W.WH_ADDR2 LIKE '%' || #{m_search} || '%'
+         OR W.WH_TYPE LIKE '%' || #{m_search} || '%'
+         OR W.WH_ZIPCODE LIKE '%' || #{m_search} || '%'
+         OR E.ENAME LIKE '%' || #{m_search} || '%'
+        ORDER BY W.WH_INSERT_DATE DESC
       ) A
       WHERE ROWNUM <= #{startIndex} + #{pageSize}
     )
     WHERE RNUM > #{startIndex}
- ]]>
+  ]]>
   </select>
   
-  
-	
   <!-- ******************** 창고 리스트 게시판 관련 쿼리 끝 ****************** -->
-
+  
+  <delete id="delete_warehouses" parameterType="String">
+  	DELETE FROM WAREHOUSE WHERE WH_CODE = '${wh_code}'
+  </delete>
 </mapper>

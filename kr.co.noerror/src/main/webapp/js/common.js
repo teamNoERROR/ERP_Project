@@ -1,28 +1,6 @@
 /*--------------------------------------------------------------
   Toggle 버튼 클릭시
 --------------------------------------------------------------*/
-function toggleButton(type) {
-	const buttons = [
-		{ id: 'product-list', color: '#82CCDD' },
-		{ id: 'item-list', color: '#82CCDD' },
-		{ id: 'consum-list', color: '#82CCDD' }
-	];
-
-	// 버튼 스타일 초기화 및 선택한 버튼 강조
-	buttons.forEach((btn, index) => {
-		const el = document.getElementById(btn.id);
-		if (index + 1 === type) {
-			el.style.background = btn.color;
-			el.style.color = '#fff';
-		} else {
-			el.style.background = 'transparent';
-			el.style.color = '#000';
-		}
-	});
-
-	// 리스트 로딩
-	loadList(type);
-}
 
 function toggleButton2(type) {
 	const buttons = [

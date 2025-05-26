@@ -88,7 +88,6 @@ WHERE 1=1
 </select>
 
 <!-- 주문 목록 출력 -->  
-
 <select id="orders_modal" resultType="kr.co.noerror.DTO.order_DTO">
 SELECT
     ord.order_code,
@@ -97,6 +96,7 @@ SELECT
     ord.order_qty,
     pdt.product_spec,
     pdt.product_unit,
+    ord.company_code,
     cmp.company_name,
     TO_CHAR(ord.due_date, 'YYYY-MM-DD') AS due_date,
     hdr.bom_code
@@ -106,5 +106,51 @@ JOIN temp_client_comp cmp ON ord.company_code = cmp.company_code
 JOIN temp_bom_header hdr ON pdt.product_code = hdr.product_code
 </select>
 
+<!-- 사원 목록 출력 -->
+<select id="emps_modal" resultType="kr.co.noerror.DTO.temp_emp_DTO">
+SELECT * FROM temp_employ
+</select>
+
+<!-- plan_code 중복체크 -->
+<select id="plan_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM temp_production_plan WHERE plan_code = #{plan_code}
+</select>
+
+<!-- 생산계획 저장 -->
+<insert id="insert_plan" parameterType="kr.co.noerror.DTO.plan_DTO">
+  INSERT INTO temp_production_plan (
+    plan_code,
+    bom_code,
+    order_code,
+    product_code,
+    product_qty,
+    priority,
+    start_date,
+    due_date,
+    company_code,
+    emp_code,
+    plan_status,
+    mrp_status,
+    memo,
+    plan_date,
+    modify_date
+  ) VALUES (
+    #{plan_code},
+    #{bom_code},
+    #{order_code},
+    #{product_code},
+    #{product_qty},
+    #{priority},
+    #{start_date},
+    #{due_date},
+    #{company_code},
+    #{emp_code}, 
+    #{plan_status}, 
+    #{mrp_status}, 
+    #{memo}, 
+    #{plan_date}, 
+    #{modify_date} 
+  ) 
+</insert>
 
 </mapper>

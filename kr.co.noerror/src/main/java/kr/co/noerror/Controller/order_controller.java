@@ -82,17 +82,14 @@ public class order_controller {
 
             if((result1==1) && (result2 == orders.size())) {
 	            response.put("success", true);
-	            response.put("message", "주문 저장 성공");
             }
             else {
             	response.put("success", false);
-                response.put("message", "저장 실패");
             }
 
         } catch (Exception e) {
         	System.out.println(e);
             response.put("success", false);
-            response.put("message", "저장 실패: " + e.getMessage());
         }
 
         return response;

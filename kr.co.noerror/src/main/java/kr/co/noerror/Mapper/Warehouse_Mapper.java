@@ -14,7 +14,12 @@ public interface Warehouse_Mapper {
 
 	public List<WareHouse_DTO> select_wh_list(int startIndex, int pageSize);
 	
-	public int warehouse_save(Map<Object, Object> wh_map);
+	//창고 저장
+	public int save_warehouse(Map<Object, Object> wh_map);
+	
+	//창고 수정
+	public int modify_warehouse(Map<Object, Object> wh_map);
+	
 	//검색된 게시물 페이지
     public List<WareHouse_DTO> search_whpaged(String m_search, Integer startIndex, Integer pageSize); 
 	
@@ -25,5 +30,11 @@ public interface Warehouse_Mapper {
     public int getTotalCount();
     
     //창고 게시물 상세 정보
-    public List<WareHouse_DTO> view_wh_detail(String wh_code);
+    public List<WareHouse_DTO> wh_SelectWithWhCode(String wh_code);
+
+    //창고 게시물 삭제
+    public int delete_warehouses(String wh_code);
+
+    
 }
+

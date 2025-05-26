@@ -12,8 +12,8 @@
 					<table class="table table-hover align-middle table-bordered">
 						<thead class="table-light">
 							<tr>
-								<th scope="col"><input type="checkbox"></th>
 								<th scope="col">#</th>
+								<th scope="col">no</th>
 								<th scope="col">직원명</th>
 								<th scope="col">사원코드</th>
 								<th scope="col">부서</th>
@@ -26,18 +26,24 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr style="cursor: pointer;" th:each="emp , bno : ${employees}"> 
-								<td><input type="checkbox"></td>
-								<td>[[${bno.count}]]</td>
-								<td>[[${emp.ENAME}]]</td>
-								<td>[[${emp.ECODE}]]</td>
-								<td>[[${emp.EPART}]]</td>
-								<td>[[${emp.EPOSITION}]]</td>
-								<td>[[${emp.EPHONE}]]</td>
-								<td>[[${emp.ETEL}]]</td>
-								<td>[[${emp.EEMAIL}]]</td>
-								<td>[[${emp.EFAX}]]</td>
-								<td>[[${emp.MEMO}]]</td>
+							<tr style="cursor: pointer;" th:each="emp, bno : ${employees}"> 
+							    <td>
+							        <input type="radio" name="empSelect" th:value="${emp.ECODE}"
+							               th:data-ename="${emp.ENAME}"
+							               th:data-epart="${emp.EPART}"
+							               th:data-eposition="${emp.EPOSITION}"
+							               th:data-ephone="${emp.EPHONE}">
+							    </td>
+							    <td>[[${bno.count}]]</td>
+							    <td>[[${emp.ENAME}]]</td>
+							    <td>[[${emp.ECODE}]]</td>
+							    <td>[[${emp.EPART}]]</td>
+							    <td>[[${emp.EPOSITION}]]</td>
+							    <td>[[${emp.EPHONE}]]</td>
+							    <td>[[${emp.ETEL}]]</td>
+							    <td>[[${emp.EEMAIL}]]</td>
+							    <td>[[${emp.EFAX}]]</td>
+							    <td>[[${emp.MEMO}]]</td>
 							</tr>
 						</tbody>
 					</table>
@@ -45,9 +51,13 @@
 			</div>
 			<div class="modal-footer">
        <!-- Action Buttons -->
+       
+       
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button"  class="btn btn-success"><i class="bi bi-pencil-square"></i> 선택</button>
+              <button type="button" id="selectEmpBtn" class="btn btn-success" onclick="selectEmp()">
+	 			  <i class="bi bi-pencil-square"></i> 선택
+	 		</button>
             </div>
         </div>
 

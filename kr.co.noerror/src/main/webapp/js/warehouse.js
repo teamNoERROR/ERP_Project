@@ -1,42 +1,113 @@
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  // 모든 modal-trigger 클래스 tr에 클릭 이벤트 붙이기
-  document.querySelectorAll('.modal-trigger').forEach(function(row) {
-    row.addEventListener('click', function(e) {
-      e.preventDefault();
+//*******************************창고 삭제 시작************************************ */
+function deleteWarehouse(button) {
+  const confirmed = confirm("정말 삭제하시겠습니까?");
+  if (!confirmed) return;
 
-      const url = this.dataset.modalUrl;  // data-modal-url 속성 가져오기
-      if (!url) return;
+  const url = button.getAttribute('data-modal-url');
 
-      // Fetch API로 모달 내용 받아오기
-      fetch(url)
-        .then(response => {
-          if (!response.ok) throw new Error('네트워크 오류');
-          return response.text();
-        })
-        .then(html => {
-          // 모달 컨테이너에 html 삽입
-          const modalContainer = document.getElementById('modalContainer');
-          modalContainer.innerHTML = html;
-
-          // Bootstrap 모달 객체 생성 및 띄우기
-          const modalElement = document.getElementById('wh_modal');
-          const modal = new bootstrap.Modal(modalElement);
-          modal.show();
-
-          // 모달 닫을 때 컨테이너 비우기
-          modalElement.addEventListener('hidden.bs.modal', () => {
-            modalContainer.innerHTML = '';
-          }, { once: true });
-        })
-        .catch(err => {
-          alert('모달 데이터를 불러오는데 실패했습니다.');
-          console.error(err);
-        });
-    });
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("삭제 요청 실패");
+    }
+    return response.text();
+  })
+  .then(result => {
+    if (result.trim() === 'suceses') { // 컨트롤러에 맞춰서 "suceses"로 비교
+      alert("삭제 성공");
+      const modal = bootstrap.Modal.getInstance(button.closest('.modal'));
+      if (modal) modal.hide();
+      location.reload();
+    } else {
+      alert("삭제 실패: 서버 응답이 예상과 다릅니다.");
+    }
+  })
+  .catch(error => {
+    alert("삭제 중 오류 발생: " + error.message);
+    console.error(error);
   });
-});
+}
+ //*******************************창고 삭제 끝************************************ */
+
+ //*******************************관리자 모달 리스트 선택 후 반환 **************************************** */
+ function selectEmp() {
+    const selectedRadio = document.querySelector('input[name="empSelect"]:checked');
+	
+	 if (!selectedRadio) {
+      alert('직원을 선택해주세요.');
+      return;
+    }
+
+    const empCode = selectedRadio.value;
+    const empName = selectedRadio.getAttribute('data-ename');
+    const empPart = selectedRadio.getAttribute('data-epart');
+    const empPosition = selectedRadio.getAttribute('data-eposition');
+    const empPhone = selectedRadio.getAttribute('data-ephone');
+
+    document.getElementById('wh_mg_id').value = empCode;
+    document.getElementById('wh_mg_name').value = empName;
+    document.getElementById('wh_mg_mp').value = empPart + ' / ' + empPosition;
+    document.getElementById('wh_mg_ph').value = empPhone;
+
+	alert("직원을 선택 하셨습니다.");
+    // 모달 닫기
+    const modalElement = document.getElementById('emp_list');
+    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+    modal.hide();
+  }
+ //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
+ 
+
+ document.addEventListener('DOMContentLoaded', function () {
+   const modalContainer = document.getElementById('modalContainer');
+
+   // 이벤트 위임: document 전체에 click 리스너 설정
+   document.addEventListener('click', function (e) {
+     const row = e.target.closest('.modal-trigger');
+     if (!row) return; // .modal-trigger 아닌 경우 무시
+
+     e.preventDefault();
+
+     const url = row.dataset.modalUrl;
+     if (!url) return;
+
+     fetch(url)
+       .then(response => {
+         if (!response.ok) throw new Error('네트워크 오류');
+         return response.text();
+       })
+       .then(html => {
+         modalContainer.innerHTML = html;
+
+         const modalElement = document.getElementById('wh_modal');
+        
+		  if (!modalElement) {
+           //console.error('모달 요소 #wh_modal 을 찾을 수 없습니다.');
+           return;
+         }
+
+         const modal = new bootstrap.Modal(modalElement);
+         modal.show();
+
+         modalElement.addEventListener('hidden.bs.modal', () => {
+           modalContainer.innerHTML = '';
+         }, { once: true });
+       })
+       .catch(err => {
+         alert('모달 데이터를 불러오는데 실패했습니다.');
+         console.error(err);
+       });
+   });
+ });
+
+
 // ********************************************* 창고 저장 js ********************************************
 //창고 값 검증
 function wh_save() {
@@ -144,12 +215,11 @@ function wh_save() {
    
   // 연락처 (휴대폰 형식: 0102223344)
   const mgPh = form.querySelector('[name="wh_mg_ph"]').value.trim();
-  if (!/^\d{7,13}$/.test(mgPh)) {
-    alert("사원 연락처는 숫자만 7~13자리로 입력해주세요.");
+  if (!/^01[0-9]-\d{3,4}-\d{4}$/.test(mgPh)) {
+    alert("사원 연락처는 '010-1234-5678' 형식으로 입력해주세요.");
     form.querySelector('[name="wh_mg_ph"]').focus();
     return;
   }
-
   // 설명 (선택사항 - 길이 제한)
   const desc = form.querySelector('[name="wh_desc"]').value.trim();
   if (desc.length > 500) {
@@ -170,9 +240,10 @@ function wh_save() {
   frm.submit();
   
   }
+ // ********************************************* 창고 저장 끝 ********************************************
+ 
   
-  
-  
+  //**********************************************다음 주소 api********************************************
   function sample6_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -211,9 +282,13 @@ function wh_save() {
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('wh_zipcode').value = data.zonecode;
-                document.getElementById("wh_addr2").value = addr;
+                document.getElementById("wh_addr1").value = addr;
                 // 커서를 상세주소 필드로 이동한다.
                 document.getElementById("wh_addr2").focus();
             }
         }).open();
     }
+	
+	//**********************************************다음 주소 api 끝********************************************
+
+

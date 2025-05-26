@@ -32,13 +32,14 @@ public class Warehouse_Service {
 
     Random random = new Random();
 
-    // 창고 등록
-    public int warehouse_save(
+    // 창고 등록 / 수정
+    public int warehouse_SaveAndUpdate(
+    		String check_insertOrModify,
             WareHouse_DTO wh_dto,
             HttpServletRequest req,
             HttpServletResponse res
     ) {
-        int whsave_result = 0;
+        int wh_result = 0;
 
         MultipartFile wh_file = wh_dto.getWh_file();
         if(wh_file != null && wh_file.getSize() > 0) {
@@ -47,7 +48,7 @@ public class Warehouse_Service {
                 // 파일명 변경
                 String file_new = this.fname.rename(wh_file.getOriginalFilename());
                 // 실제 저장 경로
-                String url = req.getServletContext().getRealPath("/noerro_erp_upload/");
+                String url = req.getServletContext().getRealPath("/noerror_erp_upload/");
 
                 FileCopyUtils.copy(wh_file.getBytes(), new File(url + file_new));
 
@@ -57,15 +58,24 @@ public class Warehouse_Service {
 
                 // 창고 코드 랜덤 생성
                 int randomNumber = 10000 + this.random.nextInt(90000);
-                String wh_code = "WHS-" + randomNumber;
-                wh_dto.setWh_code(wh_code);
+                
+                //저장일 경우에만 wh_code 생성
+                if(check_insertOrModify == "save") {                	
+                	String wh_code = "WHS-" + randomNumber;
+                	wh_dto.setWh_code(wh_code);
+                }
 
                 // DTO를 맵에 담아 DAO로 전송
                 Map<Object, Object> wh_map = new HashMap<>();
                 wh_map.put("wh_dto", wh_dto);
                 // wh_map.put("file_dto", wh_file_vo); // 필요시 주석 해제
-
-                whsave_result = this.ws_dao.warehouse_save(wh_map);
+                
+                if(check_insertOrModify == "save") {               		//창고 등록 	
+                	wh_result = this.ws_dao.save_warehouse(wh_map);
+                }
+                else if(check_insertOrModify == "update"){             //창고 수정  	
+                	wh_result = this.ws_dao.modify_warehouse(wh_map);
+                }
 
             } catch(Exception e) {
                 System.out.println("창고 등록 오류발생 : " + e);
@@ -73,8 +83,10 @@ public class Warehouse_Service {
 
         }
 
-        return whsave_result;
+        return wh_result;
     }
+
+
 
     // 창고 게시판 목록 및 검색
     public Map<Object, Object> warehouse_list(int page, String wh_search) {
@@ -99,7 +111,10 @@ public class Warehouse_Service {
             }
 
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-
+            
+            System.out.println("service " + wh_list_result.get(0).getECODE());
+            System.out.println("service " + wh_list_result.get(0).getWh_name());
+            
             wh_map.put("wh_list", wh_list_result);
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");
             wh_map.put("wh_check", wh_list_result.isEmpty() ? "nodata" : "yesdata");
@@ -117,12 +132,21 @@ public class Warehouse_Service {
     }
 
     //창고 게시판 게시물 상세 정보
-    public List<WareHouse_DTO> view_wh_detail(String wh_code){
+    public List<WareHouse_DTO> wh_SelectWithWhCode(String wh_code){
     	
     	List<WareHouse_DTO> wh_detail_result;
-    	wh_detail_result = ws_dao.view_wh_detail(wh_code);
+    	wh_detail_result = ws_dao.wh_SelectWithWhCode(wh_code);
     	
     	return wh_detail_result;
     }
+    
+    
+    public int delete_warehouse(String wh_code) {
+    	
+    	int wh_delete_result = ws_dao.delete_warehouses(wh_code);
+    	
+    	return wh_delete_result;
+    }
+    
     
 }

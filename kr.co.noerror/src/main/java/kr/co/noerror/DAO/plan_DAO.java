@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
+import kr.co.noerror.DTO.temp_emp_DTO;
 
 @Service
 public class plan_DAO {
@@ -37,5 +38,20 @@ public class plan_DAO {
 	public List<order_DTO> orders_modal(){
 		List<order_DTO> orders = this.sql.selectList("orders_modal");
 		return orders;
+	}
+	
+	public List<temp_emp_DTO> emps_modal(){
+		List<temp_emp_DTO> emps = this.sql.selectList("emps_modal");
+		return emps;		
+	}
+	
+	public 	int plan_code_check(String plan_code) {
+		int count = this.sql.selectOne("plan_code_check", plan_code);
+		return count;
+	}
+	
+	public int insert_plan(plan_DTO pdto) {
+		int result = this.sql.insert("insert_plan", pdto);
+		return result;
 	}
 }

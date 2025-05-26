@@ -158,7 +158,7 @@ function order_save() {
   }
   console.log(JSON.stringify(orderItems));
 
-  // AJAX 예시 (fetch API)
+  // AJAX (fetch API)  
   fetch('/order_save.do', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -169,11 +169,15 @@ function order_save() {
     return res.json();
   })
   .then(data => {
-    alert("주문 저장 성공");
-	// 주문목록 페이지 이동	
-	window.location.href = "/order.do";
+    if (data.success) {
+      alert("저장 성공");
+      window.location.href = "/order.do";
+    } else {
+      alert("저장 실패(알수없는 오류)");
+    }
   })
   .catch(err => {
-    alert("저장 실패: " + err.message);
+    alert("저장 실패 (요청 실패): " + err.message);
   });
+  
 }

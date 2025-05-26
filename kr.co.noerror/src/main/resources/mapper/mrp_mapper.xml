@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.mrp_mapper">
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
+<select id="plans_period" resultType="kr.co.noerror.DTO.plan_DTO" parameterType="Map">
+SELECT
+    pln.*,
+    pdt.product_name,
+    pdt.product_spec,
+    pdt.product_unit,
+    cmp.company_name,
+    emp.emp_name
+FROM temp_production_plan pln
+JOIN temp_products pdt ON pln.product_code = pdt.product_code
+JOIN temp_client_comp cmp ON pln.company_code = cmp.company_code
+JOIN temp_employ emp ON pln.emp_code = emp.emp_code
+WHERE pln.plan_status = '계획'
+  AND pln.due_date BETWEEN #{start_date} AND #{end_date}
+</select>
+
+</mapper>

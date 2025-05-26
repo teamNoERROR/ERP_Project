@@ -23,9 +23,9 @@ function toggleButton(type) {
 	} else if (type == 'item') {
 	     url = "/goods.do?type="+type;
 	} else if (type == 'consume') {
-	 	     url = "/goods.do?type="+type;
-	 	} 
- 	location.href = url; // 전체 페이지 이동
+	 	 url = "/goods.do?type="+type;
+	} 
+ 	location.href = url; //페이지 이동
 }
 
 

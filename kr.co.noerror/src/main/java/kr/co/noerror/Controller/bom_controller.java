@@ -2,6 +2,8 @@ package kr.co.noerror.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +76,8 @@ public class bom_controller {
 			
 		} catch (Exception e) {
 			this.pw.write("error");
+		} finally {
+			this.pw.close();
 		}
 		
 		return null;
@@ -89,11 +93,12 @@ public class bom_controller {
 		m.addAttribute("mmenu","완제품 상세보기");
 		m.addAttribute("mmmenu","bom 상세보기");
 	
-		bom_DTO result = this.b_svc.bom_detail(pd_code);
-		if(result != null) {
-			m.addAttribute("bom_detail", result);
+		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
+		if(resultlist != null) {
+			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+			m.addAttribute("bom_detail", resultlist);
 		}
-		
+		System.out.println(resultlist);
 		return "/goods/bom_detail.html";
 	}
 	
@@ -131,11 +136,16 @@ public class bom_controller {
 	
 	//bom 등록하기 
 	@PutMapping("/bom_insertok.do")
-	public String bom_insertok(@RequestBody List<bom_DTO> insert_item, HttpServletResponse res) throws IOException  {
+	public String bom_insertok(@RequestBody String insert_item, HttpServletResponse res) throws IOException  {
 		this.pw = res.getWriter();
 		
-		System.out.println("bomlist : " + insert_item);
-//		int result = this.b_svc.bom_insert(insert_item);  
+		int result = this.b_svc.bom_insert(insert_item);
+		if(result>0) {
+			this.pw.print("ok");  //등록 완료 
+		}else {
+			this.pw.print("fail");  //등록 실패 
+		}
+		
 		return null;
 	}
 	

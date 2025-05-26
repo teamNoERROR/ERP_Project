@@ -124,7 +124,7 @@ public class controller {
 	@GetMapping("/test.do")
 	public String test(Model m) {
 	
-		return "/temp/order_insert_test.html";
+		return "/temp/warehouse_in.html";
 	}
 
 	

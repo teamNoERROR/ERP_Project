@@ -27,12 +27,11 @@
                 </div>
                 <div class="card-body tree">
                     <ul id="bomTree">
-                        <li>
-                            <strong>완제품 A</strong>
-                            <ul>
-                                <li data-id="1">부자재 1</li>
-                                <li data-id="2">부자재 2</li>
-                                <li data-id="3">부자재 3</li>
+                        <li >
+                            <strong th:text="${top_pd}"></strong>
+                            <ul >
+                                <li  th:each="item, n : ${bom_detail}" th:data-id="${n.count}" th:text="${item.SEQ_NO + '. ' + item.ITEM_NAME}"></li>
+                               
                             </ul>
                         </li>
                     </ul>
@@ -49,8 +48,8 @@
                 </div>
                 <div class="card-body bom-detail " id="bomDetail">
                 <h5 class="mb-3">부자재 소요 리스트</h5>
-				<div class="table-responsive">
-                <table class="table table-bordered">
+				<div class="table-responsive rounded">
+                <table class="table table-bordered" style="white-space: nowrap;">
 				<thead>
 				    <tr class="text-center">
 				      <th scope="col" style="width: 5%;">#</th>
@@ -62,75 +61,33 @@
 					  <th scope="col" style="width: 30%;">규격</th>
 					  <th scope="col" style="width: 30%;">소요량</th>
 					  <th scope="col" style="width: 30%;">단위</th>
-					  <th scope="col" style="width: 30%;">가격</th>
-					  <th scope="col" style="width: 30%;">사용여부</th>
+					  <th scope="col" style="width: 30%;">단가</th>
 					  <th scope="col" style="width: 30%;">매입처</th>
 					  <th scope="col" style="width: 30%;">비고</th>
 				    </tr>
 				  </thead>
 				  <tbody>
-				  <tr>
-				  	<td>1</td>
-					<td>코드</td> 
-					<td>수량 </td>
-					<td>규격</td>
-					<td>단위</td>
-					<td>비고</td>		                    	                    							
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
+				  <tr th:each="itm, no : ${bom_detail}">
+				  	<td th:text="${bom_detail.size - no.index}"></td>
+					<td th:text="${itm.C_ITEM_CODE}"></td> 
+					<td th:text="${itm.ITEM_NAME}"></td>
+					<td th:text="${itm.ITEM_TYPE}"></td>
+					<td th:text="${itm.ITEM_CLASS1}"></td>
+					<td th:text="${itm.ITEM_CLASS2}"></td>		                    	                    							
+					<td th:text="${itm.ITEM_SPEC}"></td>
+					<td th:text="${itm.BOM_QTY}"></td>
+					<td th:text="${itm.UNIT}"></td>
+					<td th:text="${itm.ITEM_COST}"></td>
+					<td ></td>
+					<td th:text="${itm.MEMO ?: '비고없음'}"></td>
 				  </tr>
-				  <tr>
-				  	<td>1</td>
-					<td>코드</td> 
-					<td>수량 </td>
-					<td>규격</td>
-					<td>단위</td>
-					<td>비고</td>		                    	                    							
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-				  </tr>
-				  <tr>
-				  	<td>1</td>
-					<td>코드</td> 
-					<td>수량 </td>
-					<td>규격</td>
-					<td>단위</td>
-					<td>비고</td>		                    	                    							
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-					<td>비고</td>
-				  </tr>
-				  
-					</tbody>
-					
+				</tbody>
                 </table>
 				</div>
                 </div>
             </div>
 
-            <!-- 박스 2 -->
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    부자재 상세보기 2
-                </div>
-                <div class="card-body bom-detail" id="bomDetail2">
-                    <div class="text-muted">부자재를 선택하세요.</div>
-                </div>
-            </div>
+   
         </div>
     </div>
 </div>

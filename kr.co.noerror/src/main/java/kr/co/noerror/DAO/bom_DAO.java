@@ -27,16 +27,24 @@ public class bom_DAO {
 	}
 
 	//BO 상세보기 
-	public bom_DTO bom_detail(String pd_code) {
-		bom_DTO bom_detail = this.st.selectOne("bom_detail",pd_code);
+	public List<bom_DTO> bom_detail(String pd_code) {
+		List<bom_DTO> bom_detail = this.st.selectList("bom_detail",pd_code);
 		return bom_detail;
 	}
 	
+	//부모bidx 찾기
+	public Integer select_pidx(String bom_code) {
+		Integer p_idx = this.st.selectOne("select_pidx", bom_code);
+		return p_idx;
+	}
+	
 	//BOM 등록 
-	public int bom_insert(List<bom_DTO> insert_item) {
-		int bom_insert = this.st.insert("bom_insert", insert_item);
+	public int bom_insert(bom_DTO dto) {
+		int bom_insert = this.st.insert("insert_item", dto);
 		return bom_insert;
 	}
+
+	
 	
 	
 	

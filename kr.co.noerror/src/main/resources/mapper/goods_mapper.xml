@@ -61,32 +61,26 @@
 </select>
 
 <!-- 완제품 등록  -->
-<insert id="gd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
-	INSERT INTO 
-	<choose>
-		<when test="PRODUCT_TYPE == '완제품' or PRODUCT_TYPE == '반제품'">
-		PRODUCTS 
-		VALUES 
-		(PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, 
-		#{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, 
-		#{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, 
-		#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
-		#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
-		</when>
-		<otherwise>
-		ITEMS 
-		VALUES 
-		(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
-		#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
-		#{ITEM_COST}, #{ITM_SAFE_STOCK}, #{COMPANY_CODE}, 
-		#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
-		#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
-		</otherwise>
-	</choose>
-
+<insert id="pd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
+	INSERT INTO PRODUCTS 
+	VALUES 
+	(PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, 
+	#{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, 
+	#{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, 
+	#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
+	#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
 </insert>
 
-
+<!-- 부자재 등록  -->
+<insert id="itm_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
+	INSERT INTO ITEMS 
+	VALUES 
+	(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
+	#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
+	#{ITEM_COST}, #{ITM_SAFE_STOCK}, #{COMPANY_CODE}, 
+	#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
+	#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+</insert>
 
 <!-- 제품 총개수 보기 -->
 <select id="pd_all_ea" resultType="int">

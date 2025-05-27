@@ -23,30 +23,35 @@ public class goods_DAO {
 	@Autowired
 	private goods_mapper g_mapper;
 	
-	//완제품 대분류 리스트 
+	//대분류 리스트 
 	public List<String> gd_class(Map<String, String> map) {
 		List<String> result = this.st.selectList("gd_class",map);
 		return result;
 	}
 
+	//소분류 리스트
 	public List<String> sc_class(Map<String, String> map) {
 		List<String> result = this.st.selectList("s_class",map);
 		return result;
 	}
 
-
+	//제품코드 중복검사
 	public int code_dupl(products_DTO pdto) {
-		System.out.println(pdto);
 		int result = this.st.selectOne("code_dupl",pdto);
 		return result;
 	};
 
-	//제품 등록
-	public int gd_insert(products_DTO pdto) {
-		int result = this.st.insert("gd_insert",pdto);
+	//완제품 등록
+	public int pd_insert(products_DTO pdto) {
+		int result = this.st.insert("pd_insert",pdto);
 		return result;
 	}
 
+	//부자재 등록
+	public int itm_insert(products_DTO pdto) {
+		int result = this.st.insert("itm_insert",pdto);
+		return result;
+	}
 
 
 	//제품 상세보기 

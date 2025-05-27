@@ -103,16 +103,25 @@ public class goods_controller {
 	}
 	
 
-	//제품 등록하기 화면이동 (완제품+부자재)
+	//완제품 등록하기 화면이동 
 	@GetMapping("/products_insert.do")
-	public String goods_insert(Model m) throws IOException {
+	public String products_insert(Model m) throws IOException {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","품목 등록");
+		m.addAttribute("mmenu","제품 등록");
 		
 		return "/goods/products_insert.html";
 	}
 	
+	//부자재 등록하기 화면이동 
+	@GetMapping("/items_insert.do")
+	public String goods_insert(Model m) throws IOException {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","품목 관리");
+		m.addAttribute("mmenu","부자재 등록");
+		
+		return "/goods/items_insert.html";
+	}
 	
 	//제품유형 선택시 
 	@GetMapping("/goods_type.do")
@@ -153,9 +162,40 @@ public class goods_controller {
 	}
 	
 	
-	//제품 등록 (완제품+부자재)
+	//제품 등록 (완제품)
 	@PostMapping("/products_insertok.do")
 	public String products_insertok(@ModelAttribute products_DTO pdto,
+									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
+									@RequestParam(name = "url", required = false) String url,
+									HttpServletResponse res) {
+		System.out.println("이미지1 : "+productImage);
+		System.out.println("pdto1 : "+pdto);
+		try {
+			this.pw = res.getWriter();
+			
+			int result = this.g_svc.pd_insert(pdto, productImage, url);   //db에 데이터 저장 
+			if(result > 0) {  
+				this.pw.write("ok");  //제품 등록 완료 
+			}
+			else {
+				this.pw.write("fail"); //제품 등록실패
+			}
+			
+		} catch (IOException e) {
+			this.pw.write("error"); //제품 등록실패
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+	
+	//제품 등록 (부자재)
+	@PostMapping("/items_insertok.do")
+	public String items_insertok(@ModelAttribute products_DTO pdto,
 									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
 									@RequestParam(name = "url", required = false) String url,
 									HttpServletResponse res) {
@@ -173,7 +213,7 @@ public class goods_controller {
 				pdto.setAPI_FNM(this.f_dto.getApinm());
 				pdto.setIMG_SRC(this.f_dto.getImgPath());
 				
-				int result = this.g_svc.gd_insert(pdto);   //db에 데이터 저장 
+				int result = this.g_svc.itm_insert(pdto);   //db에 데이터 저장 
 				if(result > 0) {  
 					this.pw.write("ok");  //제품 등록 완료 
 				}

@@ -19,7 +19,8 @@ public interface goods_mapper {
 	
 	int code_dupl(products_DTO pdto);
 	
-	int gd_insert(products_DTO pdto);  //완제품 등록 
+	int pd_insert(products_DTO pdto);  //완제품 등록 
+	int itm_insert(products_DTO pdto);  //부자재 등록 
 	
 	int pd_all_ea(String type);  //완제품 총개수 
 	

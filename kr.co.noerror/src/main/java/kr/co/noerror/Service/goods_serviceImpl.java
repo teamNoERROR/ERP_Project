@@ -1,5 +1,6 @@
 package kr.co.noerror.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.Controller.order_controller;
@@ -52,7 +54,7 @@ public class goods_serviceImpl implements goods_service {
 	List<String> list = null; 
 	Map<String, String> map = null;
 
-	//완제품 대분류 리스트
+	//대분류 리스트
 	@Override
 	public JSONArray gd_class(String goods_type){
 		this.list = new ArrayList<>();
@@ -72,6 +74,7 @@ public class goods_serviceImpl implements goods_service {
 		return lc_list;
 	}
 	
+	//소분류리스트
 	@Override
 	public JSONArray sc_class(String goods_type, String pd_class1){
 		this.list = new ArrayList<>();
@@ -91,54 +94,75 @@ public class goods_serviceImpl implements goods_service {
 		return sc_list;
 	}
 	
-	//제품 등록
+	//완제품 등록
 	@Override
-	public int gd_insert(products_DTO pdto) {
-//		String goods_type = pdto.getPRODUCT_TYPE();  //제품유형 확인 
+	public int pd_insert(products_DTO pdto, MultipartFile productImage, String url) {
 		String gd_code;  //랜덤번호 생성 
 		int dupl;  //중복확인
-//		System.out.println("goods_type : "+goods_type);
-//		if("완제품".equals(goods_type) || "반제품".equals(goods_type)) {
-//			this.p_dto.setPRODUCT_CODE(gd_code);
-//			this.p_dto.setPRODUCT_TYPE(goods_type);
-//			System.out.println("pdto itmcd : "+ this.p_dto.getITEM_CODE());
-//			dupl = this.g_dao.code_dupl(this.p_dto);
-//			
-//			if(dupl > 0) {  //중복코드가 있을경우 
-//				gd_code = this.m_rno.random_no(); //다시 추출
-//			} else { //중복코드가 없을경우 
-//				pdto.setPRODUCT_CODE(gd_code);  //제품코드 장착 
-//				System.out.println("pdto itmcd2 : "+ pdto.getITEM_CODE());
-//			}
-//			
-//		}else if("부자재".equals(goods_type)){
-//			this.p_dto.setITEM_CODE(gd_code);  //제품코드 장착
-//			this.p_dto.setITEM_TYPE(goods_type);
-//			dupl = this.g_dao.code_dupl(this.p_dto);
-//			
-//			if(dupl > 0) {  //중복코드가 있을경우 
-//				gd_code = this.m_rno.random_no(); //다시 추출
-//			} else { //중복코드가 없을경우 
-//				pdto.setITEM_CODE(gd_code);  //제품코드 장착 
-//			}
-//			
-//		}
-		if ("완제품".equals( pdto.getPRODUCT_TYPE()) || "반제품".equals( pdto.getPRODUCT_TYPE())) {
-		    do {
-		        gd_code = this.m_rno.random_no();
+		boolean fileattach;
+		int result = 0;
+		try {
+			do {
+		        gd_code = this.m_rno.random_no(); 
 		        pdto.setPRODUCT_CODE(gd_code);
 		        dupl = this.g_dao.code_dupl(pdto);
 		    } while (dupl > 0);
 
-		} else if ("부자재".equals( pdto.getITEM_TYPE())) {
-		    do {
-		        gd_code = this.m_rno.random_no();
+//			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);
+//			if(fileattach == true) {  //FTP에 파일저장 완료 후 
+				//dto에 파일명 장착
+//				pdto.setFILE_NM(this.f_dto.getFilenm());
+//				pdto.setFILE_RENM(this.f_dto.getFileRenm());
+//				pdto.setAPI_FNM(this.f_dto.getApinm());
+//				pdto.setIMG_SRC(this.f_dto.getImgPath());
+				
+				result = this.g_dao.pd_insert(pdto);
+				
+//			}else {
+//				result = 0;
+//			}
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+		}		
+		
+		return result;
+	}
+	
+	//부자재 등록
+	@Override
+	public int itm_insert(products_DTO pdto) {
+		String gd_code;  //랜덤번호 생성 
+		int dupl;  //중복확인
+		boolean fileattach;
+		int result = 0;
+		try {
+			do {
+		        gd_code = this.m_rno.random_no(); 
 		        pdto.setITEM_CODE(gd_code);
 		        dupl = this.g_dao.code_dupl(pdto);
 		    } while (dupl > 0);
-		}
-		System.out.println("COMPANY_CODE: " + pdto.getCOMPANY_CODE());
-		int result = this.g_dao.gd_insert(pdto);
+
+//			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);
+//			if(fileattach == true) {  //FTP에 파일저장 완료 후 
+				//dto에 파일명 장착
+//				pdto.setFILE_NM(this.f_dto.getFilenm());
+//				pdto.setFILE_RENM(this.f_dto.getFileRenm());
+//				pdto.setAPI_FNM(this.f_dto.getApinm());
+//				pdto.setIMG_SRC(this.f_dto.getImgPath());
+				
+				result = this.g_dao.itm_insert(pdto);
+				
+//			}else {
+//				result = 0;
+//			}
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+		}		
+		
 		return result;
 	}
 	

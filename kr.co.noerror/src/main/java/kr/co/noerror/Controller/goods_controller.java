@@ -36,6 +36,7 @@ import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.goods_serviceImpl;
 
 @Controller
 public class goods_controller {
@@ -43,7 +44,7 @@ public class goods_controller {
 	PrintWriter pw = null;
 	
 	@Autowired
-	goods_service g_svc;
+	private goods_service g_svc;
 	
 	@Autowired
 	private bom_service b_svc; 
@@ -102,33 +103,44 @@ public class goods_controller {
 	}
 	
 
-	//제품 등록하기 화면이동 
+	//제품 등록하기 화면이동 (완제품+부자재)
 	@GetMapping("/products_insert.do")
 	public String goods_insert(Model m) throws IOException {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
 		m.addAttribute("mmenu","품목 등록");
 		
-		this.list = new ArrayList<String>();  //완제품 식품분류 목록 가져오기 
-		this.list = this.g_svc.pd_class_list(null);
-		m.addAttribute("l_class",this.list);
-		
 		return "/goods/products_insert.html";
 	}
-
 	
-	//소분류리스트 전달 api
-	@GetMapping("/goods_class.do")
-	public String pd_sclass(HttpServletResponse res, @RequestParam("products_class1") String products_class1) throws IOException {
+	
+	//제품유형 선택시 
+	@GetMapping("/goods_type.do")
+	public String goods_type(HttpServletResponse res, @RequestParam("goods_type") String goods_type,
+							@RequestParam(value="products_class1", required=false) String products_class1) throws IOException {
 		this.pw = res.getWriter();
 		try {
-			List<String> s_class = this.g_svc.pd_class_list(products_class1);
+			JSONArray lc_list = this.g_svc.gd_class(goods_type); //완제품 식품 대분류 목록 가져오기 
+			this.pw.print(lc_list);
 			
-			JSONArray sc_list = new JSONArray();
-			for(String a : s_class) {
-				sc_list.put(a);
-			}
+		} catch (Exception e) {
+			this.pw.print("error");
 			
+		} finally {
+			this.pw.close();
+		}
+		return null;
+	}
+	
+	
+	//소분류리스트 전달
+	@GetMapping("/goods_class.do")
+	public String pd_sclass(HttpServletResponse res,  
+							@RequestParam("goods_type") String goods_type,
+							@RequestParam("products_class1") String products_class1) throws IOException {
+		this.pw = res.getWriter();
+		try {
+			JSONArray sc_list = this.g_svc.sc_class(goods_type, products_class1);  //소분류 가져오기
 			this.pw.print(sc_list);
 			
 		} catch (Exception e) {
@@ -141,7 +153,7 @@ public class goods_controller {
 	}
 	
 	
-	//완제품 등록 
+	//제품 등록 (완제품+부자재)
 	@PostMapping("/products_insertok.do")
 	public String products_insertok(@ModelAttribute products_DTO pdto,
 									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
@@ -153,10 +165,6 @@ public class goods_controller {
 		try {
 			this.pw = res.getWriter();
 			
-			String pd_code = this.m_rno.random_no();
-			pdto.setPRODUCT_CODE(pd_code);  //제품코드 장착 
-			
-			
 			boolean fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);  
 			if(fileattach == true) {  //FTP에 파일저장 완료 후 
 				//dto에 파일명 장착
@@ -165,7 +173,7 @@ public class goods_controller {
 				pdto.setAPI_FNM(this.f_dto.getApinm());
 				pdto.setIMG_SRC(this.f_dto.getImgPath());
 				
-				int result = this.g_svc.pd_insert(pdto);   //db에 데이터 저장 
+				int result = this.g_svc.gd_insert(pdto);   //db에 데이터 저장 
 				if(result > 0) {  
 					this.pw.write("ok");  //제품 등록 완료 
 				}

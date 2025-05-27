@@ -73,6 +73,7 @@
                 	<tr th:if="${goods_total == 0}" >
                 		<td class="text-center no_goods_tb" colspan="14" th:text="${no_goods}" ></td>
                 	</tr>
+                	
                     <tr th:each="itmlist,idx : ${goods_all_list}" 
                     	th:attr="data-idx=${itmlist.IIDX}, data-pdcode=${itmlist.ITEM_CODE},
                     			data-code=${(mode == 'modal') ? itmlist.ITEM_CODE : ''}, 
@@ -87,6 +88,7 @@
                     	
                         <td onclick="event.stopPropagation()">
                         	<input type="checkbox" class="sb" th:name="${mode == 'modal'} ? 'select' : 'selected_box'" 
+                        			th:attr="data-idx=${itmlist.IIDX}, data-pdcode=${itmlist.ITEM_CODE}"
                         			data-type="item" 
                         			>
                         </td>
@@ -127,7 +129,7 @@
         <!-- Action Buttons -->
         <div class="mt-4 d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button"  class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal" id="openModalBtn"><i class="bi bi-plus-lg"></i> 추가</button>
+                 <button type="button"  class="btn btn-success" onclick="addBtn()"><i class="bi bi-plus-lg"></i> 추가</button>
                 <button class="btn btn-danger"  onclick="deleteBtn()"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>

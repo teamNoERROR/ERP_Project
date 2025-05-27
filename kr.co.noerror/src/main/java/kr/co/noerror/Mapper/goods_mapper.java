@@ -10,8 +10,16 @@ import kr.co.noerror.DTO.products_DTO;
 @Mapper
 public interface goods_mapper {
 
-	List<String> pd_class_list(Map<String, String> map);  //완제품 품목분류 리스트 
-	int pd_insert(products_DTO pdto);  //완제품 등록 
+//	List<String> pd_class_list(Map<String, String> map);  //완제품 품목분류 리스트 
+	List<String> gd_class(Map<String, String> map); //제품 품목선택시 대분류 리스트 출력 
+	List<String> s_class(Map<String, String> map); //소분류 리스트 출력 
+	
+	
+	
+	
+	int code_dupl(products_DTO pdto);
+	
+	int gd_insert(products_DTO pdto);  //완제품 등록 
 	
 	int pd_all_ea(String type);  //완제품 총개수 
 	

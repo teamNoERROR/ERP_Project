@@ -2,34 +2,88 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noerror.Mapper.goods_mapper">
 
-<!-- 완제품 식품분류 목록 출력 -->
-<select id="pd_class_list" resultType="String" parameterType="Map">
+
+<!-- 제품유형에 따른 식품분류 선택 -->
+<select id="gd_class" resultType="String" parameterType="Map">
 	SELECT
 	<choose>
-	<when test="key == null">
+	<when test="key == 'pd_lc'">
 		DISTINCT PRODUCT_CLASS1 FROM PRODUCTS_CLASS 
 	</when>
-	<otherwise>
-		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1}
-	</otherwise>
+	<when test="key == 'itm_lc'">
+		DISTINCT ITEMS_CLASS1 FROM ITEMS_CLASS 
+	</when>
 	</choose>
-	
+</select>
+
+
+<!-- 소분류 선택 -->
+<select id="s_class" resultType="String" parameterType="Map">
+	SELECT
+	<choose>
+	<when test="key2 == 'pd_sc'">
+		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1}
+	</when>
+	<when test="key2 == 'itm_sc'">
+		ITEMS_CLASS2 FROM ITEMS_CLASS WHERE ITEMS_CLASS1 = #{ITEMS_CLASS1}
+	</when>
+	</choose>
 </select>
 
 
 
+<!-- 완제품 식품분류 목록 출력 -->
+<!-- <select id="pd_class_list" resultType="String" parameterType="Map"> -->
+<!-- 	SELECT -->
+<!-- 	<choose> -->
+<!-- 	<when test="key == null"> -->
+<!-- 		DISTINCT PRODUCT_CLASS1 FROM PRODUCTS_CLASS  -->
+<!-- 	</when> -->
+<!-- 	<otherwise> -->
+<!-- 		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1} -->
+<!-- 	</otherwise> -->
+<!-- 	</choose> -->
+<!-- </select> -->
+
+
+
+<!-- 상품코드 중복확인 -->
+<select id="code_dupl" resultType="int" parameterType="kr.co.noerror.DTO.products_DTO">
+	SELECT COUNT(*) AS CNT FROM 
+	<choose>
+		<when test="PRODUCT_TYPE == '완제품' or PRODUCT_TYPE == '반제품'">
+			PRODUCTS WHERE PRODUCT_CODE = #{PRODUCT_CODE}
+		</when>
+		<when test="ITEM_TYPE == '부자재'">
+			ITEMS WHERE ITEM_CODE = #{ITEM_CODE}
+		</when>
+	</choose>
+</select>
+
 <!-- 완제품 등록  -->
-<insert id="pd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
-	INSERT INTO PRODUCTS VALUES (PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, #{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, #{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, #{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, #{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
-<!-- 	INSERT INTO PRODUCTS  -->
-<!-- 	(PIDX, PRODUCT_CODE, PRODUCT_NAME, PRODUCT_TYPE, PRODUCT_CLASS1, PRODUCT_CLASS2, -->
-<!--     PRODUCT_SPEC, PRODUCT_UNIT, PRODUCT_COST, PRODUCT_PRICE, PD_SAFE_STOCK, -->
-<!--     FILE_NM, FILE_RENM, API_FNM, IMG_SRC, -->
-<!--     USE_FLAG, EXP_FLAG, MEMO, INSERT_DATE, MODIFY_DATE)  -->
-<!--     VALUES (PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, #{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, #{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK},  -->
-<!-- 	#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM}, #{API_FNM}, #{IMG_SRC, jdbcType=CLOB},  -->
-<!-- 	#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB},  -->
-<!-- 	SYSDATE, NULL) -->
+<insert id="gd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
+	INSERT INTO 
+	<choose>
+		<when test="PRODUCT_TYPE == '완제품' or PRODUCT_TYPE == '반제품'">
+		PRODUCTS 
+		VALUES 
+		(PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, 
+		#{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, 
+		#{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, 
+		#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
+		#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+		</when>
+		<otherwise>
+		ITEMS 
+		VALUES 
+		(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
+		#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
+		#{ITEM_COST}, #{ITM_SAFE_STOCK}, #{COMPANY_CODE}, 
+		#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
+		#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+		</otherwise>
+	</choose>
+
 </insert>
 
 

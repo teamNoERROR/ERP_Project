@@ -1,22 +1,5 @@
+//토글버튼 클릭시 페이지 이동
 function toggleButton(type) {
-	/*const buttons = [
-	    { id: 'product_list' },
-	    { id: 'item_list' },
-		{ id: 'consume_list' }
-	];
-
-	buttons.forEach(btn => {
-		const elm = document.getElementById(btn.id);
-		if (btn.id.includes(type)) {
-		  elm.style.background = '#82CCDD';
-		  elm.style.color = '#fff';
-		  
-		} else {
-		  elm.style.background = 'transparent';
-		  elm.style.color = '#000';
-		}
-	});*/
-
   	let url = "";
 	if (type == 'product') {
 	     url = "/goods.do?type="+type;
@@ -29,17 +12,126 @@ function toggleButton(type) {
 }
 
 
-
-
-
-
-//추가 버튼 누른 경우 
+//추가 버튼 누른 경우 (데품등록페이지로 이동)
 var addBtn = function(){
 	location.href="./products_insert.do";
 }
 
 
-var product_type = document.querySelector("#product_type");
+//제품 유형 선택시 등록화면 세팅
+function goodsType(){
+	var goods_type = document.querySelector("#goods_type");
+	fetch("/goods_type.do?goods_type=" + goods_type.value, {
+		method: "GET"
+
+	}).then(function(data) {
+		return data.json();
+
+	}).then(function(l_class) {
+		var select_lc = document.querySelector("#products_class1");
+		var open_price = document.querySelector(".open_price");
+		var open_ccorp = document.querySelector(".open_ccorp");
+		
+		select_lc.innerHTML = "";
+		var w=0;
+		var lg_class = "";
+		lg_class = `<option value="">`+"선택"+`</option>`;
+		while(w< l_class.length-1){
+			lg_class += `<option value="${l_class[w]}">`+l_class[w]+`</option>`;
+			w++;
+		}
+		select_lc.innerHTML=lg_class;
+	
+		//완제품 선택시
+		if(goods_type.value == "완제품" || goods_type.value == "반제품"){  //완제품,반제품 선택시
+			//판매가 입력란 오픈
+			open_price.innerHTML = `
+				<div class="dynamic-price">
+				<label class="form-label ss">판매가</label>	
+				<input type="text" class="form-control" id="product_price">
+				</div>
+			`;
+			
+			//거래처 입력란 삭제
+			var remove_corp = open_ccorp.querySelector(".dynamic-corp");
+		    if (remove_corp){
+				remove_corp.remove();
+			}
+			open_ccorp.className = "row my-3 open_ccorp ";
+		
+				
+		//부자재 선택시 	
+		}else {   
+			//판매가 입력란 삭제 
+			var remove_price = open_price.querySelector(".dynamic-price");
+		    if (remove_price){
+				remove_price.remove();
+			}
+			open_price.className = "open_price col-md-2";
+			
+			//거래처 입력란 오픈 
+			open_ccorp.innerHTML = `
+				<div class="row dynamic-corp"> 
+				<div class="col-auto d-flex align-items-end pe-0 ">
+				<button class="btn btn-primary" type="button">
+					<i class="bi bi-search"></i>
+				</button>
+				</div>
+				<div class="col-md-2">
+					<label class="form-label">거래처코드</label> 
+					<input type="text" class="form-control" id="p_corp">
+				</div>
+				<div class="col-md-3">
+					<label class="form-label">거래처명</label> 
+					<input type="text" class="form-control">
+				</div>
+					<div class="col-md-3">
+					<label class="form-label">담당자명</label> 
+					<input type="text" class="form-control">
+				</div>
+				<div class="col-md-3">
+					<label class="form-label">연락처</label> 
+					<input type="text" class="form-control">
+				</div>
+				</div>			
+			`;
+		}
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+//대분류 - 소분류 짝맞추기 
+function lcSc(lc_value) {
+	var goods_type = document.querySelector("#goods_type");
+	fetch("./goods_class.do?goods_type=" + goods_type.value + 
+			"&products_class1=" + lc_value, {
+		method: "GET"
+		
+	}).then(function(data) {
+		return data.json();
+
+	}).then(function(s_class) {
+		
+		var select_sc = document.querySelector("#products_class2");
+		select_sc.innerHTML = "";
+		var w=0;
+		var sclass = "";
+		sclass = `<option value="">`+"선택"+`</option>`;
+		while(w< s_class.length){
+			sclass += `<option value="${s_class[w]}">`+s_class[w]+`</option>`;
+			w++;
+		}
+		select_sc.innerHTML=sclass;
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+var goods_type = document.querySelector("#goods_type");
 var products_class1 = document.querySelector("#products_class1");
 var products_class2 = document.querySelector("#products_class2");
 var product_name = document.querySelector("#product_name");
@@ -54,68 +146,58 @@ var pd_safe_stock = document.querySelector("#pd_safe_stock");
 
 var product_cost = document.querySelector("#product_cost");
 var product_price = document.querySelector("#product_price");
+var purchase_corp = document.querySelector("#p_corp");
+ 
 var memo = document.querySelector("#memo");
 var productImage = document.querySelector("#productImage").files[0];
 var url = document.querySelector("#url");
-
-//제품 등록하기
+//제품 등록하기 + 유효성검사
 function insert_pd(){
 	
 	
-	if(product_type.value ==""){
+	if(goods_type.value ==""){
 		alert("제품유형을 선택하세요");
-		product_type.focus();
+		goods_type.focus();
 	}
 	else if(products_class1.value ==""){
 		alert("대분류를 선택하세요");
 		products_class1.focus();
 	}
-	//else if(products_class2.value ==""){ 
-	//	alert("소분류를 선택하세요");
-	//	products_class2.focus();
-	//}
+	else if(products_class2.value ==""){ 
+		alert("소분류를 선택하세요");
+		products_class2.focus();
+	}
 	else if(product_name.value ==""){ 
 		alert("제품명을 입력하세요");
 		product_name.focus();	
-			
 			
 	}else if(product_spec.value ==""){ 
 		alert("제품규격을 입력하세요");
 		product_spec.focus();		
 				
-				
 	}else if(product_unit.value ==""){ 
 		alert("제품단위를 입력하세요");
 		product_unit.focus();		
-				
 				
 	}else if(pd_safe_stock.value ==""){ 
 		alert("안전재고수를 입력하세요");
 		pd_safe_stock.focus();			
 					
-					
 	}
 	else if(useY.checked == false && useN.checked == false){ 
 		alert("사용유무를 선택하세요");
-					
 					
 	}
 	else if(expireY.checked == false && expireN.checked == false){ 
 		alert("유통기한 사용유무를 선택하세요");
 						
-						
 	}
 	else if(product_cost.value ==""){ 
 		alert("단가를 입력하세요");
-		product_cost.focus();					
-							
-							
-	}else if(product_price.value ==""){ 
-		alert("판매가를 입력하세요");
-		product_price.focus();					
-							
-							
-	}else if(productImage){  //파일첨부 함경우 
+		product_cost.focus();							
+				
+	//파일첨부 함경우 			
+	}else if(productImage){  
 		var imgSize = productImage.size; // 파일 크기
 		var maxSize = 2 * 1024 * 1024; // 2MB제한
 			
@@ -130,20 +212,43 @@ function insert_pd(){
 				this.insertProduct();
 			}
 		}
-	}else {
-		if(confirm("제품등록을 완료허시겠습니까?")){
-			this.insertProduct();
+	//선택제품유형이 완제품,반제품일 경우
+	}else if(goods_type.value =="완제품" || goods_type.value =="반제품" ){
+		if(product_price.value==""){
+			alert("판매가를 입력하세요");
+			product_price.focus();		
+	 	}else {
+			if(confirm("제품등록을 완료허시겠습니까?")){
+				this.insertProduct();
+			}
 		}
+			
+	}else if(goods_type.value =="부자재"){
+		if(purchase_corp.value==""){
+			alert("판매가를 입력하세요");
+			purchase_corp.focus();		
+		}else {
+			if(confirm("제품등록을 완료허시겠습니까?")){
+				this.insertProduct();
+			}
+		}	
+		 
 	}
+	//else  {
+	//	if(confirm("제품등록을 완료허시겠습니까?")){
+	//		this.insertProduct();
+	//	}
+	//}
 }
 
 //제품 등록
 function insertProduct(){
 	var use_flag = document.querySelector('input[name="use_flag"]:checked');
 	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
+	var product_price = document.querySelector("#product_price");
 	
 	var formData = new FormData();
-	formData.append("PRODUCT_TYPE", product_type.value);
+	formData.append("PRODUCT_TYPE", goods_type.value);
 	formData.append("PRODUCT_CLASS1", products_class1.value);
 	formData.append("PRODUCT_CLASS2", products_class2.value);
 	formData.append("PRODUCT_NAME", product_name.value);
@@ -156,10 +261,8 @@ function insertProduct(){
 	formData.append("EXP_FLAG", exp_flag.value);
 	formData.append("MEMO", memo.value);
 	
-	if (productImage) { //새로 파일 첨부를 한 경우 
-    	formData.append("productImage", productImage);
-		formData.append("url", "아이피써놓기");
-	}
+    formData.append("productImage", productImage);
+	formData.append("url", "아이피써놓기");
 	
 	fetch("./products_insertok.do", {
 
@@ -170,18 +273,60 @@ function insertProduct(){
 		return data.text();
 
 	}).then(function(result) {
-		alert("제품 등록이 완료되었습니다.");
-		location.href="./goods.do";
+		if(result=="ok"){
+			alert("제품 등록이 완료되었습니다.");
+			location.href="./goods.do";
+		}
 		
 
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	});
-	
-	
-
 }
 
+
+//부자재 등록
+function insertItem(){
+	var use_flag = document.querySelector('input[name="use_flag"]:checked');
+	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
+	var purchase_corp = document.querySelector("#p_corp");
+	
+	var formData = new FormData();
+	
+	formData.append("ITEM_TYPE", goods_type.value);
+	formData.append("ITEM_CLASS1", products_class1.value);
+	formData.append("ITEM_CLASS2", products_class2.value);
+	formData.append("ITEM_NAME", product_name.value);
+	formData.append("ITEM_SPEC", product_spec.value);
+	formData.append("ITEM_UNIT", product_unit.value);
+	formData.append("ITEM_COST", product_cost.value);
+	formData.append("ITM_SAFE_STOCK", pd_safe_stock.value);
+	formData.append("COMPANY_CODE", purchase_corp.value);
+	formData.append("USE_FLAG", use_flag.value);
+	formData.append("EXP_FLAG", exp_flag.value);
+	formData.append("MEMO", memo.value);
+	
+    formData.append("productImage", productImage);
+	formData.append("url", "아이피써놓기");
+	
+	fetch("./item_insertok.do", {
+
+		method: "POST",
+		body : new URLSearchParams(formData)
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		if(result=="ok"){
+			alert("부자재 등록이 완료되었습니다.");
+			location.href="./goods.do?type=item";
+		}
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
 
 //초기화 버튼 클릭 
 function resetBtn(){
@@ -325,33 +470,7 @@ function del_ajax(del_req){
 
 
 
-//대분류 - 소분류 짝맞추기 
-function lg_class() {
 
-	var pd_class = document.querySelector("#products_class1");
-	fetch("./goods_class.do?products_class1=" + pd_class.value, {
-		method: "GET"
-		
-	}).then(function(data) {
-		return data.json();
-
-	}).then(function(s_class) {
-		
-		var select_sc = document.querySelector("#products_class2");
-		select_sc.innerHTML = "";
-		var w=0;
-		var sclass = "";
-		sclass = `<option value="">`+"선택"+`</option>`;
-		while(w< s_class.length){
-			sclass += `<option value="${s_class[w]}">`+s_class[w]+`</option>`;
-			w++;
-		}
-			select_sc.innerHTML=sclass;
-		
-	}).catch(function(error) {
-		console.log("통신오류발생" + error);
-	});
-}
 
 
 

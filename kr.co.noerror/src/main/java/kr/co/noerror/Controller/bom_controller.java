@@ -29,6 +29,7 @@ import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.goods_serviceImpl;
 
 @Controller
 public class bom_controller {
@@ -36,13 +37,10 @@ public class bom_controller {
 	PrintWriter pw = null;
 	
 	@Autowired
-	private bom_service b_svc; 
+	bom_service b_svc; 
 	
 	@Autowired
-	private goods_service g_svc; 
-	
-	@Resource(name="goods_DAO")
-	goods_DAO g_dao;
+	goods_service g_svc; 
 	
 	@Resource(name="M_random")  //랜덤숫자생성 모델 
 	M_random m_rno;

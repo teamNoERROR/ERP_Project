@@ -205,7 +205,7 @@ function resetBtn(){
 	location.reload();
 }
 
-//상세보기
+//제품상세보기
 function open_detail(event){
 	
 	var pd_code = event.currentTarget.querySelector(".pd_code").innerText;

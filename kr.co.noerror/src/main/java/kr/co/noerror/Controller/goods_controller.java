@@ -34,6 +34,7 @@ import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
 
 @Controller
@@ -43,6 +44,9 @@ public class goods_controller {
 	
 	@Autowired
 	goods_service g_svc;
+	
+	@Autowired
+	private bom_service b_svc; 
 	
 	@Resource(name="goods_DAO")
 	goods_DAO g_dao;
@@ -190,7 +194,8 @@ public class goods_controller {
 	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
 		
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
-		
+		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
+		System.out.println(resultlist);
 		if(goods_one == null) {
 			this.msg = "alert('시스템문제로 해당 제품의 상세페이지를 불러올 수 없습니다.');"
 					+ "history.go(-1);";

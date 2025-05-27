@@ -86,21 +86,34 @@ public class bom_controller {
 	
 	
 	//BOM 상세보기 화면이동 
-	@GetMapping("/bom_detail.do")
-	public String bom_detail(Model m, @RequestParam("pd_code") String pd_code) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","완제품 상세보기");
-		m.addAttribute("mmmenu","bom 상세보기");
+//	@GetMapping("/bom_detail.do")
+//	public String bom_detail(Model m, @RequestParam("pd_code") String pd_code) {
+//		m.addAttribute("lmenu","기준정보관리");
+//		m.addAttribute("smenu","품목 관리");
+//		m.addAttribute("mmenu","완제품 상세보기");
+//		m.addAttribute("mmmenu","bom 상세보기");
+//	
+//		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
+//		if(resultlist != null) {
+//			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+//			m.addAttribute("bom_detail", resultlist);
+//		}
+//		System.out.println(resultlist);
+//		return "/goods/bom_detail.html";
+//	}
 	
-		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
-		if(resultlist != null) {
-			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
-			m.addAttribute("bom_detail", resultlist);
-		}
-		System.out.println(resultlist);
-		return "/goods/bom_detail.html";
-	}
+	
+	//BOM 상세보기 모달ver
+//	@GetMapping("/bom_detail.do")
+//	public String bom_detail(Model m, @RequestParam("pd_code") String pd_code) {
+//		System.out.println(pd_code);
+//		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
+//		System.out.println(resultlist);
+//			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+//			m.addAttribute("bom_detail", resultlist);
+//		
+//		return "/modals/product_detail_modal.html";
+//	}
 	
 	
 	//BOM등록 화면 이동 

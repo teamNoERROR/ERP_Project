@@ -26,10 +26,16 @@ function bomBtn(bom_open){
 	
 	}).then(function(result) {  //등록된 BOM 있음 
 		if(result =="yes"){  
-			location.href="./bom_detail.do?pd_code="+pd_code;
+			
+			var bom_open = new bootstrap.Modal(document.getElementById('bom_detail'));
+			bom_open.show();
+			bom_detail(pd_code);
+			//location.href="./bom_detail.do?pd_code="+pd_code;
+			//bom_detail(pd_code);
 			
 		}else if(result =="no"){  //등록된 BOM없음 
 			if(confirm("등록된 BOM 자료가 없습니다. \n지금 등록 하시겠습니까?")){
+				
 				location.href="./bom_insert.do?pd_code="+pd_code;
 			}else {
 				location.href="./goods.do";   //완제품 리스트로 이동 
@@ -37,6 +43,28 @@ function bomBtn(bom_open){
 			
 		}else {
 			console.log(result);
+		}
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+//bom_detail 모달
+function bom_detail(pd_code){
+	console.log(pd_code)
+	fetch("./bom_detail.do?pd_code="+pd_code, {
+		method: "GET"
+			
+	}).then(function(data) {
+		return data.text();
+	
+	}).then(function(result) {  //등록된 BOM 있음 
+		if(result =="ok"){ 
+			console.log("result" + result); 
+			
+					
 		}
 		
 	}).catch(function(error) {

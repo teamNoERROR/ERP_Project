@@ -11,7 +11,7 @@
 <!-- BOM 상세보기 -->
 <select id="bom_detail" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="String">
 <!-- 	SELECT * FROM BOM WHERE C_PRODUCT_CODE = #{pd_code}	 -->
-	SELECT * FROM BPI_VIEW WHERE C_PRODUCT_CODE = #{pd_code}	
+	SELECT * FROM BPI_VIEW WHERE C_PRODUCT_CODE = #{pd_code} ORDER BY SEQ_NO 	
 	<!--  BOM + PRODUCTS + ITEMS 조인 -->
 
 </select>

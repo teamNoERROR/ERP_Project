@@ -194,8 +194,7 @@ public class goods_controller {
 	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
 		
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
-		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
-		System.out.println(resultlist);
+		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);  //bom상세보기 클릭시
 		if(goods_one == null) {
 			this.msg = "alert('시스템문제로 해당 제품의 상세페이지를 불러올 수 없습니다.');"
 					+ "history.go(-1);";
@@ -205,6 +204,11 @@ public class goods_controller {
 		}else {
 			if("product".equals(type)) {
 				m.addAttribute("goods_one", goods_one);
+				if(!resultlist.isEmpty()) {
+					m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+					m.addAttribute("bom_result", resultlist);
+				}
+				
 				this.url = "/modals/product_detail_modal.html";
 				
 			}else if("item".equals(type)) {

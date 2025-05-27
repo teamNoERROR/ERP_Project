@@ -99,9 +99,8 @@
 			<div class="modal-body row justify-content-center d-flex gap-3">
 
 <div class="row">
-        BOM 트리
-        <div class="col-md-5">
-            <div class="card mb-4">
+        <div class="col-md-3">
+            <div class="card mb-3">
                 <div class="card-header bg-primary text-white">
                     BOM 트리
                 </div>
@@ -110,7 +109,7 @@
                         <li >
                             <strong >[[${top_pd}]]</strong>
                             <ul >
-                                <li  th:each="item, n : ${bom_detail}" th:data-id="${n.count}" th:text="${(item.SEQ_NO + '. ') + item.ITEM_NAME}"></li>
+                                <li  th:each="bom : ${bom_result}"  th:text="${bom.SEQ_NO + '. ' + bom.ITEM_NAME}"></li>
                                
                             </ul>
                         </li>
@@ -119,9 +118,7 @@
             </div>
         </div>
 
-        부자재 상세보기
-        <div class="col-md-7">
-            박스 1
+        <div class="col-md-9">
             <div class="card mb-4">
                 <div class="card-header bg-success text-white">
                     부자재 상세보기 1
@@ -147,8 +144,8 @@
 				    </tr>
 				  </thead>
 				  <tbody>
-				  <tr th:each="itm, no : ${bom_detail}">
-				  	<td th:text="${bom_detail.size - no.index}"></td>
+				  <tr th:each="itm, no : ${bom_result}">
+				  	<td th:text="${no.count}"></td>
 					<td th:text="${itm.C_ITEM_CODE}"></td> 
 					<td th:text="${itm.ITEM_NAME}"></td>
 					<td th:text="${itm.ITEM_TYPE}"></td>

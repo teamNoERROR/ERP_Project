@@ -64,7 +64,7 @@ function deleteWarehouse(button) {
   }
  //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
  
-
+/*
  document.addEventListener('DOMContentLoaded', function () {
    const modalContainer = document.getElementById('modalContainer');
 
@@ -86,17 +86,17 @@ function deleteWarehouse(button) {
        .then(html => {
          modalContainer.innerHTML = html;
 
-         const modalElement = document.getElementById('wh_modal');
+         const wh_modal = document.getElementById('wh_modal');
         
-		  if (!modalElement) {
+		  if (!wh_modal) {
            //console.error('모달 요소 #wh_modal 을 찾을 수 없습니다.');
            return;
          }
 
-         const modal = new bootstrap.Modal(modalElement);
+         const modal = new bootstrap.Modal(wh_modal);
          modal.show();
 
-         modalElement.addEventListener('hidden.bs.modal', () => {
+         wh_modal.addEventListener('hidden.bs.modal', () => {
            modalContainer.innerHTML = '';
          }, { once: true });
        })
@@ -106,6 +106,8 @@ function deleteWarehouse(button) {
        });
    });
  });
+ */
+ 
 /*
 document.addEventListener('DOMContentLoaded', function() {
   // 모든 modal-trigger 클래스 tr에 클릭 이벤트 붙이기

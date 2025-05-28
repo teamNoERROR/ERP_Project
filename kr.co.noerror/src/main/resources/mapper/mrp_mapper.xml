@@ -32,4 +32,35 @@ WHERE pln.plan_status = '계획'
   WHERE bom.bom_code = #{bom_code}
 </select>
 
+<!-- mrp_code 중복체크 -->
+<select id="mrp_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM mrp_result_header WHERE mrp_code = #{mrp_code}
+</select>
+
+<!-- 주문정보 저장 -->  
+<insert id="insert_mrp_header" parameterType="String">
+ INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
+</insert>
+
+<insert id="insert_mrp_detail" parameterType="kr.co.noerror.DTO.mrp_result_DTO">
+  INSERT INTO mrp_result_detail (
+    mrp_code,
+    item_code,
+    required_qty,
+    total_stock,
+    safety_stock,
+    reserved_stock,
+    available_stock,
+    shortage_stock
+  ) VALUES (
+    #{mrp_code},
+    #{item_code},
+    #{required_qty},
+    #{total_stock},
+    #{safety_stock},
+    #{reserved_stock},
+    #{available_stock},
+    #{shortage_stock} 
+  ) 
+</insert>
 </mapper>

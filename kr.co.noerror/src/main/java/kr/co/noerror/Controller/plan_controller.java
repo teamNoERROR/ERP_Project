@@ -47,7 +47,7 @@ public class plan_controller {
     public Map<String, Object> plan_save(@RequestBody Map<String, Object> plan) {
         Map<String, Object> response = new HashMap<>();
         
-        //중복 없는 주문코드 생성
+        //중복 없는 생성계획 코드 생성
         String plan_code = null;
         int count = 0;
         boolean is_duplicated = true;

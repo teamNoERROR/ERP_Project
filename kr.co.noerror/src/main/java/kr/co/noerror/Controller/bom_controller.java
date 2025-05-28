@@ -132,12 +132,12 @@ public class bom_controller {
 	//부자재 리스트 모달 띄우기 
 	@GetMapping("/bom_item_list.do")
 	public String bom_item_list(Model m)  {
-		int goods_total = this.g_svc.gd_all_ea("item"); //제품 총개수
-		List<products_DTO> goods_all_list = this.g_svc.gd_all_list("item");  //제품 리스트 
+//		int goods_total = this.g_svc.gd_all_ea("item"); //제품 총개수
+//		List<products_DTO> goods_all_list = this.g_svc.gd_all_list("item");  //제품 리스트 
 		
-		m.addAttribute("no_items", "등록된 제품이 없습니다" );
-		m.addAttribute("items_total", goods_total);
-		m.addAttribute("items_list", goods_all_list);
+//		m.addAttribute("no_items", "등록된 제품이 없습니다" );
+//		m.addAttribute("items_total", goods_total);
+//		m.addAttribute("items_list", goods_all_list);
 		
 		
 		return "/modals/items_list_modal.html";

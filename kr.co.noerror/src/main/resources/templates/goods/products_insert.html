@@ -33,15 +33,15 @@
 	<div class="row mb-3">
 		<div class="col-md-4">
 			<label class="form-label">제품유형</label>
-			<select class="form-select" id="goods_type" onchange="goodsType()">
+			<select class="form-select" id="goods_type" onchange="goodsType(this.value)">
 				<option value="">선택</option>
-				<option value="완제품">완제품</option>
-				<option value="반제품">반제품</option>
+				<option value="product">완제품</option>
+				<option value="half">반제품</option>
 			</select>
 		</div>
 		<div class="col-md-4">
 			<label class="form-label">대분류</label>
-			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value)">
+			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value,type)">
 				<option value="" >선택</option>
 <!-- 				<option th:value="${l_class}" th:each="l_class : ${l_class}">[[${l_class}]]</option> -->
 			</select>

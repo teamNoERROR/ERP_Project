@@ -19,29 +19,47 @@
   <!-- 토글 버튼 영역 -->
   <div class="col-auto  mb-3">
     <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
-      <button id="product_list" class="toggle_btns" onclick="toggleButton('product')"  style="background: #82CCDD; color: #fff;">완제품</button>
-      <button id="item_list" class="toggle_btns" onclick="toggleButton('item')"  style="background: transparent; color: #000;">부자재</button>
-      <button id="consum_list" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
+      <button type="button" class="toggle_btns" id="goods_type" value="product" onclick="toggleButton('product')"  style="background: #82CCDD; color: #fff;">완제품</button>
+      <button type="button" class="toggle_btns" onclick="toggleButton('item')"  style="background: transparent; color: #000;">부자재</button>
+      <button type="button" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
     </div>
   </div>
 
   <!-- 검색창 영역 -->
   <div class="col-auto">
-    <form class="row g-2 align-items-center">
-      <div class="col-auto">
-        <div class="input-group input-group-sm">
-          <select class="form-select" style="max-width: 120px;">
-            <option selected>전체</option>
-            <option value="1">발주처명</option>
-            <option value="2">담당자</option>
+   <div ></div>
+      <div class="col-auto d-flex"  >
+       <form id="frm_class" class="row g-1 align-items-center" >
+       <input type="hidden" name="type">
+      <div class="input-group input-group-sm me-0" style="width: 200px;">
+          <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
+            <option value="">대분류</option>
+             <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
           </select>
-          <input type="text" class="form-control" placeholder="검색">
-          <button class="btn btn-primary">
+          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
+            <th:block >
+            <option value="" th:if="${sclass == null}" >소분류</option>
+            <option  th:if="${sclass != null}" th:value="${sclass}" th:utext="${sclass}">소분류</option>
+            </th:block>
+            
+          </select>
+        </div>
+         </form>
+       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()">
+        <div class="input-group input-group-sm" style="width:350px;">
+          <select class="form-select" id="search_opt" name="search_opt" style="max-width: 120px;">
+            <option value="all">전체</option>
+            <option value="pd_code"  th:selected="${search_opt} == 'pd_code'">제품코드</option>
+            <option value="pd_name" th:selected="${search_opt} == 'pd_name'">제품명</option>
+          </select>
+          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
+          <button class="btn btn-primary" >
             <i class="bi bi-search"></i>
           </button>
         </div>
+          </form>
       </div>
-    </form>
+   
   </div>
 </div>
 
@@ -99,11 +117,13 @@
   <!-- Pagination -->
         <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
             <ul class="pagination">
-                <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">다음</a></li>
+                <li class="page-item page-link prev"  th:classappend="${paging.start_pg == 1} ? 'disabled' : ''">이전</li>
+                
+                
+                <li class="page-item page-link pgnum"  onclick="go_page()" >1</li>
+                
+                
+                <li class="page-item page-link next">다음</li>
             </ul>
         </div>
         

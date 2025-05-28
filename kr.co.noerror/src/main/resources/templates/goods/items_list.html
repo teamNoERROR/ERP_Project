@@ -19,17 +19,27 @@
   <!-- 토글 버튼 영역 -->
   <div class="col-auto  mb-3">
     <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
-      <button id="product_list" class="toggle_btns" onclick="toggleButton('product')" style="background: transparent; color: #000;">완제품</button>
-      <button id="item_list" class="toggle_btns" onclick="toggleButton('item')"   style="background: #82CCDD; color: #fff;">부자재</button>
-      <button id="consum_list" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
+      <button type="button" class="toggle_btns" onclick="toggleButton('product')" style="background: transparent; color: #000;">완제품</button>
+      <button type="button" class="toggle_btns" onclick="toggleButton('item')"  id="goods_type" value="item"  style="background: #82CCDD; color: #fff;">부자재</button>
+      <button type="button" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
     </div>
   </div>
 
   <!-- 검색창 영역 -->
   <div class="col-auto">
     <form class="row g-2 align-items-center">
-      <div class="col-auto">
-        <div class="input-group input-group-sm">
+      <div class="col-auto d-flex">
+      <div class="input-group input-group-sm me-0" style="width: 200px;">
+          <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
+            <option value="">대분류</option>
+            <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" ></option>
+          </select>
+          <select class="form-select" id="products_class2" >
+            <option value="" >소분류</option>
+          </select>
+        </div>
+      
+        <div class="input-group input-group-sm" style="width:350px;">
           <select class="form-select" style="max-width: 120px;">
             <option selected>전체</option>
             <option value="1">발주처명</option>
@@ -37,7 +47,7 @@
               <option value="2">부자재</option>
           </select>
           <input type="text" class="form-control" placeholder="검색">
-          <button class="btn btn-primary" type="submit">
+          <button class="btn btn-primary" onclick="itmSearch()">
             <i class="bi bi-search"></i>
           </button>
         </div>

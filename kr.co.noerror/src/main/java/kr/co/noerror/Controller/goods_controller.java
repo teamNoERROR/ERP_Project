@@ -3,7 +3,6 @@ package kr.co.noerror.Controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
@@ -33,10 +31,10 @@ import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_file;
+import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
-import kr.co.noerror.Service.goods_serviceImpl;
 
 @Controller
 public class goods_controller {
@@ -58,6 +56,9 @@ public class goods_controller {
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
 	
+	@Resource(name="M_paging")  //랜덤숫자생성 모델 
+	M_paging m_pg;
+	
 	@Resource(name="file_DTO")  //파일첨부DTO
 	file_DTO f_dto;
 	
@@ -73,34 +74,71 @@ public class goods_controller {
 	String msg = "";
 	
 	//픔목관리 > 리스트 화면이동 
-	@GetMapping("/goods.do")
-	public String products_list(Model m,@RequestParam(value = "type", required = false) String type) {
-		
-		int goods_total = this.g_svc.gd_all_ea(type); //제품 총개수
-		List<products_DTO> goods_all_list = this.g_svc.gd_all_list(type);  //제품 리스트 
-		
-		if("product".equals(type) || type==null) {
-			m.addAttribute("mmenu","완제품 리스트");
-			this.url = "/goods/products_list.html";
+		@GetMapping({"/goods.do"})
+		public String products_list(Model m,@RequestParam(value = "type", required = false) String type
+									,@RequestParam(value = "search_opt", required = false) String search_opt
+									,@RequestParam(value = "keyword", required = false) String keyword
+									,@RequestParam(value = "products_class2", required = false) String sclass
+									,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno) {
+			System.out.println("search_opt : " +search_opt);
+			System.out.println("keyword : " +keyword);
+			System.out.println("type : " +type);
+			System.out.println("sclass : " +sclass);
+			System.out.println("pageno : " +pageno);
 			
-		}else if("item".equals(type)) {
-			m.addAttribute("mmenu","부자재 리스트");
-			this.url = "/goods/items_list.html";
+			JSONArray lc_list = this.g_svc.gd_class(type);  //대분류목록
+			this.list = new ArrayList<>();
+			for (int i = 0; i < lc_list.length(); i++) {
+				this.list.add(lc_list.getString(i));
+			}
 			
-		}else if("consume".equals(type)) {
-			m.addAttribute("mmenu","소모품 리스트");
-			this.url = "/goods/consum_list.html";
+			if(sclass!=null) {
+				String lclass_ck = this.g_svc.lclass_ck(sclass);
+				m.addAttribute("lclass_ck",lclass_ck);
+				m.addAttribute("sclass",sclass);
+			}
+//			int goods_total = this.g_svc.gd_all_ea(type); //제품 총개수
+//			List<products_DTO> goods_all_list = this.g_svc.gd_all_list(type);  //제품 리스트 
+			int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, search_opt, keyword); //제품 총개수
+			List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type,sclass, search_opt,keyword, pageno);  //제품 리스트
 			
+			Map<String, Object> paging = this.m_pg.page_ea(pageno, 5, goods_total_sch);
+			
+			
+			if("product".equals(type) || type==null) {
+				m.addAttribute("mmenu","완제품 리스트");
+				this.url = "/goods/products_list.html";
+				
+			}else if("item".equals(type)) {
+				m.addAttribute("mmenu","부자재 리스트");
+				this.url = "/goods/items_list.html";
+				
+			}else if("consume".equals(type)) {
+				m.addAttribute("mmenu","소모품 리스트");
+				this.url = "/goods/consum_list.html";
+				
+			}
+
+			
+			m.addAttribute("search_opt",search_opt);
+			m.addAttribute("keyword",keyword);
+			m.addAttribute("pd_class2",sclass);
+			m.addAttribute("lmenu","기준정보관리");
+			m.addAttribute("smenu","품목 관리");
+			m.addAttribute("lclass",this.list);
+			m.addAttribute("paging", paging );
+			m.addAttribute("pageno", pageno );
+			m.addAttribute("no_goods", "등록된 제품이 없습니다" );
+			m.addAttribute("goods_total", goods_total_sch);
+			m.addAttribute("goods_all_list", goods_all_list_sch);
+			
+			return this.url;
 		}
 
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("no_goods", "등록된 제품이 없습니다" );
-		m.addAttribute("goods_all_list", goods_all_list);
-		m.addAttribute("goods_total", goods_total);
-		
-		return this.url;
-	}
+
+	
+	
+	
 	
 
 	//완제품 등록하기 화면이동 
@@ -125,7 +163,7 @@ public class goods_controller {
 	
 	//제품유형 선택시 
 	@GetMapping("/goods_type.do")
-	public String goods_type(HttpServletResponse res, @RequestParam("goods_type") String goods_type,
+	public String goods_type(HttpServletResponse res, @RequestParam("type") String goods_type,
 							@RequestParam(value="products_class1", required=false) String products_class1) throws IOException {
 		this.pw = res.getWriter();
 		try {
@@ -145,7 +183,7 @@ public class goods_controller {
 	//소분류리스트 전달
 	@GetMapping("/goods_class.do")
 	public String pd_sclass(HttpServletResponse res,  
-							@RequestParam("goods_type") String goods_type,
+							@RequestParam("type") String goods_type,
 							@RequestParam("products_class1") String products_class1) throws IOException {
 		this.pw = res.getWriter();
 		try {
@@ -201,26 +239,14 @@ public class goods_controller {
 									HttpServletResponse res) {
 		
 		System.out.println("이미지 : "+productImage);
-		
 		try {
 			this.pw = res.getWriter();
 			
-			boolean fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);  
-			if(fileattach == true) {  //FTP에 파일저장 완료 후 
-				//dto에 파일명 장착
-				pdto.setFILE_NM(this.f_dto.getFilenm());
-				pdto.setFILE_RENM(this.f_dto.getFileRenm());
-				pdto.setAPI_FNM(this.f_dto.getApinm());
-				pdto.setIMG_SRC(this.f_dto.getImgPath());
-				
-				int result = this.g_svc.itm_insert(pdto);   //db에 데이터 저장 
-				if(result > 0) {  
-					this.pw.write("ok");  //제품 등록 완료 
-				}
-				else {
-					this.pw.write("fail"); //제품 등록실패
-				}
-			}else {
+			int result = this.g_svc.itm_insert(pdto, productImage, url);   //db에 데이터 저장
+			if(result > 0) {  
+				this.pw.write("ok");  //제품 등록 완료 
+			}
+			else {
 				this.pw.write("fail"); //제품 등록실패
 			}
 			
@@ -256,7 +282,6 @@ public class goods_controller {
 					m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
 					m.addAttribute("bom_result", resultlist);
 				}
-				
 				this.url = "/modals/product_detail_modal.html";
 				
 			}else if("item".equals(type)) {

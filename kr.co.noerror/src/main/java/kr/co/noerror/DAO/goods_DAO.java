@@ -60,21 +60,28 @@ public class goods_DAO {
 		return goods_one;
 	}
 
-
+	
+	//제품 총개수 
+	public int pd_all_ea(String type) {
+		int result = this.st.selectOne("pd_all_ea",type);
+		return result;
+	}
+	public int gd_all_ea_sch(Map<String, String> map) {
+		int result = this.st.selectOne("gd_all_ea_sch",map);
+		return result;
+	}
 
 	//제품 리스트 보기 
 	public List<products_DTO> pd_all_list(String type) {
 		List<products_DTO> pd_list = this.st.selectList("pd_all_list",type);
 		return pd_list;
 	}
-
-
-
-	//제품 총개수 
-	public int pd_all_ea(String type) {
-		int result = this.st.selectOne("pd_all_ea",type);
-		return result;
+	public List<products_DTO> gd_all_list_sch(Map<String, Object> map) {
+		List<products_DTO> pd_list = this.st.selectList("gd_all_list_sch",map);
+		return pd_list;
 	}
+
+
 
 
 
@@ -83,5 +90,13 @@ public class goods_DAO {
 		int result = this.st.delete("pd_delete", p);
 		return result;
 	}
+
+	public String lclass_ck(String sclass) {
+		String result = this.st.selectOne("lclass_ck", sclass);
+		return result;
+	}
+
+
+
 	
 }

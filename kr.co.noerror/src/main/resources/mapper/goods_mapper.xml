@@ -77,43 +77,163 @@
 	VALUES 
 	(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
 	#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
-	#{ITEM_COST}, #{ITM_SAFE_STOCK}, #{COMPANY_CODE}, 
+	#{ITEM_COST}, #{ITM_SAFE_STOCK},  
 	#{FILE_NM, jdbcType=CLOB}, #{FILE_RENM, jdbcType=VARCHAR}, #{API_FNM, jdbcType=VARCHAR}, #{IMG_SRC, jdbcType=CLOB}, 
-	#{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+	#{COMPANY_CODE}, #{USE_FLAG}, #{EXP_FLAG}, #{MEMO, jdbcType=CLOB}, SYSDATE, NULL)
 </insert>
 
-<!-- 제품 총개수 보기 -->
-<select id="pd_all_ea" resultType="int">
-	SELECT COUNT (*) FROM 
-	<choose>
-		<when test="type=='product' or type==null">
+<!-- 제품총 개수  -->
+<!-- <select id="pd_all_ea" resultType="int"> -->
+<!-- 	SELECT COUNT (*) FROM  -->
+<!-- 	<choose> -->
+<!-- 		<when test="type=='product' or type==null"> -->
+<!-- 		PRODUCTS -->
+<!-- 		</when> -->
+<!-- 		<when test="type=='item'"> -->
+<!-- 		ITEMS -->
+<!-- 		</when> -->
+<!-- 		<when test="type=='consume'"> -->
+<!-- 		ITEMS -->
+<!-- 		</when> -->
+<!-- 	</choose> -->
+<!-- </select> -->
+
+<select id="gd_all_ea_sch" resultType="int" parameterType="Map">
+	SELECT COUNT (*) FROM
+	<if test="type == 'product' or type == null">
 		PRODUCTS
-		</when>
-		<when test="type=='item'">
+		<if test="sclass != null">
+			<where>
+			PRODUCT_CLASS2 = #{sclass} 
+			</where>
+		</if>
+		<if test="search_opt == 'all' and keyword != null"> 
+			<where>
+			 (PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_CLASS1 LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_CLASS2 LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_SPEC LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_UNIT LIKE '%'||#{keyword}||'%' OR
+			 MEMO LIKE '%'||#{keyword}||'%'
+			 ) 
+			</where>
+		</if>
+		<if test="search_opt == 'pd_name' and keyword != null"> 
+			<where>
+			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' 
+			</where>
+		</if>
+	</if>
+	<if test="type == 'item'">
 		ITEMS
-		</when>
-		<when test="type=='consume'">
-		ITEMS
-		</when>
-	</choose>
+		<if test="sclass != null">
+			<where>
+			ITEM_CLASS2 = #{sclass} 
+			</where>
+		</if>
+		<if test="search_opt == 'all' and keyword != null"> 
+			<where>
+			 (ITEM_CODE LIKE '%'||#{keyword}||'%' OR
+			 ITEM_NAME LIKE '%'||#{keyword}||'%' OR
+			 ITEM_CLASS1 LIKE '%'||#{keyword}||'%' OR
+			 ITEM_CLASS2 LIKE '%'||#{keyword}||'%' OR
+			 ITEM_SPEC LIKE '%'||#{keyword}||'%' OR
+			 ITEM_UNIT LIKE '%'||#{keyword}||'%' OR
+			 MEMO LIKE '%'||#{keyword}||'%'
+			 ) 
+			</where>
+		</if>
+		<if test="search_opt == 'pd_name' and keyword != null"> 
+			<where>
+			 ITEM_NAME LIKE '%'||#{keyword}||'%' 
+			</where>
+		</if>
+	</if>
 </select>
 
 
 <!-- 제품 리스트 보기 -->
-<select id="pd_all_list" resultType="kr.co.noerror.DTO.products_DTO">
+<!-- <select id="pd_all_list" resultType="kr.co.noerror.DTO.products_DTO" > -->
+<!-- 	SELECT * FROM  -->
+<!-- 	<choose> -->
+<!-- 		<when test="type=='product' or type==null"> -->
+<!-- 		PRODUCTS ORDER BY PIDX DESC -->
+<!-- 		</when> -->
+<!-- 		<when test="type=='item'"> -->
+<!-- 		ITEMS ORDER BY IIDX DESC -->
+<!-- 		</when> -->
+<!-- 		<when test="type=='consume'"> -->
+<!-- 		ITEMS ORDER BY IIDX DESC -->
+<!-- 		</when> -->
+<!-- 	</choose> -->
+<!-- </select> -->
+<select id="gd_all_list_sch" resultType="kr.co.noerror.DTO.products_DTO" parameterType="Map">
 	SELECT * FROM 
-	<choose>
-		<when test="type=='product' or type==null">
-		PRODUCTS ORDER BY PIDX DESC
-		</when>
-		<when test="type=='item'">
-		ITEMS ORDER BY IIDX DESC
-		</when>
-		<when test="type=='consume'">
-		ITEMS ORDER BY IIDX DESC
-		</when>
-	</choose>
+	(SELECT ROWNUM AS rnum, a.* FROM 
+	(SELECT * FROM 
+	<if test="type == 'product' or type == null">
+		PRODUCTS
+		
+		<if test="sclass != null">
+			<where>
+			PRODUCT_CLASS2 = #{sclass} 
+			</where>
+		</if>
+		<if test="search_opt == 'all' and keyword != null"> 
+			<where>
+			 (PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_CLASS1 LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_CLASS2 LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_SPEC LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_UNIT LIKE '%'||#{keyword}||'%' OR
+			 MEMO LIKE '%'||#{keyword}||'%'
+			 ) 
+			</where>
+		</if>
+		<if test="search_opt == 'pd_name' and keyword != null"> 
+			<where>
+			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' 
+			</where>
+		</if>
+		ORDER BY PIDX DESC ) a
+		WHERE ROWNUM &lt;= #{end} )
+		WHERE rnum &gt;= #{start}
+	</if>
+	<if test="type == 'item'">
+		ITEMS
+		<if test="sclass != null">
+			<where>
+			ITEM_CLASS2 = #{sclass} 
+			</where>
+		</if>
+		<if test="search_opt == 'all' and keyword != null"> 
+			<where>
+			 (ITEM_CODE LIKE '%'||#{keyword}||'%' OR
+			 ITEM_NAME LIKE '%'||#{keyword}||'%' OR
+			 ITEM_CLASS1 LIKE '%'||#{keyword}||'%' OR
+			 ITEM_CLASS2 LIKE '%'||#{keyword}||'%' OR
+			 ITEM_SPEC LIKE '%'||#{keyword}||'%' OR
+			 ITEM_UNIT LIKE '%'||#{keyword}||'%' OR
+			 MEMO LIKE '%'||#{keyword}||'%'
+			 ) 
+			</where>
+		</if>
+		<if test="search_opt == 'pd_name' and keyword != null"> 
+			<where>
+			 ITEM_NAME LIKE '%'||#{keyword}||'%' 
+			</where>
+		</if>
+	</if>
 </select>
+
+
+
+
+
+
+
 
 <!-- 제품 상세보기 -->
 <select id="pd_one_detail" resultType="kr.co.noerror.DTO.products_DTO" parameterType="Map">
@@ -128,6 +248,13 @@
 	</choose>
 </select>
 
+
+
+
+
+
+
+
 <!-- 제품삭제 -->
 <delete id="pd_delete"  parameterType="Map">
 	DELETE FROM 
@@ -141,5 +268,11 @@
 	</choose>
 
 </delete>
+
+
+<select id="lclass_ck" resultType="String" parameterType="String">
+	SELECT PRODUCT_CLASS1 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS2 = #{PRODUCT_CLASS2}
+</select>
+
 
 </mapper>

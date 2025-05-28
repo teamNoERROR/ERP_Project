@@ -1,6 +1,7 @@
 //토글버튼 클릭시 페이지 이동
 function toggleButton(type) {
   	let url = "";
+	console.log("sss" + type)
 	if (type == 'product') {
 	     url = "/goods.do?type="+type;
 	} else if (type == 'item') {
@@ -24,10 +25,10 @@ var addItem = function(){
 }
 
 
-//제품 유형 선택시 등록화면 세팅
-function goodsType(){
-	var goods_type = document.querySelector("#goods_type");
-	fetch("/goods_type.do?goods_type=" + goods_type.value, {
+//대분류리스트 세팅 
+function goodsType(goods_type){
+	//goods_type = document.querySelector("#goods_type");
+	fetch("/goods_type.do?type=" + goods_type, {
 		method: "GET"
 
 	}).then(function(data) {
@@ -54,7 +55,7 @@ function goodsType(){
 //대분류 - 소분류 짝맞추기 
 function lcSc(lc_value) {
 	var goods_type = document.querySelector("#goods_type");
-	fetch("./goods_class.do?goods_type=" + goods_type.value + 
+	fetch("./goods_class.do?type=" + goods_type.value + 
 			"&products_class1=" + lc_value, {
 		method: "GET"
 		
@@ -68,7 +69,7 @@ function lcSc(lc_value) {
 		var sclass = "";
 		sclass = `<option value="">`+"선택"+`</option>`;
 		while(w< s_class.length){
-			sclass += `<option value="${s_class[w]}">`+s_class[w]+`</option>`;
+			sclass += `<option value="`+s_class[w]+`">`+s_class[w]+`</option>`;
 			w++;
 		}
 		select_sc.innerHTML=sclass;
@@ -80,9 +81,67 @@ function lcSc(lc_value) {
 
 
 
+//분류로 검색 
+function class_sch(){
+	var form = document.querySelector("#frm_class");
+	/*
+	fetch("./goods.do?type=" + goods_type.value 
+			+ "&sclass=" + sclass, {
+			method: "GET"
+			
+		}).then(function(data) {
+			return data.text();
+
+		}).then(function(result) {
+		
+		}).catch(function(error) {
+			console.log("통신오류발생" + error);
+		});
+		*/
+		form.type.value="product";
+		
+		form.action="goods.do";
+		form.method="GET";
+		form.submit();
+}
 
 
+//제품 검색 
+function pdSearch(){
+	var form = document.querySelector("#frm_word");
+	var pclass2 = document.querySelector("#products_class2");
+	var search_opt = document.querySelector("#search_opt");
+	var keyword = document.querySelector("#keyword");
+	
+	/*
+	if(keyword.value==""){
+		alert("검색어를 입력하세요.");
+		keyword.focus();
+	}else {
+		fetch("./goods_sch.do?type="+ goods_type.value + "&search_opt=" + search_opt.value + "&keyword="+keyword.value, {
+			method: "GET",
+			
+		}).then(function(data) {
+			return data.text();
 
+		}).then(function(result) {
+						
+			
+		}).catch(function(error) {
+			console.log("통신오류발생" + error);
+		});
+	}
+	*/
+	if(keyword.value==""){
+		alert("검색어를 입력하세요.");
+		keyword.focus();
+		return false;
+	}else {
+		form.action="./goods.do";	
+		form.method="GET";
+		form.submit();
+	}		
+}
 
 
 

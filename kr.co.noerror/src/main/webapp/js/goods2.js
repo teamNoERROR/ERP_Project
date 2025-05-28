@@ -6,15 +6,7 @@ var product_spec = document.querySelector("#product_spec");
 var product_unit = document.querySelector("#product_unit");
 var pd_safe_stock = document.querySelector("#pd_safe_stock");
 var product_price = document.querySelector("#product_price");
-var purchase_corp = document.querySelector("#p_corp");
-//var useY = document.querySelector("#useY");
-//var useN = document.querySelector("#useN");
-//var expireY = document.querySelector("#expireY");
-//var expireN = document.querySelector("#expireN");
-
 var product_cost = document.querySelector("#product_cost");
-
- 
 var memo = document.querySelector("#memo");
 var productImage = document.querySelector("#productImage").files[0];
 var url = document.querySelector("#url");
@@ -62,15 +54,13 @@ function insert_pd(){
 		alert("단가를 입력하세요");
 		product_cost.focus();							
 				
-	//파일첨부 함경우 			
+			
 	}else if(product_price.value==""){
 			alert("판매가를 입력하세요");
 			product_price.focus();	
 				
-	}else if(purchase_corp.value==""){
-		alert("거래처를 입력하세요");
-		purchase_corp.focus();		
 	}
+	//파일첨부 함경우 
 	else if(productImage){  
 		var imgSize = productImage.size; // 파일 크기
 		var maxSize = 2 * 1024 * 1024; // 2MB제한
@@ -82,10 +72,10 @@ function insert_pd(){
 			alert("파일첨부 용량은 2MB이하만 가능합니다.");
 			
 		}else {
-			console.log("ss")
+			insertProduct();
 		}
 	}else {
-		console.log("aa")
+		insertProduct();
 	}
 }
 
@@ -134,67 +124,8 @@ function insertProduct(){
 	});
 }
 
-
-//부자재 등록
-function insertItem(){
-	var use_flag = document.querySelector('input[name="use_flag"]:checked');
-	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
-	
-	var formData = new FormData();
-	formData.append("ITEM_TYPE", goods_type.value);
-	formData.append("ITEM_CLASS1", products_class1.value);
-	formData.append("ITEM_CLASS2", products_class2.value);
-	formData.append("ITEM_NAME", product_name.value);
-	formData.append("ITEM_SPEC", product_spec.value);
-	formData.append("ITEM_UNIT", product_unit.value);
-	formData.append("ITEM_COST", product_cost.value);
-	formData.append("ITM_SAFE_STOCK", pd_safe_stock.value);
-	formData.append("COMPANY_CODE", purchase_corp.value);
-	formData.append("USE_FLAG", use_flag.value);
-	formData.append("EXP_FLAG", exp_flag.value);
-	formData.append("MEMO", memo.value);
-	
-    formData.append("productImage", productImage);
-	formData.append("url", "아이피써놓기");
-	
-	fetch("./item_insertok.do", {
-
-		method: "POST",
-		body : new URLSearchParams(formData)
-		
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		if(result=="ok"){
-			alert("부자재 등록이 완료되었습니다.");
-			location.href="./goods.do?type=item";
-		}
-
-	}).catch(function(error) {
-		console.log("통신오류발생" + error);
-	});
-}
-
 //초기화 버튼 클릭 
 function resetBtn(){
-	
-	//document.querySelector("#productImage").value=""
-	//document.querySelector('#previewImage').src = "./img/no-image.svg";
-	//product_type.value="";
-	//products_class1.value="";
-	//products_class2.value="";
-	//product_name.value="";
-	//product_spec.value="";
-	//product_unit.value="";
-	//pd_safe_stock.value="";
-	//use_flag.value="";
-	//exp_flag.value="";
-	//product_cost.value="";
-	//product_price.value="";
-	//memo.value="";
-	//productImage.value="";
-	
 	location.reload();
 }
 
@@ -308,7 +239,13 @@ function del_ajax(del_req){
 			console.log(result);
 		}
 	}).catch(function(error) {
-		failCount++;
 		console.log("통신오류발생" + error);
 	});
 }
+
+
+//페이징 
+function go_page(){
+	alert("sss");
+}
+

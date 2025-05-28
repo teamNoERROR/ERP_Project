@@ -36,7 +36,7 @@
         <table class="table align-middle table-bordered text-center">
           <thead class="table-light">
             <tr>
-              <th style="width:10px;"><input type="checkbox" id="check-all"></th>
+              <th style="width:10px;"><input type="checkbox" id="check-all-input"></th>
               <th>#</th>
               <th>관리번호</th>
               <th>제품명</th>
@@ -53,7 +53,7 @@
           <tbody>
 		    <tr th:each="p, no : ${plans_period}">
 		      <td>
-		        <input type="checkbox" class="row-checkbox"
+		        <input type="checkbox" class="row-checkbox-input"
 		               th:data-bom-code="${p.bom_code}"
          			   th:data-product-qty="${p.product_qty}">
 		      </td>
@@ -79,10 +79,10 @@
         <!-- 버튼 영역 -->
         <div class="mb-3 d-flex gap-2 align-items-center justify-content-end">
           <button type="button" class="btn btn-warning" id="mrp_calc"><span class="me-1">🔄</span>MRP 계산</button>
-          <button type="button" class="btn btn-info text-white"><span class="me-1">📄</span>결과 저장</button>
-          <button type="button" class="btn btn-outline-success"><span class="me-1">⬇️</span>다운로드</button>
-          <button type="button" class="btn btn-outline-success"><span class="me-1"></span>예약</button>
-          <button type="button" class="btn btn-outline-success"><span class="me-1"></span>발주</button>
+          <button type="button" class="btn btn-info text-white" onclick="calc_save()"><span class="me-1">📄</span>결과 저장</button>
+          <button type="button" class="btn btn-outline-success" onclick="excel_download()"><span class="me-1">⬇️</span>다운로드</button>
+          <button type="button" class="btn btn-warning"><span class="me-1"></span>예약</button>
+          <button type="button" class="btn btn-warning"><span class="me-1"></span>발주</button>
         </div>
 
         <!-- 계산 결과 테이블 -->
@@ -91,8 +91,8 @@
           <table class="table table-hover  table-bordered align-middle text-center">
             <thead class="table-light">
               <tr>
-                <th style="width:20px;"><input type="checkbox" ></th>
-                <th style="width:20px;">No</th>
+                <th style="width:20px;"><input type="checkbox" id="check-all-result"></th>
+                <th style="width:20px;">#</th>
                 <th style="width:120px;">자재코드</th>
                 <th style="width:120px;">자재유형</th>
                 <th style="width:120px;">자재명</th>

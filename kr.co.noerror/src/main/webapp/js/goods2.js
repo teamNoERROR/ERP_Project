@@ -244,8 +244,5 @@ function del_ajax(del_req){
 }
 
 
-//페이징 
-function go_page(){
-	alert("sss");
-}
+
 

@@ -225,6 +225,9 @@
 			 ITEM_NAME LIKE '%'||#{keyword}||'%' 
 			</where>
 		</if>
+		ORDER BY IIDX DESC ) a
+		WHERE ROWNUM &lt;= #{end} )
+		WHERE rnum &gt;= #{start}
 	</if>
 </select>
 

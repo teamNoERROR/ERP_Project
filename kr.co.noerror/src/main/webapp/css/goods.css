@@ -20,9 +20,16 @@ label {
 
 .prev{
 	border-radius: 7px 0 0 7px !important;
-	
+	cursor: pointer !important;
 }
 
 .next{
 	border-radius: 0 7px 7px 0 !important;
+	cursor: pointer !important;
+}
+
+.curpg {
+	
+	background-color: #0d6efd !important;
+	color : white !important;
 }

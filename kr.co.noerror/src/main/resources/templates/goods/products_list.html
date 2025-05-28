@@ -41,7 +41,6 @@
             <option value="" th:if="${sclass == null}" >소분류</option>
             <option  th:if="${sclass != null}" th:value="${sclass}" th:utext="${sclass}">소분류</option>
             </th:block>
-            
           </select>
         </div>
          </form>
@@ -94,7 +93,7 @@
                 	
                     <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" onclick="open_detail(event)"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product"></td>
-                        <td > [[${goods_total} - ${idx.index}]]</td>
+                        <td > [[${bno - idx.index}]]</td>
                         <td><img src=""></td>
                         <td class="pd_code" >[[${pdlist.PRODUCT_CODE}]]</td>
                         <td class="text-start">[[${pdlist.PRODUCT_NAME}]]</td>
@@ -117,13 +116,18 @@
   <!-- Pagination -->
         <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
             <ul class="pagination">
-                <li class="page-item page-link prev"  th:classappend="${paging.start_pg == 1} ? 'disabled' : ''">이전</li>
+                <li class="page-item page-link prev"  
+                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product'" onclick="go_pd_pg(this)">이전</li>
                 
+                <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
+                <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product'" onclick="go_pd_pg(this)" >[[${pgn}]]</li>
+                </th:block>
                 
-                <li class="page-item page-link pgnum"  onclick="go_page()" >1</li>
-                
-                
-                <li class="page-item page-link next">다음</li>
+                <li class="page-item page-link next" 
+                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 }, data-type='product'" onclick="go_pd_pg(this)" >다음</li>
             </ul>
         </div>
         

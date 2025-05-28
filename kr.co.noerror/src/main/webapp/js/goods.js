@@ -144,10 +144,28 @@ function pdSearch(){
 }
 
 
+//페이징 
+function go_pd_pg(ee){
+	var kw = ee.getAttribute('data-keyword');
+	var no = ee.getAttribute('data-pageno');
+	var tp = ee.getAttribute('data-type');
+	if(!kw || kw == ""){  //검색어가 없는경우 
+		location.href="./goods.do?type="+tp+"&pageno="+no;
+	}else {  //검색어가 있는경우 
+		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no;
+	}
+}
 
-
-
-
+function go_itm_pg(ee){
+	var kw = ee.getAttribute('data-keyword');
+	var no = ee.getAttribute('data-pageno');
+	var tp = ee.getAttribute('data-type');
+	if(!kw || kw == ""){  //검색어가 없는경우 
+		location.href="./goods.do?type="+tp+"&pageno="+no;
+	}else {  //검색어가 있는경우 
+		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no;
+	}
+}
 
 
 

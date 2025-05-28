@@ -102,8 +102,8 @@ public class goods_controller {
 			int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, search_opt, keyword); //제품 총개수
 			List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type,sclass, search_opt,keyword, pageno);  //제품 리스트
 			
-			Map<String, Object> paging = this.m_pg.page_ea(pageno, 5, goods_total_sch);
-			
+			Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, 5, goods_total_sch);
+			int bno = this.m_pg.serial_no(goods_total_sch, pageno, 5); 
 			
 			if("product".equals(type) || type==null) {
 				m.addAttribute("mmenu","완제품 리스트");
@@ -126,8 +126,9 @@ public class goods_controller {
 			m.addAttribute("lmenu","기준정보관리");
 			m.addAttribute("smenu","품목 관리");
 			m.addAttribute("lclass",this.list);
-			m.addAttribute("paging", paging );
+			m.addAttribute("pageinfo", pageinfo );
 			m.addAttribute("pageno", pageno );
+			m.addAttribute("bno", bno );
 			m.addAttribute("no_goods", "등록된 제품이 없습니다" );
 			m.addAttribute("goods_total", goods_total_sch);
 			m.addAttribute("goods_all_list", goods_all_list_sch);

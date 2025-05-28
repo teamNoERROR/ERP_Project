@@ -21,17 +21,21 @@
 		    <label class="fw-semibold">&nbsp;- 조회 기간 : </label>
 		    <input type="date" class="form-control" name="start_date" style="max-width: 150px;"> ~
 		    <input type="date" class="form-control" name="end_date" style="max-width: 150px;"> 
-		    <button class="btn btn-outline-primary" type="submit">
-		      <i class="bi bi-search"></i>
-		    </button>
 	    	<div class="col-auto">
 				<div class="input-group input-group-sm">
 			        <input type="checkbox" checked disabled> &nbsp;생산계획 확정 &nbsp;
 			        <input type="checkbox" checked disabled> &nbsp;MRP 미계산(예약재고 미반영)&nbsp;
 				</div>
 			</div>
+		    <button class="btn btn-outline-primary" type="submit">
+		      <i class="bi bi-search"></i>
+		    </button>	    
 		  </div>
         </form>
+        
+        <div class="mb-3 d-flex gap-2 align-items-center justify-content-end">
+          <button type="button" class="btn btn-warning" id="mrp_calc"><span class="me-1">🔄</span>MRP 계산</button>
+        </div>
 
         <table class="table align-middle table-bordered text-center">
           <thead class="table-light">
@@ -75,18 +79,31 @@
 		    </tr>
 		  </tbody>
         </table>
-        
-        <!-- 버튼 영역 -->
-        <div class="mb-3 d-flex gap-2 align-items-center justify-content-end">
-          <button type="button" class="btn btn-warning" id="mrp_calc"><span class="me-1">🔄</span>MRP 계산</button>
-          <button type="button" class="btn btn-info text-white" onclick="calc_save()"><span class="me-1">📄</span>결과 저장</button>
-          <button type="button" class="btn btn-outline-success" onclick="excel_download()"><span class="me-1">⬇️</span>다운로드</button>
-          <button type="button" class="btn btn-warning"><span class="me-1"></span>예약</button>
-          <button type="button" class="btn btn-warning"><span class="me-1"></span>발주</button>
-        </div>
-
+      </div>
+     </div>
+   </div>
+   <br>
+   <div class="table-responsive rounded">
+    <div class="card shadow">
+      <div class="card-body">
         <!-- 계산 결과 테이블 -->
         <div class="mb-2 fw-semibold">▷ MRP 계산 결과</div>
+        <!-- 버튼 영역 -->
+        <div class="mb-3 d-flex gap-2 align-items-center justify-content-end">
+		  <button type="button" class="btn btn-info text-white" onclick="calc_save()">
+		    <span class="me-1">📄</span> 결과 저장
+		  </button>
+		  <button type="button" class="btn btn-outline-success" onclick="excel_download()">
+		    <span class="me-1">⬇️</span> 다운로드
+		  </button>
+		  <button type="button" class="btn btn-warning">
+		    <span class="me-1">📦</span> 재고예약화면으로 이동
+		  </button>
+		  <button type="button" class="btn btn-warning">
+		    <span class="me-1">🛒</span> 발주화면으로 이동
+		  </button>
+		</div>
+
         <div class="table-responsive">
           <table class="table table-hover  table-bordered align-middle text-center">
             <thead class="table-light">

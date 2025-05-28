@@ -103,6 +103,8 @@ public class mrp_controller {
 		
 		List<plan_DTO> plans_period = this.mdao.plans_period(mparam);
 		
+		m.addAttribute("lmenu","생산 관리");
+		m.addAttribute("smenu","mrp 계산");
 		m.addAttribute("plans_period", plans_period);
 
 		return "/production/mrp_list.html";

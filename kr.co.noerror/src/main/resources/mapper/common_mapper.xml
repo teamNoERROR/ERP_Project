@@ -8,5 +8,10 @@
 	SELECT * FROM EMPLOYEE ORDER BY EIDX DESC
 </select>
 
+<!-- 창고 리스트 전체출력 -->
+<select id="warehouse_list" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+	SELECT * FROM WAREHOUSE ORDER BY WIDX DESC
+</select>
+
 
 </mapper>

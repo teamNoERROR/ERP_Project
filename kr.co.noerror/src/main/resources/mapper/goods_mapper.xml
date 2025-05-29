@@ -98,6 +98,7 @@
 <!-- 	</choose> -->
 <!-- </select> -->
 
+<!-- 제품 전체 개수  -->
 <select id="gd_all_ea_sch" resultType="int" parameterType="Map">
 	SELECT COUNT (*) FROM
 	<if test="type == 'product' or type == null">
@@ -168,6 +169,8 @@
 <!-- 		</when> -->
 <!-- 	</choose> -->
 <!-- </select> -->
+
+<!-- 제품 전체 리스트  -->
 <select id="gd_all_list_sch" resultType="kr.co.noerror.DTO.products_DTO" parameterType="Map">
 	SELECT * FROM 
 	(SELECT ROWNUM AS rnum, a.* FROM 

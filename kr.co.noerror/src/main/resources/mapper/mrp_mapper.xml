@@ -23,8 +23,8 @@ WHERE pln.plan_status = '계획'
 <select id="boms_for_mrp" parameterType="String" resultType="kr.co.noerror.DTO.temp_bom_DTO">
   SELECT 
   	  bom.item_code, 
-  	  itm.item_name, 
   	  itm.item_type,
+  	  itm.item_name, 
   	  bom.quantity, 
   	  itm.item_unit
   FROM temp_bom_detail bom

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.purchase_mapper">
+
+<select id="mrp_result_select" parameterType="String" resultType="kr.co.noerror.DTO.mrp_result_DTO">
+ SELECT
+    mrp.mrp_code,
+    mrp.item_code,
+    mrp.required_qty,
+    mrp.available_stock,
+    mrp.shortage_stock,
+    itm.item_type,
+    itm.item_name,
+    itm.item_unit,
+    itm.company_code 
+ FROM mrp_result_detail mrp
+ JOIN temp_items itm ON mrp.item_code = itm.item_code
+ WHERE mrp.mrp_code = #{mrp_code}
+</select>
+
+</mapper>

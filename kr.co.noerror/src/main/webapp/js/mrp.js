@@ -68,7 +68,7 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
 		        const row = document.createElement("tr");
 
 		        row.innerHTML = `
-		            <td><input type="checkbox" class="row-checkbox-result"></td>
+		            <td><input type="checkbox" checked disabled class="row-checkbox-result"></td>
 		            <td>${index + 1}</td>
 		            <td>${item.item_code}</td>
 		            <td>${item.item_type}</td>
@@ -112,6 +112,9 @@ function calc_save() {
     .then(response => {
         if (response.success) {
             alert("MRP 결과 저장 완료!");
+			
+			// mrp_code를 숨겨진 input에 저장
+			document.getElementById("mrpCodeHidden").value = response.mrp_code;
         } else {
             alert("저장 실패: " + response.message);
         }
@@ -119,6 +122,44 @@ function calc_save() {
     .catch(err => {
         alert("에러 발생: " + err.message);
     });
+}
+
+//발주화면으로 이동
+function go_purchase() {
+    const dataToSave = collectMRPResultData();
+	const mrpCode = document.getElementById("mrpCodeHidden").value;
+
+    if (dataToSave.length === 0) {
+        alert("발주화면으로 이동하려면 발주할 대상을 선택해야 합니다.");
+        return;
+    }
+	
+	if (!mrpCode) {
+	        alert("먼저 MRP 저장을 완료해 주세요.");
+	        return;
+	}
+
+    // 폼 생성
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/go_purchase.do";
+
+	// 데이터 input
+	const dataInput = document.createElement("input");
+	dataInput.type = "hidden";
+	dataInput.name = "data";
+	dataInput.value = JSON.stringify(dataToSave);
+	form.appendChild(dataInput);
+
+	// mrp_code input
+	const codeInput = document.createElement("input");
+	codeInput.type = "hidden";
+	codeInput.name = "mrp_code";
+	codeInput.value = mrpCode;
+	form.appendChild(codeInput);
+
+	document.body.appendChild(form);
+	form.submit();
 }
 
 function collectMRPResultData() {

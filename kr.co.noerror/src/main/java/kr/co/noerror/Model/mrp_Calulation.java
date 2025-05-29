@@ -34,7 +34,7 @@ public class mrp_Calulation {
 				int available_stock = total_stock - safety_stock - reserved_stock;
 				int shortage_stock = available_stock - required_qty;
 				aggregated.merge(item_code,
-						new mrp_result_DTO(null, item_code, bom.getItem_name(), bom.getItem_type(), required_qty, bom.getItem_unit(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
+						new mrp_result_DTO(null, item_code, bom.getItem_type(), bom.getItem_name(), required_qty, bom.getItem_unit(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
                         (oldVal, newVal) -> {
                             oldVal.setRequired_qty(oldVal.getRequired_qty() + newVal.getRequired_qty());
                             return oldVal;

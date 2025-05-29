@@ -33,32 +33,55 @@
         
         <!-- MRP 기반 -->
         <div class="tab-pane fade show active" id="mrp" role="tabpanel">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <form method="get" action="/mrp_result_select.do">
+	              <label class="form-label">MRP코드 검색</label> 
+	              <div class="input-group">
+	                <input type="text" class="form-control" name="mrp_code" placeholder="MRP 코드">
+	                <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+	              </div>
+              </form>
+            </div>
+              <div class="form-text">* MRP 계산 자료 중 부족수량이 있는 자재만 조회됩니다.</div>
+          </div>
+          
           <table class="table table-bordered align-middle">
             <thead class="table-light text-center">
               <tr>
                 <th style="width:10px;"><input type="checkbox"></th>
+                <th>#</th>
+                <th>MRP코드</th>
                 <th>자재코드</th>
+                <th>자재유형</th>
                 <th>자재명</th>
-                <th>구매처</th>
-                <th>단위</th>
                 <th>소요수량</th>
+                <th>단위</th>
                 <th>가용재고</th>
                 <th>부족수량</th>
                 <th>발주수량</th>
+                <th>발주업체</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr th:each="m, no : ${mrp_results}">
                 <td><input type="checkbox"></td>
-                <td>RM001</td>
-                <td>김밥용 김</td>
-                <td>삼성식자재</td>
-                <td>ea</td>
-                <td>100</td>
-                <td>20</td>
-                <td>80</td>
-                <td><input type="number" class="form-control" value="80"></td>
-             </tr>
+                <th>[[${no.count}]]</th>
+                <td>[[${m.mrp_code}]]</td>
+                <td>[[${m.item_code}]]</td>
+                <td>[[${m.item_type}]]</td>
+                <td>[[${m.item_name}]]</td>
+                <td>[[${m.required_qty}]]</td>
+                <td>[[${m.item_unit}]]</td>
+                <td>[[${m.available_stock}]]</td>
+                <td>[[${m.shortage_stock}]]</td>
+                <td><input type="number" class="form-control"></td>
+                <td><type="text" class="form-control" id="company_code" placeholder="발주업체" readonly>
+                <button type="button" class="btn btn-outline-secondary modal-trigger" 
+                        th:data-modal-url="@{/orders_modal.do}" data-modal-id="orders_modal" style="cursor: pointer;">
+                    <i class="bi bi-search"></i>
+                </button></td>
+             </tr>             
             </tbody>
           </table>
         </div>

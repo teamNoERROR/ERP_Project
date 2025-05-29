@@ -103,9 +103,8 @@ function select_items () {
 	
 	  //부모 테이블의 기존 행 전체 삭제
 	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
-		
 
-	  selected_box.forEach(checkbox => {
+	  	  selected_box.forEach(checkbox => {
 		
 	    var row = checkbox.closest('tr');
 	
@@ -122,14 +121,9 @@ function select_items () {
 	    // 부모 화면에 반영
 		appendItemsRow(tbody, item);
 		
-		
-		
 		document.querySelector("#bom_tr").innerHTML+=`
 			<li> ${item.name} </li>
 		`;
-		
-		
-	
 	  });
 	
 	 // 모달 닫기

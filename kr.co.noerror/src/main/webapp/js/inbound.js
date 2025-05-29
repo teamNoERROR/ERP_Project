@@ -69,7 +69,7 @@ function choiceWh() {
 var pch_code = document.querySelector("#pch_code");
 var whcode = document.querySelector("#in_wh_name");
 var wh_code = document.querySelector("#wh_code");
-
+var inbound_date = document.querySelector("#inbound_date");
 
 
 
@@ -82,7 +82,7 @@ var inb_memo = document.querySelector("#inb_memo");
 
 //입고리스트 저장버튼 클릭 
 function insert_inBnd(){
-	var inbound_date = document.querySelector("#inbound_date");
+	
 	if(pch_code.value==""){
 		alert("발주코드를 선택하세요.");
 		pch_code.focus();		
@@ -104,17 +104,16 @@ function insert_inBnd(){
 } 
 
 function inbndInsertOk(){
-	var inbound_date = document.querySelector("#inbound_date");
 	var tbody = document.querySelector("#inbnd_items");
 	var rows = tbody.querySelectorAll('tr.item_row');
-	var item_qty = document.querySelector(".item_qty");
-	var item_exp = document.querySelector(".item_exp");
-	var item_deli = document.querySelector(".item_deli");
-	console.log(inbound_date.value)
-	
+
 	var in_items = [];
 	
 	rows.forEach(row => {
+		var item_qty = row.querySelector(".item_qty");
+		var item_exp = row.querySelector(".item_exp");
+		var item_deli = row.querySelector(".item_deli");
+		
 	    // 각 컬럼에서 값을 읽어오기
 		if(item_qty.value == ""){
 			alert("입고슈량을  입력해야 합니다.");
@@ -145,7 +144,7 @@ function inbndInsertOk(){
 	    	//}
 		}
 	});
-	
+	console.log(JSON.stringify(in_items))
 	fetch("./inbound_insertok.do", {
 
 		method: "PUT",

@@ -15,4 +15,7 @@ public interface plan_mapper {
 	int plan_count(Map<String, Object> mparam);
 	List<temp_bom_DTO> bom_items(String bom_code);
 	List<order_DTO> orders_modal();
+	List<order_DTO> emps_modal();
+	int plan_code_check(String plan_code);
+	int insert_plan(plan_DTO pdto);
 }

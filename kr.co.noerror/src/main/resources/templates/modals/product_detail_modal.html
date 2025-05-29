@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="staticBackdropLabel">제품 상세보기</h1>
+				<h1 class="modal-title fs-5" id="pd_detail_label">제품 상세보기</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body row justify-content-center d-flex gap-3">
@@ -67,8 +67,116 @@
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
 					<div class="ms-auto">
-						<button type="button" class="btn btn-info" th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" onclick="bomBtn(this)">
+						<button type="button" class="btn btn-info bom_btn" 
+								th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" 
+								onclick="bomBtn(this)">
 							<i class="bi bi-card-list"></i> BOM조회
+						</button>
+						<button type="button" class="btn btn-success">
+							<i class="bi bi-pencil-square"></i> 수정
+						</button>
+						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" data-type="product" onclick="deleteBtn(this)">
+							<i class="bi bi-trash"></i> 삭제
+						</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- BOM 상세보기 모달 -->
+<div class="modal fade" id="bom_detail" tabindex="-1" aria-labelledby="bom_detail_label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="bom_detail_label">BOM 상세보기</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body row justify-content-center d-flex gap-3">
+
+<div class="row">
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    BOM 트리
+                </div>
+                <div class="card-body tree">
+                    <ul id="bomTree">
+                        <li >
+                            <strong >[[${top_pd}]]</strong>
+                            <ul >
+                                <li  th:each="bom : ${bom_result}"  th:text="${bom.SEQ_NO + '. ' + bom.ITEM_NAME}"></li>
+                               
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    부자재 상세보기 1
+                </div>
+                <div class="card-body bom-detail " id="bomDetail">
+                <h5 class="mb-3">부자재 소요 리스트</h5>
+				<div class="table-responsive rounded">
+                <table class="table table-bordered" style="white-space: nowrap;">
+				<thead>
+				    <tr class="text-center">
+				      <th scope="col" style="width: 5%;">#</th>
+				      <th scope="col" style="width: 20%;">제품코드</th>
+				      <th scope="col" style="width: 30%;">자재명</th>
+				      <th scope="col" style="width: 30%;">제품유형</th>
+					  <th scope="col" style="width: 30%;">대분류</th>
+					  <th scope="col" style="width: 30%;">소분류</th>
+					  <th scope="col" style="width: 30%;">규격</th>
+					  <th scope="col" style="width: 30%;">소요량</th>
+					  <th scope="col" style="width: 30%;">단위</th>
+					  <th scope="col" style="width: 30%;">단가</th>
+					  <th scope="col" style="width: 30%;">매입처</th>
+					  <th scope="col" style="width: 30%;">비고</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  <tr th:each="itm, no : ${bom_result}">
+				  	<td th:text="${no.count}"></td>
+					<td th:text="${itm.C_ITEM_CODE}"></td> 
+					<td th:text="${itm.ITEM_NAME}"></td>
+					<td th:text="${itm.ITEM_TYPE}"></td>
+					<td th:text="${itm.ITEM_CLASS1}"></td>
+					<td th:text="${itm.ITEM_CLASS2}"></td>		                    	                    							
+					<td th:text="${itm.ITEM_SPEC}"></td>
+					<td th:text="${itm.BOM_QTY}"></td>
+					<td th:text="${itm.UNIT}"></td>
+					<td th:text="${itm.ITEM_COST}"></td>
+					<td ></td>
+					<td th:text="${itm.MEMO ?: '비고없음'}"></td>
+				  </tr>
+				</tbody>
+                </table>
+				</div>
+                </div>
+            </div>
+
+   
+        </div>
+    </div>
+
+
+				
+			</div>
+			<div class="modal-footer">
+				<!-- Action Buttons -->
+				<div class="d-flex gap-2">
+					<div class="ms-auto">
+						<button type="button" class="btn btn-info go_back" data-bs-dismiss="modal" aria-label="Close">
+							<i class="bi bi-card-list"></i> 이전으로
 						</button>
 						<button type="button" class="btn btn-success">
 							<i class="bi bi-pencil-square"></i> 수정

@@ -1,0 +1,46 @@
+<div class="modal fade" id="emps_modal" tabindex="-1" aria-labelledby="emps_modal_label">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="staticBackdropLabel">사원 리스트</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body row justify-content-center d-flex gap-3">
+				<!-- Client List Table -->
+				<div class="table-responsive  rounded">
+					<table class="table table-hover align-middle table-bordered">
+						<thead class="table-light">
+							<tr>
+							    <th scope="col">선택</th>
+								<th scope="col">#</th>
+								<th scope="col">직원명</th>
+								<th scope="col">사원코드</th>
+							</tr>
+						</thead>
+						<tbody>							    
+							<tr th:each="e , no : ${emps}"
+							    th:attr="data-emp_code=${e.emp_code},
+							             data-emp_name=${e.emp_name}"
+							    style="cursor: pointer;">
+								<td align="center"><input type="radio" name="emp_check"></td>
+							    <td>[[${no.count}]]</td>
+							    <td>[[${e.emp_code}]]</td>
+							    <td>[[${e.emp_name}]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+       <!-- Action Buttons -->
+        <div class="d-flex gap-2"> 
+            <div class="ms-auto">
+                <button type="button" class="btn btn-success selectBtn" onclick="emp_select()"><i class="bi bi-pencil-square"></i> 선택</button>
+            </div>
+        </div>
+
+      </div>
+		</div>
+	</div>
+</div>

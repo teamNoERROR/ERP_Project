@@ -3,13 +3,52 @@
 <mapper namespace="kr.co.noerror.Mapper.bom_mapper">
 
 
-<!-- BOM등록여부 확인  -->
+<!-- BOM 등록여부 확인  -->
 <select id="bom_check" resultType="int" parameterType="String">
 	SELECT COUNT (*) AS CNT FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
 </select>
 
+<!-- BOM 상세보기 -->
 <select id="bom_detail" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="String">
-	SELECT * FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
+<!-- 	SELECT * FROM BOM WHERE C_PRODUCT_CODE = #{pd_code}	 -->
+	SELECT * FROM BPI_VIEW WHERE C_PRODUCT_CODE = #{pd_code} ORDER BY SEQ_NO 	
+	<!--  BOM + PRODUCTS + ITEMS 조인 -->
+
 </select>
+
+<!--  -->
+<select id="bom_cd_ck" resultType="int">
+    SELECT BOM_NO.NEXTVAL FROM DUAL
+</select>
+
+<!-- 부모bomcode 찾기 -->
+<select id="select_pidx" resultType="int" parameterType="String">
+	SELECT BIDX FROM BOM WHERE BOM_CODE = #{BOM_CODE} AND BOM_LEVEL = 0
+</select>
+
+
+<!-- BOM 등록하기 -->
+<!-- <insert id="insert_item" parameterType="java.util.List"> -->
+<!-- 	INSERT ALL  -->
+<!--   	<foreach collection="list" item="bom"> -->
+<!-- 	  INTO BOM  -->
+<!-- 		(BIDX, BOM_CODE, PARENT_IDX, C_PRODUCT_CODE, C_ITEM_CODE, -->
+<!-- 	     BOM_LEVEL, SEQ_NO, BOM_QTY, UNIT, INSERT_DATE, MODIFY_DATE) -->
+<!-- 	   VALUES -->
+<!-- 		(BOM_NO.NEXTVAL, #{bom.BOM_CODE}, #{bom.PARENT_IDX, jdbcType=INTEGER}, -->
+<!--         #{bom.C_PRODUCT_CODE}, #{bom.C_ITEM_CODE}, -->
+<!--         #{bom.BOM_LEVEL}, #{bom.SEQ_NO}, #{bom.BOM_QTY}, #{bom.UNIT}, SYSTIMESTAMP, NULL) -->
+<!--     </foreach> -->
+<!--      SELECT * FROM DUAL -->
+<!-- </insert> -->
+<insert id="insert_item" parameterType="kr.co.noerror.DTO.bom_DTO">
+    INSERT INTO BOM
+    (BIDX, BOM_CODE, PARENT_IDX, C_PRODUCT_CODE, C_ITEM_CODE, BOM_LEVEL, SEQ_NO, BOM_QTY, UNIT, INSERT_DATE, MODIFY_DATE)
+    VALUES
+    (BOM_NO.NEXTVAL, #{BOM_CODE}, #{PARENT_IDX, jdbcType=INTEGER}, #{C_PRODUCT_CODE}, #{C_ITEM_CODE}, #{BOM_LEVEL}, #{SEQ_NO}, #{BOM_QTY}, #{UNIT}, SYSTIMESTAMP, NULL)
+</insert>
+
+
+
 
 </mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.mrp_mapper">
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
+<select id="plans_period" parameterType="Map" resultType="kr.co.noerror.DTO.plan_DTO">
+SELECT
+    pln.*,
+    pdt.product_name,
+    pdt.product_spec,
+    pdt.product_unit,
+    cmp.company_name,
+    emp.emp_name
+FROM temp_production_plan pln
+JOIN temp_products pdt ON pln.product_code = pdt.product_code
+JOIN temp_client_comp cmp ON pln.company_code = cmp.company_code
+JOIN temp_employ emp ON pln.emp_code = emp.emp_code
+WHERE pln.plan_status = '계획'
+  AND pln.due_date BETWEEN #{start_date} AND #{end_date}
+</select>
+
+<!-- MRP 계산을 위해 필요한 데이터를 꺼냄 -->
+<select id="boms_for_mrp" parameterType="String" resultType="kr.co.noerror.DTO.temp_bom_DTO">
+  SELECT 
+  	  bom.item_code, 
+  	  itm.item_name, 
+  	  itm.item_type,
+  	  bom.quantity, 
+  	  itm.item_unit
+  FROM temp_bom_detail bom
+  JOIN temp_items itm ON bom.item_code = itm.item_code
+  WHERE bom.bom_code = #{bom_code}
+</select>
+
+<!-- mrp_code 중복체크 -->
+<select id="mrp_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM mrp_result_header WHERE mrp_code = #{mrp_code}
+</select>
+
+<!-- 주문정보 저장 -->  
+<insert id="insert_mrp_header" parameterType="String">
+ INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
+</insert>
+
+<insert id="insert_mrp_detail" parameterType="kr.co.noerror.DTO.mrp_result_DTO">
+  INSERT INTO mrp_result_detail (
+    mrp_code,
+    item_code,
+    required_qty,
+    total_stock,
+    safety_stock,
+    reserved_stock,
+    available_stock,
+    shortage_stock
+  ) VALUES (
+    #{mrp_code},
+    #{item_code},
+    #{required_qty},
+    #{total_stock},
+    #{safety_stock},
+    #{reserved_stock},
+    #{available_stock},
+    #{shortage_stock} 
+  ) 
+</insert>
+</mapper>

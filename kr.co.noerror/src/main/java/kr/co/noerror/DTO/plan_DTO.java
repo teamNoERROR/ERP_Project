@@ -15,6 +15,7 @@ public class plan_DTO {
     private String product_code;            // VARCHAR2(10 CHAR) NOT NULL
     private String product_name;            
     private Integer product_qty;            // NUMBER NOT NULL
+    private String product_spec;
     private String product_unit;            
     private String priority;               // VARCHAR2(10 CHAR) NOT NULL ('긴급', '높음', '보통')
     private String start_date;                // DATE NOT NULL

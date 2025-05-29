@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.order_DAO;
@@ -20,6 +23,7 @@ import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
 import kr.co.noerror.DTO.temp_client_DTO;
+import kr.co.noerror.DTO.temp_emp_DTO;
 import kr.co.noerror.DTO.temp_products_DTO;
 import kr.co.noerror.Model.M_random;
 
@@ -38,10 +42,68 @@ public class plan_controller {
 	@Resource(name="M_random")
 	M_random mrandom;
 	
+	@PostMapping("/plan_save.do")
+	@ResponseBody
+    public Map<String, Object> plan_save(@RequestBody Map<String, Object> plan) {
+        Map<String, Object> response = new HashMap<>();
+        
+        //중복 없는 생성계획 코드 생성
+        String plan_code = null;
+        int count = 0;
+        boolean is_duplicated = true;
+        while(is_duplicated) {
+        	plan_code = "PLN-" + this.mrandom.random_no();
+        	count = this.pdao.plan_code_check(plan_code);
+        	if(count == 0){
+        		is_duplicated = false;
+        	}
+        }
+        
+        try {    	
+        	//production_plan 테이블에 저장
+            this.pdto.setPlan_code(plan_code);
+            this.pdto.setBom_code((String)plan.get("bom_code"));
+            this.pdto.setOrder_code((String)plan.get("order_code"));
+            this.pdto.setProduct_code((String)plan.get("product_code"));
+            this.pdto.setProduct_qty((int)plan.get("product_qty"));
+            this.pdto.setPriority((String)plan.get("priority"));
+            this.pdto.setStart_date((String)plan.get("start_date"));
+            this.pdto.setDue_date((String)plan.get("due_date"));
+            this.pdto.setCompany_code((String)plan.get("company_code"));
+            this.pdto.setEmp_code((String)plan.get("emp_code"));
+            this.pdto.setPlan_status((String)plan.get("plan_status"));
+            this.pdto.setMrp_status((String)plan.get("mrp_status"));
+            this.pdto.setMemo((String)plan.get("memo"));
+            this.pdto.setPlan_date((String)plan.get("plan_date"));
+            this.pdto.setModify_date((String)plan.get("modify_date"));
+ 
+            int result = this.pdao.insert_plan(this.pdto);
+
+            if(result > 0) {
+	            response.put("success", true);
+            }
+            else {
+            	response.put("success", false);
+            }
+
+        } catch (Exception e) {
+        	System.out.println(e);
+            response.put("success", false);
+        }
+
+        return response;
+    }
+	
+	@GetMapping("/emps_modal.do")
+	public String empls_modal(Model m) {
+		List<temp_emp_DTO> emps = this.pdao.emps_modal();
+		m.addAttribute("emps",emps);
+		return  "/modals/temp_emp_list_modal.html";
+	}
+	
 	@GetMapping("/orders_modal.do")
 	public String orders_modal(Model m) {
 		List<order_DTO> orders = this.pdao.orders_modal();
-		System.out.println(orders.get(0).getDUE_DATE());
 		m.addAttribute("orders",orders);
 		return  "/modals/temp_order_list_modal.html";
 	}

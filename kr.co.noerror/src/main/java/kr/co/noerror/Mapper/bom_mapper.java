@@ -1,6 +1,9 @@
 package kr.co.noerror.Mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import kr.co.noerror.DTO.bom_DTO;
 
@@ -9,6 +12,13 @@ public interface bom_mapper {
 	
 	int bom_check(String pd_code);  //BOM등록여부
 	
-	bom_DTO bom_detail(String pd_code);  //BOM 조회
+	bom_DTO bom_detail(String pd_code);  //BOM 상세보기
+	
+	int bom_cd_ck();  //bom bidx 조회 
+	
+	Integer select_pidx(String bom_code); //부모bidx 찾기
+	int insert_item(bom_DTO dto); //BOM 등록
+	
+	
 
 }

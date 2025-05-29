@@ -36,7 +36,7 @@
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">주문코드</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="주문코드" readonly>
+                                    <input type="text" class="form-control" id="order_code" placeholder="주문코드" readonly>
                                     <button type="button" class="btn btn-outline-secondary modal-trigger" 
                                             th:data-modal-url="@{/orders_modal.do}" data-modal-id="orders_modal" style="cursor: pointer;">
                                         <i class="bi bi-search"></i>
@@ -45,15 +45,15 @@
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">제품코드</label>
-                                <input type="text" class="form-control" placeholder="제품코드" readonly>
+                                <input type="text" class="form-control" id="product_code" placeholder="제품코드" readonly>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">제품명</label>
-                                <input type="text" class="form-control" placeholder="제품명" readonly>
+                                <input type="text" class="form-control" id="" placeholder="제품명" readonly>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">BOM 코드</label>
-                                <input type="text" class="form-control" placeholder="BOM 코드" readonly>
+                                <input type="text" class="form-control" id="bom_code" placeholder="BOM 코드" readonly>
                             </div>
                         </div>
 
@@ -65,23 +65,27 @@
                       
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">주문수량(생산수량)</label>
-                                <input type="number" class="form-control" placeholder="주문수량" readonly>
+                                <input type="number" class="form-control" id="product_qty" placeholder="주문수량" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">제품규격</label>
                                 <input type="text" class="form-control" placeholder="제품규격" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">납기일</label>
-                                <input type="text" class="form-control" placeholder="납기일" readonly>
-                            </div>
+                                <label class="form-label fw-semibold">제품단위</label>
+                                <input type="text" class="form-control" placeholder="제품단위" readonly>
+                            </div> 
                             
                         </div>
                         
                         <div class="row mb-3 row3">
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold">납기일</label>
+                                <input type="text" class="form-control" placeholder="납기일" readonly>
+                            </div>                    
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">우선순위</label>
-                                <select class="form-select" >
+                                <select class="form-select" id="priority">
                                     <option>보통</option>
                                     <option>높음</option>
                                     <option>긴급</option>
@@ -89,22 +93,22 @@
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">생산시작예정일</label>
-                                <input type="date" class="form-control" required>
+                                <input type="date" class="form-control" id="start_date" required>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">생산완료예정일</label>
-                                <input type="date" class="form-control" required>
+                                <input type="date" class="form-control" id="due_date" required>
                             </div>
                         </div>                         
 						
-                        <div class="row mb-3 row4">  
                         <!-- 계획수립자 라인 -->
+                        <div class="row mb-3 row4">  
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">사원코드</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="사원코드" readonly>
+                                    <input type="text" class="form-control" id="emp_code" placeholder="사원코드" readonly>
                                     <button type="button" class="btn btn-outline-secondary modal-trigger" 
-                                            th:data-modal-url="@{/employ_list.do}" data-modal-id="employ_list" style="cursor: pointer;">
+                                            th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
@@ -118,13 +122,15 @@
                      <div class="row row5">     
 			            <div class="col-md-12">
 			              <label class="form-label">비고</label>
-			              <textarea class="form-control" rows="2"></textarea>
+			              <textarea class="form-control" rows="2" id="memo"></textarea>
 			            </div>
 			         </div>
+			         
+			         <input type="hidden" id="company_code_hidden">
 
                        <!-- Action Buttons -->
 							<div class="d-flex justify-content-end  gap-2 mt-4">
-							<button type="button" class="btn btn-primary"><i class="bi bi-check2-square"></i> 저장</button>
+							<button type="button" class="btn btn-primary" onclick="plan_save()"><i class="bi bi-check2-square"></i> 저장</button>
 							<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
 							</div>
                     </form>

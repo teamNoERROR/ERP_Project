@@ -18,15 +18,15 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.noerror.DTO.file_DTO;
-import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.goods_serviceImpl;
 
 @Repository("M_file")
 public class M_file {
 	Logger log = LoggerFactory.getLogger(this.getClass());
-	
-	@Autowired
-	goods_service g_svc;
-	
+//	
+//	@Autowired
+//	goods_serviceImpl g_svc;
+//	
 	@Resource(name="file_DTO") 
 	file_DTO f_dto;
 	

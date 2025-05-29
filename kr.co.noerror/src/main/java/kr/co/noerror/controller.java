@@ -13,22 +13,7 @@ public class controller {
 		return "/member/member_login.html";
 	}
 		
-	//거래처관리
-	@GetMapping("/client.do")
-	public String client_list(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","거래처 관리");
-		return "/client/client_list.html";
-	}
-	
-	//발주처관리
-	@GetMapping("/p_client.do")
-	public String p_client_list(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","발주처 관리");
-		return "/client/client2_list.html";
-	}
-	
+
 
 	
 

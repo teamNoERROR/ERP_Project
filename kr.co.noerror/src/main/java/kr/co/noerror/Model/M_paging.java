@@ -31,10 +31,10 @@ public class M_paging {
 		int page_ea_total;  //총 페이지 개수 
 		int start_pg;
 		int end_pg;
-		int pgidx;
+//		int pgidx;
 		
 		page_ea_total = (int) Math.ceil((double) total_post / post_ea); 
-		pgidx = total_post / post_ea + (1-(total_post/post_ea)%1)%1;
+//		pgidx = total_post / post_ea + (1-(total_post/post_ea)%1)%1;
 		
 		//페이징 박스 개수 1~3, 4~6, 7~
 		start_pg = (((pageno -1) / page_ea)* page_ea )+1;
@@ -52,7 +52,7 @@ public class M_paging {
 		pageinfo.put("pageno" , pageno);
 		pageinfo.put("page_ea" , page_ea);  
 		pageinfo.put("page_ea_total" , page_ea_total);  
-		pageinfo.put("pgidx" , pgidx);
+//		pageinfo.put("pgidx" , pgidx);
 		
 		return pageinfo;
 	}

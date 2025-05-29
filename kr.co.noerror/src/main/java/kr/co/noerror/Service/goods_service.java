@@ -20,7 +20,7 @@ public interface goods_service {
 //	List<products_DTO> gd_all_list(String type);	//제품 리스트
 	
 	int gd_all_ea_sch(String type, String sclass, String search_opt, String keyword);	//제품 총개수 
-	List<products_DTO> gd_all_list_sch(String type, String sclass, String search_opt, String keyword, Integer pageno);	//제품 리스트
+	List<products_DTO> gd_all_list_sch(String type, String sclass, String search_opt, String keyword, Integer pageno, int post_ea);	//제품 리스트
 
 	products_DTO pd_one_detail(String pd_code, String type);	//제품 상세보기
 	int pd_delete(del_DTO d_dto); 	//제품 삭제 

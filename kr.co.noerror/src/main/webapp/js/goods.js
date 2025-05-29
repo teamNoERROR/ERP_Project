@@ -144,29 +144,67 @@ function pdSearch(){
 }
 
 
-//페이징 
+//완제품 페이징 
 function go_pd_pg(ee){
 	var kw = ee.getAttribute('data-keyword');
 	var no = ee.getAttribute('data-pageno');
 	var tp = ee.getAttribute('data-type');
-	if(!kw || kw == ""){  //검색어가 없는경우 
-		location.href="./goods.do?type="+tp+"&pageno="+no;
-	}else {  //검색어가 있는경우 
-		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no;
+	var pea = ee.getAttribute('data-pea');
+	var sc = ee.getAttribute('data-sclass');
+	
+	if(!kw || kw == "" || !sc ||sc ==null){  //검색 없는경우 
+		location.href="./goods.do?type="+tp+"&pageno="+no+"&post_ea="+pea;
 	}
+	else if(!kw || kw != "") {  //검색어가 있는경우 
+		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no+"&post_ea="+pea;
+	}
+	else if(sc ||sc !=null) { 
+		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
+			
+	}	
+	/*else { 
+		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
+			
+	}*/
 }
 
+//부자재 페이징 
 function go_itm_pg(ee){
 	var kw = ee.getAttribute('data-keyword');
 	var no = ee.getAttribute('data-pageno');
 	var tp = ee.getAttribute('data-type');
+	var pea = ee.getAttribute('data-pea');
+	var sc = ee.getAttribute('data-sclass');
+	
 	if(!kw || kw == ""){  //검색어가 없는경우 
-		location.href="./goods.do?type="+tp+"&pageno="+no;
-	}else {  //검색어가 있는경우 
-		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no;
+		location.href="./goods.do?type="+tp+"&pageno="+no+"&post_ea="+pea;
+	}else if(!kw || kw != "") {  //검색어가 있는경우 
+		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no+"&post_ea="+pea;
+	}else {
+		
+		
 	}
+	
+	
+	/*
+	var form = document.querySelector("#pgf");
+	form.method = "GET";
+	form.action = "./goods.do";
+	form.t.value="product";
+	form.submit();
+	*/
 }
 
+//완제품 게시물 개수 선택 
+function postEa(){
+	//var form = document.querySelector("#pgf");
+	var form = document.querySelector("#pfrm");
+	form.method = "GET";
+	form.action = "./goods.do";
+	form.t.value="product";
+	form.pageno.value = 1; //
+	form.submit();
+}
 
 
 

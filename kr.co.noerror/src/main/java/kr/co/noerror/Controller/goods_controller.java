@@ -74,67 +74,77 @@ public class goods_controller {
 	String msg = "";
 	
 	//픔목관리 > 리스트 화면이동 
-		@GetMapping({"/goods.do"})
-		public String products_list(Model m,@RequestParam(value = "type", required = false) String type
-									,@RequestParam(value = "search_opt", required = false) String search_opt
-									,@RequestParam(value = "keyword", required = false) String keyword
-									,@RequestParam(value = "products_class2", required = false) String sclass
-									,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno) {
-			System.out.println("search_opt : " +search_opt);
-			System.out.println("keyword : " +keyword);
-			System.out.println("type : " +type);
-			System.out.println("sclass : " +sclass);
-			System.out.println("pageno : " +pageno);
-			
-			JSONArray lc_list = this.g_svc.gd_class(type);  //대분류목록
-			this.list = new ArrayList<>();
-			for (int i = 0; i < lc_list.length(); i++) {
-				this.list.add(lc_list.getString(i));
-			}
-			
-			if(sclass!=null) {
-				String lclass_ck = this.g_svc.lclass_ck(sclass);
-				m.addAttribute("lclass_ck",lclass_ck);
-				m.addAttribute("sclass",sclass);
-			}
+	@GetMapping({"/goods.do"})
+	public String products_list(Model m, @RequestParam(value = "type", required = false) String type
+								,@RequestParam(value = "search_opt", required = false) String search_opt
+								,@RequestParam(value = "keyword", required = false) String keyword
+								,@RequestParam(value = "products_class2", required = false) String sclass
+								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
+		
 //			int goods_total = this.g_svc.gd_all_ea(type); //제품 총개수
 //			List<products_DTO> goods_all_list = this.g_svc.gd_all_list(type);  //제품 리스트 
-			int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, search_opt, keyword); //제품 총개수
-			List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type,sclass, search_opt,keyword, pageno);  //제품 리스트
+		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, search_opt, keyword); //제품 총개수
+		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type,sclass, search_opt,keyword, pageno, post_ea);  //제품 리스트
+		
+		//페이징 관련 
+		int pea = post_ea; 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, goods_total_sch);
+		int bno = this.m_pg.serial_no(goods_total_sch, pageno, pea); 
+		System.out.println(pageinfo);
+		
+		//제품타입에 따른 url 분류 
+		if("product".equals(type) || type==null) {
+			m.addAttribute("mmenu","완제품 리스트");
+			this.url = "/goods/products_list.html";
 			
-			Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, 5, goods_total_sch);
-			int bno = this.m_pg.serial_no(goods_total_sch, pageno, 5); 
+		}else if("item".equals(type)) {
+			m.addAttribute("mmenu","부자재 리스트");
+			this.url = "/goods/items_list.html";
 			
-			if("product".equals(type) || type==null) {
-				m.addAttribute("mmenu","완제품 리스트");
-				this.url = "/goods/products_list.html";
-				
-			}else if("item".equals(type)) {
-				m.addAttribute("mmenu","부자재 리스트");
-				this.url = "/goods/items_list.html";
-				
-			}else if("consume".equals(type)) {
-				m.addAttribute("mmenu","소모품 리스트");
-				this.url = "/goods/consum_list.html";
-				
-			}
-
+		}else if("consume".equals(type)) {
+			m.addAttribute("mmenu","소모품 리스트");
+			this.url = "/goods/consum_list.html";
 			
-			m.addAttribute("search_opt",search_opt);
-			m.addAttribute("keyword",keyword);
-			m.addAttribute("pd_class2",sclass);
-			m.addAttribute("lmenu","기준정보관리");
-			m.addAttribute("smenu","품목 관리");
-			m.addAttribute("lclass",this.list);
-			m.addAttribute("pageinfo", pageinfo );
-			m.addAttribute("pageno", pageno );
-			m.addAttribute("bno", bno );
-			m.addAttribute("no_goods", "등록된 제품이 없습니다" );
-			m.addAttribute("goods_total", goods_total_sch);
-			m.addAttribute("goods_all_list", goods_all_list_sch);
-			
-			return this.url;
 		}
+		
+		//리스트의 분류검색 리스트용 
+		JSONArray lc_list = this.g_svc.gd_class(type);  //대분류목록
+		this.list = new ArrayList<>();
+		for (int i = 0; i < lc_list.length(); i++) {
+			this.list.add(lc_list.getString(i));
+		}
+		
+		if(sclass!=null) {
+			String lclass_ck = this.g_svc.lclass_ck(sclass);
+			m.addAttribute("lclass_ck",lclass_ck);
+			m.addAttribute("sclass",sclass);
+
+			JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
+			List<String> slist = new ArrayList<>();
+			for (int i = 0; i < sc_list.length(); i++) {
+				slist.add(sc_list.getString(i));
+			}
+			m.addAttribute("slist",slist);
+		}
+		
+
+		//페이지로 보낼 것들 
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","품목 관리");
+		m.addAttribute("search_opt",search_opt);
+		m.addAttribute("keyword",keyword);
+		m.addAttribute("lclass",this.list);
+		m.addAttribute("bno", bno);
+		m.addAttribute("no_goods", "등록된 제품이 없습니다");
+		m.addAttribute("goods_total", goods_total_sch);
+		m.addAttribute("goods_all_list", goods_all_list_sch);
+		m.addAttribute("pageinfo", pageinfo);
+		m.addAttribute("pageno", pageno);
+		m.addAttribute("pea", pea);
+		
+		return this.url;
+	}
 
 
 	

@@ -58,8 +58,7 @@ public class goods_serviceImpl implements goods_service {
 	List<String> list = null; 
 	Map<String, String> map = null;
 	
-	//페이징관련 변수
-	Integer post_ea = 5;  //한페이지당 보여줄 게시물 개수 
+
 	
 	
 	//대분류 리스트
@@ -203,7 +202,7 @@ public class goods_serviceImpl implements goods_service {
 //	}
 	//제품 리스트 (+검색+페이징)
 	@Override
-	public List<products_DTO> gd_all_list_sch(String type, String sclass, String search_opt, String keyword, Integer pageno) {
+	public List<products_DTO> gd_all_list_sch(String type, String sclass, String search_opt, String keyword, Integer pageno, int post_ea) {
 		
 //		int clickPage = this.m_pg.serial_no(pageno, post_ea);  
 //		Map<String, Object> paging = this.m_pg.page_ea(pageno, post_ea, list_total);

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,12 +40,14 @@ public class Warehouse_Controller {
 
     //창고 저장, 수정 구분하기 위한 변수
     String check_insertOrModify;
-
+   
     
     Warehouse_Controller(Application application) {
         this.application = application;
     }	
 
+    
+    
     
     //파일명을 개발자가 원하는 형태로 변경
 	@GetMapping("/warehouse_insert.do")
@@ -187,6 +188,7 @@ public class Warehouse_Controller {
 		this.map = new HashMap<>();
 		Map<Object, Object>	wh_list_map = this.map;
 		
+		
 		wh_list_map = ws_service.warehouse_list(page, wh_search);
 		
 		m.addAttribute("wh_list", wh_list_map.get("wh_list")); // 리스트
@@ -202,6 +204,7 @@ public class Warehouse_Controller {
 		return "/warehouse/warehouses_list.html";
 	}
 	
+
 
 	
 	//창고 정보 상세 모달 페이지에 결과 값 전달
@@ -219,11 +222,7 @@ public class Warehouse_Controller {
 		return "/modals/warehouse_modal.html";
 	}
 	
-	
-	
-		
-    	
-  
+
 }
 
 

@@ -19,7 +19,7 @@
 				<div class="d-flex gap-2 align-items-center" >
 					<select class="form-select" aria-label="Default select example">
 						<option selected>입고상태</option>
-						<option value="1">가입고</option>
+<!-- 						<option value="1">가입고</option> -->
 						<option value="2">입고취소</option>
 						<option value="3">입고완료</option>
 					</select>
@@ -30,11 +30,6 @@
 				<!-- Search Bar -->
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<select class="form-select" style="max-width: 120px;">
-							<option selected>전체</option>
-							<option value="1">자재명</option>
-							<option value="2">거래처명</option>
-						</select> 
 						<input type="text" class="form-control" placeholder="검색">
 						<button class="btn btn-primary" type="submit">
 							<i class="bi bi-search"></i>
@@ -108,7 +103,7 @@
 				<!-- Action Buttons -->
 				<div class="mt-4 d-flex gap-2">
 					<div class="ms-auto">
-						<button type="button" class="btn btn-success">
+						<button type="button" class="btn btn-success" onclick="addInbound()">
 							<i class="bi bi-plus-lg"></i> 수기등록
 						</button>
 <!-- 						<button class="btn btn-danger"> -->

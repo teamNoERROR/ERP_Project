@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+
+
+<section class="container ">
+        <!-- Title -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        	<h2 class="mb-1">입고내역 수기등록</h2>
+        
+        </div>
+   
+  <!-- 우상단 x 마크  -->     
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+<button type="button" class="btn-close" aria-label="Close" onclick="goInbndList()"></button>
+</div>
+
+<div class="form-section">
+     <div class="row justify-content-center">
+             <div class="row mb-3">
+                 <div class="col-md-3 mb-3 mb-md-0">
+                     <label class="form-label fw-semibold">발주번호</label>
+                     <div class="input-group">
+                         <input type="text" class="form-control" placeholder="발주코드" id="pch_code">
+                         <button type="button" class="btn btn-primary">
+                             <i class="bi bi-search"></i>
+                         </button>
+                     </div>
+                 </div>
+                 <div class="col-md-3 mb-3 mb-md-0">
+                     <label class="form-label fw-semibold">구매처명</label>
+                     <input type="text" class="form-control" placeholder="구매처명" >
+                 </div>
+                   <div class="col-md-3">
+                     <label class="form-label fw-semibold">구매처코드</label>
+                     <input type="text" class="form-control" placeholder="구매처코드" >
+                 </div>
+                 <div class="col-md-3">
+                     <label class="form-label fw-semibold">입고창고</label>
+                     <div class="input-group">
+                         <input type="text" class="form-control" placeholder="입고할 창고"  id="in_wh_name" readonly>
+                         <button type="button" class="btn btn-primary " onclick="whSelect('in_wh')">
+                             <i class="bi bi-search"></i>
+                         </button>
+                     </div>
+                     <input type="hidden" id="wh_code">
+                 </div>
+             </div>
+
+             <div class="row mb-3">
+                      
+            <!-- 주문항목 List Table -->
+			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+				<h5 >발주 제품 내역</h5>
+				<table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
+					<thead class="table-light text-center">
+						<tr >
+							<th scope="col" style="width: 3%;">#</th>
+							<th scope="col" style="width: 8%;">제품코드</th>
+							<th scope="col" style="width: 15%;">제품명</th>
+							<th scope="col" style="width: 5%;">규격</th>
+							<th scope="col" style="width: 5%;">주문수량</th>
+							<th scope="col" style="width: 5%;">단위</th>
+							<th scope="col" style="width: 5%;">대분류</th>
+							<th scope="col" style="width: 5%;">소분류</th>
+							<th scope="col" style="width: 8%;">제품단가</th>
+							<th scope="col" style="width: 8%;">도착수량</th>
+							<th scope="col" style="width: 5%;">유통기한</th>
+							<th scope="col" style="width: 10%;">납품여부</th>
+							
+						</tr>
+					</thead>
+					<tbody id="inbnd_items">
+						<tr class="text-center item_row" >
+							<td>3</td>
+							<td id="item_code">2589-0001</td>
+							<td>오렌지</td>
+							<td>100g</td>
+							<td>500</td>
+							<td>ea</td>
+							<td>식품</td>
+							<td>과일</td>
+							<td class="text-end">3,000</td>
+							<td><input type="text" class="form-control item_qty"></td>
+							<td><input type="date" class="form-control item_exp"></td>
+							<td>
+							<select class="form-select item_deli" aria-label="Default select example" >
+								<option value="" >선택</option>
+								<option value="arrive" >납품완료</option>
+								<option value="part">일부도착</option>
+								<option value="not">미납</option>
+							</select>
+							</td>
+						</tr>
+						<tr class="text-center">
+							<td>3</td>
+							<td id="item_code">2589-0001</td>
+							<td>오렌지</td>
+							<td>100g</td>
+							<td>500</td>
+							<td>ea</td>
+							<td>식품</td>
+							<td>과일</td>
+							<td class="text-end">3,000</td>
+							<td><input type="text" class="form-control item_qty"></td>
+							<td><input type="date" class="form-control item_exp"></td>
+							<td>
+							<select class="form-select item_deli" aria-label="Default select example" >
+								<option value="" >선택</option>
+								<option value="arrive" >납품완료</option>
+								<option value="part">일부도착</option>
+								<option value="not">미납</option>
+							</select>
+							</td>
+						</tr>
+						<tr class="text-center">
+							<td>3</td>
+							<td id="item_code">2589-0001</td>
+							<td>오렌지</td>
+							<td>100g</td>
+							<td>500</td>
+							<td>ea</td>
+							<td>식품</td>
+							<td>과일</td>
+							<td class="text-end">3,000</td>
+							<td><input type="text" class="form-control item_qty"></td>
+							<td><input type="date" class="form-control item_exp"></td>
+							<td>
+							<select class="form-select item_deli" aria-label="Default select example" >
+								<option value="" >선택</option>
+								<option value="arrive" >납품완료</option>
+								<option value="part">일부도착</option>
+								<option value="not">미납</option>
+							</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+                            
+                            
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">납품일</label>
+                                <input type="date" class="form-control" id="inbound_date">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">입고상태</label>
+                                <select class="form-select" aria-label="Default select example" id="in_status">
+								<option value="temp_in" >가입고</option>
+								<option value="in_complt">입고완료</option>
+								<option value="part_in">일부입고</option>
+ 							</select> 
+                            </div>
+                            </div>
+                            
+						
+                        <div class="row mb-3">  
+                        <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold">작성자</label>
+                                <input type="text" class="form-control" value="홍길동" readonly>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <label class="form-label fw-semibold">사원코드</label>
+                                <input type="text" class="form-control" id="employee_code" value="E-23456" readonly>
+                            </div>
+                        </div>
+                           
+                           	<!-- 비고 라인 -->
+                                 <div class="row">
+            <div class="col-md-12">
+              <label class="form-label">비고</label>
+              <textarea class="form-control" rows="2" id="inb_memo"></textarea>
+            </div>
+          </div>
+
+            <!-- Action Buttons -->
+			<div class="d-flex justify-content-end  gap-2 mt-4">
+				<button type="button" class="btn btn-primary" onclick="insert_inBnd()"><i class="bi bi-check2-square"></i> 저장</button>
+				<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
+			</div>
+            </div>
+
+
+
+
+
+</div>
+
+</section>
+</main>
+
+
+<div id="modalContainer"></div>
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

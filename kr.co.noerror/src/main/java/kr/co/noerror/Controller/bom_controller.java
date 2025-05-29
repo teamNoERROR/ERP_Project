@@ -187,13 +187,22 @@ public class bom_controller {
 	
 	//부자재 리스트 모달 띄우기 
 	@GetMapping("/bom_item_list.do")
-	public String bom_item_list(Model m)  {
-//		int goods_total = this.g_svc.gd_all_ea("item"); //제품 총개수
-//		List<products_DTO> goods_all_list = this.g_svc.gd_all_list("item");  //제품 리스트 
+	public String bom_item_list(Model m,  @RequestParam(value = "type", required = false) String type
+			,@RequestParam(value = "search_opt", required = false) String search_opt
+			,@RequestParam(value = "keyword", required = false) String keyword
+			,@RequestParam(value = "products_class2", required = false) String sclass
+			,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+			,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea)  {
+		int goods_total = this.g_svc.gd_all_ea_sch(type, sclass, search_opt, keyword); //제품 총개수
+		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch(type,sclass, search_opt,keyword, pageno, post_ea);  //제품 리스트 
 		
-//		m.addAttribute("no_items", "등록된 제품이 없습니다" );
-//		m.addAttribute("items_total", goods_total);
-//		m.addAttribute("items_list", goods_all_list);
+		
+		
+		
+		
+		m.addAttribute("no_items", "등록된 부자재가 없습니다");
+		m.addAttribute("items_total", goods_total);
+		m.addAttribute("items_list", goods_all_list);
 		
 		
 		return "/modals/items_list_modal.html";

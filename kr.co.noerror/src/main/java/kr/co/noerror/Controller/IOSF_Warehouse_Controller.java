@@ -1,6 +1,5 @@
 package kr.co.noerror.Controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DTO.Inbound_DTO;
+import kr.co.noerror.DTO.inout_DTO;
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
 
 @Controller
@@ -27,8 +26,8 @@ public class IOSF_Warehouse_Controller {
 	     */
 	 @Resource(name="IOSF_Warehouse_Service")
 	    IOSF_Warehouse_Service iosf_service;
-	 @Resource(name="Inbound_DTO")
-	 	Inbound_DTO in_dto;
+//	 @Resource(name="inout_DTO")
+//	 inout_DTO inout_dto;
 
 	@PostMapping("/inbound_insert.do")
 	public String inbound_insert() {
@@ -54,12 +53,12 @@ public class IOSF_Warehouse_Controller {
 		return "/warehouse/outbound_list.html";
 	}
 	
-	@GetMapping("/warehouse_in_save.do")
-	public String warehouse_in_save(Model m) {
-		
-		m.addAttribute("Inbound_DTO", this.in_dto);
-		return "/warehouse/warehouse_in_insert.html";
-	}
+//	@GetMapping("/warehouse_in_save.do")
+//	public String warehouse_in_save(Model m) {
+//		
+//		m.addAttribute("Inbound_DTO", this.in_dto);
+//		return "/warehouse/warehouse_in_insert.html";
+//	}
 	
 	//입고 창고
 		@GetMapping("/warehouses_in_list.do")

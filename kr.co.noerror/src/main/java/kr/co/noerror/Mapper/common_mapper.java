@@ -11,6 +11,6 @@ import kr.co.noerror.DTO.employee_DTO;
 public interface common_mapper {
 	
 	List<employee_DTO> emp_list();  //관리자 리스트 전체데이터 출력
-	List<WareHouse_DTO> warehouse_list(); //창고 리스트 전체 데이터 출력
+	List<WareHouse_DTO> warehouse_list(String wh_tp); //창고 리스트 전체 데이터 출력
 
 }

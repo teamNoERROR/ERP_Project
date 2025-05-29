@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 function removeRow(btn) {
 	const row = btn.closest('tr');
 	row.parentNode.removeChild(row);
@@ -150,18 +141,7 @@ function select_items () {
 			document.querySelector("body").focus(); // body에 포커스 주기
 		}, 300);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
   }
-
 };
 
 
@@ -200,7 +180,7 @@ function appendItemsRow(tbody, item) {
 //bom등록 저장
 function bom_save(){
 	var tbody = document.querySelector("#bom_items");
-	var rows = tbody.querySelectorAll('tr.item_added'); // 테이블에서 데이터가 있는 행만 선택
+	var rows = tbody.querySelectorAll('tr.item_add_row'); // 테이블에서 데이터가 있는 행만 선택
 	var pd_code = document.querySelector("#product_code");
 	var pd_type = document.querySelector("#product_type");
   	var items = [];

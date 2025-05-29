@@ -79,10 +79,10 @@ function deleteWarehouse(button) {
     const whAddr1 = selectedRadio.getAttribute('data-wh_addr1');
     const whAddr2 = selectedRadio.getAttribute('data-wh_addr2');
 
-    document.getElementById('wh_code').value = whCode;
+	document.getElementById('wh_code').value = whCode;
     document.getElementById('wh_name').value = whName;
     document.getElementById('wh_location').value = '(' + whZipcode + ')' + ' ' + whAddr1 + ' ' + whAddr2;
-
+	
  	alert("창고를 선택 하셨습니다.");
     // 모달 닫기
     const modalElement = document.getElementById('warehouse_list');

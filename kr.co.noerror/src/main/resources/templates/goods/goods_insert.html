@@ -33,15 +33,16 @@
 	<div class="row mb-3">
 		<div class="col-md-4">
 			<label class="form-label">제품유형</label>
-			<select class="form-select" id="goods_type" onchange="goodsType(this.value)">
+			<select class="form-select" id="goods_type" onchange="goodsType()">
 				<option value="">선택</option>
-				<option value="product">완제품</option>
-				<option value="half">반제품</option>
+				<option value="완제품">완제품</option>
+				<option value="반제품">반제품</option>
+				<option value="부자재">부자재</option>
 			</select>
 		</div>
 		<div class="col-md-4">
 			<label class="form-label">대분류</label>
-			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value,type)">
+			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value)">
 				<option value="" >선택</option>
 <!-- 				<option th:value="${l_class}" th:each="l_class : ${l_class}">[[${l_class}]]</option> -->
 			</select>
@@ -103,13 +104,13 @@
 		</div>
 		
 		<!-- 선택제품이 완제품일 경우 -->
-		<div class=" col-md-2 " >
-		<label class="form-label ss">판매가</label>	
-		<input type="text" class="form-control" id="product_price">
+		<div class="open_price col-md-2 " >
 		</div>
 	</div>
 	
-
+	<!-- 선택제품이 부자재일 경우 -->
+	<div class="row my-3 open_ccorp ">
+	</div>
 	 
 	
 	<div class="row mb-3">
@@ -122,7 +123,7 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-4">
-	<button type="button" class="btn btn-primary" onclick="insert_pd()"><i class="bi bi-plus-lg"></i> 저장</button>
+	<button type="button" class="btn btn-primary" onclick="insert_pd()">저장</button>
 	<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 	</div>
 </div>

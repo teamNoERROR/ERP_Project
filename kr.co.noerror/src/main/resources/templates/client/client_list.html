@@ -14,21 +14,52 @@
 				<h2 class="mb-1">거래처 관리</h2>
 			</div>
 
-			<!-- Search Bar -->
-			<form class="row g-2 my-4 justify-content-end">
-				<div class="col-auto">
-					<div class="input-group input-group-sm">
-						<select class="form-select" style="max-width: 120px;">
-							<option selected>전체</option>
-							<option value="1">거래처명</option>
-							<option value="2">담당자</option>
-						</select> <input type="text" class="form-control" placeholder="검색">
-						<button class="btn btn-primary" type="submit">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
-				</div>
-			</form>
+			<div class="row align-items-center justify-content-between mt-3">
+  <!-- 토글 버튼 영역 -->
+  <div class="col-auto  mb-3">
+    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 250px;">
+      <button type="button" class="toggle_btns" id="corp_type" value="client" onclick="clientToggle('client')"  style="background: #82CCDD; color: #fff;">거래처</button>
+      <button type="button" class="toggle_btns" onclick="clientToggle('p_client')"  style="background: transparent; color: #000;">발주처</button>
+    </div>
+  </div>
+
+  <!-- 검색창 영역 -->
+  <div class="col-auto">
+   <div ></div>
+      <div class="col-auto d-flex"  >
+       <form id="frm_class" class="row g-1 align-items-center" >
+       <input type="hidden" name="type">
+      <div class="input-group input-group-sm me-0" style="width: 200px;">
+          <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
+            <option value="">대분류</option>
+             <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
+          </select>
+          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
+            <th:block >
+            <option value="" th:if="${sclass == null}" >소분류</option>
+            <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
+            </th:block>
+            
+          </select>
+        </div>
+         </form>
+       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()">
+        <div class="input-group input-group-sm" style="width:350px;">
+          <select class="form-select" id="search_opt" name="search_opt" style="max-width: 120px;">
+            <option value="all">전체</option>
+            <option value="pd_code"  th:selected="${search_opt} == 'pd_code'">제품코드</option>
+            <option value="pd_name" th:selected="${search_opt} == 'pd_name'">제품명</option>
+          </select>
+          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
+          <button class="btn btn-primary" >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+          </form>
+      </div>
+   
+  </div>
+</div>
 
 			<!-- Client List Table -->
 			<div class="table-responsive  rounded">

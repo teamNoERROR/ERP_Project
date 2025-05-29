@@ -64,7 +64,34 @@ function deleteWarehouse(button) {
   }
  //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
  
-/*
+ //*******************************관리자 모달 리스트 선택 후 반환 **************************************** */
+ function selectWarehouse() {
+    const selectedRadio = document.querySelector('input[name="whSelect"]:checked');
+
+  if (!selectedRadio) {
+      alert('직원을 선택해주세요.');
+      return;
+    }
+
+    const whCode = selectedRadio.value;
+    const whName = selectedRadio.getAttribute('data-wh_name');
+    const whZipcode = selectedRadio.getAttribute('data-wh_zipcode');
+    const whAddr1 = selectedRadio.getAttribute('data-wh_addr1');
+    const whAddr2 = selectedRadio.getAttribute('data-wh_addr2');
+
+    document.getElementById('wh_code').value = whCode;
+    document.getElementById('wh_name').value = whName;
+    document.getElementById('wh_location').value = '(' + whZipcode + ')' + ' ' + whAddr1 + ' ' + whAddr2;
+
+ 	alert("창고를 선택 하셨습니다.");
+    // 모달 닫기
+    const modalElement = document.getElementById('warehouse_list');
+    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+    modal.hide();
+  }
+ //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
+
+
  document.addEventListener('DOMContentLoaded', function () {
    const modalContainer = document.getElementById('modalContainer');
 
@@ -86,17 +113,17 @@ function deleteWarehouse(button) {
        .then(html => {
          modalContainer.innerHTML = html;
 
-         const wh_modal = document.getElementById('wh_modal');
+         const modalElement = document.getElementById('wh_modal');
         
-		  if (!wh_modal) {
+		  if (!modalElement) {
            //console.error('모달 요소 #wh_modal 을 찾을 수 없습니다.');
            return;
          }
 
-         const modal = new bootstrap.Modal(wh_modal);
+         const modal = new bootstrap.Modal(modalElement);
          modal.show();
 
-         wh_modal.addEventListener('hidden.bs.modal', () => {
+         modalElement.addEventListener('hidden.bs.modal', () => {
            modalContainer.innerHTML = '';
          }, { once: true });
        })
@@ -106,48 +133,7 @@ function deleteWarehouse(button) {
        });
    });
  });
- */
- 
-/*
-document.addEventListener('DOMContentLoaded', function() {
-  // 모든 modal-trigger 클래스 tr에 클릭 이벤트 붙이기
-  document.querySelectorAll('.modal-trigger').forEach(function(row) {
-    row.addEventListener('click', function(e) {
-      e.preventDefault();
 
-      const url = this.dataset.modalUrl;  // data-modal-url 속성 가져오기
-      if (!url) return;
-
-      // Fetch API로 모달 내용 받아오기
-
-      fetch(url)
-        .then(response => {
-          if (!response.ok) throw new Error('네트워크 오류');
-          return response.text();
-        
-        .then(html => {
-          // 모달 컨테이너에 html 삽입
-          const modalContainer = document.getElementById('modalContainer');
-          modalContainer.innerHTML = html;
-
-          // Bootstrap 모달 객체 생성 및 띄우기
-          const modalElement = document.getElementById('wh_modal');
-          const modal = new bootstrap.Modal(modalElement);
-          modal.show();
-
-          // 모달 닫을 때 컨테이너 비우기
-          modalElement.addEventListener('hidden.bs.modal', () => {
-            modalContainer.innerHTML = '';
-          }, { once: true });
-        })
-        .catch(err => {
-          alert('모달 데이터를 불러오는데 실패했습니다.');
-          console.error(err);
-        });
-    });
-  });
-});
-*/
 // ********************************************* 창고 저장 js ********************************************
 //창고 값 검증
 function wh_save() {

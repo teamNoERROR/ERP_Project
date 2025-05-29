@@ -56,7 +56,7 @@ public class goods_controller {
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
 	
-	@Resource(name="M_paging")  //랜덤숫자생성 모델 
+	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
 	
 	@Resource(name="file_DTO")  //파일첨부DTO

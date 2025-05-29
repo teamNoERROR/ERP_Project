@@ -1,9 +1,9 @@
 package kr.co.noerror.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import kr.co.noerror.DTO.bom_DTO;
 
@@ -18,6 +18,9 @@ public interface bom_mapper {
 	
 	Integer select_pidx(String bom_code); //부모bidx 찾기
 	int insert_item(bom_DTO dto); //BOM 등록
+	
+	int bom_all_ea_sch(Map<String, String> map);	//BOM 총개수(검색) 
+	List<bom_DTO> bom_all_list_sch(Map<String, Object> map);	//BOM 리스트(검색)
 	
 	
 

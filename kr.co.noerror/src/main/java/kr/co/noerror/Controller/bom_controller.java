@@ -3,33 +3,30 @@ package kr.co.noerror.Controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.noerror.DAO.goods_DAO;
 import kr.co.noerror.DTO.bom_DTO;
+import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_file;
-import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
-import kr.co.noerror.Service.goods_serviceImpl;
 
 @Controller
 public class bom_controller {
@@ -42,8 +39,8 @@ public class bom_controller {
 	@Autowired
 	goods_service g_svc; 
 	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
+	@Resource(name="M_paging")  //페이징생성 모델 
+	M_paging m_pg;
 	
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
@@ -51,12 +48,71 @@ public class bom_controller {
 	@Resource(name="file_DTO")  //파일첨부DTO
 	file_DTO f_dto;
 	
+	@Resource(name="del_DTO")
+	del_DTO d_dto;
+	
 	List<String> list = null; 
 	Map<String, String> map = null;
 	String url = "";
 	String msg = "";
 	 
-	 
+	
+	//BOM리스트 조회 
+	@GetMapping("/bom.do")
+	public String client_list(Model m ,@RequestParam(value = "search_opt", required = false) String search_opt
+							,@RequestParam(value = "keyword", required = false) String keyword
+							,@RequestParam(value = "products_class2", required = false) String sclass
+							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
+		
+		//리스트의 분류검색 리스트용 
+		JSONArray lc_list = this.g_svc.gd_class(null);  //대분류목록
+		this.list = new ArrayList<>();
+		for (int i = 0; i < lc_list.length(); i++) {
+			this.list.add(lc_list.getString(i));
+		}
+		
+		if(sclass!=null) {
+			String lclass_ck = this.g_svc.lclass_ck(sclass);
+			m.addAttribute("lclass_ck",lclass_ck);
+			m.addAttribute("sclass",sclass);
+
+			JSONArray sc_list = this.g_svc.sc_class(null, lclass_ck);  //소분류 목록
+			List<String> slist = new ArrayList<>();
+			for (int i = 0; i < sc_list.length(); i++) {
+				slist.add(sc_list.getString(i));
+			}
+			m.addAttribute("slist",slist);
+		}
+		
+		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass, search_opt, keyword); //bom리스트 제품 총개수
+		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass, search_opt,keyword, pageno, post_ea);  //bom리스트 제품 리스트
+		
+		//페이징 관련 
+		int pea = post_ea; 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, bom_total_sch);
+		int bno = this.m_pg.serial_no(bom_total_sch, pageno, pea); 
+		System.out.println(pageinfo);
+		
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("mmenu","BOM 관리");
+		m.addAttribute("smenu","BOM 리스트");
+		
+		m.addAttribute("search_opt",search_opt);
+		m.addAttribute("keyword",keyword);
+		
+		m.addAttribute("lclass",this.list);
+		m.addAttribute("bno", bno);
+		m.addAttribute("no_goods", "등록된 제품이 없습니다");
+		m.addAttribute("bom_total_sch", bom_total_sch);
+		m.addAttribute("bom_all_list_sch", bom_all_list_sch);
+		m.addAttribute("pageinfo", pageinfo);
+		m.addAttribute("pageno", pageno);
+		m.addAttribute("pea", pea);
+		
+		return "/goods/bom_list.html";
+		
+	}
 	 
 	//BOM등록여부 조회 
 	@GetMapping("/bom_check.do")

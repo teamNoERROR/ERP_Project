@@ -9,26 +9,19 @@ public class controller {
 
 	//메인화면
 	@GetMapping("/")
-	public String main(Model m) {
+	public String index(Model m) {
 		return "/member/member_login.html";
 	}
 		
-
-
 	
-
-	
-
-	
-	//BOM 등록하기
-	@GetMapping("/bom.do")
-	public String bom_insert(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","bom 등록하기");
-//		return "/bom_detail.html";
-		return "/goods/bom_insert.html";
+	//메인화면
+	@GetMapping("/main.do")
+	public String main(Model m) {
+		return "/common/main.html";
 	}
+
+
+	
 	
 
 	

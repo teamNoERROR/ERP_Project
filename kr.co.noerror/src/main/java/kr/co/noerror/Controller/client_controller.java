@@ -21,6 +21,7 @@ public class client_controller {
 	String url = "";
 	String msg = "";
 	
+	//거래처관리 > 거래처 리스트 조회 
 	@GetMapping("/client.do")
 	public String client_list(Model m, @RequestParam(value = "type", required = false) String type ) {
 		

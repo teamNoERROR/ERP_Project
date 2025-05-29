@@ -86,11 +86,10 @@ public class Warehouse_Service {
         return wh_result;
     }
 
-
-
     // 창고 게시판 목록 및 검색
     public Map<Object, Object> warehouse_list(int page, String wh_search) {
-        Map<Object, Object> wh_map = new HashMap<>();
+        
+    	Map<Object, Object> wh_map = new HashMap<>();
 
         try {
             // 한 페이지당 게시글 수
@@ -99,17 +98,17 @@ public class Warehouse_Service {
             int totalCount;
 
             List<WareHouse_DTO> wh_list_result;
-
+            
             boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty());
-
-            if(isSearch) {
+            
+            if(isSearch) {	//검색한 경우 (검색된 리스트)
                 wh_list_result = this.ws_dao.search_whpaged(wh_search, startIndex, pageSize);
                 totalCount = this.ws_dao.searchTotal(wh_search);
-            } else {
+            } else {	//검색 안한경우 (전체 리스트)
                 wh_list_result = this.ws_dao.select_wh_list(startIndex, pageSize);
                 totalCount = this.ws_dao.getTotalCount();
             }
-
+            
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);
             
             System.out.println("service " + wh_list_result.get(0).getECODE());
@@ -131,6 +130,9 @@ public class Warehouse_Service {
         return wh_map;
     }
 
+    
+ 
+    
     //창고 게시판 게시물 상세 정보
     public List<WareHouse_DTO> wh_SelectWithWhCode(String wh_code){
     	
@@ -140,13 +142,12 @@ public class Warehouse_Service {
     	return wh_detail_result;
     }
     
-    
+    //창고 삭제
     public int delete_warehouse(String wh_code) {
     	
     	int wh_delete_result = ws_dao.delete_warehouses(wh_code);
     	
     	return wh_delete_result;
     }
-    
     
 }

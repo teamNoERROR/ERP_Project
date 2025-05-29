@@ -44,39 +44,40 @@
               </form>
             </div>
               <div class="form-text">* MRP 계산 자료 중 부족수량이 있는 자재만 조회됩니다.</div>
+              <div class="form-text">* 발주수량과 발주업체는 수정 가능합니다.</div>
           </div>
           
           <table class="table table-bordered align-middle">
             <thead class="table-light text-center">
               <tr>
-                <th style="width:10px;"><input type="checkbox"></th>
-                <th>#</th>
-                <th>MRP코드</th>
-                <th>자재코드</th>
-                <th>자재유형</th>
-                <th>자재명</th>
-                <th>소요수량</th>
-                <th>단위</th>
-                <th>가용재고</th>
-                <th>부족수량</th>
-                <th>발주수량</th>
-                <th>발주업체</th>
+                <th style="width: 3%;"><input type="checkbox"></th>
+                <th style="width: 3%;">#</th>
+                <th style="width: 10%;">MRP코드</th>
+                <th style="width: 10%;">자재코드</th>
+                <th style="width: 7%;">자재유형</th>
+                <th style="width: 12%;">자재명</th>
+                <th style="width: 7%;">소요수량</th>
+                <th style="width: 5%;">단위</th>
+                <th style="width: 7%;">가용재고</th>
+                <th style="width: 7%;">부족수량</th>
+                <th style="width: 10%;">발주수량</th>
+                <th style="width: 19%;">발주업체</th>
               </tr>
             </thead>
             <tbody>
-              <tr th:each="m, no : ${mrp_results}">
-                <td><input type="checkbox"></td>
-                <th>[[${no.count}]]</th>
-                <td>[[${m.mrp_code}]]</td>
-                <td>[[${m.item_code}]]</td>
+              <tr th:each="m, no : ${mrp_results}" th:if="${m.shortage_stock < 0}">
+                <td align="center"><input type="checkbox"></td>
+                <td align="center">[[${no.count}]]</td>
+                <td align="center">[[${m.mrp_code}]]</td>
+                <td align="center">[[${m.item_code}]]</td>
                 <td>[[${m.item_type}]]</td>
                 <td>[[${m.item_name}]]</td>
-                <td>[[${m.required_qty}]]</td>
-                <td>[[${m.item_unit}]]</td>
-                <td>[[${m.available_stock}]]</td>
-                <td>[[${m.shortage_stock}]]</td>
-                <td><input type="number" class="form-control"></td>
-                <td><type="text" class="form-control" id="company_code" placeholder="발주업체" readonly>
+                <td align="right">[[${m.required_qty}]]</td>
+                <td align="center">[[${m.item_unit}]]</td>
+                <td align="right">[[${m.available_stock}]]</td>
+                <td align="right">[[${m.shortage_stock}]]</td>
+                <td><input type="number" class="form-control" style="text-align: right;" th:value="${-m.shortage_stock}"></td>
+                <td>[[${m.company_name}]]
                 <button type="button" class="btn btn-outline-secondary modal-trigger" 
                         th:data-modal-url="@{/orders_modal.do}" data-modal-id="orders_modal" style="cursor: pointer;">
                     <i class="bi bi-search"></i>

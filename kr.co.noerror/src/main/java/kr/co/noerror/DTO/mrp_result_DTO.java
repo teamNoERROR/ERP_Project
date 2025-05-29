@@ -23,4 +23,6 @@ public class mrp_result_DTO {
     private int reserved_stock;
     private int available_stock;
     private int shortage_stock;
+    private String company_code;
+    private String company_name;
 }

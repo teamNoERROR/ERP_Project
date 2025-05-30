@@ -12,10 +12,112 @@
     itm.item_type,
     itm.item_name,
     itm.item_unit,
-    itm.company_code 
+    itm.company_code, 
+    cmp.company_name
  FROM mrp_result_detail mrp
  JOIN temp_items itm ON mrp.item_code = itm.item_code
+ JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
  WHERE mrp.mrp_code = #{mrp_code}
+</select>
+
+<!-- pch_code 중복체크 -->
+<select id="pch_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM purchase_header WHERE pch_code = #{pch_code}
+</select>
+
+<!-- 발주요청 정보 저장 -->  
+<insert id="insert_pch_header" parameterType="String">
+ INSERT INTO purchase_header (pch_code) VALUES (#{pch_code})
+</insert>
+
+<insert id="insert_pch_detail" parameterType="kr.co.noerror.DTO.purchase_DTO">
+  INSERT INTO purchase_request (
+    pch_code,
+    item_code,
+    item_qty,
+    pch_status,
+    due_date,
+    memo,
+    request_date,
+    modify_date
+  ) VALUES (
+    #{pch_code},
+    #{item_code},
+    #{item_qty},
+    #{pch_status},
+    #{due_date},
+    #{memo},
+    SYSDATE,
+    SYSDATE 
+  ) 
+</insert>
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
+<select id="purchase_list" resultType="kr.co.noerror.DTO.purchase_DTO" parameterType="Map">
+SELECT * FROM (
+    SELECT inner_result.*, ROWNUM rnum
+    FROM (
+        SELECT pch.*, cmp.company_name, mgr.manager_name
+        FROM purchase_request pch
+        JOIN temp_items itm ON pch.item_code = itm.item_code
+        JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+        JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+        WHERE 1=1
+        <choose>
+	        <when test="scolumn == 'all'">
+	            AND (
+	                cmp.company_name LIKE '%' || #{sword} || '%' OR
+	                mgr.manager_name LIKE '%' || #{sword} || '%'
+	            )
+	        </when>
+	        <when test="scolumn == 'company_name'">
+	            AND cmp.company_name LIKE '%' || #{sword} || '%'
+	        </when>
+	        <when test="scolumn == 'manager_name'">
+	            AND mgr.manager_name LIKE '%' || #{sword} || '%'
+	        </when>
+        </choose>
+        <if test="purchase_statuses != null and purchase_statuses.size > 0">
+            AND purchase_status IN
+            <foreach item="status" index="index" collection="purchase_statuses" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        ORDER BY pch.pidx DESC
+    ) inner_result
+    WHERE ROWNUM &lt; #{end}
+)
+WHERE rnum &gt; #{start}
+</select>
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
+<select id="purchase_count" resultType="int" parameterType="map">
+SELECT COUNT(*) AS total
+FROM purchase_request pch
+JOIN temp_items itm ON pch.item_code = itm.item_code
+JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+WHERE 1=1
+    <choose>
+     <when test="scolumn == 'all'">
+         AND (
+             cmp.company_name LIKE '%' || #{sword} || '%' OR
+             mgr.manager_name LIKE '%' || #{sword} || '%'
+         )
+     </when>
+     <when test="scolumn == 'company_name'">
+         AND cmp.company_name LIKE '%' || #{sword} || '%'
+     </when>
+     <when test="scolumn == 'manager_name'">
+         AND mgr.manager_name LIKE '%' || #{sword} || '%'
+     </when>
+    </choose>
+    <if test="purchase_statuses != null and purchase_statuses.size > 0">
+        AND purchase_status IN
+        <foreach item="status" index="index" collection="purchase_statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </if>
 </select>
 
 </mapper>

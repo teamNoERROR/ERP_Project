@@ -15,7 +15,7 @@
 			</div>
 
 			<!-- Search Bar -->
-			<form class="row g-2 my-4 justify-content-end">
+			<form class="row g-2 my-4 justify-content-end" method="get" action="/purchase.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
 						<input type="checkbox"> &nbsp;발주요청&nbsp; 
@@ -44,75 +44,77 @@
 
 			<!-- 발주 List Table -->
 			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bordered">
+				<table class="table table-hover align-middle table-bpurchaseed">
 					<thead class="table-light text-center">
 						<tr>
 							<th scope="col"><input type="checkbox"></th>
 							<th scope="col">#</th>
 							<th scope="col">발주번호</th>
 							<th scope="col">발주일자</th>
-							<th scope="col">구매처명</th>
-							<th scope="col">거래금액(원)</th>
-							<th scope="col">납품예정일</th>
+							<th scope="col">발주처명</th>
+							<th scope="col">담당자명</th>
+							<th scope="col">발주수량</th>
+							<th scope="col">납기예정일</th>
 							<th scope="col">발주진행상황</th>
-							<th scope="col">입고에정창고</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="modal-trigger" th:data-modal-url="@{/modals/purchase_modal.html}" data-modal-id="pch_modal" style="cursor: pointer;">
+					<tbody> 
+						<tr th:each="p : ${all}" class="modal-trigger" th:data-modal-url="@{/modals/purchase_modal.html}" data-modal-id="pch_modal" style="cursor: pointer;">
 							<td><input type="checkbox"></td>
-							<td>3</td>
-							<td>PCH-12345</td>
-							<td>2025-05-18</td>
-							<td>(주)딸기주스</td>
-							<td>500,000</td>
-							<td>2025-06-15</td>
-							<td>발주요청</td>
-							<td>입고 1 창고</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>2</td>
-							<td>PCH-11236</td>
-							<td>2025-05-15</td>
-							<td>(주)키위주스</td>
-							<td>5,500,000</td>
-							<td>2025-06-15</td>
-							<td>진행중</td>
-							<td>입고 1 창고</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>1</td>
-							<td>PCH-12585</td>
-							<td>2025-05-15</td>
-							<td>(주)망고주스</td>
-							<td>1,500,000</td>
-							<td>2025-05-16</td>
-							<td>가입고</td>
-							<td>입고 1 창고</td>
-						</tr>
-						
+							<td>[[${p.pidx}]]</td>
+							<td>[[${p.pch_code}]]</td>
+							<td>[[${p.request_date.substring(0, 10)}]]</td>
+							<td>[[${p.company_name}]]</td>
+							<td>[[${p.manager_name}]]</td>
+							<td>[[${p.item_qty}]]</td>
+							<td>[[${p.due_date}]]</td>
+							<td>[[${p.pch_status}]]</td>
+						</tr>	
 					</tbody>
 				</table>
 			</div>
-			<div
-				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				<!-- Pagination -->
-				<div class="mt-4 d-flex justify-content-center"
-					aria-label="Page navigation">
+				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
 					<ul class="pagination">
-						<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-						<li class="page-item active"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">다음</a></li>
+						<li class="page-item" th:classappend="${pageno == 1} ? 'disabled'">
+						  <a class="page-link"
+						     th:href="@{'/purchase.do'(pageno=${pageno > 1 ? pageno - 1 : 1},
+						                          search_column=${search_column},
+						                          search_word=${search_word},
+						                          purchase_status=${purchase_statuses})}">
+						    이전
+						  </a>
+						</li>
+						
+						<li class="page-item"
+						    th:each="n : ${#numbers.sequence(1, page_cnt)}"
+						    th:classappend="${n == pageno} ? 'active'">
+						  <a class="page-link"
+						     th:href="@{'/purchase.do'(pageno=${n},
+						                          search_column=${search_column},
+						                          search_word=${search_word},
+						                          purchase_status=${purchase_statuses})}">
+						    [[${n}]]
+						  </a>
+						</li>
+						
+						<li class="page-item" th:classappend="${pageno == page_cnt} ? 'disabled'">
+						  <a class="page-link"
+						     th:href="@{'/purchase.do'(pageno=${pageno < page_cnt ? pageno + 1 : page_cnt},
+						                          search_column=${search_column},
+						                          search_word=${search_word},
+						                          purchase_status=${purchase_statuses})}">
+						    다음
+						  </a>
+						</li>
 					</ul>
 				</div>
+				
 				<!-- Action Buttons -->
 				<div class="mt-4 d-flex gap-2">
 					<div class="ms-auto">
-						<button type="button" class="btn btn-success" onclick="location.href='/purchase_in.do'">
+						<button type="button" class="btn btn-success" onclick="location.href='/purchase_insert.do'">
 							<i class="bi bi-plus-lg"></i> 수기등록
 						</button>
 <!-- 						<button class="btn btn-danger"> -->
@@ -120,18 +122,6 @@
 <!-- 						</button> -->
 					</div>
 				</div>
-				
-				<!-- Action Buttons -->
-<!-- 				<div class="mt-4 d-flex gap-2"> -->
-<!-- 					<div class="ms-auto"> -->
-<!-- 						<button type="button" class="btn btn-success"> -->
-<!-- 							<i class="bi bi-plus-lg"></i> 추가 -->
-<!-- 						</button> -->
-<!-- 						<button class="btn btn-danger"> -->
-<!-- 							<i class="bi bi-trash"></i> 삭제 -->
-<!-- 						</button> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
 			</div>
 
 		</section>

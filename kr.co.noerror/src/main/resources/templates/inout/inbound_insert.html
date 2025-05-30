@@ -79,7 +79,7 @@
 					<tbody id="inbnd_items">
 						<tr class="text-center item_row" >
 							<td>3</td>
-							<td id="item_code">2589-0001</td>
+							<td class="item_code" data-code="2589-0001">2589-0001</td>
 							<td>오렌지</td>
 							<td>100g</td>
 							<td>500</td>
@@ -87,6 +87,27 @@
 							<td>식품</td>
 							<td>과일</td>
 							<td class="text-end">3,000</td>
+							<td><input type="text" class="form-control item_qty"></td>
+							<td><input type="date" class="form-control item_exp"></td>
+							<td>
+							<select class="form-select item_deli" aria-label="Default select example" >
+								<option value="" >선택</option>
+								<option value="납품완료" >납품완료</option>
+								<option value="일부도착">일부도착</option>
+								<option value="미납">미납</option>
+							</select>
+							</td>
+						</tr>
+						<tr class="text-center item_row" >
+							<td>3</td>
+							<td id="item_code">2589-0002</td>
+							<td>사과</td>
+							<td>100g</td>
+							<td>500</td>
+							<td>ea</td>
+							<td>식품</td>
+							<td>과일</td>
+							<td class="text-end">4,000</td>
 							<td><input type="text" class="form-control item_qty"></td>
 							<td><input type="date" class="form-control item_exp"></td>
 							<td>
@@ -107,7 +128,7 @@
                         <div class="row mb-3">
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">납품일</label>
-                                <input type="date" class="form-control" id="inbound_date">
+                                <input type="date" class="form-control" id="inbound_date" value="">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">입고상태</label>

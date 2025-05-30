@@ -5,18 +5,18 @@
 
 <!-- BOM 등록여부 확인  -->
 <select id="bom_check" resultType="int" parameterType="String">
-	SELECT COUNT (*) AS CNT FROM BOM WHERE C_PRODUCT_CODE = #{C_PRODUCT_CODE}	
+	SELECT COUNT (*) AS CNT FROM BOM WHERE PRODUCT_CODE = #{PRODUCT_CODE}	
 </select>
 
 <!-- BOM 상세보기 -->
 <select id="bom_detail" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="String">
 <!-- 	SELECT * FROM BOM WHERE C_PRODUCT_CODE = #{pd_code}	 -->
-	SELECT * FROM BPI_VIEW WHERE C_PRODUCT_CODE = #{pd_code} ORDER BY SEQ_NO 	
+	SELECT * FROM BPI_VIEW WHERE PRODUCT_CODE = #{pd_code} ORDER BY BOM_SEQ_NO 	
 	<!--  BOM + PRODUCTS + ITEMS 조인 -->
 
 </select>
 
-<!--  -->
+<!-- 고유번호 중복체크  -->
 <select id="bom_cd_ck" resultType="int">
     SELECT BOM_NO.NEXTVAL FROM DUAL
 </select>
@@ -43,66 +43,44 @@
 <!-- </insert> -->
 <insert id="insert_item" parameterType="kr.co.noerror.DTO.bom_DTO">
     INSERT INTO BOM
-    (BIDX, BOM_CODE, PARENT_IDX, C_PRODUCT_CODE, C_ITEM_CODE, BOM_LEVEL, SEQ_NO, BOM_QTY, UNIT, INSERT_DATE, MODIFY_DATE)
     VALUES
-    (BOM_NO.NEXTVAL, #{BOM_CODE}, #{PARENT_IDX, jdbcType=INTEGER}, #{C_PRODUCT_CODE}, #{C_ITEM_CODE}, #{BOM_LEVEL}, #{SEQ_NO}, #{BOM_QTY}, #{UNIT}, SYSTIMESTAMP, NULL)
+    (BOM_NO.NEXTVAL, #{BOM_CODE}, #{PARENT_IDX, jdbcType=INTEGER}, #{PRODUCT_CODE}, #{ITEM_CODE}, #{BOM_LEVEL}, #{BOM_SEQ_NO}, #{BOM_QTY}, #{UNIT}, SYSTIMESTAMP, NULL)
 </insert>
 
 
 <!-- 제품 전체 개수  -->
 <select id="bom_all_ea_sch" resultType="int" parameterType="Map">
-	SELECT COUNT(DISTINCT C_PRODUCT_CODE) AS CNT FROM BPI_VIEW
-		<if test="sclass != null">
-			<where>
-			PRODUCT_CLASS2 = #{sclass} 
-			</where>
-		</if>
-		<if test="search_opt == 'all' and keyword != null"> 
-			<where>
-			 (BOM_CODE LIKE '%'||#{keyword}||'%' OR
-			 C_PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR
-			 C_ITEM_CODE LIKE '%'||#{keyword}||'%' OR
-			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR
-			 ITEM_NAME LIKE '%'||#{keyword}||'%'
-			 ) 
-			</where>
-		</if>
-		<if test="search_opt == 'pd_name' and keyword != null"> 
-			<where>
-			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' 
-			</where>
-		</if>
+	SELECT COUNT(DISTINCT PRODUCT_CODE) AS CNT FROM BPI_VIEW
+<!-- 		<if test="sclass != null"> -->
+<!-- 			<where> -->
+<!-- 			PRODUCT_CLASS2 = #{sclass}  -->
+<!-- 			</where> -->
+<!-- 		</if> -->
+<!-- 		<if test="keyword != null">  -->
+<!-- 			<where> -->
+<!-- 			 (BOM_CODE LIKE '%'||#{keyword}||'%' OR -->
+<!-- 			 C_PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR -->
+<!-- 			 C_ITEM_CODE LIKE '%'||#{keyword}||'%' OR -->
+<!-- 			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR -->
+<!-- 			 ITEM_NAME LIKE '%'||#{keyword}||'%' -->
+<!-- 			 )  -->
+<!-- 			</where> -->
+<!-- 		</if> -->
 </select>
 
 
-<!-- 제품 전체 리스트  -->
+<!-- bom 전체 리스트  -->
 <select id="bom_all_list_sch" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="Map">
-	SELECT * FROM 
-	(SELECT ROWNUM AS rnum, a.* FROM 
-	(SELECT * FROM BPI_VIEW
-	<if test="sclass != null">
-		<where>
-		PRODUCT_CLASS2 = #{sclass} 
-		</where>
-	</if>
-	<if test="search_opt == 'all' and keyword != null"> 
-		<where>
-		 (BOM_CODE LIKE '%'||#{keyword}||'%' OR
-		 C_PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR
-		 C_ITEM_CODE LIKE '%'||#{keyword}||'%' OR
-		 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR
-		 ITEM_NAME LIKE '%'||#{keyword}||'%'
-		 ) 
-		</where>
-	</if>
-	<if test="search_opt == 'pd_name' and keyword != null"> 
-		<where>
-		 PRODUCT_NAME LIKE '%'||#{keyword}||'%' 
-		</where>
-	</if>
-	ORDER BY BIDX DESC ) a
-	WHERE ROWNUM &lt;= #{end} )
-	WHERE rnum &gt;= #{start}
+	SELECT *
+	FROM (
+	    SELECT * FROM BPI_VIEW b1
+	    WHERE BIDX = (
+	        SELECT MAX(BIDX) FROM BPI_VIEW b2
+	        WHERE b2.PRODUCT_CODE = b1.PRODUCT_CODE
+	    )
+	)
+	ORDER BY BIDX DESC
+	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
 

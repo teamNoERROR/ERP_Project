@@ -1,6 +1,7 @@
 package kr.co.noerror.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,14 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DAO.bom_DAO;
 import kr.co.noerror.DAO.inout_DAO;
 import kr.co.noerror.DTO.bom_DTO;
-import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.inout_DTO;
-import kr.co.noerror.Mapper.bom_mapper;
 import kr.co.noerror.Mapper.inout_mapper;
-import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_random;
 
@@ -82,6 +79,38 @@ public class inout_serviceImpl implements inout_service {
 		}
 		System.out.println(result);
 		return 0;
+	}
+
+	//입고리스트 총개수 
+	@Override
+	public int inbound_total(String sclass, String keyword) {
+		this.map = new HashMap<>();
+		this.map.put("sclass", sclass);
+		this.map.put("keyword", String.valueOf(keyword));
+		
+		int inbound_total = this.io_dao.inbound_total(map);
+		return inbound_total;
+	}
+	
+	//입고리스트 
+	@Override
+	public List<inout_DTO> inbound_all_list(String sclass, String keyword, Integer pageno, int post_ea) {
+		int offset = (pageno - 1) * post_ea; 
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("keyword", String.valueOf(keyword));
+		map.put("sclass", sclass);
+		map.put("offset", offset);
+		map.put("post_ea", post_ea);
+		
+		List<inout_DTO> inbound_all_list = this.io_dao.inbound_all_list(map);  
+		return inbound_all_list;
+	}
+
+	@Override
+	public List<inout_DTO> inbound_detail(String inbnd_code) {
+		List<inout_DTO> inbound_detail = this.io_dao.inbound_detail(inbnd_code);
+		return inbound_detail;
 	}
 
 }

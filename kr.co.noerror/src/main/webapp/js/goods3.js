@@ -11,8 +11,15 @@ var memo = document.querySelector("#memo");
 var productImage = document.querySelector("#productImage").files[0];
 var url = document.querySelector("#url");
 
+
+//부자재페이지 > 추가 버튼 누른 경우 
+function addItem(){
+	location.href="./items_insert.do";
+}
+
+
 //제품 등록하기 + 유효성검사
-function insert_itm(){
+function insertItm(){
 	if(goods_type.value ==""){
 		alert("제품유형을 선택하세요");
 		goods_type.focus();
@@ -94,9 +101,9 @@ function insertItem(){
 	formData.append("ITEM_COST", product_cost.value);
 	formData.append("ITM_SAFE_STOCK", pd_safe_stock.value);
 	formData.append("COMPANY_CODE", purchase_corp.value);
-	formData.append("USE_FLAG", use_flag.value);
-	formData.append("EXP_FLAG", exp_flag.value);
-	formData.append("MEMO", memo.value);
+	formData.append("ITM_USE_FLAG", use_flag.value);
+	formData.append("ITM_EXP_FLAG", exp_flag.value);
+	formData.append("ITM_MEMO", memo.value);
 	
     formData.append("productImage", productImage);
 	formData.append("url", "아이피써놓기");
@@ -121,3 +128,30 @@ function insertItem(){
 	});
 }
 
+
+
+
+
+//부자재 페이징 
+function go_itm_pg(ee){
+	var page_no = ee.getAttribute('data-pageno');
+	var keyword = ee.getAttribute('data-keyword');
+	var sclass = ee.getAttribute('data-sclass');
+	
+	var params = {  
+	    type: ee.getAttribute('data-type'),
+	    pageno: page_no,
+	    post_ea: ee.getAttribute('data-pea'),
+	};
+	
+	if (keyword) {  //키워드가 있으면
+	    params["keyword"] = keyword;
+	}
+
+	if (sclass) {  //소분류 선택시 
+	    params["sclass"] = sclass;
+	}
+
+	var pString = new URLSearchParams(params).toString();
+	location.href = "./goods.do?" + pString;
+}

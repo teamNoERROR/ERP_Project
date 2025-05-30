@@ -15,19 +15,17 @@ function bomBtn(bom_open){
 	}).then(function(data) {
 		return data.text();
 	
-	}).then(function(result) {  //등록된 BOM 있음 
-		if(result =="yes"){  
+	}).then(function(result) {  
+		if(result =="yes"){  //등록된 BOM 있음 
 			
 			var bom_open = new bootstrap.Modal(document.getElementById('bom_detail'));
 			bom_open.show();
 			bom_detail(pd_code);
-			//location.href="./bom_detail.do?pd_code="+pd_code;
-			//bom_detail(pd_code);
-			
-		}else if(result =="no"){  //등록된 BOM없음 
+
+				}else if(result =="no"){  //등록된 BOM없음 
 			if(confirm("등록된 BOM 자료가 없습니다. \n지금 등록 하시겠습니까?")){
-				
 				location.href="./bom_insert.do?pd_code="+pd_code;
+				
 			}else {
 				location.href="./goods.do";   //완제품 리스트로 이동 
 			}
@@ -41,6 +39,9 @@ function bomBtn(bom_open){
 	});
 }
 
+function addBom(){
+	location.href="./bom_insert.do";
+}
 
 //bom_detail 모달
 function bom_detail(pd_code){
@@ -66,7 +67,7 @@ function bom_detail(pd_code){
 
 
 //자재 추가 버튼 클릭 => 부자재리스트 모달 오픈 
-function open_item_list(){
+function openItemList(){
 	fetch("./bom_item_list.do", {
 		method: "GET",
 
@@ -172,11 +173,13 @@ function appendItemsRow(tbody, item) {
 
 
 //bom등록 저장
-function bom_save(){
+function bomSave(){
 	var tbody = document.querySelector("#bom_items");
-	var rows = tbody.querySelectorAll('tr.item_add_row'); // 테이블에서 데이터가 있는 행만 선택
+	var rows = tbody.querySelectorAll('.item_added'); // 테이블에서 데이터가 있는 행만 선택
+	
 	var pd_code = document.querySelector("#product_code");
 	var pd_type = document.querySelector("#product_type");
+	
   	var items = [];
 	
 	if (rows.length == 0) {
@@ -211,7 +214,6 @@ function bom_save(){
 	    	}
 		}
   	});
-	console.log(JSON.stringify(items))
 	fetch("./bom_insertok.do", {
 		method: "PUT",
 		headers: {'content-type': 'application/json'},
@@ -224,6 +226,7 @@ function bom_save(){
 		console.log("result : " + result)
 		if(result=="ok"){
 			alert("BOM 등록이 완료되었습니다.");
+			location.href="./bom.do"
 		}else if(result=="fail"){
 			alert("BOM 등록에 실패했습니다.");
 		}

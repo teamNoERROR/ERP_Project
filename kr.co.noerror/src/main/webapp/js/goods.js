@@ -137,7 +137,10 @@ function deleteBtn(del_pd){
 		gd_type= del_pd.getAttribute("data-type");
 		
 		if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
-			del_req = [{idx: idx, code: pd_code, type : gd_type}]
+			del_req = [{
+				idx: idx, 
+				code: pd_code, 
+				type : gd_type}]
 			del_ajax(del_req);	//모달 안에서 1개만 삭제 
 		}
 			
@@ -155,7 +158,10 @@ function deleteBtn(del_pd){
 					pd_code = chk.getAttribute("data-pdcode");
 					gd_type= chk.getAttribute("data-type");
 					
-					del_req.push({ idx: idx, code: pd_code, type : gd_type })
+					del_req.push({ 
+						idx: idx, 
+						code: pd_code, 
+						type : gd_type })
 				});
 				del_ajax(del_req); //체크박스로 1개~여러개 삭제 
 			}

@@ -48,6 +48,7 @@ public class controller {
 		return "/warehouse/warehouses_it_list.html";
 	}
 	
+
 	@GetMapping("/test.do")
 	public String test(Model m) {
 	

@@ -39,11 +39,87 @@ function bomBtn(bom_open){
 	});
 }
 
+
+function bomDetailOpen(bom_open){
+	var pd_code = bom_open.getAttribute("data-pdcode");
+	
+	fetch("./bom_detail.do?pd_code="+pd_code, {
+		method: "GET"
+			
+	}).then(function(data) {
+		return data.text();
+	
+	}).then(function(result) {  
+		document.getElementById("modalContainer").innerHTML = result;
+			var bom_open = new bootstrap.Modal(document.getElementById('bom_detail'));
+			bom_open.show();
+			//bom_detail(pd_code);
+
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+
+//bom추가하기
 function addBom(){
 	location.href="./bom_insert.do";
 }
 
+/*
+function bomDelete(del_pd){
+	var idx;
+	var pd_code;
+	var bom_code;
+	var gd_type;
+	var del_req = new Array();
+	
+	if(del_pd){ //모달에서 삭제시 (del_pd가 전달되었을떄)
+		idx = del_pd.getAttribute("data-idx");
+		pd_code = del_pd.getAttribute("data-pdcode");
+		bom_code = del_pd.getAttribute("data-etccode");
+		gd_type= del_pd.getAttribute("data-type");
+		
+		if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
+			del_req = [{
+				idx: idx, 
+				code: pd_code, 
+				code2: bom_code, 
+				type : gd_type
+			}]
+			del_ajax(del_req);	//모달 안에서 1개만 삭제 
+		}
+			
+	}else {  //리스트에서 체크박스로 삭제시 (del_pd 전달x)
+		var checkboxes = document.querySelectorAll("input[name='selected_box']:checked");
+		
+		if (checkboxes.length == 0) {
+			alert("삭제할 항목을 선택해주세요.");
+			
+		}else{
+			if (confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")) {
+				
+				checkboxes.forEach(chk => {
+					idx = chk.getAttribute("data-idx");		
+					pd_code = chk.getAttribute("data-pdcode");
+					bom_code = del_pd.getAttribute("data-etccode");
+					gd_type= chk.getAttribute("data-type");
+					
+					del_req.push({ 
+						idx: idx, 
+						code: pd_code, 
+						code2: bom_code, 
+						type : gd_type 
+					})
+				});
+				del_ajax(del_req); //체크박스로 1개~여러개 삭제 
+			}
+		}
+	}
+}
+*/
 //bom_detail 모달
+/*
 function bom_detail(pd_code){
 	console.log(pd_code)
 	fetch("./bom_detail.do?pd_code="+pd_code, {
@@ -64,7 +140,7 @@ function bom_detail(pd_code){
 	});
 }
 
-
+*/
 
 //자재 추가 버튼 클릭 => 부자재리스트 모달 오픈 
 function openItemList(){

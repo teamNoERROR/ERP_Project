@@ -1,6 +1,3 @@
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const modalContainer = document.getElementById('modalContainer') || document.body; // 모달 삽입 컨테이너, 없으면 body에 넣기
   const loadedModals = new Set(); // 이미 로딩된 모달 ID 저장
@@ -41,6 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalEl = document.getElementById(modalId);
         if (modalEl) {
           const modal = new bootstrap.Modal(modalEl);
+
+          // 모달 닫힐 때 DOM 삭제 및 Set에서 제거
+          modalEl.addEventListener('hidden.bs.modal', () => {
+            modalEl.remove();
+            loadedModals.delete(modalId);
+          });
+
           modal.show();
         }
       } catch (error) {
@@ -49,4 +53,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-

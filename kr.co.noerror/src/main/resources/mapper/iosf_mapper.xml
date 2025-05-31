@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.iosf_mapper">
+<insert id="IOSF_save_warehouse" parameterType="map">
+
+
+<if test="wh_type == 'in'">
+INSERT INTO WAREHOUSE_INBOUND (
+  	WIN_IDX,
+    WH_CODE,
+    WH_NAME,
+    INBOUND_CODE,
+    WH_LOCATION,
+    ITEM_CODE,
+    ITEM_NAME,
+    CATEGORY_MAIN,
+    CATEGORY_SUB,
+    USE_YN,
+    CLIENT_CODE,
+    CLIENT_NAME,
+    CLIENT_USE_YN
+  )
+  VALUES (
+  	IN_WAREHOUSE_NO.NEXTVAL,
+    #{iosf_dto.wh_code},
+    #{iosf_dto.wh_name},
+    #{iosf_dto.inbound_code},
+    #{iosf_dto.wh_location},
+    #{iosf_dto.item_code},
+    #{iosf_dto.item_name},
+    #{iosf_dto.category_main},
+    #{iosf_dto.category_sub},
+    #{iosf_dto.use_yn},
+    #{iosf_dto.client_code},
+    #{iosf_dto.client_name},
+    #{iosf_dto.client_use_yn}
+  )
+</if>
+</insert>
+
+
+<update id="IOSF_modify_warehouse" parameterType="map">
+
+<if test="wh_type == 'in'">
+  UPDATE WAREHOUSE_INBOUND
+  SET 
+  	WH_CODE = #{iosf_dto.wh_code},
+    WH_NAME = #{iosf_dto.wh_name},
+    INBOUND_CODE = #{iosf_dto.inbound_code},
+    ITEM_CODE = #{iosf_dto.item_code},
+    CATEGORY_MAIN = #{iosf_dto.category_main},
+    CATEGORY_SUB = #{iosf_dto.category_sub},
+    USE_YN = #{iosf_dto.use_yn},
+    WH_LOCATION = #{iosf_dto.wh_location},
+    CLIENT_CODE = #{iosf_dto.client_code},
+    CLIENT_NAME = #{iosf_dto.client_name},
+    CLIENT_USE_YN = #{iosf_dto.client_use_yn},
+    INBOUND_DATE = #{iosf_dto.inbound_date, javaType=java.time.LocalDateTime, jdbcType=TIMESTAMP}
+    <where>
+    	INBOUND_CODE = #{iosf_dto.inbound_code}
+    </where>
+</if>
+
+</update>
+
+<select id="IOSF_select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
+  <choose>
+    <when test="wh_type == 'in'">
+      <![CDATA[
+        SELECT *
+        FROM (
+          SELECT A.*, ROWNUM RNUM
+          FROM (
+            SELECT 
+              WIN_IDX,
+              WH_CODE,
+              WH_NAME,
+         	  INBOUND_CODE,
+              ITEM_CODE,
+              ITEM_NAME,
+              CATEGORY_MAIN,
+              CATEGORY_SUB,
+              USE_YN,
+              WH_LOCATION,
+              CLIENT_CODE,
+              CLIENT_NAME,
+              CLIENT_USE_YN,
+              TO_CHAR(INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS') AS inbound_date
+            FROM WAREHOUSE_INBOUND
+            ORDER BY WIN_IDX DESC
+          ) A
+          WHERE ROWNUM <= #{startIndex} + #{pageSize}
+        )
+        WHERE RNUM > #{startIndex}
+      ]]>
+    </when>
+
+    <when test="wh_type == 'out'">
+      <![CDATA[
+        SELECT *
+        FROM (
+          SELECT A.*, ROWNUM RNUM
+          FROM (
+            SELECT 
+              WOUT_IDX AS IDX,
+              WH_CODE,
+              WH_NAME,
+              INBOUND_CODE,
+              ITEM_CODE,
+              ITEM_NAME,
+              -- 필요한 출고 필드들 추가
+              USE_YN,
+              WH_LOCATION,
+              CLIENT_CODE,
+              CLIENT_NAME,
+              CLIENT_USE_YN,
+              TO_CHAR(INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS') AS inbound_date
+            FROM WAREHOUSE_OUTBOUND
+            ORDER BY WOUT_IDX DESC
+          ) A
+          WHERE ROWNUM <= #{startIndex} + #{pageSize}
+        )
+        WHERE RNUM > #{startIndex}
+      ]]>
+    </when>
+
+    <otherwise>
+      SELECT 1 FROM DUAL -- wh_type이 없거나 잘못된 경우
+    </otherwise>
+  </choose>
+</select>
+
+<!-- 검색 + 페이지네이션 -->
+<select id="IOSF_search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
+  <choose>
+    <!-- 입고 검색 -->
+    <when test="wh_type == 'in'">
+      <![CDATA[
+        SELECT *
+        FROM (
+          SELECT A.*, ROWNUM RNUM
+          FROM (
+            SELECT 
+              WIN_IDX,
+              WH_CODE,
+              WH_NAME,
+              INBOUND_CODE,
+              ITEM_CODE,
+              ITEM_NAME,
+              CATEGORY_MAIN,
+              CATEGORY_SUB,
+              USE_YN,
+              WH_LOCATION,
+              CLIENT_CODE,
+              CLIENT_NAME,
+              CLIENT_USE_YN,
+              TO_CHAR(INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS') AS inbound_date
+            FROM WAREHOUSE_INBOUND
+            WHERE 
+              WH_NAME LIKE '%' || #{m_search} || '%' OR
+              ITEM_NAME LIKE '%' || #{m_search} || '%' OR
+              ITEM_CODE LIKE '%' || #{m_search} || '%' OR
+              CLIENT_NAME LIKE '%' || #{m_search} || '%'
+            ORDER BY WIN_IDX DESC
+          ) A
+          WHERE ROWNUM <= #{startIndex} + #{pageSize}
+        )
+        WHERE RNUM > #{startIndex}
+      ]]>
+    </when>
+
+    <!-- 출고 검색 -->
+    <when test="wh_type == 'out'">
+      <![CDATA[
+        SELECT *
+        FROM (
+          SELECT A.*, ROWNUM RNUM
+          FROM (
+            SELECT 
+              WOUT_IDX,
+              WH_CODE,
+              WH_NAME,
+            
+              ITEM_CODE,
+              ITEM_NAME,
+              USE_YN,
+              WH_LOCATION,
+              CLIENT_CODE,
+              CLIENT_NAME,
+              CLIENT_USE_YN,
+              TO_CHAR(OUTBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS') AS OUTBOUND_DATE
+            FROM WAREHOUSE_OUTBOUND
+            WHERE 
+              WH_NAME LIKE '%' || #{m_search} || '%' OR
+              ITEM_NAME LIKE '%' || #{m_search} || '%' OR
+              ITEM_CODE LIKE '%' || #{m_search} || '%' OR
+              CLIENT_NAME LIKE '%' || #{m_search} || '%'
+            ORDER BY WOUT_IDX DESC
+          ) A
+          WHERE ROWNUM <= #{startIndex} + #{pageSize}
+        )
+        WHERE RNUM > #{startIndex}
+      ]]>
+    </when>
+
+    <otherwise>
+      SELECT 1 FROM DUAL
+    </otherwise>
+  </choose>
+</select>
+  
+<!-- 전체 창고 수 -->
+  <select id="IOSF_getTotalCount" resultType="int">
+      SELECT COUNT(*) FROM WAREHOUSE
+  </select>
+
+ <select id="IOSF_wh_SelectWithInboundCode" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
+  <if test="wh_type == 'in'">
+  SELECT 
+    WH_CODE,         
+    WH_NAME,        
+    WH_LOCATION,     
+	INBOUND_CODE,
+	
+    ITEM_CODE,       
+    ITEM_NAME,       
+    CATEGORY_MAIN,   
+    CATEGORY_SUB,   
+    USE_YN,          
+
+    CLIENT_CODE,     
+    CLIENT_NAME,     
+    CLIENT_USE_YN,
+    TO_CHAR(INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS') AS inbound_date
+
+  FROM WAREHOUSE_INBOUND
+  WHERE INBOUND_CODE = '${inbound_code}'
+  </if>
+  </select>
+
+<delete id="IOSF_delete_warehouses" parameterType="map">
+	<if test="wh_type == 'in'">
+	  	DELETE FROM WAREHOUSE_INBOUND WHERE INBOUND_CODE = '${inbound_code}'
+	</if>
+  </delete>
+
+</mapper>

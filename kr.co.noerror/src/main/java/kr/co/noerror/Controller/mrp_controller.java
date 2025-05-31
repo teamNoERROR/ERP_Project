@@ -130,4 +130,11 @@ public class mrp_controller {
 
 		return "/production/mrp_list.html";
 	}
+	
+	@GetMapping("/mrp.do")
+	public String mrp(Model m) {
+		m.addAttribute("lmenu","생산 관리");
+		m.addAttribute("smenu","mrp 계산");
+		return "/production/mrp_list.html";
+	}
 }

@@ -57,10 +57,12 @@
                 <th>자재명</th>
                 <th>소요수량</th>
                 <th>단위</th>
+                <th>단가</th>
                 <th>가용재고</th>
                 <th>부족수량</th>
                 <th>발주수량</th>
-                <th>발주업체</th>
+                <th>업체코드</th>
+                <th>업체명</th>
               </tr>
             </thead>
             <tbody>
@@ -73,9 +75,11 @@
                 <td>[[${m.item_name}]]</td>
                 <td>[[${m.required_qty}]]</td>
                 <td>[[${m.item_unit}]]</td>
+                <td>[[${m.item_cost}]]</td>
                 <td>[[${m.available_stock}]]</td>
                 <td>[[${m.shortage_stock}]]</td>
                 <td><input type="number" class="form-control" th:value="${-m.shortage_stock}"></td>
+				<td>[[${m.company_code}]]</td>
 				<td>[[${m.company_name}]]</td>
              </tr>             
             </tbody>
@@ -156,20 +160,14 @@
 
     <!-- 하단 공통: 발주 바구니 -->
     <div class="mt-5">
+    
       <h5>발주 바구니</h5>
       
       <div class="d-flex justify-content-end mb-2">
 	    <button type="button" class="btn btn-primary" onclick="purchase_request()"><i class="bi bi-bookmark-check"></i> 저장</button>
 	    <button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>
 	  </div>
-	  <div class="col-12 d-flex align-items-center flex-wrap gap-2">
-	    <label>&nbsp;납기요청일 </label>
-	    <input type="date" class="form-control" name="due_date" style="max-width: 150px;">	    
-	  </div>
-      <div class="col-md-12">
-        <label>&nbsp;비고</label>
-        <textarea class="form-control" rows="2" id="memo"></textarea>
-      </div><br>
+
       <table class="table table-bordered align-middle" id="basketTable">
         <thead class="table-light text-center">
           <tr>
@@ -178,7 +176,8 @@
             <th>자재명</th>
             <th>발주수량</th>
             <th>단위</th>
-            <th>발주업체</th>
+            <th>자재단가</th>
+            <th>자재구매금액</th>
             <th>삭제</th>
           </tr>
         </thead>
@@ -188,6 +187,7 @@
       </table>
 
     </div>
+
   </div>
 </main>
 

@@ -17,7 +17,7 @@ public class M_File_Rename {
 		//날짜
 		Date day = new Date();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
-		String today = sf.format(day);		//년월일
+		String today = sf.format(day);		//년월일[
 		
 		//랜덤값
 		int no = (int)Math.ceil(Math.random()*1000); 

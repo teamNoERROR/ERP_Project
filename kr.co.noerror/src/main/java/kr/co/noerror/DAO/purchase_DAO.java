@@ -29,8 +29,8 @@ public class purchase_DAO {
 		return count;
 	}
 	
-	public int insert_pch_header(String pch_code) {
-		int result = this.sql.insert("insert_pch_header", pch_code);
+	public int insert_pch_header(purchase_DTO pdto) {
+		int result = this.sql.insert("insert_pch_header", pdto);
 		return result;
 	}
 	
@@ -47,5 +47,10 @@ public class purchase_DAO {
 	public int purchase_count(Map<String, Object> mparam) {
 		int cnt = this.sql.selectOne("purchase_count", mparam);
 		return cnt;
+	}
+	
+	public List<purchase_DTO> purchase_detail(String pch_code){
+		List<purchase_DTO> details = this.sql.selectList("purchase_detail", pch_code);
+		return details;
 	}
 }

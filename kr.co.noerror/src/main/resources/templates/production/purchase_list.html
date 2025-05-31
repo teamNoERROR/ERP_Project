@@ -53,22 +53,24 @@
 							<th scope="col">발주번호</th>
 							<th scope="col">발주일자</th>
 							<th scope="col">발주처명</th>
-							<th scope="col">담당자명</th>
+							<th scope="col">발주처 담당자</th>
+							<th scope="col">자재명</th>
 							<th scope="col">발주수량</th>
 							<th scope="col">납기예정일</th>
 							<th scope="col">발주진행상황</th>
 						</tr>
 					</thead>
 					<tbody> 
-						<tr th:each="p : ${all}" class="modal-trigger" th:data-modal-url="@{/modals/purchase_modal.html}" data-modal-id="pch_modal" style="cursor: pointer;">
+						<tr th:each="p : ${all}" class="modal-trigger" th:data-modal-url="@{/purchase_detail.do(code=${p.pch_code})}" data-modal-id="pch_modal" style="cursor: pointer;">
 							<td><input type="checkbox"></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.pch_code}]]</td>
 							<td>[[${p.request_date.substring(0, 10)}]]</td>
 							<td>[[${p.company_name}]]</td>
 							<td>[[${p.manager_name}]]</td>
+							<td>[[${p.item_name}]]</td>
 							<td>[[${p.item_qty}]]</td>
-							<td>[[${p.due_date}]]</td>
+							<td>[[${p.due_date.substring(0, 10)}]]</td>
 							<td>[[${p.pch_status}]]</td>
 						</tr>	
 					</tbody>

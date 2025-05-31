@@ -99,16 +99,16 @@
 				        <div class="col">
 				            <div class="row gx-2">
 				                <div class="col-md-3">
-				                    <input type="text" id="wh_mg_name" class="form-control" placeholder="관리자명"   name="wh_mg_name">
+				                    <input type="text" class="form-control" placeholder="관리자명" th:value="${wh_modify[0].ENAME}">
 				                </div>
 				                <div class="col-md-3">
-				                    <input type="text" id="wh_mg_id" class="form-control" placeholder="사원번호"  th:value="${wh_modify[0].wh_mg_id}" name="wh_mg_id">
+				                    <input type="text" class="form-control" placeholder="사원번호"  th:value="${wh_modify[0].ECODE}" name="ECODE">
 				                </div>
 				                <div class="col-md-3">
-				                    <input type="text" id="wh_mg_mp" class="form-control" placeholder="부서/직급" name="wh_mg_mp">
+				                    <input type="text"  class="form-control" placeholder="부서/직급" th:value="${wh_modify[0].EPART} + ' / ' + ${wh_modify[0].EPOSITION}" >
 				                </div>
 				                <div class="col-md-3">
-				                    <input type="text" id="wh_mg_ph" class="form-control" placeholder="연락처"  name="wh_mg_ph">
+				                    <input type="text"  class="form-control" placeholder="연락처"  th:value="${wh_modify[0].EPHONE}" >
 				                </div>
 				            </div>
 				        </div>

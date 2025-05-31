@@ -13,8 +13,9 @@ import kr.co.noerror.DTO.purchase_DTO;
 public interface purchase_mapper {
 	List<mrp_result_DTO> mrp_result_select(String mrp_code);
 	int pch_code_check(String pch_code);
-	int insert_pch_header(String pch_code);
-	int insert_pch_detail(purchase_DTO mdto);
+	int insert_pch_header(purchase_DTO pdto);
+	int insert_pch_detail(purchase_DTO pdto);
 	List<purchase_DTO> purchase_list(Map<String, Object> mparam);
 	int purchase_count(Map<String, Object> mparam);
+	List<purchase_DTO> purchase_detail(String pch_code);
 }

@@ -17,23 +17,23 @@
 						<tbody>
 							<tr>
 								<td class="info-label">회사명</td>
-								<td class="value-cell" colspan="4">(주) 딸기주스</td>
+								<td class="value-cell" colspan="4">[[${details[0].company_name}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">사업자번호</td>
-								<td class="value-cell">102-52-98758</td>
+								<td class="value-cell">[[${details[0].biz_num}]]</td>
 								<td class="info-label">대표자</td>
-								<td class="value-cell" colspan="2">김길동</td>
+								<td class="value-cell" colspan="2">[[${details[0].ceo_name}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">담당자</td>
-								<td class="value-cell">최누구</td>
+								<td class="value-cell">[[${details[0].manager_name}]]</td>
 								<td class="info-label">연락처</td>
-								<td class="value-cell" colspan="2">010-6333-5555</td>
+								<td class="value-cell" colspan="2">[[${details[0].phone_num}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">주소</td>
-								<td class="value-cell" colspan="5">서울시 관악구</td>
+								<td class="value-cell" colspan="5">[[${details[0].addr1 + details[0].addr2}]]</td>
 							</tr>
 						</tbody>
 					</table>

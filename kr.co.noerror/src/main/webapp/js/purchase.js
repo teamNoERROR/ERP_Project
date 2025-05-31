@@ -55,20 +55,23 @@ function addToCart() {
 
     // 🔷 업체 정보 입력 폼
     const inputRow = document.createElement('tr');
-    inputRow.innerHTML = `
-      <td colspan="8" style="background-color:#eef; padding:10px;">
-        <strong>업체코드: ${company_code} / 업체명: ${company_name}</strong><br/>
-        납기요청일: <input type="date" name="due_date_${company_code}" style="margin-right: 20px;" />
-        결제수단: 
-        <select name="pay_method_${company_code}" style="margin-right: 20px;">
-          <option value="현금결재">현금결재</option>
-          <option value="신용카드">신용카드</option>
-          <option value="계좌이체">계좌이체</option>
-          <option value="외상">외상</option>
-        </select>
-        비고: <input type="text" name="memo_${company_code}" size="40" />
-      </td>
-    `;
+	inputRow.innerHTML = `
+	  <td colspan="8" style="background-color:#eef; padding:10px;">
+	    <strong>
+	      업체코드: <span id="company_code_${company_code}">${company_code}</span> /
+	      업체명: <span id="company_name_${company_code}">${company_name}</span>
+	    </strong><br/>
+	    납기요청일: <input type="date" name="due_date_${company_code}" style="margin-right: 20px;" />
+	    결제수단: 
+	    <select name="pay_method_${company_code}" style="margin-right: 20px;">
+	      <option value="현금결재">현금결재</option>
+	      <option value="신용카드">신용카드</option>
+	      <option value="계좌이체">계좌이체</option>
+	      <option value="외상">외상</option>
+	    </select>
+	    비고: <input type="text" name="memo_${company_code}" size="40" />
+	  </td>
+	`;
     basket.appendChild(inputRow);
 
     // 🔷 자재 목록
@@ -98,43 +101,45 @@ function purchase_request() {
   let currentInputs = {};
 
   basketRows.forEach(row => {
-    const isCompanyRow = row.querySelector('strong')?.innerText.includes('업체코드:');
-    if (isCompanyRow) {
-      const companyText = row.querySelector('strong').innerText;
-      const match = companyText.match(/업체코드:\s*(\w+)\s*\/\s*업체명:\s*(.+)/);
-      if (match) {
-        currentCompanyCode = match[1].trim();
-        currentCompanyName = match[2].trim();
-		
-        const due_date_input = row.querySelector(`input[name="due_date_${currentCompanyCode}"]`);
-        const pay_method_select = row.querySelector(`select[name="pay_method_${currentCompanyCode}"]`);
-        const memo_input = row.querySelector(`input[name="memo_${currentCompanyCode}"]`);
+	const isCompanyRow = row.querySelector('strong');
+	if (isCompanyRow) {
+	  const codeEl = row.querySelector('span[id^="company_code_"]');
+	  const nameEl = row.querySelector('span[id^="company_name_"]');
 
-        currentInputs = {
-          due_date: due_date_input?.value || '',
-          pay_method: pay_method_select?.value || '',
-          memo: memo_input?.value || ''
-        };
+	  if (codeEl && nameEl) {
+	    currentCompanyCode = codeEl.innerText.trim();
+	    currentCompanyName = nameEl.innerText.trim();
 
-        if (!currentInputs.due_date) {
-          alert(`[${currentCompanyName}] 납기일을 입력하세요.`);
-          throw new Error('납기일 누락');
-        }
-        if (!currentInputs.memo) {
-          alert(`[${currentCompanyName}] 비고를 입력하세요.`);
-          throw new Error('비고 누락');
-        }
+	    const due_date_input = row.querySelector(`input[name="due_date_${currentCompanyCode}"]`);
+	    const pay_method_select = row.querySelector(`select[name="pay_method_${currentCompanyCode}"]`);
+	    const memo_input = row.querySelector(`input[name="memo_${currentCompanyCode}"]`);
 
-        groupedData[currentCompanyCode] = {
-          company_code: currentCompanyCode,
-          company_name: currentCompanyName,
-          due_date: currentInputs.due_date,
-          pay_method: currentInputs.pay_method,
-          memo: currentInputs.memo,
-          items: []
-        };
-      }
-    } else {
+	    currentInputs = {
+	      due_date: due_date_input?.value || '',
+	      pay_method: pay_method_select?.value || '',
+	      memo: memo_input?.value || ''
+	    };
+
+	    // 유효성 검사
+	    if (!currentInputs.due_date) {
+	      alert(`[${currentCompanyName}] 납기일을 입력하세요.`);
+	      throw new Error('납기일 누락');
+	    }
+	    if (!currentInputs.memo) {
+	      alert(`[${currentCompanyName}] 비고를 입력하세요.`);
+	      throw new Error('비고 누락');
+	    }
+
+	    groupedData[currentCompanyCode] = {
+	      company_code: currentCompanyCode,
+	      company_name: currentCompanyName,
+	      due_date: currentInputs.due_date,
+	      pay_method: currentInputs.pay_method,
+	      memo: currentInputs.memo,
+	      items: []
+	    };
+	  }
+	} else {
       // 자재 행 처리
       const purchase = {
         item_code: row.children[0].innerText.trim(),
@@ -151,13 +156,11 @@ function purchase_request() {
       }
     }
   });
- console.log(JSON.stringify(groupedData));
 
   if (Object.keys(groupedData).length === 0) {
     alert("바구니에 항목이 없습니다.");
     return;
   }
-
   
   fetch('/purchase_request.do', {
     method: 'POST',

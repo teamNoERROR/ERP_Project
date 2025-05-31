@@ -40,13 +40,14 @@
     request_date,
     modify_date
   ) VALUES (
-    #{company_code}
-    #{pch_status}
-    #{due_date}
-    #{pay_amount}
-    #{pay_method}
-    #{emp_code}
-    #{memo}
+    #{pch_code},
+    #{company_code},
+    #{pch_status},
+    #{due_date},
+    #{pay_amount},
+    #{pay_method},
+    #{emp_code},
+    #{memo},
     SYSDATE,
     SYSDATE 
   )
@@ -69,9 +70,20 @@
 SELECT * FROM (
     SELECT inner_result.*, ROWNUM rnum
     FROM (
-        SELECT pch.*, cmp.company_name, mgr.manager_name
-        FROM purchase_req_detail pch
-        JOIN temp_items itm ON pch.item_code = itm.item_code
+        SELECT 
+        	prd.pidx, 
+        	prd.pch_code, 
+        	prd.item_code, 
+        	itm.item_name, 
+        	prd.item_qty, 
+        	prh.due_date, 
+        	prh.pch_status, 
+        	prh.request_date, 
+        	cmp.company_name, 
+        	mgr.manager_name
+        FROM purchase_req_detail prd
+        JOIN purchase_req_header prh ON prd.pch_code = prh.pch_code
+        JOIN temp_items itm ON prd.item_code = itm.item_code
         JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
         JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
         WHERE 1=1
@@ -90,12 +102,12 @@ SELECT * FROM (
 	        </when>
         </choose>
 	    <if test="pch_statuses != null and pch_statuses.size > 0">
-	        AND pch_status IN
+	        AND prh.pch_status IN
 	        <foreach item="status" index="index" collection="pch_statuses" open="(" separator="," close=")">
 	            #{status}
 	        </foreach>
 	    </if>
-        ORDER BY pch.pidx DESC
+        ORDER BY prd.pidx DESC
     ) inner_result
     WHERE ROWNUM &lt; #{end}
 )
@@ -105,10 +117,11 @@ WHERE rnum &gt; #{start}
 <!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
 <select id="purchase_count" resultType="int" parameterType="map">
 SELECT COUNT(*) AS total
-FROM purchase_req_detail pch
-JOIN temp_items itm ON pch.item_code = itm.item_code
-JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
-JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+	FROM purchase_req_detail prd
+	JOIN purchase_req_header prh ON prd.pch_code = prh.pch_code
+	JOIN temp_items itm ON prd.item_code = itm.item_code
+	JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+	JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
 WHERE 1=1
     <choose>
      <when test="scolumn == 'all'">
@@ -125,11 +138,36 @@ WHERE 1=1
      </when>
     </choose>
     <if test="pch_statuses != null and pch_statuses.size > 0">
-        AND pch_status IN
+        AND prh.pch_status IN
         <foreach item="status" index="index" collection="pch_statuses" open="(" separator="," close=")">
             #{status}
         </foreach>
     </if>
+</select>
+
+<select id="purchase_detail" resultType="kr.co.noerror.DTO.purchase_DTO" parameterType="String">
+SELECT
+    prd.pidx, 
+    prd.pch_code, 
+    prd.item_code, 
+    itm.item_name, 
+    prd.item_qty, 
+    prh.due_date, 
+    prh.pch_status, 
+    prh.request_date, 
+    cmp.company_name, 
+    cmp.biz_num,
+    cmp.ceo_name,
+    mgr.manager_name,
+    mgr.phone_num,
+    cmp.addr1,
+    cmp.addr2
+FROM purchase_req_detail prd
+JOIN purchase_req_header prh ON prd.pch_code = prh.pch_code
+JOIN temp_items itm ON prd.item_code = itm.item_code
+JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+WHERE prd.pch_code = #{pch_code}
 </select>
 
 </mapper>

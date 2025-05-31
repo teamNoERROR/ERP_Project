@@ -26,11 +26,13 @@ public class common_DAO implements common_service {
 	}
 	
 	@Override
-	public List<WareHouse_DTO> warehouse_list() {
-		List<WareHouse_DTO> all_data = this.cm_mapper.warehouse_list();
+	public List<WareHouse_DTO> warehouse_list(String wh_tp) {
+		List<WareHouse_DTO> all_data = this.cm_mapper.warehouse_list(wh_tp);
 		
 		return all_data;
 	}
+
+
 	
 	
 

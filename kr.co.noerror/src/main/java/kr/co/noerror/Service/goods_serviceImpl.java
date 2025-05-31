@@ -67,12 +67,10 @@ public class goods_serviceImpl implements goods_service {
 		this.list = new ArrayList<>();
 		this.map = new HashMap<>();
 	
-		if("완제품".equals(goods_type) || "반제품".equals(goods_type)
-				|| "product".equals(goods_type) 
-				|| goods_type == null ) {
+		if("product".equals(goods_type) || "half".equals(goods_type) || goods_type == null ) {
 			this.map.put("key", "pd_lc");
 			
-		}else if("부자재".equals(goods_type) || "item".equals(goods_type)) {
+		}else if("item".equals(goods_type)) {
 			this.map.put("key", "itm_lc");
 			
 		}
@@ -118,6 +116,8 @@ public class goods_serviceImpl implements goods_service {
 		        dupl = this.g_dao.code_dupl(pdto);
 		    } while (dupl > 0);
 
+			
+			
 //			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);
 //			if(fileattach == true) {  //FTP에 파일저장 완료 후 
 				//dto에 파일명 장착
@@ -175,18 +175,11 @@ public class goods_serviceImpl implements goods_service {
 		return result;
 	}
 	
-	//제품 총개수 
-//	@Override
-//	public int gd_all_ea(String type) {
-//		int goods_total = this.g_dao.pd_all_ea(type);    
-//		return goods_total;
-//	}
 	//제품 총개수 (+검색+페이징)
-	public int gd_all_ea_sch(String type, String sclass, String search_opt, String keyword) {
+	public int gd_all_ea_sch(String type, String sclass, String keyword) {
 		this.map = new HashMap<>();
 		this.map.put("type", type);
 		this.map.put("sclass", sclass);
-		this.map.put("search_opt", search_opt);
 		this.map.put("keyword", String.valueOf(keyword));
 		int goods_total = this.g_dao.gd_all_ea_sch(map);
 		
@@ -194,24 +187,14 @@ public class goods_serviceImpl implements goods_service {
 		return goods_total;
 	}
 		
-	//제품 리스트(완제품+부자재)
-//	@Override
-//	public List<products_DTO> gd_all_list(String type) {
-//		List<products_DTO> goods_list = this.g_dao.pd_all_list(type);  
-//		return goods_list;
-//	}
 	//제품 리스트 (+검색+페이징)
 	@Override
-	public List<products_DTO> gd_all_list_sch(String type, String sclass, String search_opt, String keyword, Integer pageno, int post_ea) {
-		
-//		int clickPage = this.m_pg.serial_no(pageno, post_ea);  
-//		Map<String, Object> paging = this.m_pg.page_ea(pageno, post_ea, list_total);
+	public List<products_DTO> gd_all_list_sch(String type, String sclass, String keyword, Integer pageno, int post_ea) {
 		int start = (pageno - 1) * post_ea + 1;
 		int end = pageno * post_ea; 
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("type", type);
-		map.put("search_opt", search_opt);
 		map.put("keyword", String.valueOf(keyword));
 		map.put("sclass", sclass);
 		map.put("start", start);
@@ -264,6 +247,7 @@ public class goods_serviceImpl implements goods_service {
 		String lclass_ck = this.g_dao.lclass_ck(sclass);
 		return lclass_ck;
 	}
+
 
 
 

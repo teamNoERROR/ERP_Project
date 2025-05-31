@@ -26,13 +26,7 @@ public class controller {
 
 	
 	
-	//자재입고 
-	@GetMapping("/inbound.do")
-	public String inbound(Model m) {
-		m.addAttribute("lmenu","입출고관리");
-		m.addAttribute("smenu","자재관리");
-		return "/warehouse/inbound_list.html";
-	}
+
 	
 	
 	//제품 출고 

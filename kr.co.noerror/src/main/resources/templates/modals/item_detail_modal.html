@@ -11,7 +11,10 @@
 
 				<!-- 제품 이미지 -->
 				<div class="col-md-4 text-center comp_logo mt-3">
-					<img src="#" alt="제품 이미지" class="img-fluid border">
+					<th:block>
+					<img th:if="${goods_one.ITM_API_FNM == null}" src="./img/no-image.svg" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
+					<img th:if="${goods_one.ITM_API_FNM != null}" src="#" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
+					</th:block>
 				</div>
 
 				<!-- 제품 정보 -->
@@ -39,7 +42,7 @@
 							</tr>
 							<tr>
 								<td class="info-label">제품 단가</td>
-								<td class="value-cell">[[${goods_one.ITEM_COST}]]</td>
+								<td class="value-cell">[[${#numbers.formatInteger(goods_one.ITEM_COST,0,'COMMA')}]] 원</td>
 								<td class="info-label"></td>
 								<td class="value-cell"></td>
 							</tr>
@@ -51,13 +54,13 @@
 							</tr>
 							<tr>
 								<td class="info-label">사용여부</td>
-								<td class="value-cell">[[${goods_one.USE_FLAG}]]</td>
-								<td class="info-label"></td>
-								<td class="value-cell"></td>
+								<td class="value-cell">[[${goods_one.ITM_USE_FLAG}]]</td>
+								<td class="info-label">등록일 </td>
+								<td class="value-cell">[[${goods_one.ITM_INSERT_DATE.substring(0,10)}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">비고</td>
-								<td class="value-cell" colspan="3">[[${goods_one.MEMO}]]</td>
+								<td class="value-cell" colspan="3">[[${goods_one.ITM_MEMO}]]</td>
 							</tr>
 						</table>
 					</div>

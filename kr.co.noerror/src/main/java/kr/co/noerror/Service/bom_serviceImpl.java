@@ -60,7 +60,6 @@ public class bom_serviceImpl implements bom_service{
 	@Override
 	public List<bom_DTO> bom_detail(String pd_code) {
 		List<bom_DTO> bom_detail = this.b_dao.bom_detail(pd_code);
-		Map<String, bom_DTO> map = new HashMap<>();
 		return bom_detail;
 	}
 
@@ -81,18 +80,19 @@ public class bom_serviceImpl implements bom_service{
 		    
 		    b_DTO.setBOM_CODE(bom_code);  //bom 코드 장착 
 		    
-		    b_DTO.setC_PRODUCT_CODE(jo.getString("cProductCode"));
-		    b_DTO.setC_ITEM_CODE(jo.getString("cItemCode"));
+		    b_DTO.setPRODUCT_CODE(jo.getString("cProductCode"));
+		    b_DTO.setITEM_CODE(jo.getString("cItemCode"));
 		    b_DTO.setBOM_QTY(jo.getInt("bomQty"));
 		    b_DTO.setUNIT(jo.getString("unit"));
 		    
-		    b_DTO.setSEQ_NO(w+1); 
-		    if("완제품".equals(jo.getString("pd_type"))) {
+		    b_DTO.setBOM_SEQ_NO(w+1);
+		    
+		    if("product".equals(jo.getString("pd_type"))) {
 		    	b_DTO.setPARENT_IDX(null); 
 			    b_DTO.setBOM_LEVEL(0);
 			    
 		    }
-		    else if("반제품".equals(jo.getString("pd_type"))) {
+		    else if("half".equals(jo.getString("pd_type"))) {
 		    	
 		    	Integer pidx = this.b_dao.select_pidx(bom_code);  //부모bidx 찾기
 		    	System.out.println("select_pidx 반환값 = " + pidx);
@@ -113,28 +113,26 @@ public class bom_serviceImpl implements bom_service{
 
 	//BOM등록된제품 전체개수 
 	@Override
-	public int bom_all_ea_sch(String sclass, String search_opt, String keyword) {
+	public int bom_all_ea_sch(String sclass, String keyword) {
 		this.map = new HashMap<>();
 		this.map.put("sclass", sclass);
-		this.map.put("search_opt", search_opt);
 		this.map.put("keyword", String.valueOf(keyword));
 		
 		int bom_total = this.b_dao.bom_all_ea_sch(map);
 		return bom_total;
 	}
 
-	 //BOM등록된제품 전체개수 
+	 //BOM등록된제품 리스트
 	@Override
-	public List<bom_DTO> bom_all_list_sch(String sclass, String search_opt, String keyword, Integer pageno, int post_ea) {
-		int start = (pageno - 1) * post_ea + 1;
-		int end = pageno * post_ea; 
+	public List<bom_DTO> bom_all_list_sch(String sclass, String keyword, Integer pageno, int post_ea) {
+		int start = (pageno - 1) * post_ea;
+		int count = post_ea; 
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("search_opt", search_opt);
 		map.put("keyword", String.valueOf(keyword));
 		map.put("sclass", sclass);
 		map.put("start", start);
-		map.put("end", end);
+		map.put("count", count);
 
 		List<bom_DTO> bom_list = this.b_dao.bom_all_list_sch(map);  
 		return bom_list;

@@ -10,7 +10,13 @@
 
 <!-- 창고 리스트 전체출력 -->
 <select id="warehouse_list" resultType="kr.co.noerror.DTO.WareHouse_DTO">
-	SELECT * FROM WAREHOUSE ORDER BY WIDX DESC
+	SELECT * FROM WAREHOUSE 
+	<if test="wh_tp == 'in_wh'">
+		<where>
+			WH_TYPE = '입고창고'
+		</where>
+	</if>
+	ORDER BY WIDX DESC
 </select>
 
 

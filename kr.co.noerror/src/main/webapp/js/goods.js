@@ -1,29 +1,11 @@
 //토글버튼 클릭시 페이지 이동
 function toggleButton(type) {
-  	let url = "";
-	console.log("sss" + type)
-	if (type == 'product') {
-	     url = "/goods.do?type="+type;
-	} else if (type == 'item') {
-	     url = "/goods.do?type="+type;
-	} else if (type == 'consume') {
-	 	 url = "/goods.do?type="+type;
-	} 
- 	location.href = url; //페이지 이동
+	if(type == 'product' || type == 'item'){
+	 	location.href = "/goods.do?type="+type; //페이지 이동
+	}else {
+		alert("준비중입니다.");
+	}
 }
-
-
-//완제품페이지 > 추가 버튼 누른 경우 
-var addProduct = function(){
-	location.href="./products_insert.do";
-}
-
-
-//부자재페이지 > 추가 버튼 누른 경우 
-var addItem = function(){
-	location.href="./items_insert.do";
-}
-
 
 //대분류리스트 세팅 
 function goodsType(goods_type){
@@ -78,8 +60,6 @@ function lcSc(lc_value) {
 		console.log("통신오류발생" + error);
 	});
 }
-
-
 
 //분류로 검색 
 function class_sch(){
@@ -144,67 +124,88 @@ function pdSearch(){
 }
 
 
-//완제품 페이징 
-function go_pd_pg(ee){
-	var kw = ee.getAttribute('data-keyword');
-	var no = ee.getAttribute('data-pageno');
-	var tp = ee.getAttribute('data-type');
-	var pea = ee.getAttribute('data-pea');
-	var sc = ee.getAttribute('data-sclass');
+//삭제버튼 누른경우
+function deleteBtn(del_pd){
+	var idx;
+	var pd_code;
+	var gd_type;
+	var del_req = new Array();
 	
-	if(!kw || kw == "" || !sc ||sc ==null){  //검색 없는경우 
-		location.href="./goods.do?type="+tp+"&pageno="+no+"&post_ea="+pea;
-	}
-	else if(!kw || kw != "") {  //검색어가 있는경우 
-		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no+"&post_ea="+pea;
-	}
-	else if(sc ||sc !=null) { 
-		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
-			
-	}	
-	/*else { 
-		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
-			
-	}*/
-}
-
-//부자재 페이징 
-function go_itm_pg(ee){
-	var kw = ee.getAttribute('data-keyword');
-	var no = ee.getAttribute('data-pageno');
-	var tp = ee.getAttribute('data-type');
-	var pea = ee.getAttribute('data-pea');
-	var sc = ee.getAttribute('data-sclass');
-	
-	if(!kw || kw == ""){  //검색어가 없는경우 
-		location.href="./goods.do?type="+tp+"&pageno="+no+"&post_ea="+pea;
-	}else if(!kw || kw != "") {  //검색어가 있는경우 
-		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no+"&post_ea="+pea;
-	}else {
+	if(del_pd){ //모달에서 삭제시 (del_pd가 전달되었을떄)
+		idx = del_pd.getAttribute("data-idx");
+		pd_code = del_pd.getAttribute("data-pdcode");
+		gd_type= del_pd.getAttribute("data-type");
 		
+		if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
+			del_req = [{idx: idx, code: pd_code, type : gd_type}]
+			del_ajax(del_req);	//모달 안에서 1개만 삭제 
+		}
+			
+	}else {  //리스트에서 체크박스로 삭제시 (del_pd 전달x)
+		var checkboxes = document.querySelectorAll("input[name='selected_box']:checked");
 		
+		if (checkboxes.length == 0) {
+			alert("삭제할 항목을 선택해주세요.");
+			
+		}else{
+			if (confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")) {
+				
+				checkboxes.forEach(chk => {
+					idx = chk.getAttribute("data-idx");		
+					pd_code = chk.getAttribute("data-pdcode");
+					gd_type= chk.getAttribute("data-type");
+					
+					del_req.push({ idx: idx, code: pd_code, type : gd_type })
+				});
+				del_ajax(del_req); //체크박스로 1개~여러개 삭제 
+			}
+		}
 	}
-	
-	
-	/*
-	var form = document.querySelector("#pgf");
-	form.method = "GET";
-	form.action = "./goods.do";
-	form.t.value="product";
-	form.submit();
-	*/
 }
 
-//완제품 게시물 개수 선택 
-function postEa(){
-	//var form = document.querySelector("#pgf");
-	var form = document.querySelector("#pfrm");
-	form.method = "GET";
-	form.action = "./goods.do";
-	form.t.value="product";
-	form.pageno.value = 1; //
-	form.submit();
+//삭제 ajax
+function del_ajax(del_req){	
+	fetch("./goods_delete.do/"+del_req[0].type+"_del", {
+		method: "DELETE",
+		headers: {"content-type": "application/json"},
+		body: JSON.stringify(del_req)
+			
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		console.log("result : "+result);
+		if (result == "ok") {
+		
+			alert("삭제가 완료되었습니다.");
+				
+			// 모달 닫기
+	        const modalElement = document.getElementById("modal");
+	       	const modal = bootstrap.Modal.getInstance(modalElement);
+	        if (modal) {
+	            modal.hide();
+				setTimeout(() => {
+					document.activeElement.blur(); // 현재 포커스를 제거
+				}, 300);
+	        }
+			//리스트 페이지 새로고침
+	       	location.reload();
+			
+		}else if(result=="fail") {
+			alert("시스템 문제로 일부 제품 삭제에 실패했습니다.");
+		}else{
+			console.log(result);
+		}
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
 }
 
 
+
+
+//초기화 버튼 클릭 
+function resetBtn(){
+	location.reload();
+}
 

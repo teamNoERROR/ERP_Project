@@ -19,55 +19,73 @@
 				<div class="row mb-2 d-flex">
 					<div class="col-md-3 mb-2 ">
 						<label class="form-label ">제품코드</label> 
-						<input type="text" class="form-control" id="product_code" th:value="${bom_pd.PRODUCT_CODE}" readonly>
+						<input type="text" class="form-control" id="product_code" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CODE} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-3">
 						<label class="form-label">제품명</label> 
-						<input type="text" class="form-control" id="product_name" th:value="${bom_pd.PRODUCT_NAME}" readonly>
+						<input type="text" class="form-control" id="product_name" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_NAME} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-2">
 						<label class="form-label">제품유형</label> 
-						<input type="text" class="form-control" id="product_type" th:value="${bom_pd.PRODUCT_TYPE}" readonly>
+						<input type="text" class="form-control" id="product_type" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_TYPE} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-2">
 						<label class="form-label">대분류</label> 
-						<input type="text" class="form-control" id="" th:value="${bom_pd.PRODUCT_CLASS1}" readonly>
+						<input type="text" class="form-control" id="" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CLASS1} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-2">
 						<label class="form-label">소분류</label> 
-						<input type="text" class="form-control" id="" th:value="${bom_pd.PRODUCT_CLASS2}" readonly>
+						<input type="text" class="form-control" id="" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CLASS2} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
-					
-					
 				</div>
 				
 				<div class="row mb-2">
 					<div class="col-md-2">
 						<label class="form-label">제품규격</label> 
-						<input type="text" class="form-control" id="" th:value="${bom_pd.PRODUCT_SPEC}" readonly>
+						<input type="text" class="form-control" id="" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_SPEC} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-2">
 						<label class="form-label">제품단위</label> 
-						<input type="text" class="form-control" id="" th:value="${bom_pd.PRODUCT_UNIT}" readonly>
+						<input type="text" class="form-control" id="" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_UNIT} : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-2">
 						<label  class="form-label">제품단가</label> 
-						<input type="text" class="form-control text-end"  th:value="|${#numbers.formatInteger(bom_pd.PRODUCT_COST, 0, 'COMMA')}원|" readonly>
+						<input type="text" class="form-control text-end"  
+								th:value="${bom_pd != null} ? |${#numbers.formatInteger(bom_pd.PRODUCT_COST, 0, 'COMMA')}원| : ''" 
+								th:attr="readonly=${bom_pd != null}" />
 					</div>
 					<div class="col-md-2 ">
 						<label class="form-label">판매가</label> 
-						<input type="text" class="form-control text-end"  th:value="${#numbers.formatInteger(bom_pd.PRODUCT_PRICE,0,'COMMA')+'원'}" readonly>
+						<input type="text" class="form-control text-end" 
+								th:value="${bom_pd != null} ? ${#numbers.formatInteger(bom_pd.PRODUCT_PRICE,0,'COMMA')+'원'} : ''" 
+								th:attr="readonly=${bom_pd != null}" /> 
 					</div>
 					<div class="col-md-2" >
 						<label class="form-label">비고</label> 
-						<input type="text" class="form-control"   style="width: 180%;"  th:value="${bom_pd.MEMO} ?: '비고없음'" readonly>
+						<input type="text" class="form-control"   style="width: 180%;"
+								th:value="${bom_pd != null} ? ${bom_pd.PD_MEMO} : ''" 
+								th:attr="readonly=${bom_pd != null}" />  
 					</div>
 					<div class="col-md-2 d-flex align-items-end justify-content-end"  >
-						<button type="button" class="btn"
-								th:class="${bom_pd.PRODUCT_CODE != null} ? 'btn btn-secondary' : 'btn btn-primary'"
-	        					th:disabled="${bom_pd.PRODUCT_CODE != null}">
+				<button type="button"
+						th:class="${bom_pd != null} ? 'btn btn-secondary' : 'btn btn-primary'"
+						th:disabled="${bom_pd != null}">
 						<i class="bi bi-search"></i>
-						</button>
+					</button>
 					</div>
 				</div>
 				
@@ -134,11 +152,13 @@
 				</table>
 				<div class="d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
 				<div class="d-flex align-items-center" >
-					<button type="button" class="btn btn-secondary " onclick="open_item_list()"  >자재 추가</button>
+					<button type="button" class="btn btn-secondary " 
+							onclick="openItemList()"
+							>자재 추가</button>
 				</div>
 				
 				<div class="d-flex justify-content-end">
-					<button type="button" class="btn btn-primary" onclick="bom_save()"><i class="bi bi-plus-lg"></i>저장</button>
+					<button type="button" class="btn btn-primary" onclick="bomSave()"><i class="bi bi-plus-lg"></i>저장</button>
 					<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 				</div>
 				</div>

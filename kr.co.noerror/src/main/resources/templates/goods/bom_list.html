@@ -2,16 +2,16 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
-<title>완제품 등록</title>
+<title>BOM 리스트</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
 <main class="main">
 <section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 <section class="container ">
-       <!-- Title -->
+        <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">품목 관리</h2>
+        	<h2 class="mb-1">BOM 관리</h2>
         </div>
 
 	
@@ -20,7 +20,6 @@
 
   <!-- 검색창 영역 -->
   <div class="col-auto">
-   <div ></div>
       <div class="col-auto d-flex"  >
        <form id="frm_class" class="row g-1 align-items-center" >
        <input type="hidden" name="type">
@@ -38,13 +37,8 @@
           </select>
         </div>
          </form>
-       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()">
-        <div class="input-group input-group-sm" style="width:350px;">
-          <select class="form-select" id="search_opt" name="search_opt" style="max-width: 120px;">
-            <option value="all">전체</option>
-            <option value="pd_code"  th:selected="${search_opt} == 'pd_code'">제품코드</option>
-            <option value="pd_name" th:selected="${search_opt} == 'pd_name'">제품명</option>
-          </select>
+       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return bomSearch()">
+        <div class="input-group input-group-sm" style="width:250px;">
           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
           <button class="btn btn-primary" >
             <i class="bi bi-search"></i>
@@ -52,7 +46,6 @@
         </div>
           </form>
       </div>
-   
   </div>
 </div>
 
@@ -60,7 +53,7 @@
         <!-- bom List Table -->
      	<div id="contents_container">
         <div id="table-container" class="table-responsive  rounded" >
-            <table class="table align-middle table-bordered text-center" th:classappend="${bom_total_sch != 0} ? 'table-hover' : ''">
+            <table class="table align-middle table-bordered text-center" th:classappend="${bom_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
                         <th scope="col"><input type="checkbox" name="all_sel_box" onclick="all_sel()"></th>
@@ -81,17 +74,20 @@
                 </thead>
                 <tbody >
                 
-                	<tr th:if="${bom_total_sch == 0}" >
+                	<tr th:if="${bom_total == 0}" >
                 		<td class="text-center nogoods_tb" colspan="14" th:text="${no_goods}"></td>
                 	</tr>
                 	
-                    <tr th:if="${bom_total_sch != 0}" th:each="bomlist, idx : ${bom_all_list_sch}" onclick="open_detail(event)"  style="cursor: pointer;">
-                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="product"></td>
+                    <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" onclick="open_gd_detail(event)"  style="cursor: pointer;">
+                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${bomlist.PIDX}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="product"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td><img src=""></td>
                         <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>
                         <td class="text-start">[[${bomlist.PRODUCT_NAME}]]</td>
-                        <td>[[${bomlist.PRODUCT_TYPE}]]</td>
+                        <th:block>
+                        <td th:if="${bomlist.PRODUCT_TYPE == 'product'}" >완제품</td>
+                        <td th:if="${bomlist.PRODUCT_TYPE == 'half'}" >반제품</td>
+                        </th:block>
                         <td>[[${bomlist.PRODUCT_CLASS1}]]</td>
                         <td>[[${bomlist.PRODUCT_CLASS2}]]</td>
                          <td>[[${bomlist.PRODUCT_SPEC}]]</td>
@@ -99,7 +95,7 @@
                         <td class="text-end">[[${#numbers.formatInteger(bomlist.PRODUCT_COST,0,'COMMA')}]] </td>
                         <td class="text-end">[[${#numbers.formatInteger(bomlist.PRODUCT_PRICE,0,'COMMA')}]] </td>
                         <td>재고합계</td>
-                        <td>[[${pdlist.USE_FLAG}]]</td>
+                        <td>[[${bomlist.PD_USE_FLAG}]]</td>
                     </tr>
                 </tbody>
             </table>
@@ -110,6 +106,7 @@
 
         <div class="d-flex">
     <!-- Pagination -->
+
     <input type="hidden" name="t">
         <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
             <ul class="pagination">
@@ -130,7 +127,7 @@
         </div>
         
         <!-- 게시물개수 선택  -->
-        <form id="pfrm">
+        <form id="pdpg_frm">
         <input type="hidden" name="t">
         <input type="hidden" name="pageno" th:value="${pageno}">
         <div class="mt-4 ms-1">
@@ -151,13 +148,13 @@
         <!-- Action Buttons -->
         <div class="mt-4 d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button"  class="btn btn-success" onclick="addProduct()"><i class="bi bi-plus-lg"></i> 추가</button>
+                <button type="button"  class="btn btn-success" onclick="addBom()"><i class="bi bi-plus-lg"></i> 추가</button>
                 <button class="btn btn-danger"  onclick="deleteBtn()"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>
 	</div>
 	</div>
-</section>
+    </section>
 
   
 </main>

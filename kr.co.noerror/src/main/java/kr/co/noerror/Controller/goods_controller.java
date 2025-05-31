@@ -76,22 +76,18 @@ public class goods_controller {
 	//픔목관리 > 리스트 화면이동 
 	@GetMapping({"/goods.do"})
 	public String products_list(Model m, @RequestParam(value = "type", required = false) String type
-								,@RequestParam(value = "search_opt", required = false) String search_opt
 								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value = "products_class2", required = false) String sclass
 								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
 		
-//			int goods_total = this.g_svc.gd_all_ea(type); //제품 총개수
-//			List<products_DTO> goods_all_list = this.g_svc.gd_all_list(type);  //제품 리스트 
-		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, search_opt, keyword); //제품 총개수
-		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type,sclass, search_opt,keyword, pageno, post_ea);  //제품 리스트
+		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, keyword); //제품 총개수
+		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type, sclass, keyword, pageno, post_ea);  //제품 리스트
 		
 		//페이징 관련 
 		int pea = post_ea; 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, goods_total_sch);
 		int bno = this.m_pg.serial_no(goods_total_sch, pageno, pea); 
-		System.out.println(pageinfo);
 		
 		//제품타입에 따른 url 분류 
 		if("product".equals(type) || type==null) {
@@ -101,10 +97,6 @@ public class goods_controller {
 		}else if("item".equals(type)) {
 			m.addAttribute("mmenu","부자재 리스트");
 			this.url = "/goods/items_list.html";
-			
-		}else if("consume".equals(type)) {
-			m.addAttribute("mmenu","소모품 리스트");
-			this.url = "/goods/consum_list.html";
 			
 		}
 		
@@ -128,17 +120,18 @@ public class goods_controller {
 			m.addAttribute("slist",slist);
 		}
 		
-
 		//페이지로 보낼 것들 
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("search_opt",search_opt);
+		
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("lclass",this.list);
+		
 		m.addAttribute("bno", bno);
 		m.addAttribute("no_goods", "등록된 제품이 없습니다");
 		m.addAttribute("goods_total", goods_total_sch);
 		m.addAttribute("goods_all_list", goods_all_list_sch);
+		
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
 		m.addAttribute("pea", pea);
@@ -146,11 +139,6 @@ public class goods_controller {
 		return this.url;
 	}
 
-
-	
-	
-	
-	
 
 	//완제품 등록하기 화면이동 
 	@GetMapping("/products_insert.do")
@@ -174,8 +162,9 @@ public class goods_controller {
 	
 	//제품유형 선택시 
 	@GetMapping("/goods_type.do")
-	public String goods_type(HttpServletResponse res, @RequestParam("type") String goods_type,
-							@RequestParam(value="products_class1", required=false) String products_class1) throws IOException {
+	public String goods_type(HttpServletResponse res
+							, @RequestParam("type") String goods_type
+							, @RequestParam(value="products_class1", required=false) String products_class1) throws IOException {
 		this.pw = res.getWriter();
 		try {
 			JSONArray lc_list = this.g_svc.gd_class(goods_type); //완제품 식품 대분류 목록 가져오기 
@@ -277,6 +266,8 @@ public class goods_controller {
 	//품목 상세보기 모달 
 	@PostMapping("/goods_detail.do")
 	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
+		System.out.println(pd_code);
+		System.out.println(type);
 		
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);  //bom상세보기 클릭시

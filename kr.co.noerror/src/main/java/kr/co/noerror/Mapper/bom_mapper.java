@@ -22,6 +22,6 @@ public interface bom_mapper {
 	int bom_all_ea_sch(Map<String, String> map);	//BOM 총개수(검색) 
 	List<bom_DTO> bom_all_list_sch(Map<String, Object> map);	//BOM 리스트(검색)
 	
-	
+	int bom_delete(Map<String, Object> p);
 
 }

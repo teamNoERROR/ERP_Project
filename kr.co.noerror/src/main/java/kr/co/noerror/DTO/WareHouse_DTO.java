@@ -38,4 +38,8 @@ public class WareHouse_DTO {
 		   ETEL, 	 EEMAIL, 	 EFAX, 		MEMO, 		INSERT_DATE;
 
 	
+	
+	
+	//모달에서 창고리스트 선택용 변수 
+	String wh_tp;
 }

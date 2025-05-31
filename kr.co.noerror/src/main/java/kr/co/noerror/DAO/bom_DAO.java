@@ -46,14 +46,22 @@ public class bom_DAO {
 		return bom_insert;
 	}
 	
+	//bom총개수 
 	public int bom_all_ea_sch(Map<String, String> map) {
 		int result = this.st.selectOne("bom_all_ea_sch",map);
 		return result;
 	}
 	
+	
+	//bom 리스트 
 	public List<bom_DTO> bom_all_list_sch(Map<String, Object> map) {
 		List<bom_DTO> pd_list = this.st.selectList("bom_all_list_sch",map);
 		return pd_list;
+	}
+
+	public int bom_delete(Map<String, Object> p) {
+		int result = this.st.delete("bom_delete", p);
+		return result;
 	}
 
 

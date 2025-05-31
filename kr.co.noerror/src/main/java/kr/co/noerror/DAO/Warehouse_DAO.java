@@ -87,7 +87,7 @@ public class Warehouse_DAO implements Warehouse_Mapper{
 	public List<WareHouse_DTO> wh_SelectWithWhCode(String wh_code) {
 		
 		List<WareHouse_DTO> wh_detail_result = this.whs_st.selectList("wh_SelectWithWhCode",wh_code);
-
+		
 		
 		return wh_detail_result;
 	}
@@ -99,6 +99,7 @@ public class Warehouse_DAO implements Warehouse_Mapper{
 		
 		System.out.println("dao +++++++++++++++++"+wh_code+"++++++++");
 		int wh_delete_result = this.whs_st.delete("delete_warehouses",wh_code);
+		
 		return wh_delete_result;
 	}
 	

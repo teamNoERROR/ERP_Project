@@ -85,6 +85,6 @@ public class MultiDatabaseConfig {
 	@Bean(name = "sqltemplate_mysql")
 	public SqlSessionTemplate template2(@Qualifier("sqlfactory_mysql") SqlSessionFactory sf) {
 		return buildSqlTemplate(sf);
-	}
+	}	
 
 }

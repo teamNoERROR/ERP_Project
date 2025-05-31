@@ -11,8 +11,36 @@ var memo = document.querySelector("#memo");
 var productImage = document.querySelector("#productImage").files[0];
 var url = document.querySelector("#url");
 
+
+//완제품페이지 > 추가 버튼 누른 경우 (완제품등록페이지 이동)
+function addProduct(){
+	location.href="./products_insert.do";
+}
+
+
+
 //제품 등록하기 + 유효성검사
 function insert_pd(){
+	/*
+	var use_flag = document.querySelector('input[name="use_flag"]:checked');
+	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
+		
+	console.log(goods_type.value);
+	console.log(products_class1.value);
+	console.log(products_class2.value);
+	console.log(product_name.value);
+	console.log(product_spec.value);
+	console.log(product_unit.value);
+	console.log(pd_safe_stock.value);
+	console.log(product_price.value);
+	console.log(product_cost.value);
+	console.log(memo.value);
+	console.log(productImage);
+	
+	console.log(use_flag.value);
+	console.log(exp_flag.value);
+	*/
+	
 	if(goods_type.value ==""){
 		alert("제품유형을 선택하세요");
 		goods_type.focus();
@@ -80,8 +108,6 @@ function insert_pd(){
 }
 
 
-
-
 //제품 등록 ajax
 function insertProduct(){
 	var use_flag = document.querySelector('input[name="use_flag"]:checked');
@@ -97,9 +123,9 @@ function insertProduct(){
 	formData.append("PRODUCT_COST", product_cost.value);
 	formData.append("PRODUCT_PRICE", product_price.value);
 	formData.append("PD_SAFE_STOCK", pd_safe_stock.value);
-	formData.append("USE_FLAG", use_flag.value);
-	formData.append("EXP_FLAG", exp_flag.value);
-	formData.append("MEMO", memo.value);
+	formData.append("PD_USE_FLAG", use_flag.value);
+	formData.append("PD_EXP_FLAG", exp_flag.value);
+	formData.append("PD_MEMO", memo.value);
 	
     formData.append("productImage", productImage);
 	formData.append("url", "아이피써놓기");
@@ -124,13 +150,10 @@ function insertProduct(){
 	});
 }
 
-//초기화 버튼 클릭 
-function resetBtn(){
-	location.reload();
-}
+
 
 //제품상세보기
-function open_detail(event){
+function open_gd_detail(event){
 	
 	var pd_code = event.currentTarget.querySelector(".pd_code").innerText;
 	var gd_type =event.currentTarget.querySelector(".sb").getAttribute("data-type");
@@ -166,83 +189,40 @@ function open_detail(event){
 
 
 
-//삭제버튼 누른경우
-function deleteBtn(del_pd){
-	var idx;
-	var pd_code;
-	var gd_type;
-	var del_req = new Array();
+
+
+//완제품 페이징 
+function go_pd_pg(ee){
+	var kw = ee.getAttribute('data-keyword');
+	var no = ee.getAttribute('data-pageno');
+	var tp = ee.getAttribute('data-type');
+	var pea = ee.getAttribute('data-pea');
+	var sc = ee.getAttribute('data-sclass');
 	
-	if(del_pd){ //모달에서 삭제시 (del_pd가 전달되었을떄)
-		idx = del_pd.getAttribute("data-idx");
-		pd_code = del_pd.getAttribute("data-pdcode");
-		gd_type= del_pd.getAttribute("data-type");
-		
-		if(confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")){
-			del_req = [{idx: idx, code: pd_code, type : gd_type}]
-			del_ajax(del_req);	//모달 안에서 1개만 삭제 
-		}
-			
-	}else {  //리스트에서 체크박스로 삭제시 (del_pd 전달x)
-		var checkboxes = document.querySelectorAll("input[name='selected_box']:checked");
-		
-		if (checkboxes.length == 0) {
-			alert("삭제할 항목을 선택해주세요.");
-			
-		}else{
-			if (confirm("정말 삭제하시겠습니까? \n 삭제 후에는 복구되지 않습니다.")) {
-				
-				checkboxes.forEach(chk => {
-					idx = chk.getAttribute("data-idx");		
-					pd_code = chk.getAttribute("data-pdcode");
-					gd_type= chk.getAttribute("data-type");
-					
-					del_req.push({ idx: idx, code: pd_code, type : gd_type })
-				});
-				del_ajax(del_req); //체크박스로 1개~여러개 삭제 
-			}
-		}
+	if(!kw || kw == "" || !sc ||sc ==null){  //검색 없는경우 
+		location.href="./goods.do?type="+tp+"&pageno="+no+"&post_ea="+pea;
 	}
-}
-
-//삭제 ajax
-function del_ajax(del_req){	
-	fetch("./goods_delete.do/"+del_req[0].type+"_del", {
-		method: "DELETE",
-		headers: {"content-type": "application/json"},
-		body: JSON.stringify(del_req)
+	else if(!kw || kw != "") {  //검색어가 있는경우 
+		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no+"&post_ea="+pea;
+	}
+	else if(sc ||sc !=null) { 
+		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
 			
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		console.log("result : "+result);
-		if (result == "ok") {
-		
-			alert("삭제가 완료되었습니다.");
-				
-			// 모달 닫기
-	        const modalElement = document.getElementById("modal");
-	       	const modal = bootstrap.Modal.getInstance(modalElement);
-	        if (modal) {
-	            modal.hide();
-				setTimeout(() => {
-					document.activeElement.blur(); // 현재 포커스를 제거
-				}, 300);
-	        }
-			//리스트 페이지 새로고침
-	       	location.reload();
+	}	
+	/*else { 
+		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
 			
-		}else if(result=="fail") {
-			alert("시스템 문제로 일부 제품 삭제에 실패했습니다.");
-		}else{
-			console.log(result);
-		}
-	}).catch(function(error) {
-		console.log("통신오류발생" + error);
-	});
+	}*/
 }
 
 
 
-
+//완제품 게시물 개수 선택 
+function gdPostEa(type){
+	var form = document.querySelector("#pdpg_frm");
+	form.method = "GET";
+	form.action = "./goods.do";
+	form.type.value=type;
+	form.pageno.value = 1; //
+	form.submit();
+}

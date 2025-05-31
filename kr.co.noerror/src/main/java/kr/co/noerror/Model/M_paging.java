@@ -37,22 +37,44 @@ public class M_paging {
 //		pgidx = total_post / post_ea + (1-(total_post/post_ea)%1)%1;
 		
 		//페이징 박스 개수 1~3, 4~6, 7~
-		start_pg = (((pageno -1) / page_ea)* page_ea )+1;
-		end_pg = Math.min(start_pg + (page_ea - 1), page_ea_total);	
-				
+//		start_pg = (((pageno -1) / page_ea)* page_ea )+1;
+//		end_pg = Math.min(start_pg + (page_ea - 1), page_ea_total);	
+		
+//		start_pg = Math.max(1, pageno - pageno / 2);
+//		end_pg = start_pg + page_ea - 1;
+//				
+//		if (end_pg > page_ea_total) {
+//		    end_pg = page_ea_total;
+//		    start_pg = Math.max(1, end_pg - page_ea + 1);
+//		}
+		
+		int half = page_ea / 2;
+		start_pg = pageno - half;
+		if (start_pg < 1) {
+		    start_pg = 1;
+		}
+		end_pg = start_pg + page_ea - 1;
+		if (end_pg > page_ea_total) {
+		    end_pg = page_ea_total;
+		    // start_pg 조정: end_pg - (page_ea - 1) 가 1보다 작으면 1로 고정
+		    start_pg = Math.max(1, end_pg - page_ea + 1);
+		}
 		
 		Map<String, Integer> pageinfo = new HashMap<String, Integer>();
-		if (total_post == 0) {
-		    pageinfo.put("start_pg", 1);
-		    pageinfo.put("end_pg", 1);
-		}else {
-			pageinfo.put("start_pg" , start_pg);  
-			pageinfo.put("end_pg" , end_pg);  
-		}
+//		if (total_post == 0) {
+//		    pageinfo.put("start_pg", 1);
+//		    pageinfo.put("end_pg", 1);
+//		}else {
+//			pageinfo.put("start_pg" , start_pg);  
+//			pageinfo.put("end_pg" , end_pg);  
+//		}
 		pageinfo.put("pageno" , pageno);
 		pageinfo.put("page_ea" , page_ea);  
 		pageinfo.put("page_ea_total" , page_ea_total);  
 //		pageinfo.put("pgidx" , pgidx);
+		pageinfo.put("start_pg" , start_pg);  
+		pageinfo.put("end_pg" , end_pg); 
+		pageinfo.put("post_ea" , post_ea);
 		
 		return pageinfo;
 	}

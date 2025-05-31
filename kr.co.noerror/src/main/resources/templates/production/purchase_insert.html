@@ -38,50 +38,45 @@
               <form method="get" action="/mrp_result_select.do">
 	              <label class="form-label">MRP코드 검색</label> 
 	              <div class="input-group">
-	                <input type="text" class="form-control" name="mrp_code" placeholder="MRP 코드">
+	                <input type="text" class="form-control" name="mrp_code" placeholder="MRP 코드" th:value="${mrp_code}">
 	                <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
 	              </div>
               </form>
             </div>
               <div class="form-text">* MRP 계산 자료 중 부족수량이 있는 자재만 조회됩니다.</div>
-              <div class="form-text">* 발주수량과 발주업체는 수정 가능합니다.</div>
           </div>
           
           <table class="table table-bordered align-middle">
             <thead class="table-light text-center">
               <tr>
-                <th style="width: 3%;"><input type="checkbox"></th>
-                <th style="width: 3%;">#</th>
-                <th style="width: 10%;">MRP코드</th>
-                <th style="width: 10%;">자재코드</th>
-                <th style="width: 7%;">자재유형</th>
-                <th style="width: 12%;">자재명</th>
-                <th style="width: 7%;">소요수량</th>
-                <th style="width: 5%;">단위</th>
-                <th style="width: 7%;">가용재고</th>
-                <th style="width: 7%;">부족수량</th>
-                <th style="width: 10%;">발주수량</th>
-                <th style="width: 19%;">발주업체</th>
+                <th style="width:10px;"><input type="checkbox" checked disabled></th>
+                <th>#</th>
+                <th>MRP코드</th>
+                <th>자재코드</th>
+                <th>자재유형</th>
+                <th>자재명</th>
+                <th>소요수량</th>
+                <th>단위</th>
+                <th>가용재고</th>
+                <th>부족수량</th>
+                <th>발주수량</th>
+                <th>발주업체</th>
               </tr>
             </thead>
             <tbody>
               <tr th:each="m, no : ${mrp_results}" th:if="${m.shortage_stock < 0}">
-                <td align="center"><input type="checkbox"></td>
-                <td align="center">[[${no.count}]]</td>
-                <td align="center">[[${m.mrp_code}]]</td>
-                <td align="center">[[${m.item_code}]]</td>
+                <td><input type="checkbox" checked disabled></td>
+                <th>[[${no.count}]]</th>
+                <td>[[${m.mrp_code}]]</td>
+                <td>[[${m.item_code}]]</td>
                 <td>[[${m.item_type}]]</td>
                 <td>[[${m.item_name}]]</td>
-                <td align="right">[[${m.required_qty}]]</td>
-                <td align="center">[[${m.item_unit}]]</td>
-                <td align="right">[[${m.available_stock}]]</td>
-                <td align="right">[[${m.shortage_stock}]]</td>
-                <td><input type="number" class="form-control" style="text-align: right;" th:value="${-m.shortage_stock}"></td>
-                <td>[[${m.company_name}]]
-                <button type="button" class="btn btn-outline-secondary modal-trigger" 
-                        th:data-modal-url="@{/orders_modal.do}" data-modal-id="orders_modal" style="cursor: pointer;">
-                    <i class="bi bi-search"></i>
-                </button></td>
+                <td>[[${m.required_qty}]]</td>
+                <td>[[${m.item_unit}]]</td>
+                <td>[[${m.available_stock}]]</td>
+                <td>[[${m.shortage_stock}]]</td>
+                <td><input type="number" class="form-control" th:value="${-m.shortage_stock}"></td>
+				<td>[[${m.company_name}]]</td>
              </tr>             
             </tbody>
           </table>
@@ -136,10 +131,11 @@
               <tr>
                 <th style="width:10px;"><input type="checkbox"></th>
                 <th>자재코드</th>
+                <th>자재유형</th>
                 <th>자재명</th>
-                <th>구매처</th>
-                <th>단위</th>
                 <th>발주수량</th>
+                <th>단위</th>
+                <th>발주업체</th>
               </tr>
             </thead>
             <tbody>
@@ -163,18 +159,26 @@
       <h5>발주 바구니</h5>
       
       <div class="d-flex justify-content-end mb-2">
-	    <button type="submit" class="btn btn-primary"><i class="bi bi-bookmark-check"></i> 저장</button>
+	    <button type="button" class="btn btn-primary" onclick="purchase_request()"><i class="bi bi-bookmark-check"></i> 저장</button>
 	    <button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>
 	  </div>
-      
+	  <div class="col-12 d-flex align-items-center flex-wrap gap-2">
+	    <label>&nbsp;납기요청일 </label>
+	    <input type="date" class="form-control" name="due_date" style="max-width: 150px;">	    
+	  </div>
+      <div class="col-md-12">
+        <label>&nbsp;비고</label>
+        <textarea class="form-control" rows="2" id="memo"></textarea>
+      </div><br>
       <table class="table table-bordered align-middle" id="basketTable">
         <thead class="table-light text-center">
           <tr>
             <th>자재코드</th>
+            <th>자재유형</th>
             <th>자재명</th>
-            <th>구매처</th>
-            <th>단위</th>
             <th>발주수량</th>
+            <th>단위</th>
+            <th>발주업체</th>
             <th>삭제</th>
           </tr>
         </thead>
@@ -187,51 +191,9 @@
   </div>
 </main>
 
+<div id="modalContainer"></div>
+
 <footer th:replace="~{/common/footer.html :: footer}"></footer>
 
-<script>
-function addToBasket(code, name, unit, quantity) {
-  const tbody = document.getElementById('basketBody');
-  const exists = [...tbody.children].some(row => row.dataset.code === code);
-  if (exists) {
-    alert('이미 바구니에 추가된 자재입니다.');
-    return;
-  }
-
-  const tr = document.createElement('tr');
-  tr.dataset.code = code;
-  tr.innerHTML = `
-    <td>${code}</td>
-    <td>${name}</td>
-    <td>${unit}</td>
-    <td><input type="number" class="form-control" value="${quantity}" min="1"></td>
-    <td><button class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button></td>
-  `;
-  tbody.appendChild(tr);
-}
-
-function removeRow(btn) {
-  btn.closest('tr').remove();
-}
-
-function saveOrders() {
-  const rows = document.querySelectorAll('#basketBody tr');
-  if (rows.length === 0) {
-    alert('발주할 자재가 없습니다.');
-    return;
-  }
-
-  const orders = [...rows].map(row => ({
-    code: row.children[0].innerText,
-    name: row.children[1].innerText,
-    unit: row.children[2].innerText,
-    quantity: row.querySelector('input').value
-  }));
-
-  console.log('발주 데이터:', orders);
-  alert('발주가 저장되었습니다.');
-  // 실제 저장은 fetch() 또는 form 제출로 구현하세요
-}
-</script>
 </body>
 </html>

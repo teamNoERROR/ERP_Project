@@ -37,7 +37,7 @@ WHERE pln.plan_status = '계획'
  SELECT count(*) FROM mrp_result_header WHERE mrp_code = #{mrp_code}
 </select>
 
-<!-- 주문정보 저장 -->  
+<!-- MRP계산 정보 저장 -->  
 <insert id="insert_mrp_header" parameterType="String">
  INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
 </insert>
@@ -63,4 +63,5 @@ WHERE pln.plan_status = '계획'
     #{shortage_stock} 
   ) 
 </insert>
+
 </mapper>

@@ -126,37 +126,24 @@ function calc_save() {
 
 //발주화면으로 이동
 function go_purchase() {
-    const dataToSave = collectMRPResultData();
 	const mrpCode = document.getElementById("mrpCodeHidden").value;
-
-    if (dataToSave.length === 0) {
-        alert("발주화면으로 이동하려면 발주할 대상을 선택해야 합니다.");
-        return;
-    }
 	
 	if (!mrpCode) {
-	        alert("먼저 MRP 저장을 완료해 주세요.");
+	        alert("MRP 계산 및 MRP 저장을 완료한 후 이용 가능합니다.");
 	        return;
 	}
 
     // 폼 생성
     const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/go_purchase.do";
+    form.method = "GET";
+    form.action = "/mrp_result_select.do"
 
 	// 데이터 input
 	const dataInput = document.createElement("input");
 	dataInput.type = "hidden";
-	dataInput.name = "data";
-	dataInput.value = JSON.stringify(dataToSave);
-	form.appendChild(dataInput);
-
-	// mrp_code input
-	const codeInput = document.createElement("input");
-	codeInput.type = "hidden";
-	codeInput.name = "mrp_code";
-	codeInput.value = mrpCode;
-	form.appendChild(codeInput);
+	dataInput.name = "mrp_code";
+	dataInput.value = mrpCode;
+	form.appendChild(dataInput); 
 
 	document.body.appendChild(form);
 	form.submit();

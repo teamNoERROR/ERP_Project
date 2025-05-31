@@ -16,6 +16,6 @@ public class temp_bom_DTO {
     private String item_type;    // 자재유형 
     private String item_name;    // 자재명 
     private String item_unit;    // 자재단위 
-    private String unit_price;   // 단가  
+    private int item_cost;   // 단가  
     private Integer quantity;    // 소요량
 }

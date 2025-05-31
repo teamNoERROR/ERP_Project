@@ -12,6 +12,7 @@
     itm.item_type,
     itm.item_name,
     itm.item_unit,
+    itm.item_cost,
     itm.company_code, 
     cmp.company_name
  FROM mrp_result_detail mrp
@@ -22,33 +23,44 @@
 
 <!-- pch_code 중복체크 -->
 <select id="pch_code_check" parameterType="String" resultType="int">
- SELECT count(*) FROM purchase_header WHERE pch_code = #{pch_code}
+ SELECT count(*) FROM purchase_req_header WHERE pch_code = #{pch_code}
 </select>
 
 <!-- 발주요청 정보 저장 -->  
-<insert id="insert_pch_header" parameterType="String">
- INSERT INTO purchase_header (pch_code) VALUES (#{pch_code})
-</insert>
-
-<insert id="insert_pch_detail" parameterType="kr.co.noerror.DTO.purchase_DTO">
-  INSERT INTO purchase_request (
+<insert id="insert_pch_header" parameterType="kr.co.noerror.DTO.purchase_DTO">
+  INSERT INTO purchase_req_header (
     pch_code,
-    item_code,
-    item_qty,
+    company_code,
     pch_status,
     due_date,
+    pay_amount,
+    pay_method,
+    emp_code,
     memo,
     request_date,
     modify_date
   ) VALUES (
-    #{pch_code},
-    #{item_code},
-    #{item_qty},
-    #{pch_status},
-    #{due_date},
-    #{memo},
+    #{company_code}
+    #{pch_status}
+    #{due_date}
+    #{pay_amount}
+    #{pay_method}
+    #{emp_code}
+    #{memo}
     SYSDATE,
     SYSDATE 
+  )
+</insert>
+
+<insert id="insert_pch_detail" parameterType="kr.co.noerror.DTO.purchase_DTO">
+  INSERT INTO purchase_req_detail (
+    pch_code,
+    item_code,
+    item_qty
+  ) VALUES (
+    #{pch_code},
+    #{item_code},
+    #{item_qty}
   ) 
 </insert>
 
@@ -58,7 +70,7 @@ SELECT * FROM (
     SELECT inner_result.*, ROWNUM rnum
     FROM (
         SELECT pch.*, cmp.company_name, mgr.manager_name
-        FROM purchase_request pch
+        FROM purchase_req_detail pch
         JOIN temp_items itm ON pch.item_code = itm.item_code
         JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
         JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
@@ -93,7 +105,7 @@ WHERE rnum &gt; #{start}
 <!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
 <select id="purchase_count" resultType="int" parameterType="map">
 SELECT COUNT(*) AS total
-FROM purchase_request pch
+FROM purchase_req_detail pch
 JOIN temp_items itm ON pch.item_code = itm.item_code
 JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
 JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code

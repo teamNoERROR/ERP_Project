@@ -60,7 +60,7 @@
 						</tr>
 					</thead>
 					<tbody> 
-						<tr th:each="p : ${all}" class="modal-trigger" th:data-modal-url="@{/modals/purchase_modal.html}" data-modal-id="pch_modal" style="cursor: pointer;">
+						<tr th:each="p : ${all}" class="modal-trigger" th:data-modal-url="@{/purchase_detail.do(code=${p.pch_code})}" data-modal-id="pch_modal" style="cursor: pointer;">
 							<td><input type="checkbox"></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.pch_code}]]</td>

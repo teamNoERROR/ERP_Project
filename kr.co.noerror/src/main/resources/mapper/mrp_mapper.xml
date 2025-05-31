@@ -26,7 +26,8 @@ WHERE pln.plan_status = '계획'
   	  itm.item_type,
   	  itm.item_name, 
   	  bom.quantity, 
-  	  itm.item_unit
+  	  itm.item_unit,
+  	  itm.item_cost
   FROM temp_bom_detail bom
   JOIN temp_items itm ON bom.item_code = itm.item_code
   WHERE bom.bom_code = #{bom_code}

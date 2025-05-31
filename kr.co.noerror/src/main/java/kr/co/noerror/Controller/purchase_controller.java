@@ -24,6 +24,8 @@ import kr.co.noerror.DAO.purchase_DAO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.purchase_DTO;
+import kr.co.noerror.DTO.purchase_item_DTO;
+import kr.co.noerror.DTO.purchase_req_DTO;
 import kr.co.noerror.Model.M_random;
 
 @Controller
@@ -42,10 +44,15 @@ public class purchase_controller {
 	@Resource(name="M_random")
 	M_random mrandom;           
 	
-	@GetMapping("/purchase_detail.do")
-	public String purchase_detail() {
-		return "/production/purchase_detail.html";
-	}
+//	@GetMapping("/purchase_detail.do")
+//	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
+//		System.out.println(pch_code);
+//		purchase_DTO pch_header = this.pdao.pch_req_header(pch_code);
+//		List<purchase_DTO> pch_items = this.pdao.pch_req_detail(pch_code);
+//		m.addAttribute("pch_header",pch_header);
+//		m.addAttribute("pch_items",pch_items);
+//		return "/modals/purchase_detail_modal.html";
+//	}
 	
 	@GetMapping("/purchase.do")
 	public String purchase(Model m,
@@ -92,38 +99,59 @@ public class purchase_controller {
 	
 	@PostMapping("/purchase_request.do")
 	@ResponseBody
-    public Map<String, Object> purchase_request(@RequestBody List<purchase_DTO> purchases) {
+    public Map<String, Object> purchase_request(@RequestBody Map<String, purchase_req_DTO> requestMap) {
 		
 		Map<String, Object> response = new HashMap<>();
+		purchase_req_DTO pdto = null;
 		
-        //중복 없는 발주코드 생성
-        String pch_code = null;
-        int count = 0;
-        boolean is_duplicated = true;
-        while(is_duplicated) {
-        	pch_code = "pch-" + this.mrandom.random_no();
-        	count = this.pdao.pch_code_check(pch_code);
-        	if(count == 0){
-        		is_duplicated = false;
-        	}
-        }
-        
-        try {
-        	//purchase_header 테이블에 저장
-        	int result1 = this.pdao.insert_pch_header(pch_code);
-        	
-        	//purchase_request 테이블에 저장
-        	int result2 = 0;
-            for (purchase_DTO pdto : purchases) {
-            	pdto.setPch_code(pch_code);
-            	pdto.setPch_status("발주요청");
-            	//System.out.println(pdto);
-                result2 += this.pdao.insert_pch_detail(pdto);
-            }
-
-            if((result1==1) && (result2 == purchases.size())) {
+		int result1 = 0;
+		int result2 = 0;
+		try {
+			for (Map.Entry<String, purchase_req_DTO> entry : requestMap.entrySet()) {
+                String company_code = entry.getKey();
+                pdto = entry.getValue();
+			
+		        //중복 없는 발주코드 생성
+		        String pch_code = null;
+		        int count = 0;
+		        boolean is_duplicated = true;
+		        while(is_duplicated) {
+		        	pch_code = "pch-" + this.mrandom.random_no();
+		        	count = this.pdao.pch_code_check(pch_code);
+		        	if(count == 0){
+		        		is_duplicated = false;
+		        	}
+		        }
+		        
+		        purchase_DTO pch = new purchase_DTO();
+		        pch.setPch_code(pch_code);
+		        pch.setCompany_code(company_code);
+		        pch.setPch_status("발주요청");
+		        pch.setDue_date(pdto.getDue_date());
+		        pch.setPay_method(pdto.getPay_method());
+		        pch.setEmp_code("emp-00001");
+		        pch.setMemo(pdto.getMemo());
+		        
+	        	int pay_amount = 0; 	
+	            for (purchase_item_DTO idto : pdto.getItems()) {
+	            	pay_amount += idto.getItem_amount();
+	            }
+	            pch.setPay_amount(pay_amount);
+	            //purchase_req_header에 저장
+	            result1 += this.pdao.insert_pch_header(pch);
+	            
+	            for (purchase_item_DTO idto : pdto.getItems()) {
+	            	pch.setItem_code(idto.getItem_code());
+	            	pch.setItem_qty(idto.getItem_qty());
+	            	pay_amount += idto.getItem_amount();
+	            	//purchase_req_detail에 저자
+	            	result2 += this.pdao.insert_pch_detail(pch);
+	            }
+	            
+	        }
+	
+            if((result1==requestMap.size()) && (result2 == requestMap.size() * pdto.getItems().size())) {
 	            response.put("success", true);
-	            response.put("pch_code", pch_code);
             }
             else {
             	response.put("success", false);

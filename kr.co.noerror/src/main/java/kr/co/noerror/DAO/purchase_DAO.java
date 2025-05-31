@@ -29,8 +29,8 @@ public class purchase_DAO {
 		return count;
 	}
 	
-	public int insert_pch_header(String pch_code) {
-		int result = this.sql.insert("insert_pch_header", pch_code);
+	public int insert_pch_header(purchase_DTO pdto) {
+		int result = this.sql.insert("insert_pch_header", pdto);
 		return result;
 	}
 	

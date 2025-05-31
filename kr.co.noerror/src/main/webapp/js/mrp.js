@@ -75,6 +75,7 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
 		            <td>${item.item_name}</td>
 		            <td>${item.required_qty}</td>
 		            <td>${item.item_unit}</td>
+		            <td>${item.item_cost}</td>
 		            <td>${item.total_stock}</td>
 		            <td>${item.safety_stock}</td>
 		            <td>${item.reserved_stock}</td>
@@ -164,11 +165,12 @@ function collectMRPResultData() {
                 item_name: cells[4].textContent.trim(),
                 required_qty: parseInt(cells[5].textContent.trim()),
                 item_unit: cells[6].textContent.trim(),
-                total_stock: parseInt(cells[7].textContent.trim()),
-                safety_stock: parseInt(cells[8].textContent.trim()),
-                reserved_stock: parseInt(cells[9].textContent.trim()),
-                available_stock: parseInt(cells[10].textContent.trim()),
-                shortage_stock: parseInt(cells[11].textContent.trim())
+                item_cost: cells[7].textContent.trim(),
+                total_stock: parseInt(cells[8].textContent.trim()),
+                safety_stock: parseInt(cells[9].textContent.trim()),
+                reserved_stock: parseInt(cells[10].textContent.trim()),
+                available_stock: parseInt(cells[11].textContent.trim()),
+                shortage_stock: parseInt(cells[12].textContent.trim())
             });
         }
     });

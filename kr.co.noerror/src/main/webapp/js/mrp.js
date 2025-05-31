@@ -68,13 +68,14 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
 		        const row = document.createElement("tr");
 
 		        row.innerHTML = `
-		            <td><input type="checkbox" class="row-checkbox-result"></td>
+		            <td><input type="checkbox" checked disabled class="row-checkbox-result"></td>
 		            <td>${index + 1}</td>
 		            <td>${item.item_code}</td>
 		            <td>${item.item_type}</td>
 		            <td>${item.item_name}</td>
 		            <td>${item.required_qty}</td>
 		            <td>${item.item_unit}</td>
+		            <td>${item.item_cost}</td>
 		            <td>${item.total_stock}</td>
 		            <td>${item.safety_stock}</td>
 		            <td>${item.reserved_stock}</td>
@@ -112,6 +113,9 @@ function calc_save() {
     .then(response => {
         if (response.success) {
             alert("MRP 결과 저장 완료!");
+			
+			// mrp_code를 숨겨진 input에 저장
+			document.getElementById("mrpCodeHidden").value = response.mrp_code;
         } else {
             alert("저장 실패: " + response.message);
         }
@@ -119,6 +123,31 @@ function calc_save() {
     .catch(err => {
         alert("에러 발생: " + err.message);
     });
+}
+
+//발주화면으로 이동
+function go_purchase() {
+	const mrpCode = document.getElementById("mrpCodeHidden").value;
+	
+	if (!mrpCode) {
+	        alert("MRP 계산 및 MRP 저장을 완료한 후 이용 가능합니다.");
+	        return;
+	}
+
+    // 폼 생성
+    const form = document.createElement("form");
+    form.method = "GET";
+    form.action = "/mrp_result_select.do"
+
+	// 데이터 input
+	const dataInput = document.createElement("input");
+	dataInput.type = "hidden";
+	dataInput.name = "mrp_code";
+	dataInput.value = mrpCode;
+	form.appendChild(dataInput); 
+
+	document.body.appendChild(form);
+	form.submit();
 }
 
 function collectMRPResultData() {
@@ -136,11 +165,12 @@ function collectMRPResultData() {
                 item_name: cells[4].textContent.trim(),
                 required_qty: parseInt(cells[5].textContent.trim()),
                 item_unit: cells[6].textContent.trim(),
-                total_stock: parseInt(cells[7].textContent.trim()),
-                safety_stock: parseInt(cells[8].textContent.trim()),
-                reserved_stock: parseInt(cells[9].textContent.trim()),
-                available_stock: parseInt(cells[10].textContent.trim()),
-                shortage_stock: parseInt(cells[11].textContent.trim())
+                item_cost: cells[7].textContent.trim(),
+                total_stock: parseInt(cells[8].textContent.trim()),
+                safety_stock: parseInt(cells[9].textContent.trim()),
+                reserved_stock: parseInt(cells[10].textContent.trim()),
+                available_stock: parseInt(cells[11].textContent.trim()),
+                shortage_stock: parseInt(cells[12].textContent.trim())
             });
         }
     });

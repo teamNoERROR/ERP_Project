@@ -9,5 +9,5 @@ public interface common_service  {
 
 	List<employee_DTO> emp_list();
 	
-	List<WareHouse_DTO> warehouse_list();
+	List<WareHouse_DTO> warehouse_list(String wh_type);
 }

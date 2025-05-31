@@ -28,13 +28,13 @@ public class mrp_Calulation {
 			for (temp_bom_DTO bom : boms) {
 				String item_code = bom.getItem_code();
 				int required_qty = bom.getQuantity() * input.getProduct_qty();
-				int total_stock = 100;
+				int total_stock = 200;
 				int safety_stock = 50;
 				int reserved_stock = 30;
 				int available_stock = total_stock - safety_stock - reserved_stock;
-				int shortage_stock = available_stock - required_qty;
+				int shortage_stock = Math.min(available_stock - required_qty, 0);
 				aggregated.merge(item_code,
-						new mrp_result_DTO(null, item_code, bom.getItem_name(), bom.getItem_type(), required_qty, bom.getItem_unit(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
+						new mrp_result_DTO(item_code, bom.getItem_type(), bom.getItem_name(), required_qty, bom.getItem_unit(), bom.getItem_cost(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
                         (oldVal, newVal) -> {
                             oldVal.setRequired_qty(oldVal.getRequired_qty() + newVal.getRequired_qty());
                             return oldVal;

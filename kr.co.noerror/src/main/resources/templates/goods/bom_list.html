@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<title>BOM 리스트</title>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+        <!-- Title -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        	<h2 class="mb-1">BOM 관리</h2>
+        </div>
+
+	
+	<div class="row align-items-center justify-content-end my-3">
+
+
+  <!-- 검색창 영역 -->
+  <div class="col-auto">
+      <div class="col-auto d-flex"  >
+       <form id="frm_class" class="row g-1 align-items-center" >
+       <input type="hidden" name="type">
+      <div class="input-group input-group-sm me-0" style="width: 200px;">
+          <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
+            <option value="">대분류</option>
+             <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
+          </select>
+          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
+            <th:block >
+            <option value="" th:if="${sclass == null}" >소분류</option>
+            <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
+            </th:block>
+            
+          </select>
+        </div>
+         </form>
+       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return bomSearch()">
+        <div class="input-group input-group-sm" style="width:250px;">
+          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
+          <button class="btn btn-primary" >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+        <!-- bom List Table -->
+     	<div id="contents_container">
+        <div id="table-container" class="table-responsive  rounded" >
+            <table class="table align-middle table-bordered text-center" th:classappend="${bom_total != 0} ? 'table-hover' : ''">
+                <thead class="table-light" >
+                    <tr>
+                        <th scope="col"><input type="checkbox" name="all_sel_box" onclick="all_sel()"></th>
+                        <th scope="col">#</th>
+                        <th scope="col">제품사진</th>
+                        <th scope="col">제품코드</th>
+                        <th scope="col">제품명</th>
+                        <th scope="col">제품유형</th>
+                        <th scope="col">대분류</th>
+                        <th scope="col">소분류</th>
+                        <th scope="col">규격</th>
+                        <th scope="col">단위</th>
+                        <th scope="col">단가 (원)</th>
+                        <th scope="col">판매가 (원)</th>
+                        <th scope="col">재고합계</th>
+                        <th scope="col">사용</th>
+                    </tr>
+                </thead>
+                <tbody >
+                
+                	<tr th:if="${bom_total == 0}" >
+                		<td class="text-center nogoods_tb" colspan="14" th:text="${no_goods}"></td>
+                	</tr>
+                	
+                    <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" onclick="open_gd_detail(event)"  style="cursor: pointer;">
+                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${bomlist.PIDX}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="product"></td>
+                        <td > [[${bno - idx.index}]]</td>
+                        <td><img src=""></td>
+                        <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>
+                        <td class="text-start">[[${bomlist.PRODUCT_NAME}]]</td>
+                        <th:block>
+                        <td th:if="${bomlist.PRODUCT_TYPE == 'product'}" >완제품</td>
+                        <td th:if="${bomlist.PRODUCT_TYPE == 'half'}" >반제품</td>
+                        </th:block>
+                        <td>[[${bomlist.PRODUCT_CLASS1}]]</td>
+                        <td>[[${bomlist.PRODUCT_CLASS2}]]</td>
+                         <td>[[${bomlist.PRODUCT_SPEC}]]</td>
+                        <td>[[${bomlist.PRODUCT_UNIT}]]</td>
+                        <td class="text-end">[[${#numbers.formatInteger(bomlist.PRODUCT_COST,0,'COMMA')}]] </td>
+                        <td class="text-end">[[${#numbers.formatInteger(bomlist.PRODUCT_PRICE,0,'COMMA')}]] </td>
+                        <td>재고합계</td>
+                        <td>[[${bomlist.PD_USE_FLAG}]]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+       
+
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+
+        <div class="d-flex">
+    <!-- Pagination -->
+
+    <input type="hidden" name="t">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item page-link prev"  
+                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product',data-pea=${pea}" onclick="go_pd_pg(this)">이전</li>
+                
+                <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
+                <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" 
+                	onclick="go_pd_pg(this)" >[[${pgn}]]</li>
+                </th:block>
+                
+                <li class="page-item page-link next" 
+                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 }, data-type='product',data-pea=${pea}" onclick="go_pd_pg(this)" >다음</li>
+            </ul>
+        </div>
+        
+        <!-- 게시물개수 선택  -->
+        <form id="pdpg_frm">
+        <input type="hidden" name="t">
+        <input type="hidden" name="pageno" th:value="${pageno}">
+        <div class="mt-4 ms-1">
+        <select class="form-select" name="post_ea" onchange="postEa()">
+            <option value="5"   th:selected="${pea} == '5'" >5개씩 보기</option>
+            <option value="10"  th:selected="${pea} == '10'" >10개씩 보기</option>
+            <option value="15"  th:selected="${pea} == '15'" >15개씩 보기</option>
+            <option value="20"  th:selected="${pea} == '20'" >20개씩 보기</option>
+            <option value="25"  th:selected="${pea} == '25'" >25개씩 보기</option>
+            <option value="30"  th:selected="${pea} == '30'" >30개씩 보기</option>
+          </select>
+        </div>
+          </form>
+         </div>
+      
+       
+        
+        <!-- Action Buttons -->
+        <div class="mt-4 d-flex gap-2"> 
+            <div class="ms-auto">
+                <button type="button"  class="btn btn-success" onclick="addBom()"><i class="bi bi-plus-lg"></i> 추가</button>
+                <button class="btn btn-danger"  onclick="deleteBtn()"><i class="bi bi-trash"></i> 삭제</button>
+            </div>
+        </div>
+	</div>
+	</div>
+    </section>
+
+  
+</main>
+
+
+<div id="modalContainer"></div>
+<div id="modalContainer2"></div>
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

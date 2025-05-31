@@ -27,9 +27,8 @@
 		  </div>
 		  
 		  <!-- 테이블 영역 -->
-		<div th:replace="~{/goods/items_list.html :: itemList(${items_list}, ${items_total}, ${no_items}, 'modal')}"></div>
-
-			
+		<div th:replace="~{/goods/items_list.html :: itemList(${items_total}, ${items_list}, ${no_items},'modal')}"></div>
+		<div th:replace="~{/goods/items_list.html :: pgList(${pageinfo}, ${pageno}, ${pea},'modal')}"></div>	
       </div>
       <div class="modal-footer">
        <!-- Action Buttons -->

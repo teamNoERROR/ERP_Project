@@ -1,6 +1,5 @@
 package kr.co.noerror.Controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.mrp_DAO;
@@ -37,6 +39,24 @@ public class mrp_controller {
 	
 	@Resource(name="M_random")
 	M_random mrandom;
+	
+	@PostMapping("/go_purchase.do")
+	public String go_purchase(@RequestParam("data") String json_data,
+			@RequestParam("mrp_code") String mrp_code,
+			Model model) {
+	    ObjectMapper mapper = new ObjectMapper();
+	    try {
+	        List<mrp_result_DTO> mrp_results = mapper.readValue(
+	        	json_data, new TypeReference<List<mrp_result_DTO>>() {}
+	        );
+	        model.addAttribute("mrp_code", mrp_code);
+	        model.addAttribute("mrp_results", mrp_results);
+	    } catch (Exception e) {  //JSON 형식 자체가 잘못된 경우
+	        e.printStackTrace();
+	    }
+
+	    return "/production/purchase_insert.html";
+	}
 	
 	@PostMapping("/mrp_save.do")
 	@ResponseBody
@@ -70,6 +90,7 @@ public class mrp_controller {
 
             if((result1==1) && (result2 == results.size())) {
 	            response.put("success", true);
+	            response.put("mrp_code", mrp_code);
             }
             else {
             	response.put("success", false);
@@ -107,6 +128,13 @@ public class mrp_controller {
 		m.addAttribute("smenu","mrp 계산");
 		m.addAttribute("plans_period", plans_period);
 
+		return "/production/mrp_list.html";
+	}
+	
+	@GetMapping("/mrp.do")
+	public String mrp(Model m) {
+		m.addAttribute("lmenu","생산 관리");
+		m.addAttribute("smenu","mrp 계산");
 		return "/production/mrp_list.html";
 	}
 }

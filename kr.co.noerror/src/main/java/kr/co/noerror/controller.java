@@ -9,38 +9,17 @@ public class controller {
 
 	//메인화면
 	@GetMapping("/")
-	public String main(Model m) {
+	public String index(Model m) {
 		return "/member/member_login.html";
 	}
 		
-
-
-	
-
-	
-
-	
-	//BOM 등록하기
-	@GetMapping("/bom.do")
-	public String bom_insert(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","bom 등록하기");
-//		return "/bom_detail.html";
-		return "/goods/bom_insert.html";
+	//메인화면
+	@GetMapping("/main.do")
+	public String main(Model m) {
+		return "/common/main.html";
 	}
 	
 
-	
-	
-	//자재입고 
-	@GetMapping("/inbound.do")
-	public String inbound(Model m) {
-		m.addAttribute("lmenu","입출고관리");
-		m.addAttribute("smenu","자재관리");
-		return "/warehouse/inbound_list.html";
-	}
-	
 	
 	//제품 출고 
 	@GetMapping("/outbound.do")
@@ -49,7 +28,6 @@ public class controller {
 		m.addAttribute("smenu","제품 출고");
 		return "/warehouse/outbound_list.html";
 	}
-	
 	
 	//창고관리 
 	@GetMapping("/warehouse.do")
@@ -70,48 +48,11 @@ public class controller {
 		return "/warehouse/warehouses_it_list.html";
 	}
 	
-	//mrp 계산
-	@GetMapping("/mrp.do")
-	public String mrp(Model m) {
-		m.addAttribute("lmenu","생산 관리");
-		m.addAttribute("smenu","mrp 계산");
-		return "/production/mrp_list.html";
-	}
-	
-//	//생산계획등록
-//	@GetMapping("/production.do")
-//	public String production(Model m) {
-//		m.addAttribute("lmenu","생산 관리");
-//		m.addAttribute("smenu","생산계획리스트");
-//		m.addAttribute("mmenu","생산계획등록");
-//		return "/production/production_plan_list.html";
-//	}
-	
-	//생산계획등록
-//	@GetMapping("/production_in.do")
-//	public String production2(Model m) {
-//		m.addAttribute("lmenu","생산 관리");
-//		m.addAttribute("smenu","생산계획리스트");
-//		m.addAttribute("mmenu","생산계획등록");
-//		return "/production/production_plan_insert.html";
-//	}
-
-	
-	@GetMapping("/purchase.do")
-	public String purchase(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		return "/production/purchase_list.html";
-	}
-
-	
-	
 	@GetMapping("/test.do")
 	public String test(Model m) {
 	
 		return "/temp/warehouse_in.html";
 	}
 
-	
 }
 

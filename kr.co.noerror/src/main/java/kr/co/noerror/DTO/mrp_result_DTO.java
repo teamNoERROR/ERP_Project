@@ -18,9 +18,28 @@ public class mrp_result_DTO {
     private String item_name;
     private int required_qty;
     private String item_unit;
+    private int item_cost;
     private int total_stock;
     private int safety_stock;
     private int reserved_stock;
     private int available_stock;
     private int shortage_stock;
+    private String company_code;
+    private String company_name;
+    
+	public mrp_result_DTO(String item_code, String item_type, String item_name, int required_qty,
+			String item_unit, int item_cost, int total_stock, int safety_stock, int reserved_stock, int available_stock,
+			int shortage_stock) {
+		this.item_code = item_code;
+		this.item_type = item_type;
+		this.item_name = item_name;
+		this.required_qty = required_qty;
+		this.item_unit = item_unit;
+		this.item_cost = item_cost;
+		this.total_stock = total_stock;
+		this.safety_stock = safety_stock;
+		this.reserved_stock = reserved_stock;
+		this.available_stock = available_stock;
+		this.shortage_stock = shortage_stock;
+	}
 }

@@ -23,8 +23,8 @@ WHERE pln.plan_status = '계획'
 <select id="boms_for_mrp" parameterType="String" resultType="kr.co.noerror.DTO.temp_bom_DTO">
   SELECT 
   	  bom.item_code, 
-  	  itm.item_name, 
   	  itm.item_type,
+  	  itm.item_name, 
   	  bom.quantity, 
   	  itm.item_unit
   FROM temp_bom_detail bom
@@ -37,7 +37,7 @@ WHERE pln.plan_status = '계획'
  SELECT count(*) FROM mrp_result_header WHERE mrp_code = #{mrp_code}
 </select>
 
-<!-- 주문정보 저장 -->  
+<!-- MRP계산 정보 저장 -->  
 <insert id="insert_mrp_header" parameterType="String">
  INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
 </insert>
@@ -63,4 +63,5 @@ WHERE pln.plan_status = '계획'
     #{shortage_stock} 
   ) 
 </insert>
+
 </mapper>

@@ -17,4 +17,5 @@ public interface purchase_mapper {
 	int insert_pch_detail(purchase_DTO pdto);
 	List<purchase_DTO> purchase_list(Map<String, Object> mparam);
 	int purchase_count(Map<String, Object> mparam);
+	List<purchase_DTO> purchase_detail(String pch_code);
 }

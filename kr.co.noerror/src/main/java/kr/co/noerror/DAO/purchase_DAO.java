@@ -48,4 +48,9 @@ public class purchase_DAO {
 		int cnt = this.sql.selectOne("purchase_count", mparam);
 		return cnt;
 	}
+	
+	public List<purchase_DTO> purchase_detail(String pch_code){
+		List<purchase_DTO> details = this.sql.selectList("purchase_detail", pch_code);
+		return details;
+	}
 }

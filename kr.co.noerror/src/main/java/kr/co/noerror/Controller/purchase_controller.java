@@ -44,15 +44,13 @@ public class purchase_controller {
 	@Resource(name="M_random")
 	M_random mrandom;           
 	
-//	@GetMapping("/purchase_detail.do")
-//	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
-//		System.out.println(pch_code);
-//		purchase_DTO pch_header = this.pdao.pch_req_header(pch_code);
-//		List<purchase_DTO> pch_items = this.pdao.pch_req_detail(pch_code);
-//		m.addAttribute("pch_header",pch_header);
-//		m.addAttribute("pch_items",pch_items);
-//		return "/modals/purchase_detail_modal.html";
-//	}
+	@GetMapping("/purchase_detail.do")
+	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
+		List<purchase_DTO> details = this.pdao.purchase_detail(pch_code);
+		System.out.println(details.get(0));
+		m.addAttribute("details",details);
+		return "/modals/purchase_detail_modal.html";
+	}
 	
 	@GetMapping("/purchase.do")
 	public String purchase(Model m,
@@ -106,6 +104,7 @@ public class purchase_controller {
 		
 		int result1 = 0;
 		int result2 = 0;
+		int cnt = 0;
 		try {
 			for (Map.Entry<String, purchase_req_DTO> entry : requestMap.entrySet()) {
                 String company_code = entry.getKey();
@@ -129,7 +128,7 @@ public class purchase_controller {
 		        pch.setPch_status("발주요청");
 		        pch.setDue_date(pdto.getDue_date());
 		        pch.setPay_method(pdto.getPay_method());
-		        pch.setEmp_code("emp-00001");
+		        pch.setEmp_code("EMP-00001");
 		        pch.setMemo(pdto.getMemo());
 		        
 	        	int pay_amount = 0; 	
@@ -140,6 +139,7 @@ public class purchase_controller {
 	            //purchase_req_header에 저장
 	            result1 += this.pdao.insert_pch_header(pch);
 	            
+	            cnt += pdto.getItems().size();
 	            for (purchase_item_DTO idto : pdto.getItems()) {
 	            	pch.setItem_code(idto.getItem_code());
 	            	pch.setItem_qty(idto.getItem_qty());
@@ -149,8 +149,11 @@ public class purchase_controller {
 	            }
 	            
 	        }
-	
-            if((result1==requestMap.size()) && (result2 == requestMap.size() * pdto.getItems().size())) {
+			System.out.println(result1);
+			System.out.println(requestMap.size());
+			System.out.println(result2);
+			System.out.println(cnt);
+            if((result1==requestMap.size()) && (result2 == cnt)) {
 	            response.put("success", true);
             }
             else {

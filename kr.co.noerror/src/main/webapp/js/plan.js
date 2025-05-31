@@ -1,5 +1,3 @@
-
-
 function close_bom_items() {
 	// 모달 닫기
 	const modalEl = document.getElementById('bom_items');

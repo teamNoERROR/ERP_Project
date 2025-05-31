@@ -49,6 +49,61 @@
 </insert>
 
 
+<!-- 제품 전체 개수  -->
+<select id="bom_all_ea_sch" resultType="int" parameterType="Map">
+	SELECT COUNT(DISTINCT C_PRODUCT_CODE) AS CNT FROM BPI_VIEW
+		<if test="sclass != null">
+			<where>
+			PRODUCT_CLASS2 = #{sclass} 
+			</where>
+		</if>
+		<if test="search_opt == 'all' and keyword != null"> 
+			<where>
+			 (BOM_CODE LIKE '%'||#{keyword}||'%' OR
+			 C_PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR
+			 C_ITEM_CODE LIKE '%'||#{keyword}||'%' OR
+			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR
+			 ITEM_NAME LIKE '%'||#{keyword}||'%'
+			 ) 
+			</where>
+		</if>
+		<if test="search_opt == 'pd_name' and keyword != null"> 
+			<where>
+			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' 
+			</where>
+		</if>
+</select>
+
+
+<!-- 제품 전체 리스트  -->
+<select id="bom_all_list_sch" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="Map">
+	SELECT * FROM 
+	(SELECT ROWNUM AS rnum, a.* FROM 
+	(SELECT * FROM BPI_VIEW
+	<if test="sclass != null">
+		<where>
+		PRODUCT_CLASS2 = #{sclass} 
+		</where>
+	</if>
+	<if test="search_opt == 'all' and keyword != null"> 
+		<where>
+		 (BOM_CODE LIKE '%'||#{keyword}||'%' OR
+		 C_PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR
+		 C_ITEM_CODE LIKE '%'||#{keyword}||'%' OR
+		 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR
+		 ITEM_NAME LIKE '%'||#{keyword}||'%'
+		 ) 
+		</where>
+	</if>
+	<if test="search_opt == 'pd_name' and keyword != null"> 
+		<where>
+		 PRODUCT_NAME LIKE '%'||#{keyword}||'%' 
+		</where>
+	</if>
+	ORDER BY BIDX DESC ) a
+	WHERE ROWNUM &lt;= #{end} )
+	WHERE rnum &gt;= #{start}
+</select>
 
 
 </mapper>

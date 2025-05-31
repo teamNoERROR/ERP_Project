@@ -18,6 +18,7 @@ import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.Mapper.bom_mapper;
 import kr.co.noerror.Model.M_file;
+import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_random;
 
 @Service
@@ -33,6 +34,9 @@ public class bom_serviceImpl implements bom_service{
 	@Resource(name="M_random")  //랜덤숫자생성 모델 
 	M_random m_rno;
 	
+	@Resource(name="M_paging")  //페이징생성 모델 
+	M_paging m_pg;
+	
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
 	
@@ -45,12 +49,14 @@ public class bom_serviceImpl implements bom_service{
 	List<String> list = null; 
 	Map<String, String> map = null;
 	
+	//BOM등록여부 체크 
 	@Override
 	public int bom_check(String pd_code) {
 		int bom_ck = this.b_dao.bom_check(pd_code);
 		return bom_ck;
 	}
 
+	//BOM 상세보기 
 	@Override
 	public List<bom_DTO> bom_detail(String pd_code) {
 		List<bom_DTO> bom_detail = this.b_dao.bom_detail(pd_code);
@@ -58,6 +64,7 @@ public class bom_serviceImpl implements bom_service{
 		return bom_detail;
 	}
 
+	//BOM 등록
 	@Override
 	public int bom_insert( String insert_item) {
 		String bom_code = "BOM-"+this.m_rno.random_no();
@@ -102,6 +109,35 @@ public class bom_serviceImpl implements bom_service{
 		System.out.println(result);
 //		bom_DTO result = (this.b_DTO);
 		return result;
+	}
+
+	//BOM등록된제품 전체개수 
+	@Override
+	public int bom_all_ea_sch(String sclass, String search_opt, String keyword) {
+		this.map = new HashMap<>();
+		this.map.put("sclass", sclass);
+		this.map.put("search_opt", search_opt);
+		this.map.put("keyword", String.valueOf(keyword));
+		
+		int bom_total = this.b_dao.bom_all_ea_sch(map);
+		return bom_total;
+	}
+
+	 //BOM등록된제품 전체개수 
+	@Override
+	public List<bom_DTO> bom_all_list_sch(String sclass, String search_opt, String keyword, Integer pageno, int post_ea) {
+		int start = (pageno - 1) * post_ea + 1;
+		int end = pageno * post_ea; 
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("search_opt", search_opt);
+		map.put("keyword", String.valueOf(keyword));
+		map.put("sclass", sclass);
+		map.put("start", start);
+		map.put("end", end);
+
+		List<bom_DTO> bom_list = this.b_dao.bom_all_list_sch(map);  
+		return bom_list;
 	}
 
 }

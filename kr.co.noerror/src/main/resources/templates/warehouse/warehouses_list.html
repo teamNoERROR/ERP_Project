@@ -33,20 +33,20 @@
 
         <!-- 게시물 테이블 -->
         <div class="table-responsive rounded" th:if="${wh_check == 'yesdata'}">
-            <table class="table table-hover align-middle table-bordered">
+            <table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
                 <thead class="table-light text-center">
                 <tr>
-                    <th><input type="checkbox" /></th>
-                    <th>번호</th>
-                    <th>창고코드</th>
-                    <th>창고명</th>
-                    <th>창고구분</th>
-                    <th>위치</th>
-                    <th>대표관리자</th>
-                    <th>연락처</th>
-                    <th>사용여부</th>
-                    <th>비고</th>
-                    <th>등록일</th>
+                    <th scope="col"><input type="checkbox" /></th>
+                    <th scope="col">번호</th>
+                    <th scope="col">창고코드</th>
+                    <th scope="col">창고명</th>
+                    <th scope="col">창고구분</th>
+                    <th scope="col">위치</th>
+                    <th scope="col">대표관리자</th>
+                    <th scope="col">연락처</th>
+                    <th scope="col">사용여부</th>
+                    <th scope="col">비고</th>
+                    <th scope="col">등록일</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -58,9 +58,10 @@
                <tr class="modal-trigger" 
    					 th:each="wh, iterStat : ${wh_list}" 
     				 th:data-modal-url="@{'/warehouse_modal.do?wh_code=' + ${#strings.trim(wh.wh_code)}}" 
+    				 data-modal-id="wh_list"
     				 style="cursor:pointer;">
                     <td><input type="checkbox" th:value="${wh.widx}" /></td>
-                    <td th:text="${(currentPage - 1) * pageSize + iterStat.index + 1}">1</td>
+                    <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
                     <td th:text="${wh.wh_code}">WH-001</td>
                     <td th:text="${wh.wh_name}">입고1창고</td>
                     <td th:text="${wh.wh_type}">입고창고</td>

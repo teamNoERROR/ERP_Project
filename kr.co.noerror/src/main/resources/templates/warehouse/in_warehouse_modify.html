@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="~{/common/config.html :: config}">
-</head>
+<head th:replace="~{/common/config.html :: config}"></head>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
 <main class="main">
-  <section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
-  <section class="container" style="max-width: 900px;">
-
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
     <!-- Title -->
-	<div
-		class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-		<h2 class="mb-1">입고 창고 등록</h2>
-	</div>
-
-    <form id="inboundWhForm" th:action="@{/inbound_warehouse/save}" th:object="${Inbound_DTO}" method="post">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        <h2 class="mb-1">입고 창고 수정</h2>
+    </div>
+    
+   <form id="frm" th:action="@{./in_warehouse_modify.do}" th:object="${IOSF_DTO}" method="post">
 
       <!-- 창고 선택 (모달) -->
       <div class="mb-4">
@@ -28,21 +25,33 @@
         </button>
 
         <div class="d-flex gap-3 flex-wrap">
-          <input type="text" class="form-control" placeholder="창고코드" th:field="*{wh_code}" readonly style="flex: 1 1 120px;">
-          <input type="text" class="form-control" placeholder="창고명" th:field="*{wh_name}" readonly style="flex: 2 1 200px;">
-          <input type="text" class="form-control" placeholder="창고위치" th:field="*{wh_location}" readonly style="flex: 3 1 300px;">
+          <input type="text" class="form-control" placeholder="창고코드" name="wh_code" th:value="${in_wh_modify[0].wh_code}" readonly style="flex: 1 1 120px;">
+          <input type="text" class="form-control" placeholder="창고명" name="wh_name" th:value="${in_wh_modify[0].wh_name}" readonly style="flex: 2 1 200px;">
+          <input type="text" class="form-control" placeholder="창고위치" name="wh_location" th:value="${in_wh_modify[0].wh_location}" readonly style="flex: 3 1 300px;">
         </div>
       </div>
-
+	
+	 <!-- 입고 날짜 -->
+	<div class="mb-4 row gx-3">
+	  	<div class="col-md-6 mb-3">
+	    	<label class="form-label">입고 날짜</label>
+	    	<input type="datetime-local" class="form-control" name="inbound_date" th:value="${in_wh_modify[0].inbound_date}">
+	 	 </div>
+	   	 <div class="col-md-6 mb-3">
+	    	<label class="form-label">입고 코드</label>
+	    	<input type="text" class="form-control" placeholder="입고 코드" name="inbound_code" th:value="${in_wh_modify[0].inbound_code}" readonly>
+		 </div>
+	</div>
+	
       <!-- 제품 정보 -->
       <div class="mb-4 row gx-3">
         <div class="col-md-6 mb-3">
           <label class="form-label">제품코드</label>
-          <input type="text" class="form-control" th:field="*{product_code}">
+          <input type="text" class="form-control" name="item_code" th:value="${in_wh_modify[0].item_code}">
         </div>
         <div class="col-md-6 mb-3">
           <label class="form-label">부자재명</label>
-          <input type="text" class="form-control" th:field="*{product_name}">
+          <input type="text" class="form-control" name="item_name" th:value="${in_wh_modify[0].item_name}">
         </div>
       </div>
 
@@ -50,15 +59,15 @@
       <div class="mb-4 row gx-3">
         <div class="col-md-4 mb-3">
           <label class="form-label">제품 대분류</label>
-          <input type="text" class="form-control" th:field="*{product_category1}">
+          <input type="text" class="form-control" name="category_main" th:value="${in_wh_modify[0].category_main}">
         </div>
         <div class="col-md-4 mb-3">
           <label class="form-label">제품 소분류</label>
-          <input type="text" class="form-control" th:field="*{product_category2}">
+          <input type="text" class="form-control" name="category_sub" th:value="${in_wh_modify[0].category_sub}">
         </div>
         <div class="col-md-4 mb-3">
           <label class="form-label">제품 사용여부</label>
-          <select class="form-select" th:field="*{product_use_flag}">
+          <select class="form-select" name="use_yn" th:value="${in_wh_modify[0].use_yn}">
             <option value="Y">Y</option>
             <option value="N">N</option>
           </select>
@@ -69,15 +78,15 @@
       <div class="mb-4 row gx-3 align-items-end">
         <div class="col-md-5 mb-3">
           <label class="form-label">거래처 코드</label>
-          <input type="text" class="form-control" th:field="*{client_code}">
+          <input type="text" class="form-control" name="client_code" th:value="${in_wh_modify[0].client_code}">
         </div>
         <div class="col-md-5 mb-3">
           <label class="form-label">거래처명</label>
-          <input type="text" class="form-control" th:field="*{client_name}">
+          <input type="text" class="form-control" name="client_name" th:value="${in_wh_modify[0].client_name}">
         </div>
         <div class="col-md-2 mb-3">
           <label class="form-label">사용여부</label>
-          <select class="form-select" th:field="*{client_use_flag}">
+          <select class="form-select" name="client_use_yn" th:value="${in_wh_modify[0].client_use_yn}">
             <option value="Y">Y</option>
             <option value="N">N</option>
           </select>
@@ -93,10 +102,11 @@
       </div>
 
     </form>
-  </section>
+</section>
 </main>
 
 <div id="modalContainer"></div>
 <footer th:replace="~{/common/footer.html :: footer}"></footer>
+
 </body>
 </html>

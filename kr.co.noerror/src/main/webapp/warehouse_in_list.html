@@ -1,0 +1,76 @@
+<div class="modal fade" id="warehouse_list" tabindex="-1" aria-labelledby="warehouse_list_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="warehouse_list_label">입고 창고 리스트</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body row justify-content-center d-flex gap-3">
+        <div class="table-responsive rounded">
+          <table class="table table-hover align-middle table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">번호</th>
+                <th scope="col">창고코드</th>
+                <th scope="col">창고명</th>
+                <th scope="col">창고위치</th>
+                <th scope="col">제품코드</th>
+                <th scope="col">제품이름</th>
+                <th scope="col">제품대분류</th>
+                <th scope="col">제품소분류</th>
+                <th scope="col">제품사용여부</th>
+                <th scope="col">입고날짜</th>
+                <th scope="col">거래처코드</th>
+                <th scope="col">거래처이름</th>
+                <th scope="col">거래처사용여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="cursor: pointer;" th:each="wh, iterStat : ${in_warehouse_list}">
+                <td>
+                  <input type="radio" name="whSelect" th:value="${wh.wh_code}"
+                         th:data-wh_name="${wh.wh_name}"
+                         th:data-wh_zipcode="${wh.wh_zipcode}"
+                         th:data-wh_location="${wh.wh_location}"
+                         th:data-item_code="${wh.item_code}"
+                         th:data-item_name="${wh.item_name}"
+                         th:data-category_main="${wh.category_main}"
+                         th:data-category_sub="${wh.category_sub}"
+                         th:data-inbound_date="${inbound_date}"
+                         th:data-use_yn="${wh.use_yn}"
+                         th:data-client_code="${wh.client_code}"
+                         th:data-client_name="${wh.client_name}"
+                         th:data-client_use_yn="${wh.client_use_yn}">
+                </td>
+                <td>[[${iterStat.count}]]</td>
+                <td>[[${wh.wh_code}]]</td>
+                <td>[[${wh.wh_name}]]</td>
+                <td>[[${wh.wh_zipcode}]]</td>
+                <td>[[${wh.wh_location}]]</td>
+                <td>[[${wh.item_code}]]</td>
+                <td>[[${wh.item_name}]]</td>
+                <td>[[${wh.category_main}]]</td>
+                <td>[[${wh.category_sub}]]</td>
+                <td>[[${wh.inbound_date}]]</td>
+                <td>[[${wh.use_yn}]]</td>
+                <td>[[${wh.client_code}]]</td>
+                <td>[[${wh.client_name}]]</td>
+                <td>[[${wh.client_use_yn}]]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="d-flex gap-2">
+          <div class="ms-auto">
+            <button type="button" id="selectWhBtn" class="btn btn-success" onclick="select_in_Warehouse()">
+              <i class="bi bi-check2-square"></i> 선택
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

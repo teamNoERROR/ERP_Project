@@ -1,5 +1,4 @@
 
-
 //*******************************창고 삭제 시작************************************ */
 function deleteWarehouse(button) {
   const confirmed = confirm("정말 삭제하시겠습니까?");
@@ -64,7 +63,7 @@ function deleteWarehouse(button) {
   }
  //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
  
- //*******************************관리자 모달 리스트 선택 후 반환 **************************************** */
+ //******************************창고 모달 리스트 선택 후 반환 **************************************** */
  function selectWarehouse() {
     const selectedRadio = document.querySelector('input[name="whSelect"]:checked');
 
@@ -89,51 +88,36 @@ function deleteWarehouse(button) {
     const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
     modal.hide();
   }
- //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
+ //*******************************창고 모달 리스트 선택 후 반환 끝 **************************************** */
 
-
- document.addEventListener('DOMContentLoaded', function () {
-   const modalContainer = document.getElementById('modalContainer');
-
-   // 이벤트 위임: document 전체에 click 리스너 설정
-   document.addEventListener('click', function (e) {
-     const row = e.target.closest('.modal-trigger');
-     if (!row) return; // .modal-trigger 아닌 경우 무시
-
-     e.preventDefault();
-
-     const url = row.dataset.modalUrl;
-     if (!url) return;
-
-     fetch(url)
-       .then(response => {
-         if (!response.ok) throw new Error('네트워크 오류');
-         return response.text();
-       })
-       .then(html => {
-         modalContainer.innerHTML = html;
-
-         const modalElement = document.getElementById('wh_modal');
-        
-		  if (!modalElement) {
-           //console.error('모달 요소 #wh_modal 을 찾을 수 없습니다.');
-           return;
-         }
-
-         const modal = new bootstrap.Modal(modalElement);
-         modal.show();
-
-         modalElement.addEventListener('hidden.bs.modal', () => {
-           modalContainer.innerHTML = '';
-         }, { once: true });
-       })
-       .catch(err => {
-         alert('모달 데이터를 불러오는데 실패했습니다.');
-         console.error(err);
-       });
-   });
- });
-
+ 
+ //******************************입고 창고 모달 리스트 선택 후 반환 **************************************** */
+  //function select_in_Warehouse() {
+  //   const selectedRadio = document.querySelector('input[name="whSelect"]:checked');
+  //
+  // if (!selectedRadio) {
+  //     alert('직원을 선택해주세요.');
+  //     return;
+  //   }
+  //
+  //   const whCode = selectedRadio.value;
+  //   const whName = selectedRadio.getAttribute('data-wh_name');
+  //   const whZipcode = selectedRadio.getAttribute('data-wh_zipcode');
+  //   const whAddr1 = selectedRadio.getAttribute('data-wh_addr1');
+  //   const whAddr2 = selectedRadio.getAttribute('data-wh_addr2');
+  //
+  //   document.getElementById('wh_code').value = whCode;
+  //   document.getElementById('wh_name').value = whName;
+  //   document.getElementById('wh_location').value = '(' + whZipcode + ')' + ' ' + whAddr1 + ' ' + whAddr2;
+  //
+  //	alert("창고를 선택 하셨습니다.");
+  //   // 모달 닫기
+  //   const modalElement = document.getElementById('warehouse_list');
+  //   const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+  //   modal.hide();
+  // }
+  //*******************************입고 창고 모달 리스트 선택 후 반환 끝 **************************************** */
+  
 // ********************************************* 창고 저장 js ********************************************
 //창고 값 검증
 function wh_save() {

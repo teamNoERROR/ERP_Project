@@ -59,6 +59,11 @@ public class bom_DAO {
 		return pd_list;
 	}
 
+	public int bom_delete(Map<String, Object> p) {
+		int result = this.st.delete("bom_delete", p);
+		return result;
+	}
+
 
 	
 	

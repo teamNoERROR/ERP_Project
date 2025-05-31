@@ -187,7 +187,7 @@
 						<button type="button" class="btn btn-success">
 							<i class="bi bi-pencil-square"></i> 수정
 						</button>
-						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" data-type="product" onclick="deleteBtn(this)">
+						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-etccode="${bom_code}" data-type="bom" onclick="bomDelete(this)">
 							<i class="bi bi-trash"></i> 삭제
 						</button>
 					</div>

@@ -162,10 +162,12 @@ public class bom_controller {
 	public String bom_detail(Model m, @RequestParam("pd_code") String pd_code) {
 		System.out.println(pd_code);
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
+		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, "product");
 		System.out.println(resultlist);
 			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
 			m.addAttribute("bom_result", resultlist);
-		
+			m.addAttribute("goods_one", goods_one);
+			m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
 		return "/modals/product_detail_modal.html";
 	}
 	

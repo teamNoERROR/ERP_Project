@@ -84,12 +84,12 @@ public class controller {
 //	}
 
 	
-	@GetMapping("/purchase.do")
-	public String purchase(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		return "/production/purchase_list.html";
-	}
+//	@GetMapping("/purchase.do")
+//	public String purchase(Model m) {
+//		m.addAttribute("lmenu","구매영업관리");
+//		m.addAttribute("smenu","발주관리");
+//		return "/production/purchase_list.html";
+//	}
 
 	
 	

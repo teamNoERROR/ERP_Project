@@ -302,12 +302,14 @@ public class goods_controller {
 	public String goods_delete(@PathVariable(name="key") String key,
 								@RequestBody String data,
 								HttpServletRequest req, HttpServletResponse res) throws IOException {
+		System.out.println(data);
 		this.pw = res.getWriter();
 		
 		try {
 			JSONArray ja = new JSONArray(data);
 			int data_ea = ja.length();
 			int count = 0;
+			int result = 0;
 			
 			for (int w = 0; w < data_ea; w++) {
 			    JSONObject jo = ja.getJSONObject(w);
@@ -316,13 +318,21 @@ public class goods_controller {
 			    this.d_dto.setIdx(jo.getInt("idx"));
 			    this.d_dto.setCode(jo.getString("code"));
 			    this.d_dto.setType(jo.getString("type"));
+			    
 				
 				if(key.equals(del_key)) {
 	//				products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기(이미지 삭제용)
-	
-					int result =  this.g_svc.pd_delete(this.d_dto);
-					if(result >= 1) {
-						count++;
+					if("bom".equals(jo.getString("type"))) {
+						
+						 this.d_dto.setCode2(jo.getString("code2"));
+						result= this.b_svc.bom_delete(this.d_dto);
+						
+					}else {
+						result =  this.g_svc.pd_delete(this.d_dto);
+						if(result >= 1) {
+							count++;
+						}
+						
 					}
 				}else {
 					this.pw.write("key error");

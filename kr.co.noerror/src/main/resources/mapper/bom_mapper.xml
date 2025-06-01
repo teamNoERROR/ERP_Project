@@ -83,5 +83,8 @@
 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
+<delete id="bom_delete"  parameterType="Map">
+	DELETE FROM BOM WHERE BOM_CODE = #{BOM_CODE} AND PRODUCT_CODE = #{PRODUCT_CODE}
+</delete>
 
 </mapper>

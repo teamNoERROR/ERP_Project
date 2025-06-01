@@ -225,7 +225,6 @@
 		ITEMS WHERE IIDX = #{IIDX, jdbcType=INTEGER} AND ITEM_CODE = #{ITEM_CODE, jdbcType=VARCHAR}
 		</when>
 	</choose>
-
 </delete>
 
 

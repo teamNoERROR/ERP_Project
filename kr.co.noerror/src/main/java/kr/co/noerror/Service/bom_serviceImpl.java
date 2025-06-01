@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.bom_DAO;
 import kr.co.noerror.DTO.bom_DTO;
+import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.Mapper.bom_mapper;
 import kr.co.noerror.Model.M_file;
@@ -136,6 +137,15 @@ public class bom_serviceImpl implements bom_service{
 
 		List<bom_DTO> bom_list = this.b_dao.bom_all_list_sch(map);  
 		return bom_list;
+	}
+
+	@Override
+	public int bom_delete(del_DTO d_dto) {
+		Map<String, Object> p = new HashMap<>();
+		p.put("BOM_CODE", d_dto.getIdx());
+		p.put("PRODUCT_CODE", d_dto.getCode());
+		int bom_delete = this.b_dao.bom_delete(p);
+		return bom_delete;
 	}
 
 }

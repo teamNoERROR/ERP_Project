@@ -78,7 +78,9 @@
                 		<td class="text-center nogoods_tb" colspan="14" th:text="${no_goods}"></td>
                 	</tr>
                 	
-                    <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" onclick="open_gd_detail(event)"  style="cursor: pointer;">
+                    <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" 
+                    	th:data-pdcode="${bomlist.PRODUCT_CODE}" th:data-idx="${bomlist.PIDX}" 
+                    	onclick="bomDetailOpen(this)"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${bomlist.PIDX}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="product"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td><img src=""></td>
@@ -149,7 +151,7 @@
         <div class="mt-4 d-flex gap-2"> 
             <div class="ms-auto">
                 <button type="button"  class="btn btn-success" onclick="addBom()"><i class="bi bi-plus-lg"></i> 추가</button>
-                <button class="btn btn-danger"  onclick="deleteBtn()"><i class="bi bi-trash"></i> 삭제</button>
+                <button class="btn btn-danger"  onclick="bomDelete()"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>
 	</div>

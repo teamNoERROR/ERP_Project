@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DTO.mrp_result_DTO;
-import kr.co.noerror.DTO.order_DTO;
-import kr.co.noerror.DTO.purchase_DTO;
+import kr.co.noerror.DTO.pchreq_DTO;
+import kr.co.noerror.DTO.pchreq_detail_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
 
 @Service
-public class purchase_DAO {
+public class pchreq_DAO {
 	
 	@Autowired
 	@Qualifier(value = "sqltemplate_oracle")
@@ -29,18 +30,18 @@ public class purchase_DAO {
 		return count;
 	}
 	
-	public int insert_pch_header(purchase_DTO pdto) {
-		int result = this.sql.insert("insert_pch_header", pdto);
+	public int insert_purchase(pchreq_DTO pdto) {
+		int result = this.sql.insert("insert_purchase", pdto);
 		return result;
 	}
 	
-	public int insert_pch_detail(purchase_DTO pdto) {
+	public int insert_pch_detail(pchreq_detail_DTO pdto) {
 		int result = this.sql.insert("insert_pch_detail", pdto);
 		return result;
 	}
 	
-	public List<purchase_DTO> purchase_list(Map<String, Object> mparam){
-		List<purchase_DTO> all = this.sql.selectList("purchase_list", mparam);
+	public List<pchreq_res_DTO> purchase_list(Map<String, Object> mparam){
+		List<pchreq_res_DTO> all = this.sql.selectList("purchase_list", mparam);
 		return all;
 	}
 	
@@ -49,8 +50,8 @@ public class purchase_DAO {
 		return cnt;
 	}
 	
-	public List<purchase_DTO> purchase_detail(String pch_code){
-		List<purchase_DTO> details = this.sql.selectList("purchase_detail", pch_code);
+	public List<pchreq_res_DTO> purchase_detail(String pch_code){
+		List<pchreq_res_DTO> details = this.sql.selectList("purchase_detail", pch_code);
 		return details;
 	}
 }

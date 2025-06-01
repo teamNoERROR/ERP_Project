@@ -3,7 +3,7 @@ package kr.co.noerror.DTO;
 import lombok.Data;
 
 @Data
-public class purchase_DTO {
+public class pchreq_res_DTO {
 	
 	// 발주 정보 
     private Long pidx;               // 자동 증가 기본키
@@ -20,7 +20,7 @@ public class purchase_DTO {
     
     // 결제 정보
     private String pay_method;       // 결제수단
-    private Integer pay_amount;      // 결제금액   
+    private Long pay_amount;      // 결제금액   
     
     // 거래처(발주처) 정보
     private String company_code;     // 거래처 고유코드
@@ -39,8 +39,8 @@ public class purchase_DTO {
     private String item_name;        // 자제명 
     private String item_spec;        // 자제규격 
     private String item_unit;        // 자재단위
-    private Integer item_qty;        // 발주수량
-    private Integer item_cost;       // 자재단가
+    private Long item_qty;        // 발주수량
+    private Long item_cost;       // 자재단가
     private String item_class1;      // 대분류
     private String item_class2;      // 소분류
     

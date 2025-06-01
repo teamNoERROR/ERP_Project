@@ -1,0 +1,93 @@
+package kr.co.noerror.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kr.co.noerror.DAO.pchreq_DAO;
+import kr.co.noerror.DTO.pchreq_DTO;
+import kr.co.noerror.DTO.pchreq_detail_DTO;
+import kr.co.noerror.DTO.pchreq_item_DTO;
+import kr.co.noerror.DTO.pchreq_req_DTO;
+import kr.co.noerror.Model.M_random;
+
+@Service
+public class pchreq_serviceImpl implements pchreq_service {
+
+	@Autowired
+    private pchreq_DAO pchreq_dao;
+    
+    @Autowired
+    private M_random mrandom;
+
+    @Override
+    public Map<String, Object> pchreq_save(Map<String, pchreq_req_DTO> requestMap) {
+
+        Map<String, Object> response = new HashMap<>();
+        pchreq_req_DTO pchreq_req_dto = null;
+
+        int result1 = 0;
+        int result2 = 0;
+        int cnt = 0;
+
+        try {
+            for (Map.Entry<String, pchreq_req_DTO> entry : requestMap.entrySet()) {
+                String company_code = entry.getKey();
+                pchreq_req_dto = entry.getValue();
+
+                // 중복 없는 발주 코드 생성
+                String pch_code = null;
+                int count;
+                boolean is_duplicated = true;
+                while (is_duplicated) {
+                    pch_code = "pch-" + mrandom.random_no();
+                    count = pchreq_dao.pch_code_check(pch_code);
+                    if (count == 0) {
+                        is_duplicated = false;
+                    }
+                }
+
+                // 발주 헤더 DTO 생성
+                pchreq_DTO pchreq_entity = new pchreq_DTO();
+                pchreq_entity.setPch_code(pch_code);
+                pchreq_entity.setCompany_code(company_code);
+                pchreq_entity.setPch_status("발주요청");
+                pchreq_entity.setDue_date(pchreq_req_dto.getDue_date());
+                pchreq_entity.setPay_method(pchreq_req_dto.getPay_method());
+                pchreq_entity.setEmp_code("EMP-00001");  // TODO: 로그인 사용자로 대체
+                pchreq_entity.setMemo(pchreq_req_dto.getMemo());
+
+                // 총 금액 계산
+                Long pay_amount = 0L;
+                for (pchreq_item_DTO pchreq_item_dto : pchreq_req_dto.getItems()) {
+                    pay_amount += pchreq_item_dto.getItem_amount();
+                }
+                pchreq_entity.setPay_amount(pay_amount);
+
+                // purchase_req 저장
+                result1 += pchreq_dao.insert_purchase(pchreq_entity);
+
+                cnt += pchreq_req_dto.getItems().size();
+
+                // purchase_req_detail 저장
+                for (pchreq_item_DTO idto : pchreq_req_dto.getItems()) {
+                	pchreq_detail_DTO pchreq_detail_entity = new pchreq_detail_DTO();
+                	pchreq_detail_entity.setPch_code(pch_code);
+                	pchreq_detail_entity.setItem_code(idto.getItem_code());
+                	pchreq_detail_entity.setItem_qty(idto.getItem_qty());
+                    result2 += pchreq_dao.insert_pch_detail(pchreq_detail_entity);
+                }
+            }
+
+            response.put("success", (result1 == requestMap.size()) && (result2 == cnt));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+        }
+
+        return response;
+    }
+}

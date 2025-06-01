@@ -93,7 +93,7 @@ function addToCart() {
   }
 }
 
-function purchase_request() {
+function pchreq_save() {
   const basketRows = document.querySelectorAll('#basketBody tr');
   const groupedData = {};
   let currentCompanyCode = '';
@@ -162,7 +162,7 @@ function purchase_request() {
     return;
   }
   
-  fetch('/purchase_request.do', {
+  fetch('/pchreq_save.do', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

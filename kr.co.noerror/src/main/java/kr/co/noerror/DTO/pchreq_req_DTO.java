@@ -5,11 +5,11 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class purchase_req_DTO {
+public class pchreq_req_DTO {
     private String company_code;
     private String company_name;
     private String due_date;
     private String pay_method;
     private String memo;
-    private List<purchase_item_DTO> items;
+    private List<pchreq_item_DTO> items;
 }

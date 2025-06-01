@@ -180,7 +180,7 @@ public class goods_serviceImpl implements goods_service {
 		this.map = new HashMap<>();
 		this.map.put("type", type);
 		this.map.put("sclass", sclass);
-		this.map.put("keyword", String.valueOf(keyword));
+		this.map.put("keyword", String.valueOf(keyword).trim());
 		int goods_total = this.g_dao.gd_all_ea_sch(map);
 		
 		
@@ -195,12 +195,16 @@ public class goods_serviceImpl implements goods_service {
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("type", type);
-		map.put("keyword", String.valueOf(keyword));
 		map.put("sclass", sclass);
+		map.put("keyword", String.valueOf(keyword).trim());
 		map.put("start", start);
 		map.put("end", end);
 
-		List<products_DTO> goods_list = this.g_dao.gd_all_list_sch(map);  
+		List<products_DTO> goods_list = this.g_dao.gd_all_list_sch(map); 
+		
+		System.out.println("mao" + map);
+		System.out.println("keywordkeyword" + keyword);
+		
 		return goods_list;
 	}
 	

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.client_mapper">
+
+
+<!-- 제품 전체 개수(+페이징,검색)  -->
+<select id="client_total" resultType="int" parameterType="Map">
+SELECT COUNT(*) FROM CLIENT_COMP
+<choose>
+  <!-- 거래처 -->
+  <when test="type == null or type == 'client'">
+     WHERE CLIENT_TYPE = '판매처' AND COM_USE_FLAG = 'Y'
+<!--       <if test="keyword != null"> -->
+<!--       </if> -->
+  </when>
+  
+  <!-- 발주처 -->
+  <when test="type =='p_client'">
+     WHERE CLIENT_TYPE = '구매처' AND COM_USE_FLAG = 'Y'
+  </when>
+</choose>
+</select>
+
+
+<!-- 거래처 전체 리스트  -->
+<select id="client_list" resultType="kr.co.noerror.DTO.client_DTO" parameterType="Map">
+	SELECT * FROM CLIENT_COMP
+	<choose>
+		<!-- 거래처 -->
+		<when test="type == null or type == 'client'">
+		WHERE CLIENT_TYPE = '판매처' AND COM_USE_FLAG = 'Y'
+		</when>
+		
+		<!-- 발주처 -->
+		<when test="type == 'p_client'">
+     	WHERE CLIENT_TYPE = '구매처' AND COM_USE_FLAG = 'Y'
+     	</when>
+	</choose>
+	ORDER BY CIDX DESC
+	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
+</select>
+
+
+
+</mapper>

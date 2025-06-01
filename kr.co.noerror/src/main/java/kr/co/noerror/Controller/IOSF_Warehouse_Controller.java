@@ -18,6 +18,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DTO.IOSF_DTO;
+
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
 
 @Controller
@@ -40,8 +41,8 @@ public class IOSF_Warehouse_Controller {
         */
     @Resource(name="IOSF_Warehouse_Service")
        IOSF_Warehouse_Service iosf_service;
-//    @Resource(name="Inbound_DTO")
-//       Inbound_DTO in_dto;
+
+
 
     @Resource(name="IOSF_DTO")
        IOSF_DTO iosf_dto;

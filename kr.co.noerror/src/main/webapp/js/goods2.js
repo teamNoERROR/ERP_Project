@@ -18,7 +18,6 @@ function addProduct(){
 }
 
 
-
 //제품 등록하기 + 유효성검사
 function insert_pd(){
 	/*
@@ -152,7 +151,7 @@ function insertProduct(){
 
 
 
-//제품상세보기
+//제품상세보기 모달
 function open_gd_detail(event){
 	
 	var pd_code = event.currentTarget.querySelector(".pd_code").innerText;
@@ -167,7 +166,6 @@ function open_gd_detail(event){
 		return data.text();
 
 	}).then(function(result) {
-		console.log(result)
 		var modal;
 		document.getElementById("modalContainer").innerHTML = result;
 		
@@ -187,32 +185,28 @@ function open_gd_detail(event){
 }
 
 
-
-
-
-
 //완제품 페이징 
 function go_pd_pg(ee){
-	var kw = ee.getAttribute('data-keyword');
-	var no = ee.getAttribute('data-pageno');
-	var tp = ee.getAttribute('data-type');
-	var pea = ee.getAttribute('data-pea');
-	var sc = ee.getAttribute('data-sclass');
+	var keyword = ee.getAttribute('data-keyword');
+	var page_no = ee.getAttribute('data-pageno');
+	var sclass = ee.getAttribute('data-sclass');
 	
-	if(!kw || kw == "" || !sc ||sc ==null){  //검색 없는경우 
-		location.href="./goods.do?type="+tp+"&pageno="+no+"&post_ea="+pea;
-	}
-	else if(!kw || kw != "") {  //검색어가 있는경우 
-		location.href="./goods.do?type="+tp+"&keyword="+kw+"&pageno="+no+"&post_ea="+pea;
-	}
-	else if(sc ||sc !=null) { 
-		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
-			
-	}	
-	/*else { 
-		location.href="./goods.do?type="+tp+"&sclass="+sc+"&pageno="+no+"&post_ea="+pea;	
-			
-	}*/
+	var params = {  
+		    type: ee.getAttribute('data-type'),
+		    pageno: page_no,
+		    post_ea: ee.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["keyword"] = keyword;
+		}
+
+		if (sclass) {  //소분류 선택시 
+		    params["sclass"] = sclass;
+		}
+
+		var pString = new URLSearchParams(params).toString();
+		location.href = "./goods.do?" + pString;
 }
 
 

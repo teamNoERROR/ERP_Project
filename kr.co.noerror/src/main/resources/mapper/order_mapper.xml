@@ -69,19 +69,19 @@ WHERE 1=1
 </select>
 
 <!-- 거래처 목록 출력 -->  
-<select id="client_list" resultType="kr.co.noerror.DTO.temp_client_DTO">
-SELECT
-    cmp.company_code,
-    cmp.company_name,
-    cmp.biz_num,
-    mgr.manager_code,
-    mgr.manager_name,
-    mgr.phone_num
-FROM
-    temp_client_comp cmp
-JOIN
-    temp_client_manager mgr ON cmp.company_code = mgr.company_code
-</select>
+<!-- <select id="client_list" resultType="kr.co.noerror.DTO.temp_client_DTO"> -->
+<!-- SELECT -->
+<!--     cmp.company_code, -->
+<!--     cmp.company_name, -->
+<!--     cmp.biz_num, -->
+<!--     mgr.manager_code, -->
+<!--     mgr.manager_name, -->
+<!--     mgr.phone_num -->
+<!-- FROM -->
+<!--     temp_client_comp cmp -->
+<!-- JOIN -->
+<!--     temp_client_manager mgr ON cmp.company_code = mgr.company_code -->
+<!-- </select> -->
 
 <!-- 제품 목록 출력 -->
 <select id="products_list" resultType="kr.co.noerror.DTO.temp_products_DTO">

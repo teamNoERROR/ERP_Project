@@ -41,9 +41,18 @@
 					<li><a class="dropdown-item" href="./order.do">주문 관리</a></li>
 				</ul>
 			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 테스트용 </a>
+				<ul class="dropdown-menu">
+					<li><button type="button"  class="btn btn-dark" onclick="inbndListOpen()"><i class="bi bi-plus-lg"></i> 테스트버튼1</button></li>
+					<li><button type="button"  class="btn btn-warning" onclick="cltListOpen()"><i class="bi bi-plus-lg"></i>거래처리스트모달</button></li>
+					<li><button type="button"  class="btn btn-warning" onclick="pcltListOpen()"><i class="bi bi-plus-lg"></i>발주처리스트모달</button></li>
+				</ul>
+			</li>
 		</ul>
 	</nav>
 	<a href="#contact" class="logout_btn">Logout</a>
 </header>
+<div id="modalContainer"></div>
 </body>
 </html>

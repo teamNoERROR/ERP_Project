@@ -1,16 +1,16 @@
-<div class="modal fade"  id="items_list"  tabindex="-1" aria-labelledby="items_list_label" aria-hidden="true">
+<div class="modal fade"  id="inbounds_list"  tabindex="-1" aria-labelledby="inbounds_list_label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">부자재 리스트</h1>
+        <h1 class="modal-title fs-5" id="inbounds_list_label">부자재 리스트</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body row  d-flex align-items-center gap-3 ">
 		
 		  
 		  <!-- 테이블 영역 -->
-      <div th:replace="~{/modals/item_list_body_modal.html :: itmMdList(${items_total}, ${items_list}, 'modal2')}"></div>
-      
+		<div th:replace="~{/modals/inbound_list_body_modal.html :: inbndMdList(${inbnd_total}, ${inbnd_list}, 'modal2')}"></div>
+     
       </div>
       <div class="modal-footer">
        <!-- Action Buttons -->

@@ -142,7 +142,7 @@ public class bom_serviceImpl implements bom_service{
 	@Override
 	public int bom_delete(del_DTO d_dto) {
 		Map<String, Object> p = new HashMap<>();
-		p.put("BOM_CODE", d_dto.getIdx());
+		p.put("BOM_CODE", d_dto.getCode2());
 		p.put("PRODUCT_CODE", d_dto.getCode());
 		int bom_delete = this.b_dao.bom_delete(p);
 		return bom_delete;

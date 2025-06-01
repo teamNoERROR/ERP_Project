@@ -9,7 +9,7 @@ function goInbndList(){
 }
 
 
-//타입별창고리스트 모달 열기
+//입고등록시 타입별창고리스트 모달 열기
 function whSelect(wh_type){
 	fetch("./wh_type_list.do?wh_type="+wh_type, {
 			method: "GET",
@@ -18,7 +18,6 @@ function whSelect(wh_type){
 		return data.text();
 
 	}).then(function(result) {
-		console.log(result);
 		document.getElementById("modalContainer").innerHTML = result;
 		
 		var modal= new bootstrap.Modal(document.getElementById("wh_type_list"));
@@ -67,30 +66,32 @@ function choiceWh() {
 };
 
 var pch_code = document.querySelector("#pch_code");
-var whcode = document.querySelector("#in_wh_name");
+var whname = document.querySelector("#in_wh_name");
 var wh_code = document.querySelector("#wh_code");
-
 var inbound_date = document.querySelector("#inbound_date");
-
-
-
-
 var in_status = document.querySelector("#in_status");
 var employee_code = document.querySelector("#employee_code");
 var inb_memo = document.querySelector("#inb_memo");
-var item_code = document.querySelector(".item_code");
+
+var item_code = document.querySelectorAll(".item_code");  //발주상품 코드
+var item_qty = document.querySelectorAll(".item_qty");  //입고된 양
+var item_exp = document.querySelectorAll(".item_exp");  //유통기한
+var item_deli = document.querySelectorAll(".item_deli");  //입고상태
+
+var tbody = document.querySelector("#inbnd_items");
+var rows = tbody.querySelectorAll('tr.item_row');
+
 
 
 //입고리스트 저장버튼 클릭 
 function insert_inBnd(){
-	console.log(item_code.textContent)
-	console.log(inbound_date.value)
+	//console.log(item_code.textContent)
 	if(pch_code.value==""){
-		alert("발주코드를 선택하세요.");
+		alert("발주내역을 선택하세요.");
 		pch_code.focus();		
 	}else if(wh_code.value == ""){
 		alert("창고이름을 선택하세요.");
-		whcode.focus();	
+		whname.focus();	
 	}else if(inbound_date.value == ""){
 		alert("입고일자를 선택하세요.");
 		inbound_date.focus();	
@@ -99,57 +100,53 @@ function insert_inBnd(){
 		in_status.focus();	
 	}else if(employee_code.value==""){
 		alert("관리자가 등록되지 않았습니다. ")
-	}else {
-	
+	}else{
+		// 각 항목 입력 확인
+		for (var i = 0; i < rows.length; i++) {
+			if (item_qty[i].value.trim() == "" || isNaN(item_qty[i].value) || Number(item_qty[i].value) <= 0) {
+				alert("입고된 수량을 정확히 입력해주세요");
+				item_qty[i].focus();
+				return;
+			}
+			if (item_exp[i].value.trim() == "") {
+				alert("입고된 상품의 유통기한을 입력해주세요");
+				item_exp[i].focus();
+				return;
+			}
+			if (item_deli[i].value.trim() === "") {
+				alert("입고상태를 선택해주세요");
+				item_deli[i].focus();
+				return;
+			}
+		}
 		inbndInsertOk();
 	}
 } 
 
 //입고저장 ajax
 function inbndInsertOk(){
-
-	var tbody = document.querySelector("#inbnd_items");
-	var rows = tbody.querySelectorAll('tr.item_row');
-
 	var in_items = [];
 	
 	rows.forEach(row => {
-		var item_code = row.querySelector(".item_code");
-		var item_qty = row.querySelector(".item_qty");
-		var item_exp = row.querySelector(".item_exp");
-		var item_deli = row.querySelector(".item_deli");
-
-	    // 각 컬럼에서 값을 읽어오기
-		if(item_qty.value == ""){
-			alert("입고수량을  입력해야 합니다.");
-			item_qty.focus();
-			
-		}else if(item_exp.value == ""){
-			alert("입고된 상품의 유통기한을 입력해야 합니다.");
-			item_exp.focus();
-			
-		}else if(item_deli.value == ""){
-			alert("입고상태를 입력해야 합니다.");
-			item_deli.focus();
-		}else{
-		    //if(item_qty.value > 0 && item_unit.value != "") {
-				//다 입력했으면 배열에 넣기
-		      	in_items.push({
-					PCH_CODE : pch_code.value,
-			        ITEM_CODE: item_code,
-					ITEM_DEL: item_deli.value,
-					ITEM_QTY: item_qty.value,
-					ITEM_EXP:item_exp.value,
-					WH_CODE : wh_code.value,
-			        IN_STATUS: in_status.value,
-					INBOUND_DATE: inbound_date.value,
-					EMPLOYEE_CODE: employee_code.value,
-					INB_MEMO:inb_memo.value
-		      	});
-	    	//}
-		}
+		var itmCd = row.querySelector(".item_code");
+		var itmQty = row.querySelector(".item_qty");
+		var itmExp = row.querySelector(".item_exp");
+		var itmDeli = row.querySelector(".item_deli");
+	    
+		//다 입력했으면 배열에 넣기
+      	in_items.push({
+			PCH_CODE : pch_code.value,
+	        ITEM_CODE: itmCd.textContent,
+			ITEM_QTY: itmQty.value,
+			ITEM_EXP:itmExp.value,
+			ITEM_DEL: itmDeli.value,
+			WH_CODE : wh_code.value.trim(),
+	        IN_STATUS: in_status.value,
+			INBOUND_DATE: inbound_date.value,
+			EMPLOYEE_CODE: employee_code.value,
+			INB_MEMO:inb_memo.value
+      	});
 	});
-	console.log(JSON.stringify(in_items))
 	fetch("./inbound_insertok.do", {
 
 		method: "PUT",
@@ -170,8 +167,7 @@ function inbndInsertOk(){
 	});
 }
 
-//상세보기 모달 
-//제품상세보기
+//입고건 상세보기 모달 
 function openInbndDetail(event){
 	
 	var inbnd_code = event.currentTarget.querySelector(".inbnd_code").innerText;
@@ -183,13 +179,10 @@ function openInbndDetail(event){
 		return data.text();
 
 	}).then(function(result) {
-		console.log(result)
-		if(result =="ok"){ 
 			var modal;
 			document.getElementById("modalContainer").innerHTML = result;
-			modal = new bootstrap.Modal(document.getElementById("inbound_detail"));
+			modal = new bootstrap.Modal(document.getElementById("inbnd_detail"));
 			modal.show();
-		}
 		
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);

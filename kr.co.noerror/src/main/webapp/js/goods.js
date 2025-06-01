@@ -64,60 +64,22 @@ function lcSc(lc_value) {
 //분류로 검색 
 function class_sch(){
 	var form = document.querySelector("#frm_class");
-	/*
-	fetch("./goods.do?type=" + goods_type.value 
-			+ "&sclass=" + sclass, {
-			method: "GET"
-			
-		}).then(function(data) {
-			return data.text();
-
-		}).then(function(result) {
-		
-		}).catch(function(error) {
-			console.log("통신오류발생" + error);
-		});
-		*/
-		form.type.value="product";
-		
-		form.action="goods.do";
-		form.method="GET";
-		form.submit();
+	form.action="goods.do";
+	form.method="GET";
+	form.submit();
 }
 
 
 //제품 검색 
 function pdSearch(){
-	var form = document.querySelector("#frm_word");
-	var pclass2 = document.querySelector("#products_class2");
-	var search_opt = document.querySelector("#search_opt");
 	var keyword = document.querySelector("#keyword");
-	
-	/*
-	if(keyword.value==""){
-		alert("검색어를 입력하세요.");
-		keyword.focus();
-	}else {
-		fetch("./goods_sch.do?type="+ goods_type.value + "&search_opt=" + search_opt.value + "&keyword="+keyword.value, {
-			method: "GET",
-			
-		}).then(function(data) {
-			return data.text();
-
-		}).then(function(result) {
-						
-			
-		}).catch(function(error) {
-			console.log("통신오류발생" + error);
-		});
-	}
-	*/
 	if(keyword.value==""){
 		alert("검색어를 입력하세요.");
 		keyword.focus();
 		return false;
 	}else {
-		form.action="./goods.do";	
+		var form = document.querySelector("#frm_class");
+		form.action="goods.do";
 		form.method="GET";
 		form.submit();
 	}		

@@ -31,7 +31,7 @@ import kr.co.noerror.Model.M_random;
 @Controller
 public class purchase_controller {
 	
-	private static final int page_ea = 5; //한페이지당 5개씩 출력
+	private static final int page_block = 3; //페이지 번호 출력갯수
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -54,14 +54,13 @@ public class purchase_controller {
 	
 	@GetMapping("/purchase.do")
 	public String purchase(Model m,
+			@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea,
+			@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno,
 			@RequestParam(name="pch_status", required=false) String[] pch_statuses,
-			@RequestParam(name="search_column", defaultValue="all", required=false) String search_column,
-			@RequestParam(name="search_word", defaultValue="", required=false) String search_word,
-			@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno
+			@RequestParam(name="search_word", defaultValue="", required=false) String search_word
 			) {
 		
 		Map<String, Object> mparam = new HashMap<>();
-		mparam.put("scolumn", search_column);  //검색 컬럼
 		mparam.put("sword", search_word);  //검색어
 		if (pch_statuses != null) {
 			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
@@ -74,6 +73,9 @@ public class purchase_controller {
 		int start = (pageno - 1) * page_ea;  //oracle에서 해당페이지의 시작 번호
 		int end = pageno * page_ea + 1;      //oracle에서 해당페이지의 종료 번호 + 1
 		
+		int start_page = ((pageno - 1) / page_block) * page_block + 1;
+		int end_page = Math.min(start_page + page_block - 1, page_cnt);
+		
 		mparam.put("start", start);        //oracle 시작행 번호
 		mparam.put("end", end);            //oracle 종료행 번호
 		
@@ -84,11 +86,13 @@ public class purchase_controller {
 		
 		//데이터, 페이징 정보를 모델에 전달
 		m.addAttribute("all", all);
+		m.addAttribute("start_page", start_page);
+		m.addAttribute("end_page", end_page);
+		m.addAttribute("view", page_ea);
 		m.addAttribute("page_cnt", page_cnt);
 		m.addAttribute("pageno", pageno); 
 		
 	    //검색 조건을 모델에 다시 전달
-	    m.addAttribute("search_column", search_column);
 	    m.addAttribute("search_word", search_word);
 	    m.addAttribute("pch_statuses", pch_statuses);
 		

@@ -41,7 +41,6 @@ public class purchase_DTO {
     private String item_unit;        // 자재단위
     private Integer item_qty;        // 발주수량
     private Integer item_cost;       // 자재단가
-    private Integer item_total_cost; // 자재구매금액
     private String item_class1;      // 대분류
     private String item_class2;      // 소분류
     

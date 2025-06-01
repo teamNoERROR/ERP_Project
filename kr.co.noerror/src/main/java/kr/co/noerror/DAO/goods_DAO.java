@@ -31,7 +31,7 @@ public class goods_DAO {
 
 	//소분류 리스트
 	public List<String> sc_class(Map<String, String> map) {
-		List<String> result = this.st.selectList("s_class",map);
+		List<String> result = this.st.selectList("sc_class",map);
 		return result;
 	}
 
@@ -61,21 +61,13 @@ public class goods_DAO {
 	}
 
 	
-	//제품 총개수 
-	public int pd_all_ea(String type) {
-		int result = this.st.selectOne("pd_all_ea",type);
-		return result;
-	}
+	//제품 총개수 (+페이징, 검색)
 	public int gd_all_ea_sch(Map<String, String> map) {
 		int result = this.st.selectOne("gd_all_ea_sch",map);
 		return result;
 	}
 
-	//제품 리스트 보기 
-	public List<products_DTO> pd_all_list(String type) {
-		List<products_DTO> pd_list = this.st.selectList("pd_all_list",type);
-		return pd_list;
-	}
+	//제품 리스트 보기 (+페이징, 검색)
 	public List<products_DTO> gd_all_list_sch(Map<String, Object> map) {
 		List<products_DTO> pd_list = this.st.selectList("gd_all_list_sch",map);
 		return pd_list;

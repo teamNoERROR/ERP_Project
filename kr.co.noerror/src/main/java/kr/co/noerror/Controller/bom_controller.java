@@ -59,7 +59,7 @@ public class bom_controller {
 	
 	//BOM리스트 조회 
 	@GetMapping("/bom.do")
-	public String client_list(Model m 
+	public String bom_list(Model m 
 							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value = "products_class2", required = false) String sclass
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
@@ -67,7 +67,7 @@ public class bom_controller {
 
 		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass , keyword); //bom리스트 제품 총개수
 		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
-		System.out.println(bom_all_list_sch.get(0).getPIDX());
+
 		//리스트의 분류검색 리스트용 
 		JSONArray lc_list = this.g_svc.gd_class("product");  //대분류목록
 		this.list = new ArrayList<>();
@@ -163,8 +163,9 @@ public class bom_controller {
 		System.out.println(pd_code);
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, "product");
-		System.out.println(resultlist);
+		
 			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+			m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
 			m.addAttribute("bom_result", resultlist);
 			m.addAttribute("goods_one", goods_one);
 			m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
@@ -194,40 +195,7 @@ public class bom_controller {
 	}
 	
 	
-	//부자재 리스트 모달 띄우기 
-	@GetMapping("/bom_item_list.do")
-	public String bom_item_list(Model m
-			,@RequestParam(value = "type", required = false) String type
-			,@RequestParam(value = "search_opt", required = false) String search_opt
-			,@RequestParam(value = "keyword", required = false) String keyword
-			,@RequestParam(value = "products_class2", required = false) String sclass
-			,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-			,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
-			)  {
-		
-		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
-		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
-		System.out.println("type :" + type);
-		System.out.println("goods_total :" + goods_total);
-		System.out.println("goods_all_list :" + goods_all_list);
-		
-		//페이징 관련 
-		int pea = post_ea; 
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, goods_total);
-		int bno = this.m_pg.serial_no(goods_total, pageno, pea); 
-		System.out.println(pageinfo);
-		
-		m.addAttribute("keyword",keyword);
-		m.addAttribute("bno", bno);
-		m.addAttribute("no_items", "등록된 부자재가 없습니다");
-		m.addAttribute("items_total", goods_total);
-		m.addAttribute("items_list", goods_all_list);
-		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", pea);
-		
-		return "/modals/items_list_modal.html";
-	}
+	
 
 	
 	//bom 등록하기 

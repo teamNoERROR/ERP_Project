@@ -3,7 +3,7 @@
 <mapper namespace="kr.co.noerror.Mapper.goods_mapper">
 
 
-<!-- 제품유형에 따른 식품분류 선택 -->
+<!-- 제품등록시 : 제품유형에 따른 식품분류 선택 -->
 <select id="gd_class" resultType="String" parameterType="Map">
 	SELECT
 	<choose>
@@ -18,7 +18,7 @@
 
 
 <!-- 소분류 선택 -->
-<select id="s_class" resultType="String" parameterType="Map">
+<select id="sc_class" resultType="String" parameterType="Map">
 	SELECT
 	<choose>
 	<when test="key2 == 'pd_sc'">
@@ -82,53 +82,38 @@
 	#{COMPANY_CODE}, #{ITM_USE_FLAG}, #{ITM_EXP_FLAG}, #{ITM_MEMO, jdbcType=CLOB}, SYSDATE, NULL)
 </insert>
 
+
 <!-- 제품 전체 개수(+페이징,검색)  -->
 <select id="gd_all_ea_sch" resultType="int" parameterType="Map">
-	SELECT COUNT (*) FROM
-	<!-- 완제품 -->
-	<if test="type == 'product' or type == null">
-		PRODUCTS
-<!-- 		<if test="sclass != null"> -->
-<!-- 			<where> -->
-<!-- 			PRODUCT_CLASS2 = #{sclass}  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-<!-- 		<if test="keyword != null">  -->
-<!-- 			<where> -->
-<!-- 			 (PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_CLASS1 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_CLASS2 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_SPEC LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_UNIT LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 MEMO LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-	</if>
-	
-	<!-- 부자재 -->
-	<if test="type == 'item'">
-		ITEMS
-<!-- 		<if test="sclass != null"> -->
-<!-- 			<where> -->
-<!-- 			ITEM_CLASS2 = #{sclass}  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-<!-- 		<if test="keyword != null">  -->
-<!-- 			<where> -->
-<!-- 			 (ITEM_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_NAME LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_CLASS1 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_CLASS2 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_SPEC LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_UNIT LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 MEMO LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-	</if>
+SELECT COUNT(*) FROM
+<choose>
+  <!-- 완제품 -->
+  <when test="type == null or type == 'product'">
+    PRODUCTS
+      <if test="sclass != null">
+       	WHERE PRODUCT_CLASS2 = #{sclass}
+      </if>
+      <if test="keyword != null">
+<!--         WHERE  -->
+<!--         <if test="sclass != null">  PRODUCT_CLASS2 = #{sclass} AND</if> -->
+<!--         ( -->
+<!--           PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
+<!--         ) -->
+      </if>
+  </when>
+  
+  <!-- 부자재 -->
+  <when test="type =='item'">
+    ITEMS
+   
+  </when>
+</choose>
 </select>
+
 
 
 <!-- 제품 전체 리스트  -->
@@ -136,55 +121,42 @@
 	SELECT * FROM 
 	(SELECT ROWNUM AS rnum, a.* FROM 
 	(SELECT * FROM 
-	<!-- 완제품 -->
-	<if test="type == 'product' or type == null">
-		PRODUCTS
-<!-- 		<if test="sclass != null"> -->
-<!-- 			<where> -->
-<!-- 			PRODUCT_CLASS2 = #{sclass}  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-<!-- 		<if test="keyword != null">  -->
-<!-- 			<where> -->
-<!-- 			 (PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_CLASS1 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_CLASS2 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_SPEC LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_UNIT LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 MEMO LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-		ORDER BY PIDX DESC ) a
-		WHERE ROWNUM &lt;= #{end} )
-		WHERE rnum &gt;= #{start}
-	</if>
+
+<choose>
+    <!-- 완제품 -->
+  <when test="type == null or type == 'product'">
+    PRODUCTS
+      <if test="sclass != null">
+        WHERE PRODUCT_CLASS2 = #{sclass}
+      </if>
+      <if test="keyword != null">
+<!--         WHERE -->
+<!--         <if test="sclass != null">  PRODUCT_CLASS2 = #{sclass} AND</if> -->
+<!--         ( -->
+<!--           PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
+<!--         ) -->
+      </if>
+    ORDER BY PIDX DESC ) a
+	WHERE ROWNUM &lt;= #{end} )
+	WHERE rnum &gt;= #{start}
+  </when>
+
+
+  <!-- 부자재 -->
+  <when test="type == 'item'">
+    ITEMS
+    
+    
+	ORDER BY IIDX DESC ) a
+	WHERE ROWNUM &lt;= #{end} )
+	WHERE rnum &gt;= #{start}
+  </when>
+</choose>
 	
-	<!-- 부자재 -->
-	<if test="type == 'item'">
-		ITEMS
-<!-- 		<if test="sclass != null"> -->
-<!-- 			<where> -->
-<!-- 			ITEM_CLASS2 = #{sclass}  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-<!-- 		<if test="keyword != null">  -->
-<!-- 			<where> -->
-<!-- 			 (ITEM_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_NAME LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_CLASS1 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_CLASS2 LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_SPEC LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_UNIT LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 MEMO LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-		ORDER BY IIDX DESC ) a
-		WHERE ROWNUM &lt;= #{end} )
-		WHERE rnum &gt;= #{start}
-	</if>
 </select>
 
 

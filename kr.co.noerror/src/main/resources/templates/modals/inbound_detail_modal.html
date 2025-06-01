@@ -1,15 +1,18 @@
-<div class="modal fade"  id="inbound_detail"  tabindex="-1" aria-labelledby="inbound_detail_label" aria-hidden="true">
+<div class="modal fade" id="inbnd_detail" tabindex="-1" aria-labelledby="inbnd_detail_label" aria-hidden="true">
+	
+	
+	
+	
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">입고건 상세보기</h1>
+        <h1 class="modal-title fs-5" id="inbnd_detail_label">입고건 상세보기</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body row justify-content-center d-flex gap-3  mt-3 ">
-       
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-				<h2 class="mb-1">입고번호 : [[]] </h2>
+				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2>
 				<button type="button" class="btn btn-success">
 					<i class="bi bi-pencil-square"></i> 입고완료처리  	<!--  입고완료상태에서는 disabled 처리 -->
 				</button> 
@@ -190,3 +193,4 @@
     </div>
   </div>
 </div>
+				

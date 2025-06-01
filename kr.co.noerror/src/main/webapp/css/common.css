@@ -184,7 +184,7 @@ table td.info-label {
 }
 
 
-.no_goods_tb {
+.no_list_tb {
 	 cursor: default !important;
 /* 	 user-select: none;  텍스트 선택도 안 되게 */
 }

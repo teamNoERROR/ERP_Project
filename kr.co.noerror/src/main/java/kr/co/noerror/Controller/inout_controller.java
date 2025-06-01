@@ -43,12 +43,11 @@ public class inout_controller {
 	@GetMapping("/inbound.do")
 	public String inbound(Model m
 						,@RequestParam(value = "keyword", required = false) String keyword
-						,@RequestParam(value = "products_class2", required = false) String sclass
 						,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
 		
-		int inbound_total = this.io_svc.inbound_total(sclass, keyword); //입고리스트 제품 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(sclass, keyword, pageno, post_ea);  //입고리스트 제품 리스트
+		int inbound_total = this.io_svc.inbound_total(keyword); //입고리스트 제품 총개수
+		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea);  //입고리스트 제품 리스트
 		
 		//페이징 관련 
 		int pea = post_ea; 
@@ -57,15 +56,12 @@ public class inout_controller {
 		
 		System.out.println(pageinfo);
 		
-		System.out.println("inbound_total : " + inbound_total);
-		System.out.println("inbound_all_list : " + inbound_all_list);
-		
 		m.addAttribute("lmenu","입출고관리");
 		m.addAttribute("smenu","자재 입고");
 		m.addAttribute("mmenu","입고 리스트");
+		
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("bno", bno);
-		m.addAttribute("no_list", "등록된 제품이 없습니다");
 		m.addAttribute("inbound_total",inbound_total);
 		m.addAttribute("inbound_all_list",inbound_all_list);
 		m.addAttribute("pageinfo", pageinfo);
@@ -88,18 +84,17 @@ public class inout_controller {
 	//자재입고등록
 	@PutMapping("/inbound_insertok.do")
 	public String inbound_insertok(@RequestBody String inbnd_item, HttpServletResponse res) {
-		System.out.println("inbnd_item : " + inbnd_item);
-		
+		System.out.println(inbnd_item);
 		try {
 			this.pw = res.getWriter();
 			
-			int result = this.io_svc.inbnd_insert(inbnd_item);  
-			System.out.println("inbnd_insert : " + result);
-			if(result > 0) {  
+			int result = this.io_svc.inbnd_insert(inbnd_item); 
+			if(result > 0) {
 				this.pw.write("ok");  //입고 등록 완료 
-			}
-			else {
+				
+			}else {
 				this.pw.write("fail"); //입고 등록실패
+				
 			}
 			
 		} catch (IOException e) {
@@ -115,15 +110,13 @@ public class inout_controller {
 	}
 	
 	
-	//입고내역 상세보기 모달ver
+	//입고내역 상세보기 모달
 	@GetMapping("/inbnd_detail.do")
 	public String inbound_detail(Model m, @RequestParam("inbnd_code") String inbnd_code) {
-		System.out.println(inbnd_code);
-		List<inout_DTO> resultlist = this.io_svc.inbound_detail(inbnd_code);
-		System.out.println(resultlist);
-		m.addAttribute("inbnd_detail", resultlist);
+		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code);
+		m.addAttribute("inbnd_detail", inbound_detail);
 		
-		return "/modals/product_detail_modal.html";
+		return "/modals/inbound_detail_modal.html";
 	}
 	
 	

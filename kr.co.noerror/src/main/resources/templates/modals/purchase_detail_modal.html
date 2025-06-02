@@ -153,7 +153,11 @@
 					<!-- 				Action Buttons -->
 					<div class="mt-4 d-flex gap-2">
 						<div class="ms-auto">
-
+							<th:block th:if="${details[0].pch_status == '발주요청'}">
+								<a th:href="@{/purchase_detail2.do(code=${details[0].pch_code})}" class="btn btn-success">
+									<i class="bi bi-pencil-square"></i> 수정
+								</a>
+							</th:block>
 						</div>
 					</div>
 				</div>

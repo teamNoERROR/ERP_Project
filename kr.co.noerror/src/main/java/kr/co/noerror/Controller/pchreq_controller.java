@@ -129,9 +129,17 @@ public class pchreq_controller {
 		return "/modals/purchase_detail_modal.html";
 	}
 	
+	@GetMapping("/purchase_detail2.do")
+	public String purchase_detail2(@RequestParam(name="code") String pch_code, Model m) {
+		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
+		m.addAttribute("details",details);
+		return "/production/purchase_detail.html";
+	}
+	
 	@PostMapping("update_pch_status.do")
 	@ResponseBody
 	public Map<String, Object> update_pch_status(@RequestBody Map<String, String> requestParam) {
 		return pchreq_service.update_pch_status(requestParam);
 	}
+	
 }

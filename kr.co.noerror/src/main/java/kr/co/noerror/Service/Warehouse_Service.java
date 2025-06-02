@@ -107,6 +107,7 @@ public class Warehouse_Service {
             } else {	//검색 안한경우 (전체 리스트)
                 wh_list_result = this.ws_dao.select_wh_list(startIndex, pageSize);
                 totalCount = this.ws_dao.getTotalCount();
+                System.out.println("ware : "+totalCount);
             }
             
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);

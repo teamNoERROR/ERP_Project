@@ -64,7 +64,7 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	//게시물 총 갯수
 	@Override
 	public int IOSF_getTotalCount(String wh_type) {
-		return this.iosf_ware_st.selectOne("getTotalCount",wh_type);
+		return this.iosf_ware_st.selectOne("IOSF_getTotalCount",wh_type);
 	}
 	
 	//창고 리스트
@@ -101,9 +101,10 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	
 	//창고 게시물 삭제
 	@Override
-	public int IOSF_delete_warehouses(String inbound_code, String wh_type) {
+	public int IOSF_delete_warehouses(String wh_code, String inbound_code, String wh_type) {
 		
 		this.params = new HashMap<>();
+		this.params.put("wh_code", wh_code);
 		this.params.put("inbound_code", inbound_code);
 		this.params.put("wh_type", wh_type);
 		int wh_delete_result = this.iosf_ware_st.delete("IOSF_delete_warehouses",this.params);

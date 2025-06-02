@@ -94,6 +94,7 @@ public class IOSF_Warehouse_Service {
             } else {	//검색 안한경우 (전체 리스트)
                 wh_list_result = this.iosf_dao.IOSF_select_wh_list(startIndex, pageSize, wh_type);
                 totalCount = this.iosf_dao.IOSF_getTotalCount(wh_type);
+                System.out.println("iosf : "+totalCount);
             }
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);
             
@@ -101,7 +102,7 @@ public class IOSF_Warehouse_Service {
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");
             wh_map.put("wh_check", wh_list_result.isEmpty() ? "nodata" : "yesdata");
             wh_map.put("currentPage", page);
-            wh_map.put("totalCount", totalCount+1);
+            wh_map.put("totalCount", totalCount);
             wh_map.put("totalPages", totalPages);
             wh_map.put("pageSize", pageSize);
             wh_map.put("wh_search", wh_search);
@@ -123,9 +124,9 @@ public class IOSF_Warehouse_Service {
     }
     
     //창고 삭제
-    public int IOSF_delete_warehouse(String wh_code ,String wh_type) {
+    public int IOSF_delete_warehouse(String wh_code, String inbound_code ,String wh_type) {
     	
-    	int wh_delete_result = iosf_dao.IOSF_delete_warehouses(wh_code, wh_type);
+    	int wh_delete_result = iosf_dao.IOSF_delete_warehouses(wh_code, inbound_code, wh_type);
     	
     	return wh_delete_result;
     }

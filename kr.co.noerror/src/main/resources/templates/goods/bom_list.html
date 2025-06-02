@@ -75,13 +75,13 @@
                 <tbody >
                 
                 	<tr th:if="${bom_total == 0}" >
-                		<td class="text-center nogoods_tb" colspan="14" th:text="${no_goods}"></td>
+                		<td class="text-center no_list_tb" colspan="14">  BOM이 등록된 상품이 없습니다. </td>
                 	</tr>
                 	
                     <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" 
                     	th:data-pdcode="${bomlist.PRODUCT_CODE}" th:data-idx="${bomlist.PIDX}" 
                     	onclick="bomDetailOpen(this)"  style="cursor: pointer;">
-                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${bomlist.PIDX}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="product"></td>
+                        <td onclick="event.stopPropagation()"><input type="checkbox" name="bom_select" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td><img src=""></td>
                         <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>

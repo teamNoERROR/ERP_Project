@@ -39,8 +39,8 @@
 			</form>
 
 			<!-- 입고 List Table-->
-			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bordered " style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
+			<div class="table-responsive  rounded" th:fragment="inbndList(inbound_total, inbound_all_list, mode)">
+				<table class="table align-middle table-bordered " style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
 					<thead class="table-light text-center">
 						<tr >
 							<th scope="col" ><input type="checkbox"></th>
@@ -61,19 +61,21 @@
 							<th scope="col">창고코드</th>	
 							<th scope="col">발주처명</th>
 							<th scope="col">발주처 코드</th>
+							<th scope="col">등록일</th>
 						</tr>
 					</thead>
 					<tbody class="text-center">
 						<tr th:if="${inbound_total == 0}" >
-                			<td class="text-center nogoods_tb" colspan="14" th:text="${no_list}"></td>
+                			<td class="text-center no_list_tb" colspan="19" > 등록된 입고건이 없습니다. </td>
                 		</tr>
+                		
 						<tr th:if="${inbound_total != 0}" th:each="inlist, idx : ${inbound_all_list}"
 							  onclick="openInbndDetail(event)" style="cursor: pointer;">							
 							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
 							<td >[[${bno - idx.index}]]</td>
 							<td class="inbnd_code">[[${inlist.INBOUND_CODE}]]</td>
-							<td class="pch_code">[[${inlist.PCH_CODE}]]</td>
-							<td>오렌지</td>
+							<td class="pch_code">[[${inlist.PCH_CODE.substring(0,9)}]]</td>
+							<td>[[${inlist.PCH_CODE.substring(0,9)}]]</td>
 							<td>[[${inlist.ITEM_CODE}]]</td>
 							<td>100g</td>
 							<td>500</td>
@@ -87,6 +89,7 @@
 							<td>[[${inlist.WH_CODE}]]</td>
 							<td>주식회사 시네</td>
 							<td>CO-014</td>
+							<td>[[${inlist.INB_INSERT_DATE.substring(0,16)}]]</td>
 						</tr>
 						
 					</tbody>
@@ -96,22 +99,24 @@
 
         <div class="d-flex">
     <!-- Pagination -->
-
-        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation"
+        		th:fragment="inbndPgList(mode2)">
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product',data-pea=${pea}" onclick="go_in_pg(this)">이전</li>
-                
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product',data-pea=${pea}" 
+                	th:onclick="${mode2 == 'inbPageing'} ? 'inbnd_modal_pg(this)' : 'go_in_pg(this)'">이전</li>
+               
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
                 	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" 
-                	onclick="go_in_pg(this)" >[[${pgn}]]</li>
+                	th:onclick="${mode2 == 'inbPageing'} ? 'inbnd_modal_pg(this)' : 'go_in_pg(this)'">[[${pgn}]]</li>
                 </th:block>
                 
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 } ,data-pea=${pea}" onclick="go_in_pg(this)" >다음</li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 } ,data-pea=${pea}" 
+                	th:onclick="${mode2 == 'inbPageing'} ? 'inbnd_modal_pg(this)' : 'go_in_pg(this)'" >다음</li>
             </ul>
         </div>
         

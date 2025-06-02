@@ -47,12 +47,6 @@ public class goods_controller {
 	@Autowired
 	private bom_service b_svc; 
 	
-	@Resource(name="goods_DAO")
-	goods_DAO g_dao;
-	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
-	
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
 	
@@ -76,18 +70,23 @@ public class goods_controller {
 	//픔목관리 > 리스트 화면이동 
 	@GetMapping({"/goods.do"})
 	public String products_list(Model m, @RequestParam(value = "type", required = false) String type
-								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value = "products_class2", required = false) String sclass
+								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
 		
 		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type, sclass, keyword, pageno, post_ea);  //제품 리스트
 		
+		System.out.println("다죽자 : "+ goods_total_sch);
+		System.out.println("다죽자 : "+ goods_all_list_sch);
+		System.out.println("keyword : " + keyword);
+		System.out.println("sclass : " + sclass);
+		
 		//페이징 관련 
-		int pea = post_ea; 
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, goods_total_sch);
-		int bno = this.m_pg.serial_no(goods_total_sch, pageno, pea); 
+		int pst_ea = post_ea; 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pst_ea, goods_total_sch);
+		int bno = this.m_pg.serial_no(goods_total_sch, pageno, pst_ea); 
 		
 		//제품타입에 따른 url 분류 
 		if("product".equals(type) || type==null) {
@@ -98,6 +97,11 @@ public class goods_controller {
 			m.addAttribute("mmenu","부자재 리스트");
 			this.url = "/goods/items_list.html";
 			
+		}
+		
+		//검색했을경우 
+		if(sclass != null || keyword != null) {
+			m.addAttribute("mmmenu","검색결과");
 		}
 		
 		//리스트의 분류검색 리스트용 
@@ -134,7 +138,7 @@ public class goods_controller {
 		
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", pea);
+		m.addAttribute("pea", pst_ea);
 		
 		return this.url;
 	}
@@ -278,11 +282,14 @@ public class goods_controller {
 			this.url = "WEB-INF/views/message";
 			
 		}else {
-			if("product".equals(type)) {
+			if("product".equals(type)) { 
 				m.addAttribute("goods_one", goods_one);
-				if(!resultlist.isEmpty()) {
+				
+				if(!resultlist.isEmpty()) {    //bom이 등록된 경우 
 					m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+					m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
 					m.addAttribute("bom_result", resultlist);
+					m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
 				}
 				this.url = "/modals/product_detail_modal.html";
 				
@@ -318,7 +325,6 @@ public class goods_controller {
 			    this.d_dto.setIdx(jo.getInt("idx"));
 			    this.d_dto.setCode(jo.getString("code"));
 			    this.d_dto.setType(jo.getString("type"));
-			    
 				
 				if(key.equals(del_key)) {
 	//				products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기(이미지 삭제용)
@@ -326,6 +332,10 @@ public class goods_controller {
 						
 						 this.d_dto.setCode2(jo.getString("code2"));
 						result= this.b_svc.bom_delete(this.d_dto);
+						if(result >= 1) {
+							count++;
+						}
+						System.out.println("bomdel result : " + result);
 						
 					}else {
 						result =  this.g_svc.pd_delete(this.d_dto);

@@ -23,12 +23,12 @@
 
 <!-- pch_code 중복체크 -->
 <select id="pch_code_check" parameterType="String" resultType="int">
- SELECT count(*) FROM purchase_req_header WHERE pch_code = #{pch_code}
+ SELECT count(*) FROM purchase_req WHERE pch_code = #{pch_code}
 </select>
 
 <!-- 발주요청 정보 저장 -->  
-<insert id="insert_pch_header" parameterType="kr.co.noerror.DTO.purchase_DTO">
-  INSERT INTO purchase_req_header (
+<insert id="insert_purchase" parameterType="kr.co.noerror.DTO.pchreq_DTO">
+  INSERT INTO purchase_req (
     pch_code,
     company_code,
     pch_status,
@@ -53,7 +53,8 @@
   )
 </insert>
 
-<insert id="insert_pch_detail" parameterType="kr.co.noerror.DTO.purchase_DTO">
+<!-- 발주요청 상세정보 저장 -->  
+<insert id="insert_pch_detail" parameterType="kr.co.noerror.DTO.pchreq_detail_DTO">
   INSERT INTO purchase_req_detail (
     pch_code,
     item_code,
@@ -66,48 +67,36 @@
 </insert>
 
 <!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
-<select id="purchase_list" resultType="kr.co.noerror.DTO.purchase_DTO" parameterType="Map">
+<select id="purchase_list" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="Map">
 SELECT * FROM (
     SELECT inner_result.*, ROWNUM rnum
     FROM (
         SELECT 
-        	prd.pidx, 
-        	prd.pch_code, 
-        	prd.item_code, 
-        	itm.item_name, 
-        	prd.item_qty, 
-        	prh.due_date, 
-        	prh.pch_status, 
-        	prh.request_date, 
+        	pch.pidx, 
+        	pch.pch_code, 
+        	pch.due_date, 
+        	pch.pch_status, 
+        	pch.request_date, 
+        	pch.pay_amount,
         	cmp.company_name, 
         	mgr.manager_name
-        FROM purchase_req_detail prd
-        JOIN purchase_req_header prh ON prd.pch_code = prh.pch_code
-        JOIN temp_items itm ON prd.item_code = itm.item_code
-        JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+        FROM purchase_req pch
+        JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
         JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
         WHERE 1=1
-        <choose>
-	        <when test="scolumn == 'all'">
-	            AND (
-	                cmp.company_name LIKE '%' || #{sword} || '%' OR
-	                mgr.manager_name LIKE '%' || #{sword} || '%'
-	            )
-	        </when>
-	        <when test="scolumn == 'company_name'">
-	            AND cmp.company_name LIKE '%' || #{sword} || '%'
-	        </when>
-	        <when test="scolumn == 'manager_name'">
-	            AND mgr.manager_name LIKE '%' || #{sword} || '%'
-	        </when>
-        </choose>
+		<if test="sword != null and sword != ''">
+		  AND (
+		      cmp.company_name LIKE '%' || #{sword} || '%' OR
+		      mgr.manager_name LIKE '%' || #{sword} || '%'
+		  )
+		</if>
 	    <if test="pch_statuses != null and pch_statuses.size > 0">
-	        AND prh.pch_status IN
+	        AND pch.pch_status IN
 	        <foreach item="status" index="index" collection="pch_statuses" open="(" separator="," close=")">
 	            #{status}
 	        </foreach>
 	    </if>
-        ORDER BY prd.pidx DESC
+        ORDER BY pch.pidx DESC
     ) inner_result
     WHERE ROWNUM &lt; #{end}
 )
@@ -117,56 +106,57 @@ WHERE rnum &gt; #{start}
 <!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
 <select id="purchase_count" resultType="int" parameterType="map">
 SELECT COUNT(*) AS total
-	FROM purchase_req_detail prd
-	JOIN purchase_req_header prh ON prd.pch_code = prh.pch_code
-	JOIN temp_items itm ON prd.item_code = itm.item_code
-	JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+	FROM purchase_req pch
+	JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
 	JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
 WHERE 1=1
-    <choose>
-     <when test="scolumn == 'all'">
-         AND (
-             cmp.company_name LIKE '%' || #{sword} || '%' OR
-             mgr.manager_name LIKE '%' || #{sword} || '%'
-         )
-     </when>
-     <when test="scolumn == 'company_name'">
-         AND cmp.company_name LIKE '%' || #{sword} || '%'
-     </when>
-     <when test="scolumn == 'manager_name'">
-         AND mgr.manager_name LIKE '%' || #{sword} || '%'
-     </when>
-    </choose>
+	<if test="sword != null and sword != ''">
+	  AND (
+	      
+	      cmp.company_name LIKE '%' || #{sword} || '%' OR
+	      mgr.manager_name LIKE '%' || #{sword} || '%'
+	  )
+	</if>
     <if test="pch_statuses != null and pch_statuses.size > 0">
-        AND prh.pch_status IN
+        AND pch.pch_status IN
         <foreach item="status" index="index" collection="pch_statuses" open="(" separator="," close=")">
             #{status}
         </foreach>
     </if>
 </select>
 
-<select id="purchase_detail" resultType="kr.co.noerror.DTO.purchase_DTO" parameterType="String">
+<select id="purchase_detail" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="String">
 SELECT
     prd.pidx, 
     prd.pch_code, 
     prd.item_code, 
-    itm.item_name, 
+    itm.item_name,
+    itm.item_spec,
+    itm.item_unit, 
     prd.item_qty, 
-    prh.due_date, 
-    prh.pch_status, 
-    prh.request_date, 
+    itm.item_cost,
+    itm.item_class1,
+    itm.item_class2,
+    pch.due_date, 
+    pch.pch_status, 
+    pch.request_date, 
+    pch.pay_amount,
+    pch.pay_method,
+    pch.memo,
     cmp.company_name, 
     cmp.biz_num,
     cmp.ceo_name,
     mgr.manager_name,
     mgr.phone_num,
     cmp.addr1,
-    cmp.addr2
+    cmp.addr2,
+    emp.emp_name
 FROM purchase_req_detail prd
-JOIN purchase_req_header prh ON prd.pch_code = prh.pch_code
+JOIN purchase_req pch ON prd.pch_code = pch.pch_code
 JOIN temp_items itm ON prd.item_code = itm.item_code
 JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
 JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+JOIN temp_employ emp ON pch.emp_code = emp.emp_code
 WHERE prd.pch_code = #{pch_code}
 </select>
 

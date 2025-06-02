@@ -15,7 +15,7 @@ public interface inout_mapper {
 	
 	int insert_inbnd(inout_DTO dto);  //자재입고등록
 	
-	int inbound_total(Map<String, String> map);
-	List<inout_DTO> inbound_all_list(Map<String, Object> map);
-	List<inout_DTO> inbound_detail(String inbnd_code);
+	int inbound_total(Map<String, String> map); //입고 총 개수 
+	List<inout_DTO> inbound_all_list(Map<String, Object> map); //입고 총 리스트 
+	List<inout_DTO> inbound_detail(String inbnd_code); //입고건 상세보기 
 }

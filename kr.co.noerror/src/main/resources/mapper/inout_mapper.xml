@@ -10,57 +10,46 @@
 <insert id="insert_inbnd" parameterType="kr.co.noerror.DTO.inout_DTO">
     INSERT INTO INBOUND
     VALUES
-    (INBOUND_NO.NEXTVAL, #{INBOUND_CODE}, #{PCH_CODE}, #{ITEM_CODE}, #{ITEM_DEL}, #{ITEM_QTY}, #{ITEM_EXP}, #{WH_CODE}, #{IN_STATUS}, #{INBOUND_DATE}, #{EMPLOYEE_CODE}, #{INB_MEMO}, SYSTIMESTAMP, NULL)
+    (INBOUND_NO.NEXTVAL, #{INBOUND_CODE}, #{PCH_CODE}, 
+    #{ITEM_CODE}, #{ITEM_DEL}, #{ITEM_QTY}, #{ITEM_EXP}, 
+    #{WH_CODE}, #{IN_STATUS}, #{INBOUND_DATE}, #{EMPLOYEE_CODE}, #{INB_MEMO}, SYSTIMESTAMP, NULL)
 </insert>
 
 <!-- 입고리스트 전체개수  -->
 <select id="inbound_total" resultType="int" parameterType="Map">
 <!-- 	SELECT COUNT(DISTINCT INBOUND_CODE) AS CNT FROM INBOUND -->
-	SELECT COUNT (*) AS CNT FROM INBOUND
-<!-- 		<if test="sclass != null"> -->
-<!-- 			<where> -->
-<!-- 			PRODUCT_CLASS2 = #{sclass}  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-<!-- 		<if test="keyword != null">  -->
-<!-- 			<where> -->
-<!-- 			 (INBOUND_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PCH_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_DEL LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 WH_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 EMPLOYEE_CODE LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
+	SELECT COUNT (*) FROM INB_DETAIL_VIEW
 </select>
 
-<!-- 입고 전체 리스트  -->
+
+
 <select id="inbound_all_list" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
-	SELECT * FROM INBOUND
-<!-- 	<if test="sclass != null"> -->
-<!-- 		<where> -->
-<!-- 		PRODUCT_CLASS2 = #{sclass}  -->
-<!-- 		</where> -->
-<!-- 	</if> -->
-<!-- 	<if test="keyword != null">  -->
-<!-- 		<where> -->
-<!-- 		 (INBOUND_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PCH_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_DEL LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 WH_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 EMPLOYEE_CODE LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 		</where> -->
-<!-- 	</if> -->
+	SELECT * FROM INB_DETAIL_VIEW
 	ORDER BY IIDX DESC
-	OFFSET #{offset} ROWS FETCH NEXT #{post_ea} ROWS ONLY
+	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
+<!-- 입고번호 중복 제거 -->
+<!-- <select id="inbound_total2" resultType="int" parameterType="Map"> -->
+<!-- 	SELECT COUNT (DISTINCT INBOUND_CODE) AS CNT FROM INBOUND -->
+<!-- </select> -->
+<!-- 입고 전체 리스트 중복제거 -->
+<!-- <select id="inbound_all_list2" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map"> -->
+<!-- 	SELECT * -->
+<!-- 	FROM ( -->
+<!-- 	    SELECT * FROM INBOUND i1 -->
+<!-- 	    WHERE IIDX = ( -->
+<!-- 	        SELECT MAX(IIDX) FROM INBOUND i2 -->
+<!-- 	        WHERE i2.INBOUND_CODE = i1.INBOUND_CODE -->
+<!-- 	    ) -->
+<!-- 	) -->
+<!-- 	ORDER BY IIDX DESC -->
+<!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
+<!-- </select> -->
 
+<!-- 입고 상세보기 모달  -->
 <select id="inbound_detail" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="String">
-	SELECT * FROM INBOUND WHERE INBOUND_CODE = #{inbnd_code} ORDER BY IIDX 	
+	SELECT * FROM INB_DETAIL_VIEW WHERE INBOUND_CODE = #{inbnd_code} ORDER BY IIDX 	
 </select>
 
 </mapper>

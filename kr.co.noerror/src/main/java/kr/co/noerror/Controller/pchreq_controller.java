@@ -20,18 +20,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.mrp_DAO;
-import kr.co.noerror.DAO.purchase_DAO;
+import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.order_DTO;
-import kr.co.noerror.DTO.purchase_DTO;
-import kr.co.noerror.DTO.purchase_item_DTO;
-import kr.co.noerror.DTO.purchase_req_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.DTO.pchreq_item_DTO;
+import kr.co.noerror.DTO.pchreq_req_DTO;
 import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Service.pchreq_service;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Controller
-public class purchase_controller {
+public class pchreq_controller {
 	
-	private static final int page_ea = 5; //한페이지당 5개씩 출력
+	private static final int page_block = 3; //페이지 번호 출력갯수
+	private final pchreq_service pchreq_service;
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -39,14 +43,14 @@ public class purchase_controller {
 	mrp_DAO mdao;
 	
 	@Autowired
-	purchase_DAO pdao;
+	pchreq_DAO pdao;
 	
 	@Resource(name="M_random")
 	M_random mrandom;           
 	
 	@GetMapping("/purchase_detail.do")
 	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
-		List<purchase_DTO> details = this.pdao.purchase_detail(pch_code);
+		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
 		System.out.println(details.get(0));
 		m.addAttribute("details",details);
 		return "/modals/purchase_detail_modal.html";
@@ -54,14 +58,13 @@ public class purchase_controller {
 	
 	@GetMapping("/purchase.do")
 	public String purchase(Model m,
+			@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea,
+			@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno,
 			@RequestParam(name="pch_status", required=false) String[] pch_statuses,
-			@RequestParam(name="search_column", defaultValue="all", required=false) String search_column,
-			@RequestParam(name="search_word", defaultValue="", required=false) String search_word,
-			@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno
+			@RequestParam(name="search_word", defaultValue="", required=false) String search_word
 			) {
 		
 		Map<String, Object> mparam = new HashMap<>();
-		mparam.put("scolumn", search_column);  //검색 컬럼
 		mparam.put("sword", search_word);  //검색어
 		if (pch_statuses != null) {
 			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
@@ -74,98 +77,36 @@ public class purchase_controller {
 		int start = (pageno - 1) * page_ea;  //oracle에서 해당페이지의 시작 번호
 		int end = pageno * page_ea + 1;      //oracle에서 해당페이지의 종료 번호 + 1
 		
+		int start_page = ((pageno - 1) / page_block) * page_block + 1;
+		int end_page = Math.min(start_page + page_block - 1, page_cnt);
+		
 		mparam.put("start", start);        //oracle 시작행 번호
 		mparam.put("end", end);            //oracle 종료행 번호
 		
-		List<purchase_DTO> all = this.pdao.purchase_list(mparam);
+		List<pchreq_res_DTO> all = this.pdao.purchase_list(mparam);
 
 		m.addAttribute("lmenu","구매영업관리");
 		m.addAttribute("smenu","발주관리");
 		
 		//데이터, 페이징 정보를 모델에 전달
 		m.addAttribute("all", all);
+		m.addAttribute("start_page", start_page);
+		m.addAttribute("end_page", end_page);
+		m.addAttribute("view", page_ea);
 		m.addAttribute("page_cnt", page_cnt);
 		m.addAttribute("pageno", pageno); 
 		
 	    //검색 조건을 모델에 다시 전달
-	    m.addAttribute("search_column", search_column);
 	    m.addAttribute("search_word", search_word);
 	    m.addAttribute("pch_statuses", pch_statuses);
 		
 		return "/production/purchase_list.html";
 	}
 	
-	@PostMapping("/purchase_request.do")
+	@PostMapping("/pchreq_save.do")
 	@ResponseBody
-    public Map<String, Object> purchase_request(@RequestBody Map<String, purchase_req_DTO> requestMap) {
-		
-		Map<String, Object> response = new HashMap<>();
-		purchase_req_DTO pdto = null;
-		
-		int result1 = 0;
-		int result2 = 0;
-		int cnt = 0;
-		try {
-			for (Map.Entry<String, purchase_req_DTO> entry : requestMap.entrySet()) {
-                String company_code = entry.getKey();
-                pdto = entry.getValue();
-			
-		        //중복 없는 발주코드 생성
-		        String pch_code = null;
-		        int count = 0;
-		        boolean is_duplicated = true;
-		        while(is_duplicated) {
-		        	pch_code = "pch-" + this.mrandom.random_no();
-		        	count = this.pdao.pch_code_check(pch_code);
-		        	if(count == 0){
-		        		is_duplicated = false;
-		        	}
-		        }
-		        
-		        purchase_DTO pch = new purchase_DTO();
-		        pch.setPch_code(pch_code);
-		        pch.setCompany_code(company_code);
-		        pch.setPch_status("발주요청");
-		        pch.setDue_date(pdto.getDue_date());
-		        pch.setPay_method(pdto.getPay_method());
-		        pch.setEmp_code("EMP-00001");
-		        pch.setMemo(pdto.getMemo());
-		        
-	        	int pay_amount = 0; 	
-	            for (purchase_item_DTO idto : pdto.getItems()) {
-	            	pay_amount += idto.getItem_amount();
-	            }
-	            pch.setPay_amount(pay_amount);
-	            //purchase_req_header에 저장
-	            result1 += this.pdao.insert_pch_header(pch);
-	            
-	            cnt += pdto.getItems().size();
-	            for (purchase_item_DTO idto : pdto.getItems()) {
-	            	pch.setItem_code(idto.getItem_code());
-	            	pch.setItem_qty(idto.getItem_qty());
-	            	pay_amount += idto.getItem_amount();
-	            	//purchase_req_detail에 저자
-	            	result2 += this.pdao.insert_pch_detail(pch);
-	            }
-	            
-	        }
-			System.out.println(result1);
-			System.out.println(requestMap.size());
-			System.out.println(result2);
-			System.out.println(cnt);
-            if((result1==requestMap.size()) && (result2 == cnt)) {
-	            response.put("success", true);
-            }
-            else {
-            	response.put("success", false);
-            }
-
-        } catch (Exception e) {
-        	System.out.println(e);
-            response.put("success", false);
-        }
-
-	    return response;
+    public Map<String, Object> pchreq_save(@RequestBody Map<String, pchreq_req_DTO> requestMap) {
+		return pchreq_service.pchreq_save(requestMap);
     }
 
 	@GetMapping("/mrp_result_select.do")

@@ -27,15 +27,16 @@
 
   <!-- 검색창 영역 -->
   <div class="col-auto">
-   <div ></div>
       <div class="col-auto d-flex"  >
-       <form id="frm_class" class="row g-1 align-items-center" >
-       <input type="hidden" name="type">
+      <!-- 분류로 검색 -->
+       <form id="frm_class" class="row g-1 align-items-center" onsubmit="return pdSearch()">
+<!--        <input type="hidden" name="type" value="product"> -->
       <div class="input-group input-group-sm me-0" style="width: 200px;">
           <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
             <option value="">대분류</option>
              <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
           </select>
+          
           <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
             <th:block >
             <option value="" th:if="${sclass == null}" >소분류</option>
@@ -44,11 +45,13 @@
             
           </select>
         </div>
-         </form>
-       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()">
+<!--          </form> -->
+         
+         <!-- 키워드로 검색 -->
+<!--        <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()"> -->
         <div class="input-group input-group-sm" style="width:250px;">
           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
-          <button class="btn btn-primary" >
+          <button class="btn btn-primary"  >
             <i class="bi bi-search"></i>
           </button>
         </div>
@@ -56,6 +59,9 @@
       </div>
    
   </div>
+  
+  
+  
 </div>
 
 
@@ -84,7 +90,7 @@
                 <tbody >
                 
                 	<tr th:if="${goods_total == 0}" >
-                		<td class="text-center nogoods_tb" colspan="14" th:text="${no_goods}"></td>
+                		<td class="text-center no_list_tb" colspan="14"> 등록된 상품이 없습니다. </td>
                 	</tr>
                 	
                     <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" onclick="open_gd_detail(event)"  style="cursor: pointer;">

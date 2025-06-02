@@ -55,4 +55,10 @@ public class pchreq_DAO {
 		List<pchreq_res_DTO> details = this.sql.selectList("purchase_detail", pch_code);
 		return details;
 	}
+	
+	//발주상태 업데이트
+	public int update_pch_status(Map<String, String> mparam) {
+		int result = this.sql.update("update_pch_status", mparam);
+		return result;
+	}
 }

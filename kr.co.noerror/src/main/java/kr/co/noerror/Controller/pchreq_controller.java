@@ -44,16 +44,35 @@ public class pchreq_controller {
 	
 	@Autowired
 	pchreq_DAO pdao;
+
+	@GetMapping("/purchase_in.do")
+	public String purchase(Model m) {
+		m.addAttribute("lmenu","구매영업관리");
+		m.addAttribute("smenu","발주관리");
+		m.addAttribute("mmenu","발주등록");
+		return "/production/purchase_insert.html";
+	}
 	
-	@Resource(name="M_random")
-	M_random mrandom;           
+	@GetMapping("/mrp_result_select.do")
+	public String mrp_result_select(@RequestParam(name="mrp_code") String mrp_code,
+			Model m) {
+		
+		List<mrp_result_DTO> mrp_results = this.pdao.mrp_result_select(mrp_code);
+		
+		m.addAttribute("lmenu","구매영업관리");
+		m.addAttribute("smenu","발주관리");
+		m.addAttribute("mmenu","발주등록");
+		
+		m.addAttribute("mrp_code",mrp_code);
+		m.addAttribute("mrp_results",mrp_results);
+		
+		return "/production/purchase_insert.html";
+	}
 	
-	@GetMapping("/purchase_detail.do")
-	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
-		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
-		System.out.println(details.get(0));
-		m.addAttribute("details",details);
-		return "/modals/purchase_detail_modal.html";
+	@PostMapping("/pchreq_save.do")
+	@ResponseBody
+	public Map<String, Object> pchreq_save(@RequestBody Map<String, pchreq_req_DTO> requestMap) {
+		return pchreq_service.pchreq_save(requestMap);
 	}
 	
 	@GetMapping("/purchase.do")
@@ -84,7 +103,7 @@ public class pchreq_controller {
 		mparam.put("end", end);            //oracle 종료행 번호
 		
 		List<pchreq_res_DTO> all = this.pdao.purchase_list(mparam);
-
+		
 		m.addAttribute("lmenu","구매영업관리");
 		m.addAttribute("smenu","발주관리");
 		
@@ -96,40 +115,23 @@ public class pchreq_controller {
 		m.addAttribute("page_cnt", page_cnt);
 		m.addAttribute("pageno", pageno); 
 		
-	    //검색 조건을 모델에 다시 전달
-	    m.addAttribute("search_word", search_word);
-	    m.addAttribute("pch_statuses", pch_statuses);
+		//검색 조건을 모델에 다시 전달
+		m.addAttribute("search_word", search_word);
+		m.addAttribute("pch_statuses", pch_statuses);
 		
 		return "/production/purchase_list.html";
 	}
 	
-	@PostMapping("/pchreq_save.do")
-	@ResponseBody
-    public Map<String, Object> pchreq_save(@RequestBody Map<String, pchreq_req_DTO> requestMap) {
-		return pchreq_service.pchreq_save(requestMap);
-    }
-
-	@GetMapping("/mrp_result_select.do")
-	public String mrp_result_select(@RequestParam(name="mrp_code") String mrp_code,
-			Model m) {
-		
-		List<mrp_result_DTO> mrp_results = this.pdao.mrp_result_select(mrp_code);
-		
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		m.addAttribute("mmenu","발주등록");
-		
-		m.addAttribute("mrp_code",mrp_code);
-		m.addAttribute("mrp_results",mrp_results);
-		
-		return "/production/purchase_insert.html";
+	@GetMapping("/purchase_detail.do")
+	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
+		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
+		m.addAttribute("details",details);
+		return "/modals/purchase_detail_modal.html";
 	}
 	
-	@GetMapping("/purchase_in.do")
-	public String purchase(Model m) {
-		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","발주관리");
-		m.addAttribute("mmenu","발주등록");
-		return "/production/purchase_insert.html";
+	@PostMapping("update_pch_status.do")
+	@ResponseBody
+	public Map<String, Object> update_pch_status(@RequestBody Map<String, String> requestParam) {
+		return pchreq_service.update_pch_status(requestParam);
 	}
 }

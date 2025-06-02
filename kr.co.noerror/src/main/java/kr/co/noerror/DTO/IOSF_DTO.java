@@ -25,7 +25,11 @@ public class IOSF_DTO {
     String category_main;  // 제품 대분류
     String category_sub;   // 제품 소분류
     String use_yn;         // 제품 사용 여부
+    String in_status; 	   // 입고 상태
+    String item_count;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
+    
+    
     // 거래처 정보
     String client_code;     // 거래처 코드
     String client_name;     // 거래처 이름

@@ -233,6 +233,7 @@ public class common_controller {
 								,@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno
 								,@RequestParam(name="pch_status", required=false) String[] pch_statuses
 								,@RequestParam(name="search_word", defaultValue="", required=false) String search_word
+//								,@RequestParam(name="code",  required=false) String pch_code
 								,@RequestParam(value="mode", required = false) String mode
 								)  {
 		System.out.println(page_ea);

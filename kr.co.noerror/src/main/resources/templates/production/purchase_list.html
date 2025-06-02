@@ -63,7 +63,7 @@
 					<tbody>
 						<tr th:each="p : ${all}" class="modal-trigger"
 							th:data-modal-url="@{/purchase_detail.do(code=${p.pch_code})}"
-							data-modal-id="pch_modal" style="cursor: pointer;">
+							data-modal-id="pch_modal" style="cursor: pointer;" th:data-code="${p.pch_code}" th:onclick="${mode == 'modal'} ? 'pchDetailBtn(this)' : ''" >
 							<td><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" ></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.pch_code}]]</td>

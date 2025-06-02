@@ -22,7 +22,7 @@ function bomBtn(bom_open){
 			bom_open.show();
 			bomDetailOpen(pd_code);
 
-				}else if(result =="no"){  //등록된 BOM없음 
+		}else if(result =="no"){  //등록된 BOM없음 
 			if(confirm("등록된 BOM 자료가 없습니다. \n지금 등록 하시겠습니까?")){
 				location.href="./bom_insert.do?pd_code="+pd_code;
 				
@@ -53,7 +53,6 @@ function bomDetailOpen(bom_open){
 		document.getElementById("modalContainer").innerHTML = result;
 			var bom_open = new bootstrap.Modal(document.getElementById('bom_detail'));
 			bom_open.show();
-			//bom_detail(pd_code);
 
 		
 	}).catch(function(error) {

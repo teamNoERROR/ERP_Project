@@ -313,11 +313,12 @@ function pch_modal_pg (page){
 	});
 }
 
-/*
+
 //발주내역 상세보기  
 function pchDetailBtn(pch_code){
-	console.log("pch_code:", pch_code); 
-	fetch("./purchase_detail.do?code="+pch_code, {
+	var ph_code = pch_code.getAttribute("data-code");
+	console.log("pch_code:", ph_code); 
+	fetch("./purchase_detail.do?code="+ph_code, {
 		method: "GET"
 			
 	}).then(function(data) {
@@ -326,7 +327,7 @@ function pchDetailBtn(pch_code){
 	}).then(function(result) {  
 			
 		// 모달 내부 내용 채우기
-		document.querySelector("#pch_modal .modal-content").innerHTML = result;
+		document.querySelector("#modalContainer2").innerHTML = result;
 		var pch_detail_modal = new bootstrap.Modal(document.getElementById('pch_modal'));
 		pch_detail_modal.show();
 				
@@ -335,4 +336,3 @@ function pchDetailBtn(pch_code){
 		console.log("통신오류발생" + error);
 	});
 }
-*/

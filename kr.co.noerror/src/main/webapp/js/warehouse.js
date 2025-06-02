@@ -1,5 +1,5 @@
 
-//*******************************창고 삭제 시작************************************ */
+//*******************************창고 상세보기에서 삭제*********************************** */
 function deleteWarehouse(button) {
   const confirmed = confirm("정말 삭제하시겠습니까?");
   if (!confirmed) return;
@@ -33,7 +33,7 @@ function deleteWarehouse(button) {
     console.error(error);
   });
 }
- //*******************************창고 삭제 끝************************************ */
+ //************************************************************************************************ */
 
  //*******************************관리자 모달 리스트 선택 후 반환 **************************************** */
  function selectEmp() {
@@ -61,7 +61,7 @@ function deleteWarehouse(button) {
     const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
     modal.hide();
   }
- //*******************************관리자 모달 리스트 선택 후 반환 끝 **************************************** */
+ //***************************************************************************************************** */
  
  //******************************창고 모달 리스트 선택 후 반환 **************************************** */
  function selectWarehouse() {
@@ -88,36 +88,92 @@ function deleteWarehouse(button) {
     const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
     modal.hide();
   }
- //*******************************창고 모달 리스트 선택 후 반환 끝 **************************************** */
+ //************************************************************************************************** */
 
- 
- //******************************입고 창고 모달 리스트 선택 후 반환 **************************************** */
-  //function select_in_Warehouse() {
-  //   const selectedRadio = document.querySelector('input[name="whSelect"]:checked');
-  //
-  // if (!selectedRadio) {
-  //     alert('직원을 선택해주세요.');
-  //     return;
-  //   }
-  //
-  //   const whCode = selectedRadio.value;
-  //   const whName = selectedRadio.getAttribute('data-wh_name');
-  //   const whZipcode = selectedRadio.getAttribute('data-wh_zipcode');
-  //   const whAddr1 = selectedRadio.getAttribute('data-wh_addr1');
-  //   const whAddr2 = selectedRadio.getAttribute('data-wh_addr2');
-  //
-  //   document.getElementById('wh_code').value = whCode;
-  //   document.getElementById('wh_name').value = whName;
-  //   document.getElementById('wh_location').value = '(' + whZipcode + ')' + ' ' + whAddr1 + ' ' + whAddr2;
-  //
-  //	alert("창고를 선택 하셨습니다.");
-  //   // 모달 닫기
-  //   const modalElement = document.getElementById('warehouse_list');
-  //   const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-  //   modal.hide();
-  // }
-  //*******************************입고 창고 모달 리스트 선택 후 반환 끝 **************************************** */
+ //전체 창고 -> 창고 선택 탭
+ function toggleWh(type) {
+   	let url = "";
+ 	if (type == 'all') {
+ 	     url = "/warehouses_list.do";
+ 	}
+	else if(type == 'in'){
+ 	     url = "/warehouses_in_list.do";		
+	}
+	else if(type == 'mt'){		
+ 	     url = "/warehouses_mt_list.do";		
+	} 
+
+	  	location.href = url; //페이지 이동
+ }
+
   
+
+// ********************************************* 창고 체크박스로 삭제 *****************************************
+function deleteWh(wh_type) {
+    const checkedBoxes = document.querySelectorAll('input[name="deleteCodes"]:checked');
+
+    if (checkedBoxes.length === 0) {
+        alert("삭제할 항목을 선택하세요.");
+        return;
+    }
+
+    if (!confirm("선택한 항목을 삭제하시겠습니까?")) {
+        return;
+    }
+
+    let url = '/warehouse_delete_page.do'; // 기본
+    let deleteCount = 0;
+    let failCount = 0;
+
+    checkedBoxes.forEach(cb => {
+        const wh_code = cb.value;
+        const inbound_code = cb.dataset.inbound;
+
+        const params = new URLSearchParams();
+
+        if (wh_type === 'in') {
+            url = '/in_warehouse_delete_page.do';
+            params.append('wh_code', wh_code);
+            params.append('inbound_code', inbound_code);
+        } else {
+            // 기타 유형 처리 (예: all, out 등)
+            params.append('wh_code', wh_code);
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params
+        })
+        .then(res => res.text())
+        .then(result => {
+            if (result === 'suceses') {
+                deleteCount++;
+            } else {
+                failCount++;
+            }
+
+            if (deleteCount + failCount === checkedBoxes.length) {
+                if (failCount > 0) {
+                    alert(`${failCount}건 삭제 실패. 나머지는 성공.`);
+                } else {
+                    alert("모두 삭제 성공!");
+                }
+                location.reload();
+            }
+        })
+        .catch(err => {
+            failCount++;
+            console.error(err);
+        });
+    });
+}
+
+// *****************************************************************************************************
+
+
 // ********************************************* 창고 저장 js ********************************************
 //창고 값 검증
 function wh_save() {
@@ -250,7 +306,7 @@ function wh_save() {
   frm.submit();
   
   }
- // ********************************************* 창고 저장 끝 ********************************************
+ // ********************************************************************************************************
  
   
   //**********************************************다음 주소 api********************************************
@@ -299,6 +355,6 @@ function wh_save() {
         }).open();
     }
 	
-	//**********************************************다음 주소 api 끝********************************************
+	//**************************************************************************************************
 
 

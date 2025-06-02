@@ -25,6 +25,7 @@ public class pchreq_DAO {
 		return results;
 	}
 	
+	//발주코드 중복체크 용도
 	public 	int pch_code_check(String pch_code) {
 		int count = this.sql.selectOne("pch_code_check", pch_code);
 		return count;
@@ -53,5 +54,11 @@ public class pchreq_DAO {
 	public List<pchreq_res_DTO> purchase_detail(String pch_code){
 		List<pchreq_res_DTO> details = this.sql.selectList("purchase_detail", pch_code);
 		return details;
+	}
+	
+	//발주상태 업데이트
+	public int update_pch_status(Map<String, String> mparam) {
+		int result = this.sql.update("update_pch_status", mparam);
+		return result;
 	}
 }

@@ -35,5 +35,5 @@ public interface IOSF_Warehouse_Mapper {
 	    public List<IOSF_DTO> IOSF_wh_SelectWithInboundCode(String inbound_code, String wh_type);
 
 	    //창고 게시물 삭제
-	    public int IOSF_delete_warehouses(String wh_code, String wh_type);
+	    public int IOSF_delete_warehouses(String wh_code, String inbound_code, String wh_type);
 }

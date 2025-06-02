@@ -1,6 +1,7 @@
 package kr.co.noerror.Service;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.co.noerror.DTO.inout_DTO;
 
@@ -16,6 +17,9 @@ public interface inout_service {
 	List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea);
 
 	//입고건 상세보기 
-	List<inout_DTO> inbound_detail(String inbnd_code);
+	List<inout_DTO> inbound_detail(String inbnd_code, String pch_cd);
+
+	//기입고처리건 확인  + 입고상태변경(체크박스)
+	Map<String, Integer> in_status_ck(String inbnd_data);
 
 }

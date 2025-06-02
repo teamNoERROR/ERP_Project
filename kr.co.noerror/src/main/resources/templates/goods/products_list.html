@@ -39,7 +39,7 @@
           
           <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
             <th:block >
-            <option value="" th:if="${sclass == null}" >소분류</option>
+            <option value="" th:if="${sclass == null or sclass.isEmpty()}" >소분류</option>
             <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
             </th:block>
             
@@ -71,7 +71,7 @@
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
-                        <th scope="col"><input type="checkbox" name="all_sel_box" onclick="all_sel()"></th>
+                        <th scope="col"><input type="checkbox" disabled></th>
                         <th scope="col">#</th>
                         <th scope="col">제품사진</th>
                         <th scope="col">제품코드</th>
@@ -127,7 +127,8 @@
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)">이전</li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)">
+					<i class="bi bi-chevron-double-left"></i> </li>
                 
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
@@ -137,7 +138,8 @@
                 
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 }, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)" >다음</li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 }, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)" >
+					<i class="bi bi-chevron-double-right"></i> </li>
             </ul>
         </div>
         

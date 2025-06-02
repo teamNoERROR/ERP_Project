@@ -123,10 +123,12 @@ public class pchreq_controller {
 	}
 	
 	@GetMapping("/purchase_detail.do")
-	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m) {
+	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m,@RequestParam(value="mode", required = false) String mode) {
+		
 		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
 		m.addAttribute("details",details);
 		return "/modals/purchase_detail_modal.html";
+		
 	}
 	
 	@PostMapping("update_pch_status.do")

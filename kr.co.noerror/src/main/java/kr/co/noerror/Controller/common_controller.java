@@ -1,5 +1,7 @@
 package kr.co.noerror.Controller;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.common_DAO;
+import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.inout_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.client_service;
@@ -42,6 +46,9 @@ public class common_controller {
 	
 	@Autowired
 	private client_service clt_svc;
+	
+	@Autowired
+	pchreq_DAO pdao;
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
@@ -216,6 +223,65 @@ public class common_controller {
 	        return "/modals/inbound_list_modal.html"; // 일반 뷰 전체
 	    }
 //			return "/modals/inbound_list_modal.html";
+	}
+	
+	
+	//발주 리스트 모달 띄우기 
+	@GetMapping({"/pch_list.do"})
+	public String pch_list_modal(Model m
+								,@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea
+								,@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno
+								,@RequestParam(name="pch_status", required=false) String[] pch_statuses
+								,@RequestParam(name="search_word", defaultValue="", required=false) String search_word
+								,@RequestParam(value="mode", required = false) String mode
+								)  {
+		System.out.println(page_ea);
+		System.out.println(pageno);
+		System.out.println(mode);
+		
+		int page_block = 3;
+		Map<String, Object> mparam = new HashMap<>();
+		mparam.put("sword", search_word);  //검색어
+		if (pch_statuses != null) {
+			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
+		}
+		
+		int data_cnt = this.pdao.purchase_count(mparam);
+		
+		int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
+		
+		int start = (pageno - 1) * page_ea;  //oracle에서 해당페이지의 시작 번호
+		int end = pageno * page_ea + 1;      //oracle에서 해당페이지의 종료 번호 + 1
+		
+		int start_page = ((pageno - 1) / page_block) * page_block + 1;
+		int end_page = Math.min(start_page + page_block - 1, page_cnt);
+		
+		mparam.put("start", start);        //oracle 시작행 번호
+		mparam.put("end", end);            //oracle 종료행 번호
+		
+		List<pchreq_res_DTO> all = this.pdao.purchase_list(mparam);
+	
+		
+		//데이터, 페이징 정보를 모델에 전달
+		m.addAttribute("pch_list", all);
+		m.addAttribute("start_page", start_page);
+		m.addAttribute("end_page", end_page);
+		m.addAttribute("view", page_ea);
+		m.addAttribute("page_cnt", page_cnt);
+		m.addAttribute("pageno", pageno); 
+		
+		//검색 조건을 모델에 다시 전달
+		m.addAttribute("search_word", search_word);
+		m.addAttribute("pch_statuses", pch_statuses);
+		
+//		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
+//		m.addAttribute("details",details);
+		
+		if ("modal2".equals(mode)) {
+	        return "/modals/purchase_list_body_modal.html :: pchMdList";
+	    } else {
+	        return "/modals/purchase_list_modal.html"; 
+	    }
 	}
 		
 

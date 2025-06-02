@@ -44,11 +44,12 @@
 			</form>
 
 			<!-- 발주 List Table -->
-			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bpurchaseed">
+			<div id="list-container">
+			<div id="table-container" class="table-responsive  rounded" th:fragment="pchList(all, mode)">
+				<table class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
 					<thead class="table-light text-center">
 						<tr>
-							<th scope="col"><input type="checkbox"></th>
+							<th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">발주번호</th>
 							<th scope="col">발주일자</th>
@@ -63,7 +64,7 @@
 						<tr th:each="p : ${all}" class="modal-trigger"
 							th:data-modal-url="@{/purchase_detail.do(code=${p.pch_code})}"
 							data-modal-id="pch_modal" style="cursor: pointer;">
-							<td><input type="checkbox"></td>
+							<td><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" ></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.pch_code}]]</td>
 							<td>[[${p.request_date.substring(0, 10)}]]</td>
@@ -77,40 +78,49 @@
 				</table>
 			</div>
 
-			<div
-				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				<div class="d-flex">
 					<!-- Pagination -->
-					<div class="mt-4 d-flex justify-content-center"
-						aria-label="Page navigation">
+					<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="pchPgList(pchMode)">
 						<ul class="pagination">
 							<!-- 이전 블록 -->
-							<li class="page-item"
-								th:classappend="${start_page == 1} ? 'disabled'"><a
-								class="page-link"
+							<li class="page-item prev"
+								th:classappend="${start_page == 1} ? 'disabled'">
+								<a class="page-link" th:if="${pchMode != 'pchPageing'}"
 								th:href="@{'/purchase.do'(pageno=${start_page - 1},
 			                            search_word=${search_word},
-			                            purchase_status=${purchase_statuses})}">
-									이전 </a></li>
+			                            purchase_status=${purchase_statuses})}">이전 </a>
+			                    <a class="page-link" th:if="${pchMode == 'pchPageing'}"  
+			                    	th:attr="data-keyword=${search_word}, data-pageno=${start_page - 1}, data-pea=${view}" 
+			                    	th:onclick="'pch_modal_pg(this)'">이전</a>
+							</li>
 
 							<!-- 현재 페이지 블록 -->
 							<li class="page-item"
 								th:each="n : ${#numbers.sequence(start_page, end_page)}"
-								th:classappend="${n == pageno} ? 'active'"><a
-								class="page-link"
+								th:classappend="${n == pageno} ? 'active'">
+								<a class="page-link" th:if="${pchMode != 'pchPageing'}"
 								th:href="@{'/purchase.do'(pageno=${n},
 			                            search_word=${search_word},
 			                            purchase_status=${purchase_statuses})}">
-									[[${n}]] </a></li>
+									[[${n}]] </a>
+								<a class="page-link" th:if="${pchMode == 'pchPageing'}" 
+									th:attr="data-keyword=${search_word}, data-pageno=${n}, data-pea=${view}" 
+									th:onclick="'pch_modal_pg(this)'">[[${n}]]</a>		
+							</li>
 
 							<!-- 다음 블록 -->
-							<li class="page-item"
-								th:classappend="${end_page >= page_cnt} ? 'disabled'"><a
-								class="page-link"
+							<li class="page-item next"
+								th:classappend="${end_page >= page_cnt} ? 'disabled'">
+								<a class="page-link" th:if="${pchMode != 'pchPageing'}"
 								th:href="@{'/purchase.do'(pageno=${end_page + 1},
 			                            search_word=${search_word},
 			                            purchase_status=${purchase_statuses})}">
-									다음 </a></li>
+									다음 </a>
+								<a class="page-link" th:if="${pchMode == 'pchPageing'}"   
+									th:attr="data-keyword=${search_word}, data-pageno=${end_page + 1}, data-pea=${view}" 
+									th:onclick="'pch_modal_pg(this)'">다음</a>
+								</li>
 						</ul>
 					</div>
 
@@ -126,10 +136,9 @@
 						</select>
 					</div>
 				</div>
-			</div>
+			
 			<!-- Action Buttons -->
-			<div class="mt-4 d-flex gap-2">
-				F
+			
 				<div class="ms-auto">
 					<button type="button" class="btn btn-success"
 						onclick="location.href='/purchase_in.do'">
@@ -139,7 +148,8 @@
 					<!-- 							<i class="bi bi-trash"></i> 삭제 -->
 					<!-- 						</button> -->
 				</div>
-			</div>
+				</div>
+				</div>
 		</section>
 	</main>
 

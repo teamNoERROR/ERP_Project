@@ -25,6 +25,7 @@ public class pchreq_DAO {
 		return results;
 	}
 	
+	//발주코드 중복체크 용도
 	public 	int pch_code_check(String pch_code) {
 		int count = this.sql.selectOne("pch_code_check", pch_code);
 		return count;

@@ -11,16 +11,16 @@ import kr.co.noerror.DTO.pchreq_DTO;
 import kr.co.noerror.DTO.pchreq_detail_DTO;
 import kr.co.noerror.DTO.pchreq_item_DTO;
 import kr.co.noerror.DTO.pchreq_req_DTO;
-import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
 public class pchreq_serviceImpl implements pchreq_service {
 
 	@Autowired
     private pchreq_DAO pchreq_dao;
-    
-    @Autowired
-    private M_random mrandom;
+	
+	@Autowired
+	private M_unique_code_generator unique_code_generator;
 
     @Override
     public Map<String, Object> pchreq_save(Map<String, pchreq_req_DTO> requestMap) {
@@ -38,16 +38,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 pchreq_req_dto = entry.getValue();
 
                 // 중복 없는 발주 코드 생성
-                String pch_code = null;
-                int count;
-                boolean is_duplicated = true;
-                while (is_duplicated) {
-                    pch_code = "pch-" + mrandom.random_no();
-                    count = pchreq_dao.pch_code_check(pch_code);
-                    if (count == 0) {
-                        is_duplicated = false;
-                    }
-                }
+                String pch_code = unique_code_generator.generate("pch-", code -> pchreq_dao.pch_code_check(code) > 0);
 
                 // 발주 헤더 DTO 생성
                 pchreq_DTO pchreq_entity = new pchreq_DTO();

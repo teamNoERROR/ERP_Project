@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +36,9 @@ public class inout_controller {
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
+	
+	@Resource(name="inout_DTO")
+	inout_DTO io_dto;
 	
 	List<String> list = null; 
 	Map<String, String> map = null;
@@ -66,7 +72,6 @@ public class inout_controller {
 		m.addAttribute("inbound_all_list",inbound_all_list);
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", pea);
 		
 		return "/inout/inbound_list.html";
 	}
@@ -84,7 +89,6 @@ public class inout_controller {
 	//자재입고등록
 	@PutMapping("/inbound_insertok.do")
 	public String inbound_insertok(@RequestBody String inbnd_item, HttpServletResponse res) {
-		System.out.println(inbnd_item);
 		try {
 			this.pw = res.getWriter();
 			
@@ -112,11 +116,46 @@ public class inout_controller {
 	
 	//입고내역 상세보기 모달
 	@GetMapping("/inbnd_detail.do")
-	public String inbound_detail(Model m, @RequestParam("inbnd_code") String inbnd_code) {
-		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code);
+	public String inbound_detail(Model m, @RequestParam("inbnd_code") String inbnd_code
+								, @RequestParam("pch_cd") String pch_cd) {
+		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, pch_cd);
+
+		System.out.println(inbound_detail);
 		m.addAttribute("inbnd_detail", inbound_detail);
-		
 		return "/modals/inbound_detail_modal.html";
+	}
+	
+	
+	//입고상태변경처리
+	@PatchMapping("/inbnd_ok.do")
+	public String inbnd_ok(Model m, @RequestBody String inbnd_data, HttpServletResponse res) throws IOException {
+		try {
+			this.pw = res.getWriter();
+			
+			JSONArray ja = new JSONArray(inbnd_data);
+			int data_ea = ja.length();
+			
+			 Map<String, Integer> status = this.io_svc.in_status_ck(inbnd_data);  //기존 입고처리 유무 확인 
+			if(status.get("aleady_count")>0) {  //기존처리건이 있으면 
+				this.pw.write("기존 처리된 건이"+status.get("aleady_count")+ "개 있습니다.");
+				
+			}else if(data_ea == status.get("updated")) {
+				this.pw.write("ok");
+				
+			}else {
+				this.pw.write("fail");
+			}
+			
+		} catch (Exception e) {
+			this.pw.write("error");
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
 	}
 	
 	

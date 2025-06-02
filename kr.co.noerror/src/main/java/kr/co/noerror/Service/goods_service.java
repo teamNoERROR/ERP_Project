@@ -22,4 +22,5 @@ public interface goods_service {
 	products_DTO pd_one_detail(String pd_code, String type);  //제품 상세보기
 	int pd_delete(del_DTO d_dto); 	//제품 삭제 
 	String lclass_ck(String sclass);
+	
 }

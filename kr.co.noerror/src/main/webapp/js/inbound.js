@@ -171,8 +171,9 @@ function inbndInsertOk(){
 function openInbndDetail(event){
 	
 	var inbnd_code = event.currentTarget.querySelector(".inbnd_code").innerText;
-	
-	fetch("./inbnd_detail.do?inbnd_code="+inbnd_code, {
+	var pch_cd = event.currentTarget.querySelector(".pch_code").getAttribute("data-pch");
+
+	fetch("./inbnd_detail.do?inbnd_code="+inbnd_code+"&pch_cd="+pch_cd, {
 		method: "GET",
 		
 	}).then(function(data) {
@@ -189,4 +190,90 @@ function openInbndDetail(event){
 	});
 }
 
+
+function inboundOk(){
+	var in_status = document.querySelector("#in_status").value;
+	var inbnd_ckbx = document.querySelectorAll("input[name='inb_sel']:checked");
+	
+	if(inbnd_ckbx.length==0){
+		alert("입고상태를 변경할 상품이 선택되지 않았습니다.");
+		
+	}else if(in_status == ""){
+		alert("입고상태를 선택하세요.");
+		
+	}else{
+
+		var status_chg = new Array();
+		inbnd_ckbx.forEach(chk => {
+			inb_code = chk.getAttribute("data-inbcode");
+			pch_code = chk.getAttribute("data-pchcode");
+			
+			status_chg.push({ 
+				code: inb_code, 
+				code2: pch_code,
+				status : in_status 
+			})
+		});
+		fetch("./inbnd_ok.do", {
+			method: "PATCH",
+			headers: {"content-type": "application/json"},
+			body: JSON.stringify(status_chg)
+				
+		}).then(function(data) {
+			return data.text();
+
+		}).then(function(result) {
+			if (result == "ok") {
+				alert("상태 변경이 완료되었습니다.");
+		       	
+				// 체크된 체크박스들 비활성화
+				 inbnd_ckbx.forEach(cb => {
+				     cb.disabled = true;
+				 });
+				location.reload();
+				
+			}else if(result=="fail") {
+				alert("시스템 문제로 일부 제품의 상태 변경에 실패했습니다.");
+				location.reload();
+				
+			}else{
+				console.log(result);
+			}
+		}).catch(function(error) {
+			console.log("통신오류발생" + error);
+		});
+		
+	}
+}
+
+//입고리스트 페이징 
+function go_in_pg(ee){
+	var keyword = ee.getAttribute('data-keyword');
+	var page_no = ee.getAttribute('data-pageno');
+	
+	var params = {  
+		    type: ee.getAttribute('data-type'),
+		    pageno: page_no,
+		    post_ea: ee.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["keyword"] = keyword;
+		}
+
+		var pString = new URLSearchParams(params).toString();
+		location.href = "./inbound.do?" + pString;
+}
+
+
+
+//완제품 게시물 개수 선택 
+function inbPostEa(type){
+	var form = document.querySelector("#inbpg_frm");
+	form.method = "GET";
+	form.action = "./inbound.do";
+	form.type.value=type;
+	form.pageno.value = 1; //
+	form.submit();
+}
 

@@ -13,8 +13,8 @@
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
 				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2>
-				<button type="button" class="btn btn-success">
-					<i class="bi bi-pencil-square"></i> 입고완료처리  	<!--  입고완료상태에서는 disabled 처리 -->
+				<button type="button" class="btn btn-success" onclick="inboundOk()">
+					<i class="bi bi-pencil-square"></i> 저장  	<!--  입고완료상태에서는 disabled 처리 -->
 				</button> 
 			</div>
 			<div class="table-responsive  rounded">
@@ -99,11 +99,12 @@
 							<th scope="col">규격</th>
 							<th scope="col">단위</th>
 							<th scope="col">주문수량</th>
+							<th scope="col">입고수량</th>
 							<th scope="col">제품단가(원)</th>
-							<th scope="col">판매금액(원)</th>
+							<th scope="col">구매금액(원)</th>
 							<th scope="col">대분류</th>
 							<th scope="col">소분류</th>
-							<th scope="col">비고</th>
+<!-- 							<th scope="col">비고</th> -->
 							<th scope="col">주문상태</th>
 							
 						</tr>
@@ -117,45 +118,20 @@
 							<td>100g</td>
 							<td>ea</td>
 							<td>500</td>
+							<td>입고수량</td>
 							<td>3,000</td>
 							<td>1,500,000</td>
 							<td>식품</td>
 							<td>과일</td>
-							<td>비고 없음</td>
-							<td>발주요청</td>
-							
+<!-- 							<td>비고 없음</td> -->
+							<td>
+							<select class="form-select item_deli" id="" >
+								<option value="입고완료" >입고완료</option>
+								<option value="입고취소" >입고취소</option>
+								<option value="미입고">미입고</option>
+							</select>
+							</td>
 						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>2</td>
-							<td>2580-0001</td>
-							<td>사과</td>
-							<td>100g</td>
-							<td>ea</td>
-							<td>100</td>
-							<td>1,500</td>
-							<td>150,000</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td>비고 없음</td>
-							<td>발주요청</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>1</td>
-							<td>2581-0001</td>
-							<td>키위</td>
-							<td>50g</td>
-							<td>ea</td>
-							<td>700</td>
-							<td>1,000</td>
-							<td>700,000</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td>비고 없음</td>
-							<td>발주요청</td>
-						</tr>
-
 					</tbody>
 					<tfoot>
 						<tr>
@@ -171,7 +147,7 @@
 							<td>-</td>
 							<td>-</td>
 							<td>-</td>
-							<td>-</td>
+<!-- 							<td>-</td> -->
 						</tr>
 					</tfoot>
 				</table>
@@ -184,8 +160,8 @@
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button"  class="btn btn-success"><i class="bi bi-pencil-square"></i> 수정</button>
-                <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button>
+<!--                 <button type="button"  class="btn btn-success"><i class="bi bi-pencil-square"></i> 수정</button> -->
+<!--                 <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button> -->
             </div>
         </div>
 

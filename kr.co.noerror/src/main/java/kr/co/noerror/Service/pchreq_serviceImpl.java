@@ -38,7 +38,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 pchreq_req_dto = entry.getValue();
 
                 // 중복 없는 발주 코드 생성
-                String pch_code = unique_code_generator.generate("pch-", code -> pchreq_dao.pch_code_check(code) > 0);
+                String pch_code = this.unique_code_generator.generate("pch-", code -> pchreq_dao.pch_code_check(code) > 0);
 
                 // 발주 헤더 DTO 생성
                 pchreq_DTO pchreq_entity = new pchreq_DTO();
@@ -58,7 +58,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 pchreq_entity.setPay_amount(pay_amount);
 
                 // purchase_req 저장
-                result1 += pchreq_dao.insert_purchase(pchreq_entity);
+                result1 += this.pchreq_dao.insert_purchase(pchreq_entity);
 
                 cnt += pchreq_req_dto.getItems().size();
 
@@ -68,7 +68,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 	pchreq_detail_entity.setPch_code(pch_code);
                 	pchreq_detail_entity.setItem_code(idto.getItem_code());
                 	pchreq_detail_entity.setItem_qty(idto.getItem_qty());
-                    result2 += pchreq_dao.insert_pch_detail(pchreq_detail_entity);
+                    result2 += this.pchreq_dao.insert_pch_detail(pchreq_detail_entity);
                 }
             }
 
@@ -80,5 +80,21 @@ public class pchreq_serviceImpl implements pchreq_service {
         }
 
         return response;
+    }
+    
+    @Override
+    public Map<String, Object> update_pch_status(Map<String, String> requestParam) {
+    	
+    	Map<String, Object> response = new HashMap<>();
+    	
+    	try {
+    		int result = this.pchreq_dao.update_pch_status(requestParam);
+    		response.put("success", (result == 1));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("success", false);
+	    }
+	
+	    return response;
     }
 }

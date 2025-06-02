@@ -160,4 +160,10 @@ JOIN temp_employ emp ON pch.emp_code = emp.emp_code
 WHERE prd.pch_code = #{pch_code}
 </select>
 
+<update id="update_pch_status" parameterType="map">
+    UPDATE purchase_req
+    SET pch_status = #{pch_status}
+    WHERE pch_code = #{pch_code}
+</update>
+
 </mapper>

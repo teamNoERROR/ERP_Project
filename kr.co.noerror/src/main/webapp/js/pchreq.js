@@ -185,3 +185,50 @@ function pchreq_save() {
     alert("에러 발생: " + err.message);
   });
 }
+
+function update_pch_status() {
+    const selectEl = document.getElementById("modal-status-select");
+    const selectedStatus = selectEl.value;
+    const pch_code = selectEl.getAttribute("data-pch-code");
+
+    if (selectedStatus === "발주상태 선택") {
+        alert("발주상태를 선택하세요.");
+        return;
+    }
+
+    if (!pch_code) {
+        alert("발주코드를 찾을 수 없습니다.");
+        return;
+    }
+
+    const data = {
+        pch_code: pch_code,
+        pch_status: selectedStatus
+    };
+
+    fetch("/update_pch_status.do", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("상태가 성공적으로 변경되었습니다.");
+            location.reload(); // 또는 모달만 닫기: $('#pch_modal').modal('hide');
+        } else {
+            alert("상태 변경에 실패했습니다.");
+        }
+    })
+    .catch(err => {
+        console.error("에러 발생:", err);
+        alert("서버 오류가 발생했습니다.");
+    });
+}
+
+function clear_cart(){
+	const basket = document.getElementById('basketBody');
+	basket.innerHTML = ''; // 바구니 내용 전체 제거
+}

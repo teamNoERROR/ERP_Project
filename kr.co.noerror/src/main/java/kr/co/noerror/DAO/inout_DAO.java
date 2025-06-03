@@ -34,7 +34,7 @@ public class inout_DAO {
 
 
 	//입고 총 개수 
-	public int inbound_total(Map<String, String> map) {
+	public int inbound_total(Map<String, Object> map) {
 		int inbnd_insert = this.st.selectOne("inbound_total", map);
 		return inbnd_insert;
 	}

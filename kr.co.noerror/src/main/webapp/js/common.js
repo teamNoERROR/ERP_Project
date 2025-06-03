@@ -52,6 +52,26 @@ function previewFile() {
 /*--------------------------------------------------------------
   리스트 모달
 ----------------------------------------------------------- */
+//타입별창고리스트 모달 열기
+function whSelect(wh_type){
+	fetch("./wh_type_list.do?wh_type="+wh_type, {
+			method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("wh_type_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+} 
+
 
 //거래처리스트 모달 오픈 
 function cltListOpen(){
@@ -74,7 +94,7 @@ function cltListOpen(){
 }
 
 //거래처리스트 모달 페이징
-function cl_modal_pg (page){
+function pcl_modal_pg (page){
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
@@ -106,7 +126,7 @@ function cl_modal_pg (page){
 }
 
 //발주처리스트 모달 오픈 
-function pcltListOpen(){
+function pCltListOpen(){
 	fetch("./client_list2.do", {
 		method: "GET",
 
@@ -116,7 +136,6 @@ function pcltListOpen(){
 	}).then(function(result) {
 		document.getElementById("modalContainer").innerHTML = result;
 		
-		//var modal= new bootstrap.Modal(document.getElementById("client_list"));
 		var modal= new bootstrap.Modal(document.getElementById("p_client_list"));
 		modal.show();
 		
@@ -369,11 +388,12 @@ function pch_modal_pg (page){
 	});
 }
 
-/*
+
 //발주내역 상세보기  
 function pchDetailBtn(pch_code){
-	console.log("pch_code:", pch_code); 
-	fetch("./purchase_detail.do?code="+pch_code, {
+	var ph_code = pch_code.getAttribute("data-code");
+	console.log("pch_code:", ph_code); 
+	fetch("./purchase_detail.do?code="+ph_code, {
 		method: "GET"
 			
 	}).then(function(data) {
@@ -382,7 +402,7 @@ function pchDetailBtn(pch_code){
 	}).then(function(result) {  
 			
 		// 모달 내부 내용 채우기
-		document.querySelector("#pch_modal .modal-content").innerHTML = result;
+		document.querySelector("#modalContainer2").innerHTML = result;
 		var pch_detail_modal = new bootstrap.Modal(document.getElementById('pch_modal'));
 		pch_detail_modal.show();
 				
@@ -391,4 +411,3 @@ function pchDetailBtn(pch_code){
 		console.log("통신오류발생" + error);
 	});
 }
-*/

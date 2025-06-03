@@ -1,20 +1,24 @@
 package kr.co.noerror.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DAO.pchreq_DAO;
+import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_DTO;
 import kr.co.noerror.DTO.pchreq_detail_DTO;
 import kr.co.noerror.DTO.pchreq_item_DTO;
 import kr.co.noerror.DTO.pchreq_req_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.DTO.search_condition_DTO;
 import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
-public class pchreq_serviceImpl implements pchreq_service {
+public class pchreq_serviceImpl implements pchreq_service, generic_list_service<pchreq_res_DTO> {
 
 	@Autowired
     private pchreq_DAO pchreq_dao;
@@ -22,6 +26,23 @@ public class pchreq_serviceImpl implements pchreq_service {
 	@Autowired
 	private M_unique_code_generator unique_code_generator;
 
+	@Override
+	public int search_count(search_condition_DTO search_cond) {
+		return this.pchreq_dao.search_count(search_cond);
+	}
+	
+	@Override
+	public List<pchreq_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
+		Map<String, Object> params = new HashMap<>();
+        params.put("search_word", search_cond.getSearch_word());
+        params.put("statuses", search_cond.getStatuses());
+        params.put("start", paging_info.getStart());
+        params.put("end", paging_info.getEnd());
+        
+        return this.pchreq_dao.paged_list(params);
+	}
+	
+	
     @Override
     public Map<String, Object> pchreq_save(Map<String, pchreq_req_DTO> requestMap) {
 
@@ -58,7 +79,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 pchreq_entity.setPay_amount(pay_amount);
 
                 // purchase_req 저장
-                result1 += this.pchreq_dao.insert_purchase(pchreq_entity);
+                result1 += this.pchreq_dao.pchreq_insert(pchreq_entity);
 
                 cnt += pchreq_req_dto.getItems().size();
 
@@ -68,7 +89,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 	pchreq_detail_entity.setPch_code(pch_code);
                 	pchreq_detail_entity.setItem_code(idto.getItem_code());
                 	pchreq_detail_entity.setItem_qty(idto.getItem_qty());
-                    result2 += this.pchreq_dao.insert_pch_detail(pchreq_detail_entity);
+                    result2 += this.pchreq_dao.pchreq_detail_insert(pchreq_detail_entity);
                 }
             }
 
@@ -118,12 +139,12 @@ public class pchreq_serviceImpl implements pchreq_service {
     }
     
     @Override
-    public Map<String, Object> update_pch_status(Map<String, String> requestParam) {
+    public Map<String, Object> pch_status_update(Map<String, String> requestParam) {
     	
     	Map<String, Object> response = new HashMap<>();
     	
     	try {
-    		int result = this.pchreq_dao.update_pch_status(requestParam);
+    		int result = this.pchreq_dao.pch_status_update(requestParam);
     		response.put("success", (result == 1));
 	    } catch (Exception e) {
 	        e.printStackTrace();

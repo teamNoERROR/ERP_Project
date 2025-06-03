@@ -83,6 +83,7 @@ public class IOSF_Warehouse_Service {
             final int pageSize = 5;
             int startIndex = (page - 1) * pageSize;
             int totalCount;
+            int endIndex = startIndex + pageSize;
 
             List<IOSF_DTO> wh_list_result;
             
@@ -92,12 +93,14 @@ public class IOSF_Warehouse_Service {
                 wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type);
                 totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type);
             } else {	//검색 안한경우 (전체 리스트)
-                wh_list_result = this.iosf_dao.IOSF_select_wh_list(startIndex, pageSize, wh_type);
+                wh_list_result = this.iosf_dao.IOSF_select_wh_list(startIndex, pageSize,endIndex, wh_type);
                 totalCount = this.iosf_dao.IOSF_getTotalCount(wh_type);
-                System.out.println("iosf : "+totalCount);
             }
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);
             
+            System.out.println("iosf : "+totalCount);
+       
+            System.out.println("wh_list_result size: " + wh_list_result.size());         
             wh_map.put("wh_list", wh_list_result);
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");
             wh_map.put("wh_check", wh_list_result.isEmpty() ? "nodata" : "yesdata");
@@ -115,18 +118,18 @@ public class IOSF_Warehouse_Service {
     }
     
     //창고 게시판 게시물 상세 정보
-    public List<IOSF_DTO> IOSF_wh_SelectWithInboundCode(String inbound_code, String wh_type){
+    public List<IOSF_DTO> IOSF_wh_SelectWithCode(String code, String wh_type){
     	
     	List<IOSF_DTO> wh_detail_result;
-    	wh_detail_result = iosf_dao.IOSF_wh_SelectWithInboundCode(inbound_code, wh_type);
+    	wh_detail_result = iosf_dao.IOSF_wh_SelectWithCode(code, wh_type);
     	
     	return wh_detail_result;
     }
     
     //창고 삭제
-    public int IOSF_delete_warehouse(String wh_code, String inbound_code ,String wh_type) {
+    public int IOSF_delete_warehouse(String wh_code, String code ,String wh_type) {
     	
-    	int wh_delete_result = iosf_dao.IOSF_delete_warehouses(wh_code, inbound_code, wh_type);
+    	int wh_delete_result = iosf_dao.IOSF_delete_warehouses(wh_code, code, wh_type);
     	
     	return wh_delete_result;
     }

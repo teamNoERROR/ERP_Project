@@ -16,9 +16,12 @@ public class IOSF_DTO {
 	// 창고 정보
 	String win_idx; 	    // 창고 자동증가값
     String wh_code;        // 창고 코드
+    String wh_type;        // 창고 코드
     String wh_name;        // 창고 이름
     String wh_location;    // 창고 위치
     String inbound_code;	// 입고 코드
+    String inbound_date2;
+    
     // 제품 정보
     String item_code;      // 제품 코드
     String item_name;      // 제품 이름
@@ -30,9 +33,23 @@ public class IOSF_DTO {
     LocalDateTime inbound_date;   // 입고 날짜
     
     
+    //출고 창고
+    String out_code;				// 완제품 창고 코드
+    String out_date;				// 완제품창고 인서트 날짜
+    
+    //완제품 창고
+    String finish_code;				// 완제품 창고 코드
+    String finish_date;				// 완제품창고 인서트 날짜
+    
+    //부자재 창고
+    String material_code;				// 부자재 창고 코드
+    String material_date; 				// 부자재창고 인서트 날짜
+    
     // 거래처 정보
     String client_code;     // 거래처 코드
     String client_name;     // 거래처 이름
     String client_use_yn;   // 거래처 사용 여부
+    
+    
 	
 }

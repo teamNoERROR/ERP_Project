@@ -64,7 +64,7 @@ function addToCart() {
 	    납기요청일: <input type="date" name="due_date_${company_code}" style="margin-right: 20px;" />
 	    결제수단: 
 	    <select name="pay_method_${company_code}" style="margin-right: 20px;">
-	      <option value="현금결재">현금결재</option>
+	      <option value="현금결제">현금결제</option>
 	      <option value="신용카드">신용카드</option>
 	      <option value="계좌이체">계좌이체</option>
 	      <option value="외상">외상</option>
@@ -185,7 +185,7 @@ function pchreq_save() {
   .then(response => {
     if (response.success) {
       alert("발주정보 결과 저장 완료!");
-      window.location.href = "/purchase.do";
+      window.location.href = "/pchreq_list.do";
     } else {
       alert("저장 실패: " + response.message);
     }
@@ -195,7 +195,7 @@ function pchreq_save() {
   });
 }
 
-function update_pch_status() {
+function pch_status_update() {
     const selectEl = document.getElementById("modal-status-select");
     const selectedStatus = selectEl.value;
     const pch_code = selectEl.getAttribute("data-pch-code");
@@ -215,7 +215,7 @@ function update_pch_status() {
         pch_status: selectedStatus
     };
 
-    fetch("/update_pch_status.do", {
+    fetch("/pch_status_update.do", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -362,7 +362,7 @@ function pchreq_update() {
 	.then(result => {
 		if (result.success) {
 			alert('발주정보가 수정되었습니다.');
-			window.location.href = "/purchase.do";
+			window.location.href = "/pchreq_list.do";
 		} else {
 			alert('수정 실패: ' + (result.message || '알 수 없는 오류'));
 		}

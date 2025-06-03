@@ -9,17 +9,18 @@ import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.pchreq_DTO;
 import kr.co.noerror.DTO.pchreq_detail_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.DTO.search_condition_DTO;
 
 @Mapper
 public interface pchreq_mapper {
 	List<mrp_result_DTO> mrp_result_select(String mrp_code);
 	int pch_code_check(String pch_code);
-	int insert_purchase(pchreq_DTO pdto);
-	int insert_pch_detail(pchreq_detail_DTO pdto);
-	List<pchreq_res_DTO> purchase_list(Map<String, Object> mparam);
-	int purchase_count(Map<String, Object> mparam);
-	List<pchreq_res_DTO> purchase_detail(String pch_code);
+	int pchreq_insert(pchreq_DTO pdto);
+	int pchreq_detail_insert(pchreq_detail_DTO pdto);
+	List<pchreq_res_DTO> pchreq_paged_list(Map<String, Object> mparam);
+	int pchreq_search_count(search_condition_DTO search_cond);
+	List<pchreq_res_DTO> pchreq_detail(String pch_code);
 	int pchreq_update(pchreq_DTO pdto);
 	int pchreq_detail_update(pchreq_detail_DTO pdto);
-	int update_pch_status(Map<String, String> mparam);
+	int pch_status_update(Map<String, String> mparam);
 }

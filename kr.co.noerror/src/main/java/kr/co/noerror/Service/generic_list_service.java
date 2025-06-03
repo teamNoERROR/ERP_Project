@@ -6,6 +6,6 @@ import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
 
 public interface generic_list_service<T> {
-	int getTotalCount(search_condition_DTO search_cond);
-    List<T> getPagedList(search_condition_DTO search_cond, paging_info_DTO paging_info);
+	int search_count(search_condition_DTO search_cond);
+    List<T> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info);
 }

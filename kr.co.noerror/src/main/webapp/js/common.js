@@ -282,6 +282,62 @@ function pchListOpen(){
 		console.log("통신오류발생" + error);
 	});
 }
+
+//페이징에서 리스트 모달 오픈
+function pchListOpen2(el) {
+	console.log(el);
+    const pageNo = el.getAttribute("data-page-no");
+    const searchWord = el.getAttribute("data-search-word");
+    const statuses = el.getAttribute("data-statuses");
+    const pageSize = el.getAttribute("data-page-size");
+	
+    // URL 파라미터 구성
+    const params = new URLSearchParams();
+    params.append("page_no", pageNo ?? "1");
+	params.append("search_word", searchWord ?? ""); // null이면 빈 문자열로 처리
+	params.append("statuses", statuses ?? ""); // null이면 빈 문자열로 처리
+	params.append("page_size", pageSize);
+	
+    fetch("./pch_list.do?" + params.toString(), {
+        method: "GET"
+    }).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("purchase_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+function pchListOpen3(selectEl) {
+    const pageSize = selectEl.value;
+
+    const params = new URLSearchParams();
+    params.append("page_size", pageSize);
+
+	fetch("./pch_list.do?" + params.toString(), {
+	        method: "GET"
+	    }).then(function(data) {
+			return data.text();
+
+		}).then(function(result) {
+			document.getElementById("modalContainer").innerHTML = result;
+			
+			var modal= new bootstrap.Modal(document.getElementById("purchase_list"));
+			modal.show();
+			
+		}).catch(function(error) {
+			
+			console.log("통신오류발생" + error);
+		});
+}
+
 //발주리스트 모달 페이징
 function pch_modal_pg (page){
 	var search_word = page.getAttribute('data-keyword');

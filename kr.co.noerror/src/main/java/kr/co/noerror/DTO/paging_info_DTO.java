@@ -12,7 +12,6 @@ public class paging_info_DTO {
     private int total_count;
     private int start;
     private int end;
-
     private int page_cnt;
     private int start_page;
     private int end_page;	

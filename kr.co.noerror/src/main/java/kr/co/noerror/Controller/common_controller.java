@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
@@ -20,17 +22,21 @@ import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.inout_DTO;
+import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
+import kr.co.noerror.DTO.search_condition_DTO;
 import kr.co.noerror.Model.M_paging;
+import kr.co.noerror.Model.M_paging_util;
 import kr.co.noerror.Service.client_service;
+import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inout_service;
 
 @Controller
 public class common_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
-	
+	private static final int page_block = 3; //페이지 번호 출력갯수
 	
 	@Resource(name="employee_DTO")
 	employee_DTO emp_dto;
@@ -48,10 +54,16 @@ public class common_controller {
 	private client_service clt_svc;
 	
 	@Autowired
+	private generic_list_service<pchreq_res_DTO> pch_svc;
+	
+	@Autowired
 	pchreq_DAO pdao;
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
+	
+    @Resource(name="M_paging_util")
+    M_paging_util page_util;
 	
 	//관리자 리스트 모달 
 	@GetMapping("/employee_list.do")
@@ -227,6 +239,27 @@ public class common_controller {
 	
 	
 	//발주 리스트 모달 띄우기 
+	@GetMapping("/pch_list.do")
+	public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model) {
+
+	    int search_count = this.pch_svc.search_count(search_cond);
+	    
+	    paging_info_DTO paging_info = this.page_util.calculate(
+	    		search_count, 
+	    		search_cond.getPage_no(), 
+	    		search_cond.getPage_size(), 
+	    		page_block
+	    );
+
+	    List<pchreq_res_DTO> pch_list = this.pch_svc.paged_list(search_cond, paging_info);
+
+	    model.addAttribute("pch_list", pch_list);
+	    model.addAttribute("paging", paging_info);
+	    model.addAttribute("condition", search_cond);
+	    return "/modals/purchase_list_body_modal.html";
+	}
+	
+	/*
 	@GetMapping({"/pch_list.do"})
 	public String pch_list_modal(Model m
 								,@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea
@@ -246,28 +279,28 @@ public class common_controller {
 			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
 		}
 		
-		int data_cnt = this.pdao.pchreq_count(mparam);
+		//int data_cnt = this.pdao.search_count(mparam);
 		
-		int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
+		//int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
 		
 		int start = (pageno - 1) * page_ea;  //oracle에서 해당페이지의 시작 번호
 		int end = pageno * page_ea + 1;      //oracle에서 해당페이지의 종료 번호 + 1
 		
 		int start_page = ((pageno - 1) / page_block) * page_block + 1;
-		int end_page = Math.min(start_page + page_block - 1, page_cnt);
+		//int end_page = Math.min(start_page + page_block - 1, page_cnt);
 		
 		mparam.put("start", start);        //oracle 시작행 번호
 		mparam.put("end", end);            //oracle 종료행 번호
 		
-		List<pchreq_res_DTO> all = this.pdao.pchreq_list(mparam);
+		List<pchreq_res_DTO> all = this.pdao.paged_list(mparam);
 	
 		
 		//데이터, 페이징 정보를 모델에 전달
 		m.addAttribute("pch_list", all);
 		m.addAttribute("start_page", start_page);
-		m.addAttribute("end_page", end_page);
+		//m.addAttribute("end_page", end_page);
 		m.addAttribute("view", page_ea);
-		m.addAttribute("page_cnt", page_cnt);
+		//m.addAttribute("page_cnt", page_cnt);
 		m.addAttribute("pageno", pageno); 
 		
 		//검색 조건을 모델에 다시 전달
@@ -283,6 +316,7 @@ public class common_controller {
 	        return "/modals/purchase_list_modal.html"; 
 	    }
 	}
+	*/
 		
 
 }

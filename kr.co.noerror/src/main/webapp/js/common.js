@@ -94,7 +94,7 @@ function cltListOpen(){
 }
 
 //거래처리스트 모달 페이징
-function cl_modal_pg (page){
+function pcl_modal_pg (page){
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
@@ -126,7 +126,7 @@ function cl_modal_pg (page){
 }
 
 //발주처리스트 모달 오픈 
-function pcltListOpen(){
+function pCltListOpen(){
 	fetch("./client_list2.do", {
 		method: "GET",
 
@@ -136,7 +136,6 @@ function pcltListOpen(){
 	}).then(function(result) {
 		document.getElementById("modalContainer").innerHTML = result;
 		
-		//var modal= new bootstrap.Modal(document.getElementById("client_list"));
 		var modal= new bootstrap.Modal(document.getElementById("p_client_list"));
 		modal.show();
 		

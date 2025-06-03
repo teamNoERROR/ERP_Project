@@ -7,24 +7,23 @@ var employee_code = document.querySelector("#employee_code");
 var inb_memo = document.querySelector("#inb_memo");
 
 
-
-
-
-
-
-
-//입고리스트 수기등록 버튼 클릭 
+/*--------------------------------------------------------------
+입고리스트 수기등록 버튼 클릭 
+--------------------------------------------------------------*/
 function addInbound(){
 	location.href="./inbound_insert.do";
 }
 
-//우상단 x 마크 클릭(리스트로 돌아가기)
+/*--------------------------------------------------------------
+우상단 x 마크 클릭(리스트로 돌아가기)
+--------------------------------------------------------------*/
 function goInbndList(){
 	location.href="./inbound.do"
 }
 
-
-//창고리스트에서 선택후 인풋란에 붙여넣기  
+/*--------------------------------------------------------------
+창고리스트에서 선택후 인풋란에 붙여넣기 
+--------------------------------------------------------------*/
 function choiceWh() {
 	var radios = document.querySelectorAll('input[name="choice_wh"]');
 	
@@ -56,8 +55,9 @@ function choiceWh() {
 	}
 };
 
-
-//발주리스트에서 선택후 인풋란에 붙여넣기  
+/*--------------------------------------------------------------
+발주리스트에서 선택후 인풋란에 붙여넣기  
+--------------------------------------------------------------*/
 function choicePch() {
 	var radios = document.querySelectorAll('input[name="choice_pch"]');
 	var selected_radio = null;
@@ -102,7 +102,9 @@ function choicePch() {
 	}
 };
 
-//발주부자재 리스트 로드 
+/*--------------------------------------------------------------
+발주부자재 리스트 로드 
+--------------------------------------------------------------*/
 function pchDtlLoad(pch_code){
 	fetch("./purchase_detail_modal.do?code="+pch_code, {
 		method: "GET",
@@ -152,8 +154,9 @@ function pchDtlLoad(pch_code){
 }
 
 
-
-//입고리스트 저장버튼 클릭 
+/*--------------------------------------------------------------
+입고리스트 저장버튼 클릭 
+--------------------------------------------------------------*/
 function insert_inBnd(){
 	var tbody = document.querySelector("#inbnd_items");
 	var rows = tbody.querySelectorAll('tr.item_row');
@@ -199,7 +202,9 @@ function insert_inBnd(){
 	}
 } 
 
-//입고저장 ajax
+/*--------------------------------------------------------------
+입고저장 ajax
+--------------------------------------------------------------*/
 function inbndInsertOk(){
 	var in_items = [];
 	var tbody = document.querySelector("#inbnd_items");
@@ -246,7 +251,9 @@ function inbndInsertOk(){
 	});
 }
 
-//입고건 상세보기 모달 
+/*--------------------------------------------------------------
+입고건 상세보기 모달 
+--------------------------------------------------------------*/
 function openInbndDetail(event){
 	
 	var inbnd_code = event.currentTarget.querySelector(".inbnd_code").innerText;
@@ -269,7 +276,9 @@ function openInbndDetail(event){
 	});
 }
 
-//입고 저장
+/*--------------------------------------------------------------
+입고상태 변경 
+--------------------------------------------------------------*/
 function inbCngOk(){
 	var in_status = document.querySelector("#in_status").value;
 	var inbnd_ckbx = document.querySelectorAll("input[name='inb_sel']:checked");
@@ -325,10 +334,29 @@ function inbCngOk(){
 	}
 }
 
-//입고리스트 페이징 
+
+
+/*--------------------------------------------------------------
+체크박스 클릭시 리스트 변경 
+--------------------------------------------------------------*/
+
+function inStatusCk(cbCk){
+	/*var checked = document.querySelectorAll('input[name="status"]:checked');
+	var ck_values = Array.from(checked).map(cb => cb.value);
+	console.log(ck_values)*/
+	var form = document.querySelector("#inbnd_search");
+	form.action = "inbound.do";
+	form.method = "GET";
+	form.submit();
+	
+} 
+/*--------------------------------------------------------------
+입고리스트 페이징 
+--------------------------------------------------------------*/
 function go_in_pg(ee){
 	var keyword = ee.getAttribute('data-keyword');
 	var page_no = ee.getAttribute('data-pageno');
+	var status = ee.getAttribute('data-status');
 	
 	var params = {  
 		    type: ee.getAttribute('data-type'),
@@ -340,13 +368,21 @@ function go_in_pg(ee){
 		    params["keyword"] = keyword;
 		}
 
+		if (status) {
+		    var statusList = status.split(',');  // 배열로 분리
+		    statusList.forEach((s) => {
+		        params["status"] = params["status"] || [];
+		        params["status"].push(s);
+		    });
+		}
 		var pString = new URLSearchParams(params).toString();
 		location.href = "./inbound.do?" + pString;
 }
 
 
-
-//완제품 게시물 개수 선택 
+/*--------------------------------------------------------------
+입고리스트 게시물 개수 선택 
+--------------------------------------------------------------*/
 function inbPostEa(type){
 	var form = document.querySelector("#inbpg_frm");
 	form.method = "GET";

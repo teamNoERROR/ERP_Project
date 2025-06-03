@@ -40,6 +40,11 @@ SELECT COUNT(*) FROM CLIENT_COMP
 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
+<!-- 거래처 상세보기  -->
+<select id="client_detail" resultType="kr.co.noerror.DTO.client_DTO" parameterType="Map">
+	SELECT * FROM CLIENT_COMP WHERE COMPANY_CODE = #{COMPANY_CODE} AND CIDX = #{CIDX}
+</select>
+
 
 
 </mapper>

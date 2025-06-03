@@ -204,10 +204,11 @@ public class common_controller {
 								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 								,@RequestParam(value="mode", required = false) String mode
+								,@RequestParam(value = "status", required = false) String[] status
 								)  {
 		
-		int inbound_total = this.io_svc.inbound_total(keyword); //입고 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea);  //입고 리스트 
+		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고 총개수
+		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고 리스트 
 		
 		//페이징 관련 
 		int pea = post_ea; 

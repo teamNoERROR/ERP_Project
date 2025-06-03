@@ -3,29 +3,34 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="pd_detail_label">발주 상세보기</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
 			</div>
 			<div class="modal-body row justify-content-center d-flex gap-3">
-				<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-					<h2 class="mb-1">발주번호 : [[${details[0].pch_code}]] </h2>
+				<div
+					class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
+					<h2 class="mb-1">발주번호 : [[${details[0].pch_code}]]</h2>
 					<div class="d-flex align-items-center gap-2">
-				    <!-- 발주코드를 data 속성에 저장 -->
-				    <select class="form-select" id="modal-status-select" style="max-width: 150px;" th:attr="data-pch-code=${details[0].pch_code}">
-				        <option selected value="발주상태 선택">발주상태 선택</option>
-				        <option value="발주요청">발주요청</option>
-				        <option value="발주취소">발주취소</option>
-				        <option value="발주완료">발주완료</option>
-				        <option value="진행중">진행중</option>
-				        <option value="지연중">지연중</option>
-				        <option value="가입고">가입고</option>
-				        <option value="입고완료">입고완료</option>
-				        <option value="반품">반품</option>
-				    </select>
+						<!-- 발주코드를 data 속성에 저장 -->
+						<select class="form-select" id="modal-status-select"
+							style="max-width: 150px;"
+							th:attr="data-pch-code=${details[0].pch_code}">
+							<option selected value="발주상태 선택">발주상태 선택</option>
+							<option value="발주요청">발주요청</option>
+							<option value="발주취소">발주취소</option>
+							<option value="발주완료">발주완료</option>
+							<option value="진행중">진행중</option>
+							<option value="지연중">지연중</option>
+							<option value="가입고">가입고</option>
+							<option value="입고완료">입고완료</option>
+							<option value="반품">반품</option>
+						</select>
 
-				    <button type="button" class="btn btn-success" style="white-space: nowrap;" onclick="update_pch_status()">
-				        <i class="bi bi-pencil-square"></i> 상태변경처리
-				    </button>
-				</div>
+						<button type="button" class="btn btn-success"
+							style="white-space: nowrap;" onclick="update_pch_status()">
+							<i class="bi bi-pencil-square"></i> 상태변경처리
+						</button>
+					</div>
 				</div>
 				<div class="table-responsive  rounded">
 					<table class="table table-bordered align-middle">
@@ -53,13 +58,14 @@
 							</tr>
 							<tr>
 								<td class="info-label">주소</td>
-								<td class="value-cell" colspan="5">[[${details[0].addr1 + details[0].addr2}]]</td>
+								<td class="value-cell" colspan="5">[[${details[0].addr1 +
+									details[0].addr2}]]</td>
 							</tr>
 						</tbody>
 					</table>
-	
+
 				</div>
-	
+
 				<div class="table-responsive  rounded">
 					<h5 class="">발주정보</h5>
 					<table class="table align-middle table-bordered">
@@ -77,7 +83,8 @@
 						</tr>
 						<tr>
 							<td class="info-label">결제 금액</td>
-							<td class="value-cell">[[${#numbers.formatDecimal(details[0].pay_amount, 0, 'COMMA', 0, 'POINT')}]] 원</td>
+							<td class="value-cell">[[${#numbers.formatDecimal(details[0].pay_amount,
+								0, 'COMMA', 0, 'POINT')}]] 원</td>
 							<td class="info-label">결제 수단</td>
 							<td class="value-cell">[[${details[0].pay_method}]]</td>
 						</tr>
@@ -90,19 +97,18 @@
 						<tr>
 							<td class="info-label">비고</td>
 							<td class="value-cell" colspan="3">[[${details[0].memo}]]</td>
-	<!-- 						<td class="info-label"></td> -->
-	<!-- 						<td class="value-cell"></td> -->
+							<!-- 						<td class="info-label"></td> -->
+							<!-- 						<td class="value-cell"></td> -->
 						</tr>
 					</table>
 				</div>
-	
+
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
 					<h5 class="">발주 제품 내역</h5>
 					<table class="table table-hover align-middle table-bordered">
 						<thead class="table-light text-center">
 							<tr>
-								<th scope="col"><input type="checkbox"></th>
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
 								<th scope="col">제품명</th>
@@ -113,20 +119,22 @@
 								<th scope="col">구매금액(원)</th>
 								<th scope="col">대분류</th>
 								<th scope="col">소분류</th>
-								
+
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="d, no : ${details}">
-								<td><input type="checkbox"></td>
 								<td>[[${no.count}]]</td>
 								<td>[[${d.item_code}]]</td>
 								<td>[[${d.item_name}]]</td>
 								<td>[[${d.item_spec}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_qty, 0, 'COMMA', 0, 'POINT')}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(d.item_qty, 0,
+									'COMMA', 0, 'POINT')}]]</td>
 								<td>[[${d.item_unit}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_qty * d.item_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(d.item_cost,
+									0, 'COMMA', 0, 'POINT')}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(d.item_qty *
+									d.item_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
 								<td>[[${d.item_class1}]]</td>
 								<td>[[${d.item_class2}]]</td>
 							</tr>
@@ -135,13 +143,13 @@
 						<tfoot>
 							<tr>
 								<td class="info-label" colspan="2">합계</td>
-								<td ></td>
 								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
-								<td align="right">[[${#numbers.formatDecimal(details[0].pay_amount, 0, 'COMMA', 0, 'POINT')}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(details[0].pay_amount,
+									0, 'COMMA', 0, 'POINT')}]]</td>
 								<td></td>
 								<td></td>
 							</tr>
@@ -153,12 +161,17 @@
 					<!-- 				Action Buttons -->
 					<div class="mt-4 d-flex gap-2">
 						<div class="ms-auto">
-
+							<th:block th:if="${details[0].pch_status == '발주요청'}">
+								<a
+									th:href="@{/purchase_update.do(code=${details[0].pch_code})}"
+									class="btn btn-success"> <i class="bi bi-pencil-square"></i>
+									수정
+								</a>
+							</th:block>
 						</div>
 					</div>
 				</div>
-      		</div>
+			</div>
 		</div>
 	</div>
 </div>
-				

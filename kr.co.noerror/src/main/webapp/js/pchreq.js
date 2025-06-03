@@ -94,6 +94,14 @@ function addToCart() {
 }
 
 function pchreq_save() {
+  const empCode = document.getElementById("emp_code").value;
+  const empName = document.getElementById("emp_name").value;
+
+  if (!empCode || !empName) {
+	alert("발주담당자를 선택해주세요.");
+	return;
+  }
+	
   const basketRows = document.querySelectorAll('#basketBody tr');
   const groupedData = {};
   let currentCompanyCode = '';
@@ -135,6 +143,7 @@ function pchreq_save() {
 	      company_name: currentCompanyName,
 	      due_date: currentInputs.due_date,
 	      pay_method: currentInputs.pay_method,
+		  emp_code: empCode,
 	      memo: currentInputs.memo,
 	      items: []
 	    };
@@ -228,7 +237,138 @@ function update_pch_status() {
     });
 }
 
+//발주바구니 비우기
 function clear_cart(){
 	const basket = document.getElementById('basketBody');
 	basket.innerHTML = ''; // 바구니 내용 전체 제거
+}
+
+//주문수량 변경시 구매금액 자동 변경
+document.addEventListener('DOMContentLoaded', function () {
+	const qtyInputs = document.querySelectorAll('.qty-input');
+
+	function updateRowAmount(row) {
+		const qtyInput = row.querySelector('.qty-input');
+		const costCell = row.querySelector('.cost-input');
+		const amountCell = row.querySelector('.amount-cell');
+
+		let qty = parseInt(qtyInput.value);
+		let cost = parseInt(costCell.dataset.cost);
+
+		if (isNaN(qty) || qty < 1) qty = 1;
+		if (isNaN(cost) || cost < 0) cost = 0;
+
+		const amount = qty * cost;
+		amountCell.textContent = amount.toLocaleString();
+		return amount;
+	}
+
+	function updateTotalAmount() {
+		let total = 0;
+		document.querySelectorAll('#product-tbody tr').forEach(row => {
+			const qtyInput = row.querySelector('.qty-input');
+			const costCell = row.querySelector('.cost-input');
+
+			const qty = parseInt(qtyInput.value) || 0;
+			const cost = parseInt(costCell.dataset.cost) || 0;
+			total += qty * cost;
+		});
+
+		document.querySelectorAll('.total-amount').forEach(el => {
+			el.textContent = total.toLocaleString();
+		});
+	}
+
+	function onInputChange() {
+		const row = this.closest('tr');
+		updateRowAmount(row);
+		updateTotalAmount();
+	}
+
+	qtyInputs.forEach(input => input.addEventListener('input', onInputChange));
+});
+
+function pchreq_update() {
+	const frm = document.getElementById('frm');
+
+	const dueDate = frm.querySelector('input[name="due_date"]');
+	const empCode = frm.querySelector('input[name="emp_code"]');
+	const empName = frm.querySelector('input[name="emp_name"]');
+	const payMethod = frm.querySelector('select[name="pay_method"]');
+	const rows = document.querySelectorAll('#product-tbody tr');
+	
+	// 유효성 검사
+	if (!dueDate.value) {
+		alert("납기요청일을 입력하세요.");
+		dueDate.focus();
+		return;
+	} 
+	if (!empName.value.trim()) {
+		alert("발주 담당자를 입력하세요.");
+		empName.focus();
+		return;
+	} 
+	if (!payMethod.value) {
+		alert("결제 수단을 선택하세요.");
+		payMethod.focus();
+		return;
+	} 
+	
+	if (rows.length === 0) {
+		alert('최소 한 개 이상의 제품이 있어야 합니다.');
+		return;
+	}
+
+	const items = [];
+	for (const row of rows) {
+		const itemCode = row.querySelector('.item-code').value;
+		const qtyInput = row.querySelector('.qty-input');
+		const qty = parseInt(qtyInput.value);
+		if (isNaN(qty) || qty < 1) {
+			alert('수량은 1 이상이어야 합니다.');
+			qtyInput.focus();
+			return;
+		}
+		items.push({
+			item_code: itemCode,
+			item_qty: qty
+		});
+	}
+	
+	// 서버로 보낼 데이터 구성
+	const data = {
+		pch_code: frm.querySelector('input[name="pch_code"]').value,
+		due_date: dueDate.value,
+		emp_code: empCode.value,
+		pay_method: payMethod.value,
+		memo: frm.querySelector('textarea[name="memo"]').value,
+		items: items
+	};
+
+	// AJAX 통신 (POST)
+	fetch('/pchreq_updateok.do', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('서버 응답 오류');
+		}
+		return response.json(); 
+	})
+	.then(result => {
+		if (result.success) {
+			alert('발주정보가 수정되었습니다.');
+			window.location.href = "/purchase.do";
+		} else {
+			alert('수정 실패: ' + (result.message || '알 수 없는 오류'));
+		}
+	})
+	.catch(error => {
+		console.error(error);
+		alert('수정 중 오류 발생');
+	});
 }

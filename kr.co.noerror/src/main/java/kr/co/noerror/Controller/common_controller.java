@@ -1,5 +1,7 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.common_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
@@ -30,7 +35,7 @@ import kr.co.noerror.Service.inout_service;
 @Controller
 public class common_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
-	
+	PrintWriter pw = null;
 	
 	@Resource(name="employee_DTO")
 	employee_DTO emp_dto;
@@ -284,6 +289,7 @@ public class common_controller {
 	        return "/modals/purchase_list_modal.html"; 
 	    }
 	}
-		
+	
+	
 
 }

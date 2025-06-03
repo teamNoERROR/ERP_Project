@@ -52,6 +52,26 @@ function previewFile() {
 /*--------------------------------------------------------------
   리스트 모달
 ----------------------------------------------------------- */
+//타입별창고리스트 모달 열기
+function whSelect(wh_type){
+	fetch("./wh_type_list.do?wh_type="+wh_type, {
+			method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("wh_type_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+} 
+
 
 //거래처리스트 모달 오픈 
 function cltListOpen(){

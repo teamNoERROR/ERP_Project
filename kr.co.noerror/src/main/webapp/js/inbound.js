@@ -1,3 +1,18 @@
+var pch_code = document.querySelector("#pch_code");
+var whname = document.querySelector("#in_wh_name");
+var wh_code = document.querySelector("#wh_code");
+var inbound_date = document.querySelector("#inbound_date");
+var in_status = document.querySelector("#in_status");
+var employee_code = document.querySelector("#employee_code");
+var inb_memo = document.querySelector("#inb_memo");
+
+
+
+
+
+
+
+
 //입고리스트 수기등록 버튼 클릭 
 function addInbound(){
 	location.href="./inbound_insert.do";
@@ -7,27 +22,6 @@ function addInbound(){
 function goInbndList(){
 	location.href="./inbound.do"
 }
-
-
-//입고등록시 타입별창고리스트 모달 열기
-function whSelect(wh_type){
-	fetch("./wh_type_list.do?wh_type="+wh_type, {
-			method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("wh_type_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-} 
 
 
 //창고리스트에서 선택후 인풋란에 붙여넣기  
@@ -47,11 +41,8 @@ function choiceWh() {
 		var wh_name = selected_radio.getAttribute('data-wh_name');
 		
 	  	//선택한 창고 데이터 붙여넣을 곳 
-		var in_wh_name = document.querySelector('#in_wh_name');
-		var in_wh_code = document.querySelector('#wh_code');
-		  
-		in_wh_name.value= wh_name;
-		in_wh_code.value= selected_radio.value;
+		whname.value= wh_name;
+		wh_code.value= selected_radio.value;
 		
 		// 선택 후 모달 닫기
 	 	var modalElement = document.getElementById("wh_type_list");
@@ -65,27 +56,112 @@ function choiceWh() {
 	}
 };
 
-var pch_code = document.querySelector("#pch_code");
-var whname = document.querySelector("#in_wh_name");
-var wh_code = document.querySelector("#wh_code");
-var inbound_date = document.querySelector("#inbound_date");
-var in_status = document.querySelector("#in_status");
-var employee_code = document.querySelector("#employee_code");
-var inb_memo = document.querySelector("#inb_memo");
 
-var item_code = document.querySelectorAll(".item_code");  //발주상품 코드
-var item_qty = document.querySelectorAll(".item_qty");  //입고된 양
-var item_exp = document.querySelectorAll(".item_exp");  //유통기한
-var item_deli = document.querySelectorAll(".item_deli");  //입고상태
+//발주리스트에서 선택후 인풋란에 붙여넣기  
+function choicePch() {
+	var radios = document.querySelectorAll('input[name="choice_pch"]');
+	var selected_radio = null;
+	
+		
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	if (!selected_radio) {
+		alert("발주내역을 선택해 주세요.");
 
-var tbody = document.querySelector("#inbnd_items");
-var rows = tbody.querySelectorAll('tr.item_row');
+	 }else{
+		var tr = selected_radio.closest('tr');
+		var tdList = tr.querySelectorAll('td');
+		var pidx =  tdList[2].innerText.trim();
+		var cmp_name = tdList[4].innerText.trim();
+		var cmp_code = tr.getAttribute("data-etccode");
+		
+		var pch_code = document.querySelector('#pch_code');
+		var comp_name = document.querySelector('#comp_name');
+		var comp_code = document.querySelector('#comp_code');
+		  
+		pchDtlLoad(pidx);   //발주목록 테이블에 붙여넣기
+		
+		pch_code.value= pidx;
+		comp_name.value= cmp_name;
+		comp_code.value= cmp_code;
+		
+	
+		
+		// 선택 후 모달 닫기
+	 	var modalElement = document.getElementById("purchase_list");
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	}
+};
+
+//발주부자재 리스트 로드 
+function pchDtlLoad(pch_code){
+	fetch("./purchase_detail_modal.do?code="+pch_code, {
+		method: "GET",
+		
+	}).then(function(data) {
+		return data.json();
+
+	}).then(function(result) {
+		console.log(result)
+		var tbody = document.querySelector('#inbnd_items');
+		
+		//기존 행 전체 삭제
+		document.querySelectorAll('tr.item_row').forEach(tr => tr.remove());
+		//결과값 붙이기 
+		result.forEach((resultItem, index) => {
+				
+			var tr = document.createElement('tr');
+		  	tr.className = "item_row"
+		  	tr.innerHTML = `
+			    <td>`+(index+1)+`</td>
+			    <td class="item_code">`+resultItem.item_code+`</td>
+			    <td>`+resultItem.item_name+`</td>
+			    <td>`+resultItem.item_spec+`</td>
+			    <td>`+resultItem.item_qty+`</td>
+			    <td>`+resultItem.item_unit+`</td>
+			    <td>`+resultItem.item_class1+`</td>
+				<td>`+resultItem.item_class2+`</td>
+				<td class="text-end">`+resultItem.item_cost+`</td>
+				<td><input type="text" class="form-control item_qty"></td>
+				<td><input type="date" class="form-control item_exp"></td>
+				<td>
+					<select class="form-select item_deli" aria-label="Default select example" >
+						<option value="" >선택</option>
+						<option value="납품완료" >납품완료</option>
+						<option value="부분입고">부분입고</option>
+						<option value="미납">미납</option>
+					</select>
+				</td>
+			  `;
+		  	tbody.append(tr);
+		});  
+		  
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+	
+}
 
 
 
 //입고리스트 저장버튼 클릭 
 function insert_inBnd(){
-	//console.log(item_code.textContent)
+	var tbody = document.querySelector("#inbnd_items");
+	var rows = tbody.querySelectorAll('tr.item_row');
+	
+	var item_qty = document.querySelectorAll(".item_qty");  //입고된 양
+	var item_exp = document.querySelectorAll(".item_exp");  //유통기한
+	var item_deli = document.querySelectorAll(".item_deli");  //입고상태
+	//console.log(item_cd.textContent)
 	if(pch_code.value==""){
 		alert("발주내역을 선택하세요.");
 		pch_code.focus();		
@@ -126,13 +202,15 @@ function insert_inBnd(){
 //입고저장 ajax
 function inbndInsertOk(){
 	var in_items = [];
+	var tbody = document.querySelector("#inbnd_items");
+	var rows = tbody.querySelectorAll('tr.item_row');
 	
 	rows.forEach(row => {
 		var itmCd = row.querySelector(".item_code");
 		var itmQty = row.querySelector(".item_qty");
 		var itmExp = row.querySelector(".item_exp");
 		var itmDeli = row.querySelector(".item_deli");
-	    
+		console.log(itmCd.textContent)
 		//다 입력했으면 배열에 넣기
       	in_items.push({
 			PCH_CODE : pch_code.value,
@@ -147,6 +225,7 @@ function inbndInsertOk(){
 			INB_MEMO:inb_memo.value
       	});
 	});
+	
 	fetch("./inbound_insertok.do", {
 
 		method: "PUT",
@@ -190,8 +269,8 @@ function openInbndDetail(event){
 	});
 }
 
-
-function inboundOk(){
+//입고 저장
+function inbCngOk(){
 	var in_status = document.querySelector("#in_status").value;
 	var inbnd_ckbx = document.querySelectorAll("input[name='inb_sel']:checked");
 	
@@ -276,4 +355,7 @@ function inbPostEa(type){
 	form.pageno.value = 1; //
 	form.submit();
 }
+
+
+
 

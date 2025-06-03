@@ -36,11 +36,11 @@
                  </div>
                  <div class="col-md-3 mb-3 mb-md-0">
                      <label class="form-label fw-semibold">구매처명</label>
-                     <input type="text" class="form-control" placeholder="구매처명" >
+                     <input type="text" class="form-control" placeholder="구매처명" id="comp_name">
                  </div>
                    <div class="col-md-3">
                      <label class="form-label fw-semibold">구매처코드</label>
-                     <input type="text" class="form-control" placeholder="구매처코드" >
+                     <input type="text" class="form-control" placeholder="구매처코드" id="comp_code">
                  </div>
                  <div class="col-md-3">
                      <label class="form-label fw-semibold">입고창고</label>
@@ -59,8 +59,8 @@
             <!-- 주문항목 List Table -->
 			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
 				<h5 >발주 제품 내역</h5>
-				<table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
-					<thead class="table-light text-center">
+				<table class="table table-hover align-middle table-bordered text-center" style="white-space: nowrap;">
+					<thead class="table-light ">
 						<tr >
 							<th scope="col" style="width: 3%;">#</th>
 							<th scope="col" style="width: 8%;">제품코드</th>
@@ -78,48 +78,10 @@
 						</tr>
 					</thead>
 					<tbody id="inbnd_items">
-						<tr class="text-center item_row" >
-							<td>3</td>
-							<td class="item_code">25000</td>
-							<td >오렌지</td>
-							<td>100g</td>
-							<td>500</td>
-							<td>ea</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td class="text-end">3,000</td>
-							<td><input type="text" class="form-control item_qty"></td>
-							<td><input type="date" class="form-control item_exp"></td>
-							<td>
-							<select class="form-select item_deli" aria-label="Default select example" >
-								<option value="" >선택</option>
-								<option value="납품완료" >납품완료</option>
-								<option value="부분입고">부분입고</option>
-								<option value="미납">미납</option>
-							</select>
-							</td>
+						<tr class="item_row">
+							<td colspan="12" class="text-center ">입고된 제품이 없습니다.</td>
 						</tr>
-						<tr class="text-center item_row" >
-							<td>3</td>
-							<td class="item_code">25016</td>
-							<td>사과</td>
-							<td>100g</td>
-							<td>500</td>
-							<td>ea</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td class="text-end">4,000</td>
-							<td><input type="text" class="form-control item_qty"></td>
-							<td><input type="date" class="form-control item_exp"></td>
-							<td>
-							<select class="form-select item_deli" aria-label="Default select example" >
-								<option value="" >선택</option>
-								<option value="납품완료" >납품완료</option>
-								<option value="부분입고">부분입고</option>
-								<option value="미납">미납</option>
-							</select>
-							</td>
-						</tr>
+						<!-- 아이템 목록 뜨는 곳 -->
 					</tbody>
 				</table>
 			</div>

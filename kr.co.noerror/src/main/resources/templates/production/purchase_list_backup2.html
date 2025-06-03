@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+	<header th:replace="~{/common/header.html :: header}"></header>
+
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+		<section class="container ">
+			<!-- Title -->
+			<div
+				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<h2 class="mb-1">발주 관리</h2>
+			</div>
+
+			<!-- Search Bar -->
+			<form class="row g-2 my-4 justify-content-end" method="get"
+				action="/pchreq_list.do">
+				<div class="col-auto">
+					<div class="input-group input-group-sm">
+						<input type="checkbox" name="statuses" value="발주요청">&nbsp;발주요청&nbsp;
+						<input type="checkbox" name="statuses" value="발주취소">&nbsp;발주취소&nbsp;
+						<input type="checkbox" name="statuses" value="발주완료">&nbsp;발주완료&nbsp;
+						<input type="checkbox" name="statuses" value="진행중">&nbsp;진행중&nbsp;
+						<input type="checkbox" name="statuses" value="지연중">&nbsp;지연중&nbsp;
+						<input type="checkbox" name="statuses" value="가입고">&nbsp;가입고&nbsp;
+						<input type="checkbox" name="statuses" value="입고완료">&nbsp;입고완료&nbsp;
+						<input type="checkbox" name="statuses" value="반품">
+						&nbsp;반품&nbsp;
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control" name="search_word"
+							placeholder="검색">
+						<button class="btn btn-primary" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+
+			<!-- 발주 List Table -->
+			<div id="list-container">
+				<div id="table-container" class="table-responsive  rounded"
+					th:fragment="pchList(pch_list, mode)">
+					<table
+						class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
+						<thead class="table-light text-center">
+							<tr>
+								<th scope="col"><input
+									th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
+								<th scope="col">#</th>
+								<th scope="col">발주번호</th>
+								<th scope="col">발주일자</th>
+								<th scope="col">발주처명</th>
+								<th scope="col">발주처 담당자</th>
+								<th scope="col">거래금액</th>
+								<th scope="col">납품예정일</th>
+								<th scope="col">발주진행상황</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="p : ${pch_list}" class="modal-trigger"
+								th:data-modal-url="@{/pchreq_detail.do(code=${p.pch_code})}"
+								data-modal-id="pch_modal" style="cursor: pointer;">
+								<td onclick="event.stopPropagation();"><input
+									th:type="${mode == 'modal'} ? 'radio' : 'checkbox'"></td>
+								<td>[[${p.pidx}]]</td>
+								<td>[[${p.pch_code}]]</td>
+								<td>[[${p.request_date.substring(0, 10)}]]</td>
+								<td>[[${p.company_name}]]</td>
+								<td>[[${p.manager_name}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(p.pay_amount,
+									0, 'COMMA', 0, 'POINT')}]]</td>
+								<td>[[${p.due_date.substring(0, 10)}]]</td>
+								<td>[[${p.pch_status}]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Pagination -->
+				<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+					<!-- Pagination -->
+					<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="pchPgList(pchMode)">
+						<ul class="pagination">
+							<!-- 이전 블록 -->
+							<li class="page-item prev"
+								th:classappend="${start_page == 1} ? 'disabled'">
+								<a class="page-link" th:if="${pchMode != 'pchPageing'}"
+								th:href="@{'/pchreq_list.do'(pageno=${start_page - 1},
+			                            search_word=${search_word},
+			                            purchase_status=${purchase_statuses})}">이전 </a>
+			                    <a class="page-link" th:if="${pchMode == 'pchPageing'}"  
+			                    	th:attr="data-keyword=${search_word}, data-pageno=${start_page - 1}, data-pea=${view}" 
+			                    	th:onclick="'pch_modal_pg(this)'">이전</a>
+							</li>
+
+							<!-- 현재 페이지 블록 -->
+							<li class="page-item"
+								th:each="n : ${#numbers.sequence(start_page, end_page)}"
+								th:classappend="${n == pageno} ? 'active'">
+								<a class="page-link" th:if="${pchMode != 'pchPageing'}"
+								th:href="@{'/pchreq_list.do'(pageno=${n},
+			                            search_word=${search_word},
+			                            purchase_status=${purchase_statuses})}">
+									[[${n}]] </a>
+								<a class="page-link" th:if="${pchMode == 'pchPageing'}" 
+									th:attr="data-keyword=${search_word}, data-pageno=${n}, data-pea=${view}" 
+									th:onclick="'pch_modal_pg(this)'">[[${n}]]</a>		
+							</li>
+
+							<!-- 다음 블록 -->
+							<li class="page-item next"
+								th:classappend="${end_page >= page_cnt} ? 'disabled'">
+								<a class="page-link" th:if="${pchMode != 'pchPageing'}"
+								th:href="@{'/pchreq_list.do'(pageno=${end_page + 1},
+			                            search_word=${search_word},
+			                            purchase_status=${purchase_statuses})}">
+									다음 </a>
+								<a class="page-link" th:if="${pchMode == 'pchPageing'}"   
+									th:attr="data-keyword=${search_word}, data-pageno=${end_page + 1}, data-pea=${view}" 
+									th:onclick="'pch_modal_pg(this)'">다음</a>
+								</li>
+						</ul>
+	
+					<!-- Action Buttons -->
+					<div class="ms-auto">
+						<button type="button" class="btn btn-success"
+							onclick="location.href='/pchreq_insert.do'">
+							<i class="bi bi-plus-lg"></i> 수기등록
+						</button>
+						<!-- 						<button class="btn btn-danger"> -->
+						<!-- 							<i class="bi bi-trash"></i> 삭제 -->
+						<!-- 						</button> -->
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<div id="modalContainer"></div>
+
+	<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

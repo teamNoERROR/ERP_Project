@@ -58,7 +58,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 pchreq_entity.setPay_amount(pay_amount);
 
                 // purchase_req 저장
-                result1 += this.pchreq_dao.insert_purchase(pchreq_entity);
+                result1 += this.pchreq_dao.pchreq_insert(pchreq_entity);
 
                 cnt += pchreq_req_dto.getItems().size();
 
@@ -68,7 +68,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 	pchreq_detail_entity.setPch_code(pch_code);
                 	pchreq_detail_entity.setItem_code(idto.getItem_code());
                 	pchreq_detail_entity.setItem_qty(idto.getItem_qty());
-                    result2 += this.pchreq_dao.insert_pch_detail(pchreq_detail_entity);
+                    result2 += this.pchreq_dao.pchreq_detail_insert(pchreq_detail_entity);
                 }
             }
 
@@ -118,12 +118,12 @@ public class pchreq_serviceImpl implements pchreq_service {
     }
     
     @Override
-    public Map<String, Object> update_pch_status(Map<String, String> requestParam) {
+    public Map<String, Object> pch_status_update(Map<String, String> requestParam) {
     	
     	Map<String, Object> response = new HashMap<>();
     	
     	try {
-    		int result = this.pchreq_dao.update_pch_status(requestParam);
+    		int result = this.pchreq_dao.pch_status_update(requestParam);
     		response.put("success", (result == 1));
 	    } catch (Exception e) {
 	        e.printStackTrace();

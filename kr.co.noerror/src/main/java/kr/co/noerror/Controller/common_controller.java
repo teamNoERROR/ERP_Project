@@ -246,7 +246,7 @@ public class common_controller {
 			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
 		}
 		
-		int data_cnt = this.pdao.purchase_count(mparam);
+		int data_cnt = this.pdao.pchreq_count(mparam);
 		
 		int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
 		
@@ -259,7 +259,7 @@ public class common_controller {
 		mparam.put("start", start);        //oracle 시작행 번호
 		mparam.put("end", end);            //oracle 종료행 번호
 		
-		List<pchreq_res_DTO> all = this.pdao.purchase_list(mparam);
+		List<pchreq_res_DTO> all = this.pdao.pchreq_list(mparam);
 	
 		
 		//데이터, 페이징 정보를 모델에 전달
@@ -274,7 +274,7 @@ public class common_controller {
 		m.addAttribute("search_word", search_word);
 		m.addAttribute("pch_statuses", pch_statuses);
 		
-//		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
+//		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
 //		m.addAttribute("details",details);
 		
 		if ("modal2".equals(mode)) {

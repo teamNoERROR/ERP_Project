@@ -27,7 +27,7 @@
 </select>
 
 <!-- 발주요청 정보 저장 -->  
-<insert id="insert_purchase" parameterType="kr.co.noerror.DTO.pchreq_DTO">
+<insert id="pchreq_insert" parameterType="kr.co.noerror.DTO.pchreq_DTO">
   INSERT INTO purchase_req (
     pch_code,
     company_code,
@@ -54,7 +54,7 @@
 </insert>
 
 <!-- 발주요청 상세정보 저장 -->  
-<insert id="insert_pch_detail" parameterType="kr.co.noerror.DTO.pchreq_detail_DTO">
+<insert id="pchreq_detail_insert" parameterType="kr.co.noerror.DTO.pchreq_detail_DTO">
   INSERT INTO purchase_req_detail (
     pch_code,
     item_code,
@@ -67,7 +67,7 @@
 </insert>
 
 <!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
-<select id="purchase_list" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="Map">
+<select id="pchreq_list" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="Map">
 SELECT * FROM (
     SELECT inner_result.*, ROWNUM rnum
     FROM (
@@ -78,6 +78,7 @@ SELECT * FROM (
         	pch.pch_status, 
         	pch.request_date, 
         	pch.pay_amount,
+        	cmp.company_code,
         	cmp.company_name, 
         	mgr.manager_name
         FROM purchase_req pch
@@ -104,7 +105,7 @@ WHERE rnum &gt; #{start}
 </select>
 
 <!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
-<select id="purchase_count" resultType="int" parameterType="map">
+<select id="pchreq_count" resultType="int" parameterType="map">
 SELECT COUNT(*) AS total
 	FROM purchase_req pch
 	JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
@@ -125,7 +126,7 @@ WHERE 1=1
     </if>
 </select>
 
-<select id="purchase_detail" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="String">
+<select id="pchreq_detail" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="String">
 SELECT
     prd.pidx, 
     prd.pch_code, 
@@ -181,7 +182,7 @@ WHERE pch_code = #{pch_code}
 </update>
 
 <!-- 발주상태 업데이트 -->
-<update id="update_pch_status" parameterType="map">
+<update id="pch_status_update" parameterType="map">
 UPDATE purchase_req
 SET pch_status = #{pch_status}
 WHERE pch_code = #{pch_code}

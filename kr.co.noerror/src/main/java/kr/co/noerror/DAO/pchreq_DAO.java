@@ -56,6 +56,18 @@ public class pchreq_DAO {
 		return details;
 	}
 	
+	//발주정보 수정
+	public int pchreq_update(pchreq_DTO pdto) {
+		int result = this.sql.update("pchreq_update", pdto);
+		return result;
+	}
+	
+	//발주 상세정보 수정
+	public int pchreq_detail_update(pchreq_detail_DTO pdto) {
+		int result = this.sql.update("pchreq_detail_update", pdto);
+		return result;		
+	}
+	
 	//발주상태 업데이트
 	public int update_pch_status(Map<String, String> mparam) {
 		int result = this.sql.update("update_pch_status", mparam);

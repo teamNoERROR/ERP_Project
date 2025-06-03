@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -129,14 +130,20 @@ public class pchreq_controller {
 		return "/modals/purchase_detail_modal.html";
 	}
 	
-	@GetMapping("/purchase_detail2.do")
-	public String purchase_detail2(@RequestParam(name="code") String pch_code, Model m) {
+	@GetMapping("/purchase_update.do")
+	public String purchase_update(@RequestParam(name="code") String pch_code, Model m) {
 		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
 		m.addAttribute("details",details);
-		return "/production/purchase_detail.html";
+		return "/production/purchase_update.html";
 	}
 	
-	@PostMapping("update_pch_status.do")
+	@PostMapping("/pchreq_updateok.do")
+	@ResponseBody
+	public Map<String, Object> pchreq_updateok(@RequestBody pchreq_req_DTO requestdto) {
+		return pchreq_service.pchreq_update(requestdto);
+	}
+	
+	@PostMapping("/update_pch_status.do")
 	@ResponseBody
 	public Map<String, Object> update_pch_status(@RequestBody Map<String, String> requestParam) {
 		return pchreq_service.update_pch_status(requestParam);

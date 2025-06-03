@@ -47,7 +47,7 @@ public class pchreq_serviceImpl implements pchreq_service {
                 pchreq_entity.setPch_status("발주요청");
                 pchreq_entity.setDue_date(pchreq_req_dto.getDue_date());
                 pchreq_entity.setPay_method(pchreq_req_dto.getPay_method());
-                pchreq_entity.setEmp_code("EMP-00001");  // TODO: 로그인 사용자로 대체
+                pchreq_entity.setEmp_code(pchreq_req_dto.getEmp_code());
                 pchreq_entity.setMemo(pchreq_req_dto.getMemo());
 
                 // 총 금액 계산
@@ -73,6 +73,41 @@ public class pchreq_serviceImpl implements pchreq_service {
             }
 
             response.put("success", (result1 == requestMap.size()) && (result2 == cnt));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+        }
+
+        return response;
+    }
+    
+    @Override
+    public Map<String, Object> pchreq_update(pchreq_req_DTO pchreq_req_dto) {
+    	
+    	Map<String, Object> response = new HashMap<>();
+    	int result1 = 0;
+    	int result2 = 0;
+    	try {
+	    	// purchase_req 수정
+	    	pchreq_DTO pchreq_entity = new pchreq_DTO();
+            pchreq_entity.setPch_code(pchreq_req_dto.getPch_code());
+            pchreq_entity.setDue_date(pchreq_req_dto.getDue_date());
+            pchreq_entity.setPay_method(pchreq_req_dto.getPay_method());
+            pchreq_entity.setEmp_code(pchreq_req_dto.getEmp_code());
+            pchreq_entity.setMemo(pchreq_req_dto.getMemo());
+	        result1 = this.pchreq_dao.pchreq_update(pchreq_entity);
+	
+	        // purchase_req_detail 수정
+	        for (pchreq_item_DTO idto : pchreq_req_dto.getItems()) {
+	        	pchreq_detail_DTO pchreq_detail_entity = new pchreq_detail_DTO();
+	        	pchreq_detail_entity.setPch_code(pchreq_req_dto.getPch_code());
+	        	pchreq_detail_entity.setItem_code(idto.getItem_code());
+	        	pchreq_detail_entity.setItem_qty(idto.getItem_qty());
+	            result2 += this.pchreq_dao.pchreq_detail_update(pchreq_detail_entity);
+	        }
+	        
+            response.put("success", ((result1 == 1) && (result2 == pchreq_req_dto.getItems().size())));
 
         } catch (Exception e) {
             e.printStackTrace();

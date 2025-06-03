@@ -158,6 +158,22 @@
       </div>
     </div>
 
+	<!-- 발주담당자 입력 폼 -->
+	<div class="row mb-3 empinfo">
+	  <div class="col-md-4">
+	    <label class="form-label">발주담당자</label>
+		<div>
+		  <input type="hidden" class="form-control" name="emp_code" id="emp_code" th:value="${session.emp_code}" readonly>
+		</div>
+	    <div class="input-group">
+	      <input type="text" class="form-control" name="emp_name" id="emp_name" th:value="${session.emp_name}" readonly>
+          <button type="button" class="btn btn-outline-secondary modal-trigger" 
+                  th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
+              <i class="bi bi-search"></i>
+          </button>
+	    </div>
+	</div>
+	
     <!-- 하단 공통: 발주 바구니 -->
     <div class="mt-5">
     

@@ -160,10 +160,31 @@ JOIN temp_employ emp ON pch.emp_code = emp.emp_code
 WHERE prd.pch_code = #{pch_code}
 </select>
 
+<!-- 발주정보 수정 -->
+<update id="pchreq_update" parameterType="kr.co.noerror.DTO.pchreq_DTO">
+UPDATE purchase_req
+SET
+	due_date = #{due_date},
+	pay_method = #{pay_method},
+	emp_code = #{emp_code},
+	memo = #{memo},
+	modify_date = SYSDATE
+WHERE pch_code = #{pch_code}
+</update>
+
+<update id="pchreq_detail_update" parameterType="kr.co.noerror.DTO.pchreq_detail_DTO">
+UPDATE purchase_req_detail
+SET
+	item_qty = #{item_qty}
+WHERE pch_code = #{pch_code}
+  AND item_code = #{item_code} 
+</update>
+
+<!-- 발주상태 업데이트 -->
 <update id="update_pch_status" parameterType="map">
-    UPDATE purchase_req
-    SET pch_status = #{pch_status}
-    WHERE pch_code = #{pch_code}
+UPDATE purchase_req
+SET pch_status = #{pch_status}
+WHERE pch_code = #{pch_code}
 </update>
 
 </mapper>

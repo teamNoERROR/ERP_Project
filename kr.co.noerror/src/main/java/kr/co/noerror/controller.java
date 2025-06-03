@@ -1,8 +1,16 @@
 package kr.co.noerror;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import kr.co.noerror.DAO.pchreq_DAO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
 
 @Controller
 public class controller {
@@ -53,6 +61,13 @@ public class controller {
 	public String test(Model m) {
 	
 		return "/temp/warehouse_in.html";
+	}
+	
+	@GetMapping("/session.do")
+	public String session_save(HttpSession session) {
+		session.setAttribute("emp_code", "EMP-00005");
+		session.setAttribute("emp_name", "정수연");
+		return "/Production/temp_session.html";
 	}
 
 }

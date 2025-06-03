@@ -1,9 +1,11 @@
 package kr.co.noerror.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import kr.co.noerror.DTO.paging_info_DTO;
 
+@Repository("M_paging_util")
 public class M_paging_util {
 
 	@Autowired

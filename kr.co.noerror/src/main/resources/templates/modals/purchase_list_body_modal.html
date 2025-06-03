@@ -1,32 +1,52 @@
-<div class="modal-body row  d-flex align-items-center gap-3 " th:fragment="pchMdList(pch_list, mode)">
-		 <!-- 검색창 영역 -->
-		  <div class="d-flex justify-content-end mb-2">
-		    <form class="row g-2 align-items-center ">
-		      <div class="col-auto">
-		        <div class="input-group input-group-sm">
-		          <input type="text" class="form-control" placeholder="검색어를 입력하세요">
-		          <button class="btn btn-primary">
-		            <i class="bi bi-search"></i>
-		          </button>
-		        </div>
-		      </div>
-		    </form>
-		  </div>
-		  
-		  <!-- 테이블 영역 -->
-		<div th:replace="~{/production/purchase_list.html :: pchList( ${pch_list}, 'modal')}" ></div>
-		
-		<!-- 페이징 -->
-		<div th:replace="~{/production/purchase_list.html :: pchPgList('pchPageing')}" ></div>
+<div class="modal fade" id="purchase_list" tabindex="-1"
+	aria-labelledby="purchase_list_label" aria-hidden="true">
+	<div
+		class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="purchase_list_label">발주처 리스트</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body row  d-flex align-items-center gap-3 "
+				th:fragment="pchMdList(pch_list, mode)">
+				<!-- 검색창 영역 -->
+				<div class="d-flex justify-content-end mb-2">
+					<form class="row g-2 align-items-center ">
+						<div class="col-auto">
+							<div class="input-group input-group-sm">
+								<input type="text" class="form-control" placeholder="검색어를 입력하세요">
+								<button class="btn btn-primary">
+									<i class="bi bi-search"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
 
-      </div>
-      <div class="modal-footer">
-       <!-- Action Buttons -->
-        <div class="d-flex gap-2"> 
-            <div class="ms-auto">
-                <button type="button" class="btn btn-success" onclick=""><i class="bi bi-pencil-square"></i> 선택</button>
-               
-            </div>
-        </div>
-</div>
+				<!-- 테이블 영역 -->
+				<div
+					th:replace="~{/production/purchase_list.html :: pchList( ${pch_list}, 'modal')}"></div>
 
+				<!-- 페이징 -->
+				<!-- <div th:replace="~{/production/purchase_list.html :: pchPgList('pchPageing')}" ></div> -->
+				<div
+					class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+					<!-- Pagination -->
+					<div
+						th:replace="~{/fragments/paging.html :: pagination(${paging}, ${condition}, 'modal')}">
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<!-- Action Buttons -->
+				<div class="d-flex gap-2">
+					<div class="ms-auto">
+						<button type="button" class="btn btn-success" onclick="">
+							<i class="bi bi-pencil-square"></i> 선택
+						</button>
+
+					</div>
+				</div>
+			</div>

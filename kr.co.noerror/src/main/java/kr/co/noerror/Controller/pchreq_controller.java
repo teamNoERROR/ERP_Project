@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,14 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.order_DTO;
+import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.DTO.search_condition_DTO;
 import kr.co.noerror.DTO.pchreq_item_DTO;
 import kr.co.noerror.DTO.pchreq_req_DTO;
+import kr.co.noerror.Model.M_paging_util;
 import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.pchreq_service;
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +41,9 @@ import lombok.RequiredArgsConstructor;
 public class pchreq_controller {
 	
 	private static final int page_block = 3; //페이지 번호 출력갯수
-	private final pchreq_service pchreq_service;
+	
+	private final generic_list_service<pchreq_res_DTO> pchreq_list_service;  //generic_list_service<pchreq_res_DTO> 생성자 주입
+	private final pchreq_service pchreq_service;                             //pchreq_service 생성자 주입
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -45,6 +52,12 @@ public class pchreq_controller {
 	
 	@Autowired
 	pchreq_DAO pdao;
+	
+	@Autowired
+	paging_info_DTO paging_info;
+	
+	@Autowired
+	M_paging_util paging_util;
 
 	@GetMapping("/pchreq_insert.do")
 	public String pchreq_insert(Model m) {
@@ -77,7 +90,37 @@ public class pchreq_controller {
 	}
 	
 	@GetMapping("/pchreq_list.do")
-	public String pchreq_list(Model m,
+	public String pchreq_list(@ModelAttribute search_condition_DTO search_cond, Model model) {
+		
+		if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
+			System.out.println(search_cond.getStatuses().get(0));
+		    List<String> statuses = search_cond.getStatuses().stream()
+		        .filter(s -> s != null && !s.trim().isEmpty())
+		        .collect(Collectors.toList());
+		    search_cond.setStatuses(statuses);
+		}
+		
+	    int search_count = this.pchreq_list_service.search_count(search_cond);
+	    
+	    paging_info_DTO paging_info = this.paging_util.calculate(
+	    		search_count, 
+	    		search_cond.getPage_no(), 
+	    		search_cond.getPage_size(), 
+	    		page_block
+	    );
+
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+
+	    model.addAttribute("pch_list", pch_list);
+	    model.addAttribute("paging", paging_info);
+	    model.addAttribute("condition", search_cond);
+	    
+	    return "/production/purchase_list.html";
+	}
+	
+	/*
+	@GetMapping("/pchreq_list2.do")
+	public String pchreq_list2(Model m,
 			@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea,
 			@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno,
 			@RequestParam(name="pch_status", required=false) String[] pch_statuses,
@@ -90,7 +133,7 @@ public class pchreq_controller {
 			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
 		}
 		
-		int data_cnt = this.pdao.pchreq_count(mparam);
+		int data_cnt = this.pdao.search_count(mparam);
 		
 		int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
 		
@@ -103,7 +146,7 @@ public class pchreq_controller {
 		mparam.put("start", start);        //oracle 시작행 번호
 		mparam.put("end", end);            //oracle 종료행 번호
 		
-		List<pchreq_res_DTO> all = this.pdao.pchreq_list(mparam);
+		List<pchreq_res_DTO> all = this.pdao.paged_list(mparam);
 		
 		m.addAttribute("lmenu","구매영업관리");
 		m.addAttribute("smenu","발주관리");
@@ -122,6 +165,7 @@ public class pchreq_controller {
 		
 		return "/production/purchase_list.html";
 	}
+	*/
 	
 	@GetMapping("/pchreq_detail.do")
 	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m,@RequestParam(value="mode", required = false) String mode) {

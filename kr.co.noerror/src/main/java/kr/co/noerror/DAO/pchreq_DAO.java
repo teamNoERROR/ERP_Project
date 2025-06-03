@@ -12,6 +12,7 @@ import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.pchreq_DTO;
 import kr.co.noerror.DTO.pchreq_detail_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.DTO.search_condition_DTO;
 
 @Service
 public class pchreq_DAO {
@@ -41,13 +42,15 @@ public class pchreq_DAO {
 		return result;
 	}
 	
-	public List<pchreq_res_DTO> pchreq_list(Map<String, Object> mparam){
-		List<pchreq_res_DTO> all = this.sql.selectList("pchreq_list", mparam);
+	//검색 및 페이징 후 pchreq 리스트
+	public List<pchreq_res_DTO> paged_list(Map<String, Object> mparam){
+		List<pchreq_res_DTO> all = this.sql.selectList("pchreq_paged_list", mparam);
 		return all;
 	}
 	
-	public int pchreq_count(Map<String, Object> mparam) {
-		int cnt = this.sql.selectOne("pchreq_count", mparam);
+	//검색후의 pchreq 리스트 갯수
+	public int search_count(search_condition_DTO search_cond) {
+		int cnt = this.sql.selectOne("pchreq_search_count", search_cond);
 		return cnt;
 	}
 	

@@ -67,7 +67,7 @@
 </insert>
 
 <!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
-<select id="pchreq_list" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="Map">
+<select id="pchreq_paged_list" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="Map">
 SELECT * FROM (
     SELECT inner_result.*, ROWNUM rnum
     FROM (
@@ -85,15 +85,15 @@ SELECT * FROM (
         JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
         JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
         WHERE 1=1
-		<if test="sword != null and sword != ''">
+		<if test="search_word != null and search_word != ''">
 		  AND (
-		      cmp.company_name LIKE '%' || #{sword} || '%' OR
-		      mgr.manager_name LIKE '%' || #{sword} || '%'
+		      cmp.company_name LIKE '%' || #{search_word} || '%' OR
+		      mgr.manager_name LIKE '%' || #{search_word} || '%'
 		  )
 		</if>
-	    <if test="pch_statuses != null and pch_statuses.size > 0">
+	    <if test="statuses != null and statuses.size() > 0">
 	        AND pch.pch_status IN
-	        <foreach item="status" index="index" collection="pch_statuses" open="(" separator="," close=")">
+	        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
 	            #{status}
 	        </foreach>
 	    </if>
@@ -105,22 +105,22 @@ WHERE rnum &gt; #{start}
 </select>
 
 <!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
-<select id="pchreq_count" resultType="int" parameterType="map">
+<select id="pchreq_search_count" resultType="int" parameterType="kr.co.noerror.DTO.search_condition_DTO">
 SELECT COUNT(*) AS total
 	FROM purchase_req pch
 	JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
 	JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
 WHERE 1=1
-	<if test="sword != null and sword != ''">
+	<if test="search_word != null and search_word != ''">
 	  AND (
 	      
-	      cmp.company_name LIKE '%' || #{sword} || '%' OR
-	      mgr.manager_name LIKE '%' || #{sword} || '%'
+	      cmp.company_name LIKE '%' || #{search_word} || '%' OR
+	      mgr.manager_name LIKE '%' || #{search_word} || '%'
 	  )
 	</if>
-    <if test="pch_statuses != null and pch_statuses.size > 0">
+    <if test="statuses != null and statuses.size() > 0">
         AND pch.pch_status IN
-        <foreach item="status" index="index" collection="pch_statuses" open="(" separator="," close=")">
+        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
             #{status}
         </foreach>
     </if>

@@ -19,5 +19,7 @@ public interface pchreq_mapper {
 	List<pchreq_res_DTO> purchase_list(Map<String, Object> mparam);
 	int purchase_count(Map<String, Object> mparam);
 	List<pchreq_res_DTO> purchase_detail(String pch_code);
+	int pchreq_update(pchreq_DTO pdto);
+	int pchreq_detail_update(pchreq_detail_DTO pdto);
 	int update_pch_status(Map<String, String> mparam);
 }

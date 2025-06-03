@@ -31,28 +31,28 @@ public class pchreq_DAO {
 		return count;
 	}
 	
-	public int insert_purchase(pchreq_DTO pdto) {
-		int result = this.sql.insert("insert_purchase", pdto);
+	public int pchreq_insert(pchreq_DTO pdto) {
+		int result = this.sql.insert("pchreq_insert", pdto);
 		return result;
 	}
 	
-	public int insert_pch_detail(pchreq_detail_DTO pdto) {
-		int result = this.sql.insert("insert_pch_detail", pdto);
+	public int pchreq_detail_insert(pchreq_detail_DTO pdto) {
+		int result = this.sql.insert("pchreq_detail_insert", pdto);
 		return result;
 	}
 	
-	public List<pchreq_res_DTO> purchase_list(Map<String, Object> mparam){
-		List<pchreq_res_DTO> all = this.sql.selectList("purchase_list", mparam);
+	public List<pchreq_res_DTO> pchreq_list(Map<String, Object> mparam){
+		List<pchreq_res_DTO> all = this.sql.selectList("pchreq_list", mparam);
 		return all;
 	}
 	
-	public int purchase_count(Map<String, Object> mparam) {
-		int cnt = this.sql.selectOne("purchase_count", mparam);
+	public int pchreq_count(Map<String, Object> mparam) {
+		int cnt = this.sql.selectOne("pchreq_count", mparam);
 		return cnt;
 	}
 	
-	public List<pchreq_res_DTO> purchase_detail(String pch_code){
-		List<pchreq_res_DTO> details = this.sql.selectList("purchase_detail", pch_code);
+	public List<pchreq_res_DTO> pchreq_detail(String pch_code){
+		List<pchreq_res_DTO> details = this.sql.selectList("pchreq_detail", pch_code);
 		return details;
 	}
 	
@@ -69,8 +69,8 @@ public class pchreq_DAO {
 	}
 	
 	//발주상태 업데이트
-	public int update_pch_status(Map<String, String> mparam) {
-		int result = this.sql.update("update_pch_status", mparam);
+	public int pch_status_update(Map<String, String> mparam) {
+		int result = this.sql.update("pch_status_update", mparam);
 		return result;
 	}
 }

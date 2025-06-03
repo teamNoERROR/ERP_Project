@@ -46,8 +46,8 @@ public class pchreq_controller {
 	@Autowired
 	pchreq_DAO pdao;
 
-	@GetMapping("/purchase_in.do")
-	public String purchase(Model m) {
+	@GetMapping("/pchreq_insert.do")
+	public String pchreq_insert(Model m) {
 		m.addAttribute("lmenu","구매영업관리");
 		m.addAttribute("smenu","발주관리");
 		m.addAttribute("mmenu","발주등록");
@@ -76,8 +76,8 @@ public class pchreq_controller {
 		return pchreq_service.pchreq_save(requestMap);
 	}
 	
-	@GetMapping("/purchase.do")
-	public String purchase(Model m,
+	@GetMapping("/pchreq_list.do")
+	public String pchreq_list(Model m,
 			@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea,
 			@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno,
 			@RequestParam(name="pch_status", required=false) String[] pch_statuses,
@@ -90,7 +90,7 @@ public class pchreq_controller {
 			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
 		}
 		
-		int data_cnt = this.pdao.purchase_count(mparam);
+		int data_cnt = this.pdao.pchreq_count(mparam);
 		
 		int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
 		
@@ -103,7 +103,7 @@ public class pchreq_controller {
 		mparam.put("start", start);        //oracle 시작행 번호
 		mparam.put("end", end);            //oracle 종료행 번호
 		
-		List<pchreq_res_DTO> all = this.pdao.purchase_list(mparam);
+		List<pchreq_res_DTO> all = this.pdao.pchreq_list(mparam);
 		
 		m.addAttribute("lmenu","구매영업관리");
 		m.addAttribute("smenu","발주관리");
@@ -123,18 +123,18 @@ public class pchreq_controller {
 		return "/production/purchase_list.html";
 	}
 	
-	@GetMapping("/purchase_detail.do")
-	public String purchase_detail(@RequestParam(name="code") String pch_code, Model m,@RequestParam(value="mode", required = false) String mode) {
+	@GetMapping("/pchreq_detail.do")
+	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m,@RequestParam(value="mode", required = false) String mode) {
 		
-		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
+		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
 		m.addAttribute("details",details);
 		return "/modals/purchase_detail_modal.html";
 		
 	}
 	
-	@GetMapping("/purchase_update.do")
-	public String purchase_update(@RequestParam(name="code") String pch_code, Model m) {
-		List<pchreq_res_DTO> details = this.pdao.purchase_detail(pch_code);
+	@GetMapping("/pchreq_update.do")
+	public String pchreq_update(@RequestParam(name="code") String pch_code, Model m) {
+		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
 		m.addAttribute("details",details);
 		return "/production/purchase_update.html";
 	}
@@ -145,10 +145,10 @@ public class pchreq_controller {
 		return pchreq_service.pchreq_update(requestdto);
 	}
 	
-	@PostMapping("/update_pch_status.do")
+	@PostMapping("/pch_status_update.do")
 	@ResponseBody
-	public Map<String, Object> update_pch_status(@RequestBody Map<String, String> requestParam) {
-		return pchreq_service.update_pch_status(requestParam);
+	public Map<String, Object> pch_status_update(@RequestBody Map<String, String> requestParam) {
+		return pchreq_service.pch_status_update(requestParam);
 	}
 	
 }

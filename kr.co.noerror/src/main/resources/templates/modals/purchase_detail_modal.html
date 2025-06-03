@@ -27,8 +27,8 @@
 						</select>
 
 						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="update_pch_status()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리
+							style="white-space: nowrap;" onclick="pch_status_update()">
+							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
 						</button>
 					</div>
 				</div>
@@ -163,7 +163,7 @@
 						<div class="ms-auto">
 							<th:block th:if="${details[0].pch_status == '발주요청'}">
 								<a
-									th:href="@{/purchase_update.do(code=${details[0].pch_code})}"
+									th:href="@{/pchreq_update.do(code=${details[0].pch_code})}"
 									class="btn btn-success"> <i class="bi bi-pencil-square"></i>
 									수정
 								</a>

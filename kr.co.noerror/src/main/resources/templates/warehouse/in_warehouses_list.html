@@ -18,7 +18,7 @@
 		<button type="button" class="toggle_btns" onclick="toggleWh('all')"   style="background: transparent; color: #000;">전체</button>
 		<button type="button" class="toggle_btns" onclick="toggleWh('in')" id="wh_type" value="in"  style="background: #82CCDD; color: #fff;">입고</button>
 		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('pd')"  style="background: transparent; color: #000;">완제품</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  style="background: transparent; color: #000;">완제품</button>
 		<button type="button" class="toggle_btns" onclick="toggleWh('mt')"  style="background: transparent; color: #000;">부자재</button>
 	</div>
 
@@ -36,8 +36,12 @@
 			    <i class="bi bi-search"></i>
 			</button>
 			
-			  <form class="d-flex align-items-center gap-2 mb-0">
-			    <input type="text" class="form-control" style="width: 200px;" placeholder="부자재 창고가 선택됩니다."/>
+			  <form class="d-flex align-items-center gap-2 mb-0" >
+			    <input type="text" id="wh_code" class="form-control" style="width: 200px;" placeholder="부자재 창고가 선택됩니다."/>
+			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" />
+			    <input type="hidden" name="item_code" id="item_code" class="form-control" />
+			    <input type="hidden" id="client_code" class="form-control" />
+			    <input type="hidden" id="wh_type" class="form-control" />
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
 			            style="white-space: nowrap; min-width: 70px;">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
@@ -88,15 +92,21 @@
 				        style="cursor:pointer;">
 				      <td>
 				      	<input type="checkbox" name="deleteCodes"
-				      	 	   th:value="${in_wh.wh_code}" onclick="event.stopPropagation();" 
-				    		   th:data-inbound="${in_wh.inbound_code}"
-				      	 	   />
+				   			   	class="move-checkbox"
+				      	 	   th:value="${in_wh.wh_code}" 
+						       th:data-inbound_code="${in_wh.inbound_code}" 
+						       th:data-item_code="${in_wh.item_code}" 
+						       th:data-client_code="${in_wh.client_code}" 
+						       th:data-wh_code="${in_wh.wh_code}" 
+						       data-wh_type="mt"
+						       onclick="selectRow(this); event.stopPropagation();" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
 				      <td th:text="${in_wh.inbound_code}">IN-0001</td>
 				      <td th:text="${in_wh.wh_code}">WH-001</td>
 				      <td th:text="${in_wh.wh_name}">창고이름</td>
 				      <td th:text="${in_wh.item_code}">ITEM-123</td>
+				      <td th:hidden="${in_wh.client_code}">client-123</td>
 				      <td th:text="${in_wh.item_name}">나사</td>
 				      <td th:text="${in_wh.category_main + '/' + in_wh.category_sub}">부품/소모품</td>
 				      <td th:text="${in_wh.client_name}">삼성전자</td>

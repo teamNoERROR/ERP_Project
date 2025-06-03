@@ -14,29 +14,39 @@
             <h2 class="mb-1">창고 관리</h2>
         </div>
 
-        <!-- 검색 폼 -->
-        <form class="row g-2 my-4 justify-content-end" th:action="@{/warehouses_list.do}" method="get">
-            <div class="col-auto">
-                <div class="input-group input-group-sm">
-                    <select class="form-select" name="wh_searchType" style="max-width: 120px;">
-                        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option>
-                        <option value="wh_code" th:selected="${wh_searchType == 'wh_code'}">창고코드</option>
-                        <option value="wh_name" th:selected="${wh_searchType == 'wh_name'}">창고명</option>
-                    </select>
-                    <input type="text" name="wh_search" class="form-control" placeholder="검색" th:value="${wh_search}">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-search"></i> 검색
-                    </button>
-                </div>
-            </div>
-        </form>
+
+<div class="row align-items-center justify-content-between mt-3">
+	<!-- 토글 버튼 영역 -->
+	<div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 450px;">
+		<button type="button" class="toggle_btns" id="wh_type" value="all" onclick="toggleWh('all')"  style="background: #82CCDD; color: #fff;">전체</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('in')" style="background: transparent; color: #000;">입고</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('pd')"  style="background: transparent; color: #000;">완제품</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('mt')"  style="background: transparent; color: #000;">부자재</button>
+	</div>
+	<!-- 토글 버튼 영역 -->
+
+	<!-- 검색 폼 -->
+	<div class="col-auto">
+	<form class="row g-2 my-4 justify-content-end" th:action="@{/warehouses_list.do}" method="get">
+		<div class="input-group input-group-sm">
+			<input type="text" name="wh_search" class="form-control" placeholder="검색" th:value="${wh_search}">
+			<button class="btn btn-primary" type="submit">
+				<i class="bi bi-search"></i> 검색
+			</button>
+		</div>
+	</form>
+	</div>
+	<!-- 검색 폼 -->
+</div>
+
 
         <!-- 게시물 테이블 -->
         <div class="table-responsive rounded" th:if="${wh_check == 'yesdata'}">
             <table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
                 <thead class="table-light text-center">
                 <tr>
-                    <th scope="col"><input type="checkbox" /></th>
+                    <th scope="col">#</th>
                     <th scope="col">번호</th>
                     <th scope="col">창고코드</th>
                     <th scope="col">창고명</th>
@@ -60,7 +70,9 @@
     				 th:data-modal-url="@{'/warehouse_modal.do?wh_code=' + ${#strings.trim(wh.wh_code)}}" 
     				 data-modal-id="wh_list"
     				 style="cursor:pointer;">
-                    <td><input type="checkbox" th:value="${wh.widx}" /></td>
+                    <td><input type="checkbox" name="deleteCodes" 
+                    	th:value="${wh.wh_code}" onclick="event.stopPropagation();" />
+                    </td>
                     <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
                     <td th:text="${wh.wh_code}">WH-001</td>
                     <td th:text="${wh.wh_name}">입고1창고</td>
@@ -104,11 +116,9 @@
             <button type="button" class="btn btn-success" onclick="location.href='/warehouse_insert.do'">
                 <i class="bi bi-plus-lg"></i> 추가
             </button>
-            <!-- 
-            <button type="button" class="btn btn-danger" onclick="deleteSelected()">
-                <i class="bi bi-trash"></i> 삭제
+            <button class="btn btn-danger"  onclick="deleteWh('all')">
+            	<i class="bi bi-trash"></i> 삭제
             </button>
-             -->
         </div>
 
 

@@ -67,6 +67,7 @@ public class goods_controller {
 	String url = "";
 	String msg = "";
 	
+	
 	//픔목관리 > 리스트 화면이동 
 	@GetMapping({"/goods.do"})
 	public String products_list(Model m, @RequestParam(value = "type", required = false) String type
@@ -78,10 +79,8 @@ public class goods_controller {
 		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type, sclass, keyword, pageno, post_ea);  //제품 리스트
 		
-		System.out.println("다죽자 : "+ goods_total_sch);
-		System.out.println("다죽자 : "+ goods_all_list_sch);
-		System.out.println("keyword : " + keyword);
-		System.out.println("sclass : " + sclass);
+		System.out.println("goods_total_sch : " + goods_total_sch);
+		System.out.println("goods_all_list_sch : " + goods_all_list_sch);
 		
 		//페이징 관련 
 		int pst_ea = post_ea; 
@@ -113,8 +112,8 @@ public class goods_controller {
 		
 		if(sclass!=null) {
 			String lclass_ck = this.g_svc.lclass_ck(sclass);
-			m.addAttribute("lclass_ck",lclass_ck);
-			m.addAttribute("sclass",sclass);
+			m.addAttribute("lclass_ck",lclass_ck);  //선택한 대분류항목
+			m.addAttribute("sclass",sclass);  //선택한 소분류항목
 
 			JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
 			List<String> slist = new ArrayList<>();
@@ -122,6 +121,7 @@ public class goods_controller {
 				slist.add(sc_list.getString(i));
 			}
 			m.addAttribute("slist",slist);
+			
 		}
 		
 		//페이지로 보낼 것들 
@@ -335,7 +335,6 @@ public class goods_controller {
 						if(result >= 1) {
 							count++;
 						}
-						System.out.println("bomdel result : " + result);
 						
 					}else {
 						result =  this.g_svc.pd_delete(this.d_dto);

@@ -73,12 +73,21 @@ function class_sch(){
 //제품 검색 
 function pdSearch(){
 	var keyword = document.querySelector("#keyword");
-	if(keyword.value==""){
+	var sclass = document.querySelector("#products_class2");
+	var form = document.querySelector("#frm_class");
+	
+	if(sclass.value=="" && keyword.value==""){
 		alert("검색어를 입력하세요.");
 		keyword.focus();
 		return false;
-	}else {
-		var form = document.querySelector("#frm_class");
+		
+	}else if(sclass.value=="" && keyword.value!="") {
+		sclass.value=null;
+		form.action="goods.do";
+		form.method="GET";
+		form.submit();
+		
+	}else{
 		form.action="goods.do";
 		form.method="GET";
 		form.submit();

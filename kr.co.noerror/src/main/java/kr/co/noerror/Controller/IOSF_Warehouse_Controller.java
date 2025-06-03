@@ -18,7 +18,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DTO.IOSF_DTO;
-
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
 
 @Controller
@@ -41,8 +40,6 @@ public class IOSF_Warehouse_Controller {
         */
     @Resource(name="IOSF_Warehouse_Service")
        IOSF_Warehouse_Service iosf_service;
-
-
 
     @Resource(name="IOSF_DTO")
        IOSF_DTO iosf_dto;
@@ -197,13 +194,16 @@ public class IOSF_Warehouse_Controller {
       
       @PostMapping("/in_warehouse_delete_page.do")
       @ResponseBody
-      public String in_delete_warehouse(@RequestParam("inbound_code") String inbound_code) {
+      public String in_delete_warehouse(
+    		  @RequestParam("wh_code") String wh_code,
+    		  @RequestParam("inbound_code") String inbound_code
+    		  ) {
          // 삭제 로직 수행
          
          String result = "";
          this.wh_type = "in";
          
-         int wh_save_result = iosf_service.IOSF_delete_warehouse(inbound_code, this.wh_type);
+         int wh_save_result = iosf_service.IOSF_delete_warehouse(wh_code, inbound_code, this.wh_type);
          System.out.println("결과 " + wh_save_result);
          
          if(wh_save_result > 0) {

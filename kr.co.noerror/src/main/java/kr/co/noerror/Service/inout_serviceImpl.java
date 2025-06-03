@@ -80,6 +80,7 @@ public class inout_serviceImpl implements inout_service {
 		int f_result=0;
 		int result = 0;
 		int count = 0;
+		System.out.println("Sy : "+ itm_list.toString());
 		for (inout_DTO in_dto : itm_list) {
 			result += this.io_dao.inbnd_insert(in_dto);
 			
@@ -104,7 +105,7 @@ public class inout_serviceImpl implements inout_service {
 	@Override
 	public int inbound_total(String keyword) {
 		this.map = new HashMap<>();
-		this.map.put("keyword", String.valueOf(keyword).trim());
+		this.map.put("keyword", keyword);
 		
 		int inbound_total = this.io_dao.inbound_total(map);
 		return inbound_total;
@@ -117,7 +118,7 @@ public class inout_serviceImpl implements inout_service {
 		int count = post_ea; 
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("keyword", String.valueOf(keyword).trim());
+		map.put("keyword", keyword);
 		map.put("start", start);
 		map.put("count", count);
 		
@@ -127,9 +128,64 @@ public class inout_serviceImpl implements inout_service {
 
 	//입고건 상세보기 
 	@Override
-	public List<inout_DTO> inbound_detail(String inbnd_code) {
-		List<inout_DTO> inbound_detail = this.io_dao.inbound_detail(inbnd_code);
+	public List<inout_DTO> inbound_detail(String inbnd_code, String pch_cd) {
+		this.map = new HashMap<>();
+		this.map.put("inbnd_code", inbnd_code);
+		this.map.put("pch_cd", pch_cd);
+		List<inout_DTO> inbound_detail = this.io_dao.inbound_detail(this.map);
 		return inbound_detail;
 	}
 
+	//입고상태 변경 
+	@Override
+	public Map<String, Integer> in_status_ck(String inbnd_data) {
+		
+		JSONArray ja = new JSONArray(inbnd_data);
+		int data_ea = ja.length();
+		int aleady_count = 0;
+		int update_count = 0;
+		int result = 0;
+		int result2 = 0;
+		List<inout_DTO> updateList = new ArrayList<>();
+		Map<String, Integer> result_map = new HashMap<>();
+		 
+		for (int w = 0; w < data_ea; w++) {
+		    JSONObject jo = ja.getJSONObject(w);
+		    
+		    inout_DTO io_dto = new inout_DTO();
+		    io_dto.setINBOUND_CODE(jo.getString("code"));
+		    io_dto.setPCH_CODE(jo.getString("code2"));
+		    io_dto.setIN_STATUS(jo.getString("status"));
+		    
+		    result = this.io_dao.in_status_ck(io_dto);
+		    if(result > 0) {  //기존 입고완료건 있음 
+		    	aleady_count++;
+		    }
+		    updateList.add(io_dto);
+		}
+	
+		 //하나라도 입고완료가 있으면 아무것도 처리 안 함
+	    if (aleady_count > 0) {
+	        result_map.put("aleady_count", aleady_count);
+	        result_map.put("updated", 0);
+	        return result_map;
+	    }
+	    
+	    //전부 '입고완료'가 아닌 경우에만 상태면 list의 dto들 dao로 보냄 
+	    for (inout_DTO dto : updateList) {
+	        result2 = this.io_dao.inbound_ok(dto);  // 입고완료 처리
+	        if (result2 > 0) {
+	        	update_count++;
+	        }
+	    }
+	    result_map.put("aleady_count", 0);
+	    result_map.put("updated", update_count);
+	    
+	    return result_map;
+		
+	}
+
+
+
+	
 }

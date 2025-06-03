@@ -50,7 +50,7 @@ function previewFile() {
 
 
 /*--------------------------------------------------------------
-  임시
+  리스트 모달
 ----------------------------------------------------------- */
 
 //거래처리스트 모달 오픈 
@@ -261,3 +261,78 @@ function inbnd_modal_pg (page){
 		console.log("통신오류발생" + error);
 	});
 }
+
+
+//발주건 리스트 모달 오픈
+function pchListOpen(){
+	fetch("./pch_list.do", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("purchase_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+//발주리스트 모달 페이징
+function pch_modal_pg (page){
+	var search_word = page.getAttribute('data-keyword');
+	var pageno = page.getAttribute('data-pageno');
+	
+	var params = {  
+		    pageno: pageno,
+		    page_ea: page.getAttribute('data-pea'),
+		};
+		
+		if (search_word) {  //키워드가 있으면
+		    params["search_word"] = search_word;
+		}
+		var pString = new URLSearchParams(params).toString();
+		
+		
+	fetch("./pch_list.do?"+pString+"&mode=modal2", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.querySelector('#purchase_list .modal-body').innerHTML = result;
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+/*
+//발주내역 상세보기  
+function pchDetailBtn(pch_code){
+	console.log("pch_code:", pch_code); 
+	fetch("./purchase_detail.do?code="+pch_code, {
+		method: "GET"
+			
+	}).then(function(data) {
+		return data.text();
+	
+	}).then(function(result) {  
+			
+		// 모달 내부 내용 채우기
+		document.querySelector("#pch_modal .modal-content").innerHTML = result;
+		var pch_detail_modal = new bootstrap.Modal(document.getElementById('pch_modal'));
+		pch_detail_modal.show();
+				
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+*/

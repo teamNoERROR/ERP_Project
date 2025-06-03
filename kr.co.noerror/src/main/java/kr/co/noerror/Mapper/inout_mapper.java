@@ -17,5 +17,7 @@ public interface inout_mapper {
 	
 	int inbound_total(Map<String, String> map); //입고 총 개수 
 	List<inout_DTO> inbound_all_list(Map<String, Object> map); //입고 총 리스트 
-	List<inout_DTO> inbound_detail(String inbnd_code); //입고건 상세보기 
+	List<inout_DTO> inbound_detail(Map<String, String> map); //입고건 상세보기
+	
+	int inbound_ok(inout_DTO io_dto); //입고상태 변경 
 }

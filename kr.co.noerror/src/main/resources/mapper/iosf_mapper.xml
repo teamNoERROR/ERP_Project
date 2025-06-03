@@ -211,7 +211,7 @@ INSERT INTO WAREHOUSE_INBOUND (
   
 <!-- 전체 창고 수 -->
   <select id="IOSF_getTotalCount" resultType="int">
-      SELECT COUNT(*) FROM WAREHOUSE
+      SELECT COUNT(*) FROM WAREHOUSE_INBOUND
   </select>
 
  <select id="IOSF_wh_SelectWithInboundCode" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
@@ -240,7 +240,7 @@ INSERT INTO WAREHOUSE_INBOUND (
 
 <delete id="IOSF_delete_warehouses" parameterType="map">
 	<if test="wh_type == 'in'">
-	  	DELETE FROM WAREHOUSE_INBOUND WHERE INBOUND_CODE = '${inbound_code}'
+	  	DELETE FROM WAREHOUSE_INBOUND WHERE INBOUND_CODE = '${inbound_code}' AND WH_CODE = '${wh_code}'
 	</if>
   </delete>
 

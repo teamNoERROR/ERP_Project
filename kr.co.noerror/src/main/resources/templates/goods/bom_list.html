@@ -56,7 +56,7 @@
             <table class="table align-middle table-bordered text-center" th:classappend="${bom_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
-                        <th scope="col"><input type="checkbox" name="all_sel_box" onclick="all_sel()"></th>
+                        <th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled ></th>
                         <th scope="col">#</th>
                         <th scope="col">제품사진</th>
                         <th scope="col">제품코드</th>

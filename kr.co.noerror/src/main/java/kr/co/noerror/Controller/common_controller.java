@@ -27,7 +27,7 @@ import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_paging_util;
+import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Service.client_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
@@ -63,7 +63,7 @@ public class common_controller {
 	M_paging m_pg;
 	
     @Resource(name="M_paging_util")
-    M_paging_util page_util;
+    M_paging2 page_util;
 	
 	//관리자 리스트 모달 
 	@GetMapping("/employee_list.do")
@@ -237,7 +237,7 @@ public class common_controller {
 //			return "/modals/inbound_list_modal.html";
 	}
 	
-	
+	/*
 	//발주 리스트 모달 띄우기 
 	@GetMapping("/pch_list.do")
 	public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model) {
@@ -258,8 +258,9 @@ public class common_controller {
 	    model.addAttribute("condition", search_cond);
 	    return "/modals/purchase_list_body_modal.html";
 	}
+	*/
 	
-	/*
+	
 	@GetMapping({"/pch_list.do"})
 	public String pch_list_modal(Model m
 								,@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea
@@ -316,7 +317,7 @@ public class common_controller {
 	        return "/modals/purchase_list_modal.html"; 
 	    }
 	}
-	*/
+	
 		
 
 }

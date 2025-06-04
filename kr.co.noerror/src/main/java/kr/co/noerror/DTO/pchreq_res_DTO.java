@@ -27,8 +27,8 @@ public class pchreq_res_DTO {
     private String company_name;     // 거래처 이름
     private String biz_num;
     private String ceo_name;
-    private String addr1;
-    private String addr2;
+    private String com_addr1;
+    private String com_addr2;
     private String manager_code;     // 거래처 담당자 고유코드
     private String manager_name;     // 거래처 담당자 이름
     private String phone_num;

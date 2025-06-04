@@ -65,8 +65,8 @@ public class controller {
 	
 	@GetMapping("/session.do")
 	public String session_save(HttpSession session) {
-		session.setAttribute("emp_code", "EMP-00005");
-		session.setAttribute("emp_name", "정수연");
+		session.setAttribute("emp_code", "EMP-00001");
+		session.setAttribute("emp_name", "김철수");
 		return "/Production/temp_session.html";
 	}
 

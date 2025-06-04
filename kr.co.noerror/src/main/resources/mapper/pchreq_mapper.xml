@@ -79,11 +79,11 @@ SELECT * FROM (
         	pch.request_date, 
         	pch.pay_amount,
         	cmp.company_code,
-        	cmp.company_name, 
-        	mgr.manager_name
+        	cmp.company_name <!--, 
+            mgr.manager_name -->
         FROM purchase_req pch
-        JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
-        JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+        JOIN client_comp cmp ON pch.company_code = cmp.company_code
+        <!--  JOIN client_manager mgr ON cmp.company_code = mgr.company_code -->
         WHERE 1=1
 		<if test="search_word != null and search_word != ''">
 		  AND (
@@ -108,8 +108,8 @@ WHERE rnum &gt; #{start}
 <select id="pchreq_search_count" resultType="int" parameterType="kr.co.noerror.DTO.search_condition_DTO">
 SELECT COUNT(*) AS total
 	FROM purchase_req pch
-	JOIN temp_client_comp cmp ON pch.company_code = cmp.company_code
-	JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+	JOIN client_comp cmp ON pch.company_code = cmp.company_code
+	<!-- JOIN client_manager mgr ON cmp.company_code = mgr.company_code -->
 WHERE 1=1
 	<if test="search_word != null and search_word != ''">
 	  AND (
@@ -126,6 +126,7 @@ WHERE 1=1
     </if>
 </select>
 
+<!-- 발주 상세정보 조회 -->
 <select id="pchreq_detail" resultType="kr.co.noerror.DTO.pchreq_res_DTO" parameterType="String">
 SELECT
     prd.pidx, 
@@ -147,16 +148,16 @@ SELECT
     cmp.company_name, 
     cmp.biz_num,
     cmp.ceo_name,
-    mgr.manager_name,
-    mgr.phone_num,
-    cmp.addr1,
-    cmp.addr2,
+   <!-- mgr.manager_name,
+    mgr.phone_num,-->
+    cmp.com_addr1,
+    cmp.com_addr2,
     emp.emp_name
 FROM purchase_req_detail prd
 JOIN purchase_req pch ON prd.pch_code = pch.pch_code
-JOIN temp_items itm ON prd.item_code = itm.item_code
-JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
-JOIN temp_client_manager mgr ON cmp.company_code = mgr.company_code
+JOIN items itm ON prd.item_code = itm.item_code
+JOIN client_comp cmp ON itm.company_code = cmp.company_code
+<!-- JOIN client_manager mgr ON cmp.company_code = mgr.company_code -->
 JOIN temp_employ emp ON pch.emp_code = emp.emp_code
 WHERE prd.pch_code = #{pch_code}
 </select>

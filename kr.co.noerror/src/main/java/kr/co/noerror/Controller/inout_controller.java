@@ -132,8 +132,14 @@ public class inout_controller {
 	//입고내역 상세보기 모달
 	@GetMapping("/inbnd_detail_modal.do")
 	public String inbnd_detail_modal(Model m, @RequestParam("inbnd_code") String inbnd_code
-								, @RequestParam("pch_cd") String pch_cd) {
-		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, pch_cd);
+								, @RequestParam("pch_code") String pch_cd) {
+		System.out.println(pch_cd);
+		System.out.println(inbnd_code);
+		String ori_pch_cd = pch_cd.substring(0,9);
+		System.out.println(ori_pch_cd);
+		
+		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, ori_pch_cd);
+		System.out.println(inbound_detail);
 		m.addAttribute("inbnd_detail", inbound_detail);
 		return "/modals/inbound_detail_modal.html";
 	}

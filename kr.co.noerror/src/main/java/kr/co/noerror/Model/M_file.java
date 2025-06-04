@@ -36,9 +36,6 @@ public class M_file {
 	@Resource(name="file_DTO") 
 	file_DTO f_dto;
 	
-	@Resource(name="M_random")
-	M_random m_rno;
-	
 	String file_rnm = null;
 	
 	final String host = "210.178.108.186";
@@ -270,7 +267,7 @@ public class M_file {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String today = sf.format(date);
 		
-		String no = this.m_rno.random_no();
+		int no = (int)(Math.random()*90000)+10000; 
 		String makeFileRenm = today+no+ext;
 
 		return makeFileRenm;

@@ -37,6 +37,7 @@ import kr.co.noerror.Service.client_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inout_service;
+import kr.co.noerror.Service.pchreq_service;
 
 @Controller
 public class common_controller {
@@ -54,16 +55,16 @@ public class common_controller {
 	common_DAO common_svc;
 	
 	@Autowired
-	private goods_service g_svc;
+	private goods_service g_svc;  //품목 서비스
 	
 	@Autowired
-	private inout_service io_svc;
+	private inout_service io_svc;  //입출고리스트 서비스 
 	
 	@Autowired
-	private client_service clt_svc;
+	private client_service clt_svc;  //거래처 서비스
 	
 	@Autowired
-	private generic_list_service<pchreq_res_DTO> pch_svc;
+	private generic_list_service<pchreq_res_DTO> pchreq_list_service;
 	
 	@Autowired
 	pchreq_DAO pdao;
@@ -71,8 +72,8 @@ public class common_controller {
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
 	
-    @Resource(name="M_paging_util")
-    M_paging_util page_util;
+	@Autowired
+	M_paging_util paging_util;
 	
 	//관리자 리스트 모달 
 	@GetMapping("/employee_list.do")
@@ -223,21 +224,21 @@ public class common_controller {
 								,@RequestParam(value = "status", required = false) String[] status
 								)  {
 		
-		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고 리스트 
+//		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고 총개수
+//		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고 리스트 
 		
 		//페이징 관련 
 		int pea = post_ea; 
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, inbound_total);
-		int bno = this.m_pg.serial_no(inbound_total, pageno, pea); 
+//		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, inbound_total);
+//		int bno = this.m_pg.serial_no(inbound_total, pageno, pea); 
 		
-		m.addAttribute("keyword",keyword);
-		m.addAttribute("bno", bno);
-		m.addAttribute("inbnd_total", inbound_total);
-		m.addAttribute("inbnd_list", inbound_all_list);
-		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", pea);
+//		m.addAttribute("keyword",keyword);
+//		m.addAttribute("bno", bno);
+//		m.addAttribute("inbnd_total", inbound_total);
+//		m.addAttribute("inbnd_list", inbound_all_list);
+//		m.addAttribute("pageinfo", pageinfo);
+//		m.addAttribute("pageno", pageno);
+//		m.addAttribute("pea", pea);
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/inbound_list_body_modal.html :: inbndMdList";
@@ -249,86 +250,40 @@ public class common_controller {
 	
 	
 	//발주 리스트 모달 띄우기 
-	@GetMapping("/pch_list.do")
-	public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model) {
+	@GetMapping("/pch_list_modal.do")
+	public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model,@RequestParam(value="mode", required = false) String mode) {
 
-	    int search_count = this.pch_svc.search_count(search_cond);
+		if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
+			System.out.println(search_cond.getStatuses().get(0));
+		    List<String> statuses = search_cond.getStatuses().stream()
+		        .filter(s -> s != null && !s.trim().isEmpty())
+		        .collect(Collectors.toList());
+		    search_cond.setStatuses(statuses);
+		}
+		
+	    int search_count = this.pchreq_list_service.search_count(search_cond);
 	    
-	    paging_info_DTO paging_info = this.page_util.calculate(
+	    paging_info_DTO paging_info = this.paging_util.calculate(
 	    		search_count, 
 	    		search_cond.getPage_no(), 
 	    		search_cond.getPage_size(), 
 	    		page_block
 	    );
 
-	    List<pchreq_res_DTO> pch_list = this.pch_svc.paged_list(search_cond, paging_info);
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
 
 	    model.addAttribute("pch_list", pch_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
-	    return "/modals/purchase_list_body_modal.html";
-	}
-	
-	/*
-	@GetMapping({"/pch_list.do"})
-	public String pch_list_modal(Model m
-								,@RequestParam(name="views", defaultValue="5", required=false) Integer page_ea
-								,@RequestParam(name="pageno", defaultValue="1", required=false) Integer pageno
-								,@RequestParam(name="pch_status", required=false) String[] pch_statuses
-								,@RequestParam(name="search_word", defaultValue="", required=false) String search_word
-//								,@RequestParam(name="code",  required=false) String pch_code
-								,@RequestParam(value="mode", required = false) String mode
-								)  {
-		System.out.println(page_ea);
-		System.out.println(pageno);
-		System.out.println(mode);
-		
-		int page_block = 3;
-		Map<String, Object> mparam = new HashMap<>();
-		mparam.put("sword", search_word);  //검색어
-		if (pch_statuses != null) {
-			mparam.put("pch_statuses", Arrays.asList(pch_statuses)); // Mapper에서 IN 처리
-		}
-		
-		//int data_cnt = this.pdao.search_count(mparam);
-		
-		//int page_cnt = (data_cnt-1) / page_ea + 1; //올림 처리하는 수식
-		
-		int start = (pageno - 1) * page_ea;  //oracle에서 해당페이지의 시작 번호
-		int end = pageno * page_ea + 1;      //oracle에서 해당페이지의 종료 번호 + 1
-		
-		int start_page = ((pageno - 1) / page_block) * page_block + 1;
-		//int end_page = Math.min(start_page + page_block - 1, page_cnt);
-		
-		mparam.put("start", start);        //oracle 시작행 번호
-		mparam.put("end", end);            //oracle 종료행 번호
-		
-		List<pchreq_res_DTO> all = this.pdao.paged_list(mparam);
-	
-		
-		//데이터, 페이징 정보를 모델에 전달
-		m.addAttribute("pch_list", all);
-		m.addAttribute("start_page", start_page);
-		//m.addAttribute("end_page", end_page);
-		m.addAttribute("view", page_ea);
-		//m.addAttribute("page_cnt", page_cnt);
-		m.addAttribute("pageno", pageno); 
-		
-		//검색 조건을 모델에 다시 전달
-		m.addAttribute("search_word", search_word);
-		m.addAttribute("pch_statuses", pch_statuses);
-		
-//		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
-//		m.addAttribute("details",details);
-		
-		if ("modal2".equals(mode)) {
+	    
+	    if ("modal2".equals(mode)) {
 	        return "/modals/purchase_list_body_modal.html :: pchMdList";
 	    } else {
 	        return "/modals/purchase_list_modal.html"; 
 	    }
 	}
+	
 
-	*/
 		
 
 

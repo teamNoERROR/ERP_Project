@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.inout_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.inout_service;
 
@@ -34,6 +36,9 @@ public class inout_controller {
 	
 	@Autowired
 	private inout_service io_svc;
+	
+	@Autowired
+	pchreq_DAO pdao;
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
@@ -52,12 +57,18 @@ public class inout_controller {
 						,@RequestParam(value = "keyword", required = false) String keyword
 						,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
-						,@RequestParam(value = "status", required = false) String[] status) {
+						) {
 //		if (status == null) {
-//		    status = new String[] {"가입고", "입고완료", "입고취소"};
+//		    status = new String[] {};
 //		}
-		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고리스트 제품 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고리스트 제품 리스트
+		
+		
+//		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고리스트 제품 총개수
+//		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고리스트 제품 리스트
+		
+		int inbound_total = this.io_svc.inbound_total(keyword); //입고리스트 제품 총개수
+		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea);  //입고리스트 제품 리스트
+		
 		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, inbound_total);
@@ -75,7 +86,7 @@ public class inout_controller {
 		m.addAttribute("inbound_all_list",inbound_all_list);
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-		m.addAttribute("statusList", status);
+//		m.addAttribute("statusList", status);
 		
 		return "/inout/inbound_list.html";
 	}
@@ -119,12 +130,10 @@ public class inout_controller {
 	
 	
 	//입고내역 상세보기 모달
-	@GetMapping("/inbnd_detail.do")
-	public String inbound_detail(Model m, @RequestParam("inbnd_code") String inbnd_code
+	@GetMapping("/inbnd_detail_modal.do")
+	public String inbnd_detail_modal(Model m, @RequestParam("inbnd_code") String inbnd_code
 								, @RequestParam("pch_cd") String pch_cd) {
 		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, pch_cd);
-
-		System.out.println(inbound_detail);
 		m.addAttribute("inbnd_detail", inbound_detail);
 		return "/modals/inbound_detail_modal.html";
 	}
@@ -132,7 +141,7 @@ public class inout_controller {
 	
 	//입고상태변경처리
 	@PatchMapping("/inbnd_ok.do")
-	public String inbnd_ok(Model m, @RequestBody String inbnd_data, HttpServletResponse res) throws IOException {
+	public String inbnd_ok( @RequestBody String inbnd_data, HttpServletResponse res) throws IOException {
 		try {
 			this.pw = res.getWriter();
 			
@@ -162,6 +171,25 @@ public class inout_controller {
 		return null;
 	}
 	
+	
+	//입고건 상세보기 
+//	@GetMapping("/inbnd_detail_modal.do")
+//	public String inbnd_detail_modal(Model m, @RequestParam("pch_code") String pch_code
+//									) {
+//		try {
+//			String ori_pch_cd = pch_code.substring(0,9);
+//			System.out.println(ori_pch_cd);
+//			List<pchreq_res_DTO> purchase_details = this.pdao.pchreq_detail(ori_pch_cd);
+//			m.addAttribute("purchase_details",purchase_details);
+//			
+//		} catch (Exception e) {
+//			this.log.error(e.toString());
+//			e.printStackTrace();
+//			
+//		} 
+//		
+//		return "/modals/inbound_detail_modal.html";
+//	}
 	
 
 	

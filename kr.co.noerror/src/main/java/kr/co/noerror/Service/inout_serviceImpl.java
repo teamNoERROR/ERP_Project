@@ -14,11 +14,10 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.inout_DAO;
-import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.inout_DTO;
 import kr.co.noerror.Mapper.inout_mapper;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
 public class inout_serviceImpl implements inout_service {
@@ -29,8 +28,8 @@ public class inout_serviceImpl implements inout_service {
 	@Resource(name="inout_DAO")
 	inout_DAO io_dao;
 	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
+	@Resource(name="M_unique_code_generator")
+	M_unique_code_generator makeCode;  //고유코드 생성모델
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
@@ -44,15 +43,10 @@ public class inout_serviceImpl implements inout_service {
 	//입고등록 인서트
 	@Override
 	public int inbnd_insert(String inbnd_item) {
-		String inb_code;  //랜덤번호 생성 
-		int dupl;  //중복확인
-		
-		do {
-			inb_code = "INB-"+this.m_rno.random_no(); 
-	        dupl = this.io_dao.code_dupl_inb(inb_code);
-	    } while (dupl > 0);
-		
-	    
+		 //고유코드생성
+        String inb_code = this.makeCode.generate("INB-", code -> this.io_dao.code_dupl_inb(code) > 0);
+        
+        
 		JSONArray ja = new JSONArray(inbnd_item);
 		int item_ea = ja.length();
 		
@@ -105,11 +99,11 @@ public class inout_serviceImpl implements inout_service {
 
 	//입고리스트 총개수 
 	@Override
-	public int inbound_total(String keyword, String[] status) {
-		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
+	public int inbound_total(String keyword) {
+//		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
 		Map<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
-		map.put("IN_STATUS", statusList);
+//		map.put("IN_STATUS", statusList);
 		
 		int inbound_total = this.io_dao.inbound_total(map);
 		return inbound_total;
@@ -117,16 +111,16 @@ public class inout_serviceImpl implements inout_service {
 	
 	//입고리스트 
 	@Override
-	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea, String[] status) {
+	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea) {
 		int start = (pageno - 1) * post_ea;
 		int count = post_ea; 
 		
-		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
+//		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
 		Map<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
 		map.put("start", start);
 		map.put("count", count);
-		map.put("IN_STATUS", statusList);
+//		map.put("IN_STATUS", statusList);
 		
 		List<inout_DTO> inbound_all_list = this.io_dao.inbound_all_list(map);  
 		return inbound_all_list;
@@ -161,7 +155,7 @@ public class inout_serviceImpl implements inout_service {
 		    inout_DTO io_dto = new inout_DTO();
 		    io_dto.setINBOUND_CODE(jo.getString("code"));
 		    io_dto.setPCH_CODE(jo.getString("code2"));
-		    io_dto.setIN_STATUS(jo.getString("status"));
+		    io_dto.setIN_STATUS(jo.getString("statusinb"));
 		    
 		    result = this.io_dao.in_status_ck(io_dto);
 		    if(result > 0) {  //기존 입고완료건 있음 

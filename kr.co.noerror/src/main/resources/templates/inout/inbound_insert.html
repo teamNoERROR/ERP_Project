@@ -28,8 +28,7 @@
                      <label class="form-label fw-semibold">발주번호</label>
                      <div class="input-group">
                          <input type="text" class="form-control" placeholder="발주코드" id="pch_code">
-                         <button type="button" class="btn btn-primary"  
-                         		onclick="pchListOpen()">
+                         <button type="button" class="btn btn-primary" onclick="pchListOpen()">
                              <i class="bi bi-search"></i>
                          </button>
                      </div>
@@ -46,11 +45,11 @@
                      <label class="form-label fw-semibold">입고창고</label>
                      <div class="input-group">
                          <input type="text" class="form-control" placeholder="입고할 창고"  id="in_wh_name" readonly>
-                         <button type="button" class="btn btn-primary " onclick="whSelect('in_wh')">
+                         <button type="button" class="btn btn-primary " onclick="whSelect('in_wh','in_wh_name', 'in_wh_code')">
                              <i class="bi bi-search"></i>
                          </button>
                      </div>
-                     <input type="hidden" id="wh_code">
+                     <input type="hidden" id="in_wh_code">
                  </div>
              </div>
 

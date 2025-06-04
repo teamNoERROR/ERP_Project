@@ -1,6 +1,5 @@
 package kr.co.noerror.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,22 +9,17 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.Controller.order_controller;
-import kr.co.noerror.DAO.bom_DAO;
 import kr.co.noerror.DAO.goods_DAO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
-import kr.co.noerror.Mapper.bom_mapper;
 import kr.co.noerror.Mapper.goods_mapper;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
@@ -37,9 +31,6 @@ public class goods_serviceImpl implements goods_service {
 
 	@Resource(name="goods_DAO")
 	goods_DAO g_dao;
-	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
 	
 	@Resource(name="M_unique_code_generator")
 	M_unique_code_generator makeCode;

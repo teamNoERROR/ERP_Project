@@ -29,34 +29,34 @@
 					</button>
 				</div>
 				
-			<form id="inbnd_search">
-				<div class="d-flex">
-					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
-						<label class="d-flex align-items-center gap-1">
-							<input type="checkbox" name="status" value="가입고" onchange="inStatusCk(this)"
-									th:checked="${statusList != null and #arrays.contains(statusList, '가입고' )}" > 가입고
-						</label>
-						 <label class="d-flex align-items-center gap-1">
-							<input type="checkbox" name="status" value="입고완료" onchange="inStatusCk(this)"
-									th:checked="${statusList != null and #arrays.contains(statusList, '입고완료')}"> 입고완료
-						</label>
-						 <label class="d-flex align-items-center gap-1"> 
-							<input type="checkbox" name="status" value="입고취소" onchange="inStatusCk(this)"
-									th:checked="${statusList != null and  #arrays.contains(statusList, '입고취소')}"> 입고취소&nbsp;&nbsp;
-						</label> 
-					</div>
+<!-- 			<form id="inbnd_search"> -->
+<!-- 				<div class="d-flex"> -->
+<!-- 					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap"> -->
+<!-- 						<label class="d-flex align-items-center gap-1"> -->
+<!-- 							<input type="checkbox" name="status1" value="가입고" onchange="inStatusCk(this)" -->
+<!-- 									th:checked="${statusList != null and #arrays.contains(statusList, '가입고' )}" > 가입고 -->
+<!-- 						</label> -->
+<!-- 						 <label class="d-flex align-items-center gap-1"> -->
+<!-- 							<input type="checkbox" name="status1" value="입고완료" onchange="inStatusCk(this)" -->
+<!-- 									th:checked="${statusList != null and #arrays.contains(statusList, '입고완료')}"> 입고완료 -->
+<!-- 						</label> -->
+<!-- 						 <label class="d-flex align-items-center gap-1">  -->
+<!-- 							<input type="checkbox" name="status1" value="입고취소" onchange="inStatusCk(this)" -->
+<!-- 									th:checked="${statusList != null and  #arrays.contains(statusList, '입고취소')}"> 입고취소&nbsp;&nbsp; -->
+<!-- 						</label>  -->
+<!-- 					</div> -->
 					
-					<!-- Search Bar -->
-					<div class="col-auto">
-						<div class="input-group input-group-sm">
-							<input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="검색">
-							<button class="btn btn-primary">
-								<i class="bi bi-search"></i>
-							</button>
-						</div>
-					</div>
-				</div>
-			</form>
+<!-- 					Search Bar -->
+<!-- 					<div class="col-auto"> -->
+<!-- 						<div class="input-group input-group-sm"> -->
+<!-- 							<input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="검색"> -->
+<!-- 							<button class="btn btn-primary"> -->
+<!-- 								<i class="bi bi-search"></i> -->
+<!-- 							</button> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</form> -->
 		</div>
 			<!-- 입고 List Table-->
 			<div class="table-responsive  rounded" th:fragment="inbndList(inbound_total, inbound_all_list, mode)">
@@ -90,7 +90,7 @@
                 		</tr>
                 		
 						<tr th:if="${inbound_total != 0}" th:each="inlist, idx : ${inbound_all_list}"
-							  onclick="openInbndDetail(event)" style="cursor: pointer;">							
+							  onclick="openInbndDetail(this)" style="cursor: pointer;">							
 							<td onclick="event.stopPropagation();">
 								<input type="checkbox" name="inb_sel" class="inb_sb"
 										th:attr="data-pchcode=${inlist.PCH_CODE}, data-inbcode=${inlist.INBOUND_CODE}" 

@@ -56,6 +56,7 @@ public class pchreq_DAO {
 	
 	public List<pchreq_res_DTO> pchreq_detail(String pch_code){
 		List<pchreq_res_DTO> details = this.sql.selectList("pchreq_detail", pch_code);
+		System.out.println(details);
 		return details;
 	}
 	

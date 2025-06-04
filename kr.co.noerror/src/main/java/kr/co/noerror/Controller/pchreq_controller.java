@@ -1,7 +1,5 @@
 package kr.co.noerror.Controller;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -9,8 +7,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,18 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.mrp_result_DTO;
-import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
+import kr.co.noerror.DTO.pchreq_req_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
-import kr.co.noerror.DTO.pchreq_item_DTO;
-import kr.co.noerror.DTO.pchreq_req_DTO;
 import kr.co.noerror.Model.M_paging_util;
-import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.pchreq_service;
 import lombok.RequiredArgsConstructor;
@@ -118,6 +110,36 @@ public class pchreq_controller {
 	    return "/production/purchase_list.html";
 	}
 	
+	//발주리스트 모달연계용 서브페이지 
+	@GetMapping("/pchreq_list_sub.do")
+	public String pchreq_list_sub (@ModelAttribute search_condition_DTO search_cond, Model model) {
+		
+		if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
+			System.out.println(search_cond.getStatuses().get(0));
+		    List<String> statuses = search_cond.getStatuses().stream()
+		        .filter(s -> s != null && !s.trim().isEmpty())
+		        .collect(Collectors.toList());
+		    search_cond.setStatuses(statuses);
+		}
+		
+	    int search_count = this.pchreq_list_service.search_count(search_cond);
+	    
+	    paging_info_DTO paging_info = this.paging_util.calculate(
+	    		search_count, 
+	    		search_cond.getPage_no(), 
+	    		search_cond.getPage_size(), 
+	    		page_block
+	    );
+
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+
+	    model.addAttribute("pch_list", pch_list);
+	    model.addAttribute("paging", paging_info);
+	    model.addAttribute("condition", search_cond);
+	    
+	    return "/production/purchase_list_sub.html";
+	}
+	
 	/*
 	@GetMapping("/pchreq_list2.do")
 	public String pchreq_list2(Model m,
@@ -168,7 +190,7 @@ public class pchreq_controller {
 	*/
 	
 	@GetMapping("/pchreq_detail.do")
-	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m,@RequestParam(value="mode", required = false) String mode) {
+	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m) {
 		
 		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
 		m.addAttribute("details",details);

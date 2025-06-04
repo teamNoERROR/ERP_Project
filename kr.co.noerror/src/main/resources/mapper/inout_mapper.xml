@@ -74,7 +74,7 @@
 
 <!-- 입고 상세보기 모달  -->
 <select id="inbound_detail" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
-	SELECT * FROM INBOUND WHERE INBOUND_CODE = #{inbnd_code} AND PCH_CODE = #{pch_cd} 	
+	SELECT * FROM PCH_INB_VIEW WHERE INBOUND_CODE = #{inbnd_code} AND PCH_CODE = #{pch_cd} 	
 </select>
 
 <!-- 입고상태 확인  -->

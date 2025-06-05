@@ -32,7 +32,7 @@ import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_paging_util;
+import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Service.client_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
@@ -72,8 +72,10 @@ public class common_controller {
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
 	
-	@Autowired
-	M_paging_util paging_util;
+
+  @Resource(name="M_paging_util")
+  M_paging2 page_util;
+
 	
 	//관리자 리스트 모달 
 	@GetMapping("/employee_list.do")
@@ -248,41 +250,42 @@ public class common_controller {
 //			return "/modals/inbound_list_modal.html";
 	}
 	
-	
 	//발주 리스트 모달 띄우기 
-	@GetMapping("/pch_list_modal.do")
-	public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model,@RequestParam(value="mode", required = false) String mode) {
+  @GetMapping("/pch_list_modal.do")
+  public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model,@RequestParam(value="mode", required = false) String mode) {
 
-		if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
-			System.out.println(search_cond.getStatuses().get(0));
-		    List<String> statuses = search_cond.getStatuses().stream()
-		        .filter(s -> s != null && !s.trim().isEmpty())
-		        .collect(Collectors.toList());
-		    search_cond.setStatuses(statuses);
-		}
-		
-	    int search_count = this.pchreq_list_service.search_count(search_cond);
-	    
-	    paging_info_DTO paging_info = this.paging_util.calculate(
-	    		search_count, 
-	    		search_cond.getPage_no(), 
-	    		search_cond.getPage_size(), 
-	    		page_block
-	    );
+    if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
+      System.out.println(search_cond.getStatuses().get(0));
+        List<String> statuses = search_cond.getStatuses().stream()
+            .filter(s -> s != null && !s.trim().isEmpty())
+            .collect(Collectors.toList());
+        search_cond.setStatuses(statuses);
+    }
 
-	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+      int search_count = this.pchreq_list_service.search_count(search_cond);
 
-	    model.addAttribute("pch_list", pch_list);
-	    model.addAttribute("paging", paging_info);
-	    model.addAttribute("condition", search_cond);
-	    
-	    if ("modal2".equals(mode)) {
-	        return "/modals/purchase_list_body_modal.html :: pchMdList";
-	    } else {
-	        return "/modals/purchase_list_modal.html"; 
-	    }
-	}
+      paging_info_DTO paging_info = this.paging_util.calculate(
+          search_count, 
+          search_cond.getPage_no(), 
+          search_cond.getPage_size(), 
+          page_block
+      );
+
+      List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+
+      model.addAttribute("pch_list", pch_list);
+      model.addAttribute("paging", paging_info);
+      model.addAttribute("condition", search_cond);
+
+      if ("modal2".equals(mode)) {
+          return "/modals/purchase_list_body_modal.html :: pchMdList";
+      } else {
+          return "/modals/purchase_list_modal.html"; 
+      }
+  }
 	
+
+
 
 		
 

@@ -22,9 +22,17 @@ import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_req_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
-import kr.co.noerror.Model.M_paging_util;
+
+import kr.co.noerror.DTO.pchreq_item_DTO;
+import kr.co.noerror.DTO.pchreq_req_DTO;
+import kr.co.noerror.Model.M_paging;
+import kr.co.noerror.Model.M_paging2;
+import kr.co.noerror.Model.M_random;
+
 import kr.co.noerror.Service.generic_list_service;
+import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.pchreq_service;
 import lombok.RequiredArgsConstructor;
 
@@ -49,7 +57,13 @@ public class pchreq_controller {
 	paging_info_DTO paging_info;
 	
 	@Autowired
-	M_paging_util paging_util;
+	private goods_service g_svc;
+	
+	@Resource(name="M_paging")  //페이징생성 모델 
+	M_paging m_pg;
+	
+	@Autowired
+	M_paging2 m_pg2;
 
 	@GetMapping("/pchreq_insert.do")
 	public String pchreq_insert(Model m) {
@@ -78,23 +92,16 @@ public class pchreq_controller {
 	@PostMapping("/pchreq_save.do")
 	@ResponseBody
 	public Map<String, Object> pchreq_save(@RequestBody Map<String, pchreq_req_DTO> requestMap) {
+		System.out.println(requestMap);
 		return pchreq_service.pchreq_save(requestMap);
 	}
 	
 	@GetMapping("/pchreq_list.do")
 	public String pchreq_list(@ModelAttribute search_condition_DTO search_cond, Model model) {
 		
-		if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
-			System.out.println(search_cond.getStatuses().get(0));
-		    List<String> statuses = search_cond.getStatuses().stream()
-		        .filter(s -> s != null && !s.trim().isEmpty())
-		        .collect(Collectors.toList());
-		    search_cond.setStatuses(statuses);
-		}
-		
 	    int search_count = this.pchreq_list_service.search_count(search_cond);
 	    
-	    paging_info_DTO paging_info = this.paging_util.calculate(
+	    paging_info_DTO paging_info = this.m_pg2.calculate(
 	    		search_count, 
 	    		search_cond.getPage_no(), 
 	    		search_cond.getPage_size(), 
@@ -215,6 +222,40 @@ public class pchreq_controller {
 	@ResponseBody
 	public Map<String, Object> pch_status_update(@RequestBody Map<String, String> requestParam) {
 		return pchreq_service.pch_status_update(requestParam);
+	}
+	
+	//부자재 리스트 모달 띄우기 
+	@GetMapping("/item_list2.do")
+	public String item_list2(Model m
+								,@RequestParam(value = "type", required = false) String type
+								,@RequestParam(value = "keyword", required = false) String keyword
+								,@RequestParam(value = "products_class2", required = false) String sclass
+								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+								,@RequestParam(value="mode", required = false) String mode
+								)  {
+		
+		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
+		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
+		
+		//페이징 관련 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total);
+		int bno = this.m_pg.serial_no(goods_total, pageno, post_ea); 
+		
+		m.addAttribute("keyword",keyword);
+		m.addAttribute("bno", bno);
+		m.addAttribute("items_total", goods_total);
+		m.addAttribute("items_list", goods_all_list);
+		m.addAttribute("pageinfo", pageinfo);
+		m.addAttribute("pageno", pageno);
+		m.addAttribute("pea", post_ea);
+		
+		
+		if ("modal2".equals(mode)) {
+	        return "/modals/item_list_body_modal2.html :: itmMdList";
+	    } else {
+	        return "/modals/items_list_modal2.html"; 
+	    }
 	}
 	
 }

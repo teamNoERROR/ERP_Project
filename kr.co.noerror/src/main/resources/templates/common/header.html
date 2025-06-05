@@ -2,15 +2,23 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <body>
-<header class="header d-flex align-items-center justify-content-between px-4" th:fragment="header">
+<header class="header d-flex align-items-center justify-content-between gap-3 px-4" th:fragment="header">
 	<div class="logo" onclick="location.href='./main.do'">NoError</div>
+	
 	<nav class="navbar navbar-expand-lg bg-light">
+		<!-- 반응형 : 햄버거 버튼 -->
+	  	<button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+	          	aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+	    	<span class="navbar-toggler-icon"></span>
+	  	</button>
+	  	
+	  	<!-- 메뉴 영역 (접히는 부분) -->
+	  	<div class="collapse navbar-collapse" id="navbarMenu">
 		<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 기준정보관리 </a>
-				<ul class="dropdown-menu">
+				<a class="nav-link dropdown-toggle lmenu " role="button"  aria-expanded="false"> 기준정보관리 </a>
+				<ul class="dropdown-menu custom-menu">
 					<li><a class="dropdown-item" href="./client.do">거래처 관리</a></li>
-<!-- 					<li><a class="dropdown-item" href="./p_client.do">발주처 관리</a></li> -->
 					<li><a class="dropdown-item" href="./goods.do">품목 관리</a></li>
 					<li><a class="dropdown-item" href="./bom.do">BOM 관리</a></li>
 					<li><a class="dropdown-item" href="./warehouses_list.do">창고 관리</a></li>
@@ -18,8 +26,8 @@
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 입출고 관리 </a>
-				<ul class="dropdown-menu">
+				<a class="nav-link dropdown-toggle lmenu" role="button"  aria-expanded="false"> 입출고 관리 </a>
+				<ul class="dropdown-menu custom-menu">
 					<li><a class="dropdown-item" href="./inbound.do">자재 입고</a></li>
 					<li><a class="dropdown-item" href="./outbound.do">제품 출고</a></li>
 					<li><a class="dropdown-item" href="#">재고 관리</a></li>
@@ -27,7 +35,7 @@
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 생산 관리 </a>
-				<ul class="dropdown-menu">
+				<ul class="dropdown-menu custom-menu">
 					<li><a class="dropdown-item" href="./production.do">생산 계획</a></li>
 					<li><a class="dropdown-item" href="#">작업 관리</a></li>
 					<li><a class="dropdown-item" href="./production_in.do">생산계획 등록</a></li>
@@ -35,23 +43,22 @@
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 구매 영업 관리 </a>
-				<ul class="dropdown-menu">
+				<a class="nav-link dropdown-toggle lmenu" role="button"  aria-expanded="false"> 구매 영업 관리 </a>
+				<ul class="dropdown-menu custom-menu">
 					<li><a class="dropdown-item" href="./pchreq_list.do">발주 관리</a></li>
 					<li><a class="dropdown-item" href="./order.do">주문 관리</a></li>
 				</ul>
 			</li>
-			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle lmenu" role="button" aria-expanded="false"> 테스트용 </a>
-				<ul class="dropdown-menu">
-					<li><button type="button"  class="btn btn-dark" onclick="inbndListOpen()"><i class="bi bi-plus-lg"></i> 테스트버튼1</button></li>
-					<li><button type="button"  class="btn btn-warning" onclick="pcltListOpen()"><i class="bi bi-plus-lg"></i>발주처리스트모달</button></li>
-					<li><a class="dropdown-item" href="./session.do">세션 저장</a></li>
-				</ul>
-			</li>
 		</ul>
+		</div>
+		
 	</nav>
+	
+	<div class="userinfo">
+	<span class="login_user">[사원] 이명헌 님</span>
 	<a href="#contact" class="logout_btn">Logout</a>
+	</div>
+	
 </header>
 <div id="modalContainer"></div>
 </body>

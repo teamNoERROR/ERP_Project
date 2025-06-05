@@ -32,10 +32,14 @@ body {
 	font-weight: bold;
 	color: var(--text-color);
 	text-transform: uppercase;
+	cursor: default;
 }
 
-
-
+.header .logo:hover {
+	color: var(--hover-color);
+	cursor: default;
+	transition: color 0.5s;
+}
 
 .navmenu a:hover {
 	color: var(--hover-color);
@@ -88,13 +92,116 @@ body {
 }
 
 
+/* 메뉴 바탕색 */
+.navbar, .navbar-nav{
+	background-color: #0A3D62 !important;	
+}
+
+/* 대메뉴 */
+.nav-item {
+	display: flex  !important;
+	list-style: none  !important;
+	padding: 0  !important;
+	color : white  !important;
+}
+.nav-item > .lmenu {
+	color : white  !important;
+	text-decoration: none  !important;
+	padding: 10px 15px  !important;
+	transition: color 0.3s  !important;
+	margin-right: 90px !important;
+}
+.nav-item:last-child > .lmenu {
+	color : white  !important;
+	text-decoration: none  !important;
+	padding: 10px 15px  !important;
+	transition: color 0.3s  !important;
+	margin-right: 0 !important;
+}
+
+/* 소메뉴 */
+.nav-item .dropdown-menu .dropdown-item  {
+	color: var(--secondary-text-color)  !important;
+	text-decoration: none  !important;
+	padding: 10px 15px  !important;
+	transition: color 0.3s  !important;
+	margin-right: 90px !important;
+	background-color: #DDF2FD !important;
+}
+.nav-item .dropdown-menu .dropdown-item:hover {
+	color : white !important;
+}
+
+/* 드롭다운메뉴판 바탕색, 크기 */
+.dropdown-menu {
+	background-color: #DDF2FD;
+	width : 200px !important;
+}
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 45px; /* 필요 시 위치 조정 */
+}
+
+
+/*로그인 유저 스타일*/
+.userinfo {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  
+}
+
+.login_user{
+	color: white;
+	cursor: default;
+}
+
+button:focus,
+.btn:focus,
+input:focus,
+select:focus,
+textarea:focus,
+.page-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 576px) {
+	.navbar-collapse{
+		max-width : 200px;
+	}
+  .custom-toggler {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  
+  .nav-item.dropdown {
+    position: relative !important;
+  }
+  
+  .nav-item.dropdown:hover .dropdown-menu{
+	display: block  !important;
+	position: absolute !important;
+	top: -10%; /* 부모 아래쪽에 위치 */
+	z-index: 1000;
+	width: max-content;
+  }
+ 
+  .userinfo {
+    flex-direction: column;
+    align-items: center; /* 가운데 정렬 */
+    margin-right: 10px;
+  }
+  
+  .login_user{
+  	font-size : 0.7em;
+  }
+  
+}
 
 .readonly_text{
-	
-	
 color : grey;	
 pointer-events: none;	
-	
 }
 
 /*--------------------------------------------------------------
@@ -187,6 +294,15 @@ table td.info-label {
 .no_list_tb {
 	 cursor: default !important;
 /* 	 user-select: none;  텍스트 선택도 안 되게 */
+}
+
+.no_list_tb:hover {
+	cursor: default !important;
+	background-color: white !important;
+}
+
+.gray-row{
+	background-color: #eee;
 }
 
 /*--------------------------------------------------------------

@@ -19,7 +19,6 @@ function addItem(){
 	location.href="./items_insert.do";
 }
 
-
 /*--------------------------------------------------------------
 제품 등록하기 + 유효성검사
 --------------------------------------------------------------*/
@@ -52,10 +51,12 @@ function insertItm(){
 				
 	}else if(itm_safe_stock.value ==""){ 
 		alert("안전재고수를 입력하세요");
-		itm_safe_stock.focus();			
+		itm_safe_stock.focus();	
+				
 	}else if(!reg_num.test(itm_safe_stock.value)){
 		alert("안전재고수는 숫자만 입력이 가능합니다.");
 		itm_safe_stock.focus();	
+		
 	}else if(useY.checked == false && useN.checked == false){ 
 		alert("사용유무를 선택하세요");
 	}
@@ -93,7 +94,6 @@ function insertItm(){
 		insertItem();
 	}
 }
-
 
 /*--------------------------------------------------------------
 거래처 선택 후 인풋란에 붙여넣기
@@ -184,8 +184,6 @@ function insertItem(){
 		console.log("통신오류발생" + error);
 	});
 }
-
-
 
 /*--------------------------------------------------------------
 부자재 페이징

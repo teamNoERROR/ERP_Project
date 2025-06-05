@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.mrp_result_DTO;
@@ -24,13 +25,8 @@ import kr.co.noerror.DTO.pchreq_req_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
-
-import kr.co.noerror.DTO.pchreq_item_DTO;
-import kr.co.noerror.DTO.pchreq_req_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_paging2;
-import kr.co.noerror.Model.M_random;
-
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.pchreq_service;
@@ -131,7 +127,7 @@ public class pchreq_controller {
 		
 	    int search_count = this.pchreq_list_service.search_count(search_cond);
 	    
-	    paging_info_DTO paging_info = this.paging_util.calculate(
+	    paging_info_DTO paging_info = this.m_pg2.calculate(
 	    		search_count, 
 	    		search_cond.getPage_no(), 
 	    		search_cond.getPage_size(), 

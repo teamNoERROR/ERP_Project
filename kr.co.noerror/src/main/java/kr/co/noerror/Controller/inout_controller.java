@@ -132,10 +132,11 @@ public class inout_controller {
 	//입고내역 상세보기 모달
 	@GetMapping("/inbnd_detail_modal.do")
 	public String inbnd_detail_modal(Model m, @RequestParam("inbnd_code") String inbnd_code
-								, @RequestParam("pch_code") String pch_cd) {
-//		String ori_pch_cd = pch_cd.substring(0,9);
+								, @RequestParam("pch_code") String pch_cd
+								, @RequestParam("ori_pcd") String ori_pcd) {
 		
-		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, pch_cd);
+		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, ori_pcd);
+		String ind_pchcd="";
 		int pch_qty_total=0;  //총 주문수량 
 		int inb_qty_total=0;  //총 입고수량 
 		int itm_cost_total=0;  //총 제품 단가
@@ -146,18 +147,17 @@ public class inout_controller {
 		    inb_qty_total += sum.getITEM_QTY();     // ITEM_QTY 누적
 		    itm_cost_total += sum.getITEM_COST();   // ITEM_COST 누적 (단가 총합이 맞는지 확인 필요)
 		    pch_amount_total += sum.getPAY_AMOUNT(); // PAY_AMOUNT 누적
+		    
+		    ind_pchcd += sum.getIND_PCH_CD();
 		}
-		System.out.println(pch_qty_total);
-		System.out.println(inb_qty_total);
-		System.out.println(itm_cost_total);
-		System.out.println(pch_amount_total);
+		System.out.println(ind_pchcd);
 		
 		m.addAttribute("inbnd_detail", inbound_detail);
 		m.addAttribute("pch_qty_total", pch_qty_total);
 		m.addAttribute("inb_qty_total", inb_qty_total);
 		m.addAttribute("itm_cost_total", itm_cost_total);
 		m.addAttribute("pch_amount_total", pch_amount_total);
-		
+		m.addAttribute("pch_cd", pch_cd);
 		return "/modals/inbound_detail_modal.html";
 	}
 	

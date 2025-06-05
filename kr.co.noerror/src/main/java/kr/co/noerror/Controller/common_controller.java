@@ -42,11 +42,9 @@ import kr.co.noerror.Service.pchreq_service;
 @Controller
 public class common_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
-
 	PrintWriter pw = null;
 
 	private static final int page_block = 3; //페이지 번호 출력갯수
-
 	
 	@Resource(name="employee_DTO")
 	employee_DTO emp_dto;
@@ -71,10 +69,9 @@ public class common_controller {
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
-	
 
-  @Resource(name="M_paging_util")
-  M_paging2 page_util;
+	@Resource(name="M_paging_util")
+	M_paging2 page_util;
 
 	
 	//관리자 리스트 모달 
@@ -247,7 +244,6 @@ public class common_controller {
 	    } else {
 	        return "/modals/inbound_list_modal.html"; // 일반 뷰 전체
 	    }
-//			return "/modals/inbound_list_modal.html";
 	}
 	
 	//발주 리스트 모달 띄우기 
@@ -264,7 +260,7 @@ public class common_controller {
 
       int search_count = this.pchreq_list_service.search_count(search_cond);
 
-      paging_info_DTO paging_info = this.paging_util.calculate(
+      paging_info_DTO paging_info = this.page_util.calculate(
           search_count, 
           search_cond.getPage_no(), 
           search_cond.getPage_size(), 

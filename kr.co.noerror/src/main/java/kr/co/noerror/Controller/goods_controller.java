@@ -325,8 +325,6 @@ public class goods_controller {
 	//품목 상세보기 모달 
 	@PostMapping("/goods_detail.do")
 	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
-		System.out.println(pd_code);
-		System.out.println(type);
 		
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);  //bom상세보기 클릭시

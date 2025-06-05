@@ -44,14 +44,13 @@
 			<!-- 발주 List Table -->
 			<div id="list-container">
 
-				<div id="table-container" class="table-responsive  rounded"
-					th:fragment="pchList(pch_list, mode)">
-					<table
-						class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
+				<div id="table-container" class="table-responsive  rounded" >
+					<table class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
 						<thead class="table-light text-center">
 							<tr>
-								<th scope="col"><input
-									th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
+								<th scope="col">
+									<input type="checkbox" disabled>
+								</th>
 								<th scope="col">#</th>
 								<th scope="col">발주번호</th>
 								<th scope="col">발주일자</th>
@@ -66,8 +65,8 @@
 							<tr th:each="p : ${pch_list}" class="modal-trigger"
 								th:data-modal-url="@{/pchreq_detail.do(code=${p.pch_code})}"
 								data-modal-id="pch_modal" style="cursor: pointer;">
-								<td onclick="event.stopPropagation();"><input
-									th:type="${mode == 'modal'} ? 'radio' : 'checkbox'"></td>
+								<td onclick="event.stopPropagation();">
+									<input type="checkbox"></td>
 								<td>[[${p.pidx}]]</td>
 								<td>[[${p.pch_code}]]</td>
 								<td>[[${p.request_date.substring(0, 10)}]]</td>
@@ -85,13 +84,11 @@
 
 				<!-- Pagination -->
 				<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-					<div
-						th:replace="~{/fragments/paging.html :: pagination(${paging}, ${condition}, 'normal')}"></div>
+					<div th:replace="~{/fragments/paging.html :: pagination(${paging}, ${condition}, 'normal')}"></div>
 	
 					<!-- Action Buttons -->
 					<div class="ms-auto">
-						<button type="button" class="btn btn-success"
-							onclick="location.href='/pchreq_insert.do'">
+						<button type="button" class="btn btn-success" onclick="location.href='/pchreq_insert.do'">
 							<i class="bi bi-plus-lg"></i> 수기등록
 						</button>
 						<!-- 						<button class="btn btn-danger"> -->

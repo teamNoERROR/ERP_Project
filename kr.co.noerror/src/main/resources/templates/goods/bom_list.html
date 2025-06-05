@@ -58,7 +58,7 @@
                     <tr>
                         <th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled ></th>
                         <th scope="col">#</th>
-                        <th scope="col">제품사진</th>
+                        <th scope="col">IMG</th>
                         <th scope="col">제품코드</th>
                         <th scope="col">제품명</th>
                         <th scope="col">제품유형</th>
@@ -83,7 +83,10 @@
                     	onclick="bomDetailOpen(this)"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()"><input type="checkbox" name="bom_select" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
                         <td > [[${bno - idx.index}]]</td>
-                        <td><img src=""></td>
+                        <td class="p-0">
+                        	<img th:if="${bomlist.PD_API_FNM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${bomlist.PD_FILE_RENM}}" style="width:50px;">
+                        	<img th:if="${bomlist.PD_API_FNM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
+                        </td>
                         <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>
                         <td class="text-start">[[${bomlist.PRODUCT_NAME}]]</td>
                         <th:block>

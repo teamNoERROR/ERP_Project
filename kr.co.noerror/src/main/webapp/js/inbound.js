@@ -1,6 +1,6 @@
 var pch_code = document.querySelector("#pch_code");
-var whname = document.querySelector("#in_wh_name");
-var wh_code = document.querySelector("#wh_code");
+var wh_name = document.querySelector("#in_wh_name");
+var wh_code = document.querySelector("#in_wh_code");
 var inbound_date = document.querySelector("#inbound_date");
 var in_status = document.querySelector("#in_status");
 var employee_code = document.querySelector("#employee_code");
@@ -21,39 +21,6 @@ function goInbndList(){
 	location.href="./inbound.do"
 }
 
-/*--------------------------------------------------------------
-창고리스트에서 선택후 인풋란에 붙여넣기 
---------------------------------------------------------------*/
-function choiceWh() {
-	var radios = document.querySelectorAll('input[name="choice_wh"]');
-	
-	var selected_radio = null;
-	for (var i = 0; i < radios.length; i++) {
-	  if (radios[i].checked) {
-	    selected_radio = radios[i];
-	  }
-	}
-	if (!selected_radio) {
-	alert("창고를 선택해 주세요.");
-
-	 }else{
-		var wh_name = selected_radio.getAttribute('data-wh_name');
-		
-	  	//선택한 창고 데이터 붙여넣을 곳 
-		whname.value= wh_name;
-		wh_code.value= selected_radio.value;
-		
-		// 선택 후 모달 닫기
-	 	var modalElement = document.getElementById("wh_type_list");
-		var modal = bootstrap.Modal.getInstance(modalElement);
-		if (modal) {
-		    modal.hide();
-			setTimeout(() => {
-				document.querySelector("body").focus(); // body에 포커스 주기
-			}, 300);
-		}
-	}
-};
 
 /*--------------------------------------------------------------
 발주리스트에서 선택후 인풋란에 붙여넣기  
@@ -74,17 +41,18 @@ function choicePch() {
 	 }else{
 		var tr = selected_radio.closest('tr');
 		var tdList = tr.querySelectorAll('td');
-		var pidx =  tdList[2].innerText.trim();
+		var pchcode =  tdList[2].innerText.trim();
 		var cmp_name = tdList[4].innerText.trim();
 		var cmp_code = tr.getAttribute("data-etccode");
 		
+		//inbnd_insert.html에 붙는 부분
 		var pch_code = document.querySelector('#pch_code');
 		var comp_name = document.querySelector('#comp_name');
 		var comp_code = document.querySelector('#comp_code');
 		  
-		pchDtlLoad(pidx);   //발주목록 테이블에 붙여넣기
+		pchDtlLoad(pchcode);   //발주목록 테이블에 붙여넣기
 		
-		pch_code.value= pidx;
+		pch_code.value= pchcode;
 		comp_name.value= cmp_name;
 		comp_code.value= cmp_code;
 		
@@ -170,7 +138,7 @@ function insert_inBnd(){
 		pch_code.focus();		
 	}else if(wh_code.value == ""){
 		alert("창고이름을 선택하세요.");
-		whname.focus();	
+		wh_name.focus();	
 	}else if(inbound_date.value == ""){
 		alert("입고일자를 선택하세요.");
 		inbound_date.focus();	
@@ -256,10 +224,13 @@ function inbndInsertOk(){
 --------------------------------------------------------------*/
 function openInbndDetail(event){
 	
-	var inbnd_code = event.currentTarget.querySelector(".inbnd_code").innerText;
-	var pch_cd = event.currentTarget.querySelector(".pch_code").getAttribute("data-pch");
+	var inbnd_code = event.querySelector(".inbnd_code").textContent.trim();
+	var pch_cd = event.querySelector(".pch_code").getAttribute("data-pch");
+	var ori_pcd = pch_cd.substring(0, 9)
+	   console.log("inbnd_code:", inbnd_code);
+	   console.log("pch_cd:", ori_pcd);
 
-	fetch("./inbnd_detail.do?inbnd_code="+inbnd_code+"&pch_cd="+pch_cd, {
+	fetch("./inbnd_detail_modal.do?pch_code="+ori_pcd+"&inbnd_code="+inbnd_code, {
 		method: "GET",
 		
 	}).then(function(data) {
@@ -280,26 +251,27 @@ function openInbndDetail(event){
 입고상태 변경 
 --------------------------------------------------------------*/
 function inbCngOk(){
-	var in_status = document.querySelector("#in_status").value;
+	var inb_status = document.querySelector("#in_status").value;
 	var inbnd_ckbx = document.querySelectorAll("input[name='inb_sel']:checked");
-	
+	var in_status = document.querySelector("#in_status");
+	console.log(in_status);
 	if(inbnd_ckbx.length==0){
 		alert("입고상태를 변경할 상품이 선택되지 않았습니다.");
 		
-	}else if(in_status == ""){
+	}else if(inb_status == ""){
 		alert("입고상태를 선택하세요.");
 		
 	}else{
 
 		var status_chg = new Array();
-		inbnd_ckbx.forEach(chk => {
-			inb_code = chk.getAttribute("data-inbcode");
-			pch_code = chk.getAttribute("data-pchcode");
+		inbnd_ckbx.forEach(inchk => {
+			inb_code = inchk.getAttribute("data-inbcode");
+			pch_code = inchk.getAttribute("data-pchcode");
 			
 			status_chg.push({ 
 				code: inb_code, 
 				code2: pch_code,
-				status : in_status 
+				statusinb : in_status.value
 			})
 		});
 		fetch("./inbnd_ok.do", {

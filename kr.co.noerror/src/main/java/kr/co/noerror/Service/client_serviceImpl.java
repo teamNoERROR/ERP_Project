@@ -11,14 +11,11 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.client_DAO;
-import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.file_DTO;
-import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Mapper.client_mapper;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_random;
 
 @Service
 public class client_serviceImpl implements client_service {
@@ -29,9 +26,6 @@ public class client_serviceImpl implements client_service {
 	
 	@Resource(name="client_DAO")
 	client_DAO clt_dao;
-	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;

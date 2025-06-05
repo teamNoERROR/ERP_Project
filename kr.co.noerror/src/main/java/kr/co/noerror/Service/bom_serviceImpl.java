@@ -20,7 +20,7 @@ import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.Mapper.bom_mapper;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
 public class bom_serviceImpl implements bom_service{
@@ -31,9 +31,9 @@ public class bom_serviceImpl implements bom_service{
 	
 	@Resource(name="bom_DAO")
 	bom_DAO b_dao;
-	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
+
+	@Resource(name="M_unique_code_generator")
+	M_unique_code_generator makeCode;  //고유코드 생성모델
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
@@ -67,7 +67,8 @@ public class bom_serviceImpl implements bom_service{
 	//BOM 등록
 	@Override
 	public int bom_insert( String insert_item) {
-		String bom_code = "BOM-"+this.m_rno.random_no();
+		//고유코드생성
+        String bom_code = this.makeCode.generate("BOM-", code -> this.b_dao.code_dupl_bom(code) > 0);
 	    
 		JSONArray ja = new JSONArray(insert_item);
 		int item_ea = ja.length();

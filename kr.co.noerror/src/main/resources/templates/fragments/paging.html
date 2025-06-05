@@ -10,68 +10,33 @@
 	    <!-- Pagination -->
 	    <ul class="pagination mb-0">
 	        <!-- 이전 -->
-	        <li th:classappend="${paging.start_page == 1} ? 'disabled'" class="page-item">
-	            <!-- mode가 'modal'일 때 -->
-				<a class="page-link"
-				   href="javascript:void(0)" 
-				   th:if="${mode == 'modal'}"
-				   th:attr="data-page-no=${paging.start_page - 1}, 
-				            data-search-word=${condition.search_word}, 
-				            data-statuses=${condition.statuses},
-				            data-page-size=${condition.page_size}"
-				   onclick="pchListOpen2(this);">이전</a>
-				   
-				<!-- 그 외일 때 -->  
+	        <li th:classappend="${paging.start_page == 1} ? 'disabled'" class="page-item prev">
 	            <a class="page-link"
 	               th:href="@{'/pchreq_list.do'(page_no=${paging.start_page - 1},
 	                                            search_word=${condition.search_word},
 	                                            statuses=${condition.statuses},
-	                                            page_size=${condition.page_size})}"
-	               th:unless="${mode == 'modal'}">이전</a>
+	                                            page_size=${condition.page_size})}">
+	            <i class="bi bi-chevron-double-left"></i> </a>
 	        </li>
 
 	        <!-- 페이지 번호 -->
-	        <li class="page-item"
-	            th:each="i : ${#numbers.sequence(paging.start_page, paging.end_page)}"
-	            th:classappend="${i == paging.page_no} ? 'active'">
-	            <!-- mode가 'modal'일 때 -->
-				<a class="page-link"
-				   href="javascript:void(0)" 
-				   th:if="${mode == 'modal'}"
-				   th:attr="data-page-no=${i}, 
-				            data-search-word=${condition.search_word}, 
-				            data-statuses=${condition.statuses},
-				            data-page-size=${condition.page_size}"
-				   onclick="pchListOpen2(this);">[[${i}]]</a>
-				   	            
-	            <!-- 그 외일 때 --> 
+	        <li class="page-item" th:each="i : ${#numbers.sequence(paging.start_page, paging.end_page)}"
+	            				th:classappend="${i == paging.page_no} ? 'active'">
 	            <a class="page-link"
 	               th:href="@{'/pchreq_list.do'(page_no=${i},
 	                                            search_word=${condition.search_word},
 	                                            statuses=${condition.statuses},
-	                                            page_size=${condition.page_size})}"
-	               th:unless="${mode == 'modal'}">[[${i}]]</a>
+	                                            page_size=${condition.page_size})}">[[${i}]]</a>
 	        </li>
 
 	        <!-- 다음 -->
 	        <li th:classappend="${paging.end_page >= paging.page_cnt} ? 'disabled'" class="page-item">
-	            <!-- mode가 'modal'일 때 -->
-				<a class="page-link"
-				   href="javascript:void(0)" 
-				   th:if="${mode == 'modal'}"
-				   th:attr="data-page-no=${paging.start_page - 1}, 
-				            data-search-word=${condition.search_word}, 
-				            data-statuses=${condition.statuses},
-				            data-page-size=${condition.page_size}"
-				   onclick="pchListOpen2(this);">다음</a>
-				   
-	        	<!-- 그 외일 때 --> 
 	            <a class="page-link"
 	               th:href="@{'/pchreq_list.do'(page_no=${paging.end_page + 1},
 	                                            search_word=${condition.search_word},
 	                                            statuses=${condition.statuses},
-	                                            page_size=${condition.page_size})}"
-	              th:unless="${mode == 'modal'}">다음</a>
+	                                            page_size=${condition.page_size})}">
+	            <i class="bi bi-chevron-double-right"></i>  </a>
 	        </li>
 	    </ul>
 

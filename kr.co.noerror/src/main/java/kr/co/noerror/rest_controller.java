@@ -21,7 +21,7 @@ public class rest_controller {
 	@GetMapping("/purchase_detail_modal.do")
 	public List<pchreq_res_DTO> purchase_detail_modal(@RequestParam(name="code") String pch_code) {
 			
-		List<pchreq_res_DTO> pch_details = this.pdao.purchase_detail(pch_code);
+		List<pchreq_res_DTO> pch_details = this.pdao.pchreq_detail(pch_code);
 		System.out.println(pch_details);
 		
 		return pch_details;

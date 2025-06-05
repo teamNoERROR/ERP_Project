@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import kr.co.noerror.DTO.paging_info_DTO;
 
 @Repository("M_paging_util")
-public class M_paging_util {
+public class M_paging2 {
 
 	@Autowired
 	paging_info_DTO paging_info_dto;

@@ -11,10 +11,10 @@ public interface inout_service {
 	int inbnd_insert(String inbnd_item);
 	
 	//입고리스트 총개수 
-	int inbound_total(String keyword, String[] status);
+	int inbound_total(String keyword);
 
 	//입고리스트 
-	List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea, String[] status);
+	List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea);
 
 	//입고건 상세보기 
 	List<inout_DTO> inbound_detail(String inbnd_code, String pch_cd);

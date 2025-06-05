@@ -29,18 +29,8 @@
             <tbody>
               <tr style="cursor: pointer;" id="wh_data"  th:each="wh, idx : ${wh_tp_data}">
                 <td>
-                  <input type="radio" name="iosfSelect" th:value="${wh.wh_code}"
-                         th:data-wh_name="${wh.wh_name}"
-                         th:data-wh_zipcode="${wh.wh_zipcode}"
-                         th:data-wh_addr1="${wh.wh_addr1}"
-                         th:data-wh_addr2="${wh.wh_addr2}"
-                         th:data-wh_type="${wh.wh_type}"
-                         th:data-wh_use_flag="${wh.wh_use_flag}"
-                         th:data-wh_insert_date="${wh.wh_insert_date}"
-                         th:data-wh_modify_date="${wh.wh_modify_date}"
-                         th:data-wh_mg_id="${wh.wh_mg_id}"
-                         th:data-wh_desc="${wh.wh_desc}"
-                         th:data-wh_note="${wh.wh_note}">
+                  <input type="radio" name="choice_wh" id="choice_wh" th:value="${wh.wh_code}"
+                         th:attr="data-wh_name=${wh.wh_name}">
                 </td>
                 <td>[[${idx.count}]]</td>
                 <td>[[${wh.wh_code}]]</td>
@@ -63,10 +53,9 @@
       <div class="modal-footer">
         <div class="d-flex gap-2">
           <div class="ms-auto">
-          <!-- 단일 버튼만 보여주고 -->
-				<button type="button" id="selectWhBtn" class="btn btn-success" onclick="select_iosf_wh('')">
- 					 <i class="bi bi-check2-square"></i> 선택
-				</button>
+            <button type="button" id="selectWhBtn" class="btn btn-success" onclick="choiceWh()">
+              <i class="bi bi-check2-square"></i> 선택
+            </button>
           </div>
         </div>
       </div>

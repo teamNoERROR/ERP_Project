@@ -30,9 +30,4 @@ public class client_DAO {
 		return client_list;
 	}
 
-	public client_DTO clt_one_detail(Map<String, String> map) {
-		client_DTO client_one  = this.st.selectOne("client_detail",map);
-		return client_one;
-	}
-
 }

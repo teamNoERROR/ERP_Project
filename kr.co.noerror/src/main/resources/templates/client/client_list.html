@@ -75,10 +75,9 @@
 
 						<tr th:if="${client_total != 0}"
 							th:each="cltlist, idx : ${client_list}"
-							th:attr="data-idx=${cltlist.CIDX}, data-code=${cltlist.COMPANY_CODE}, data-type='client'"
-							th:onclick="openCltDetail(this)" style="cursor: pointer;">
+							onclick="open_clt_detail(event)" style="cursor: pointer;">
 							<td onclick="event.stopPropagation()">
-								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="sel_clt" class="clt_sb"></td>
+								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="sel_clt" class="sb" data-type="client"></td>
 							<td>[[${bno - idx.index}]]</td>
 							<td>[[${cltlist.COMPANY_CODE}]]</td>
 							<td>[[${cltlist.COMPANY_NAME}]]</td>
@@ -104,7 +103,7 @@
 							<li class="page-item page-link prev"
 								th:classappend="${1 >= pageno} ? 'disabled' : ''"
 								th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='client', data-pea=${pageinfo.post_ea}"
-								th:onclick="${mode2 == 'pageing'} ? 'pcl_modal_pg(this)' : 'go_clt_pg(this)'">
+								th:onclick="${mode2 == 'pageing'} ? 'cl_modal_pg(this)' : 'go_clt_pg(this)'">
 								<i class="bi bi-chevron-double-left"></i></li>
 
 							<th:block
@@ -112,13 +111,13 @@
 								<li class="page-item page-link pgnum"
 									th:classappend="${pageno == pgn} ? 'curpg' : ''"
 									th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='client', data-pea=${pageinfo.post_ea}"
-									th:onclick="${mode2 == 'pageing'} ? 'pcl_modal_pg(this)' : 'go_clt_pg(this)'">[[${pgn}]]</li>
+									th:onclick="${mode2 == 'pageing'} ? 'cl_modal_pg(this)' : 'go_clt_pg(this)'">[[${pgn}]]</li>
 							</th:block>
 
 							<li class="page-item page-link next"
 								th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''"
 								th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 }, data-type='client', data-pea=${pageinfo.post_ea}"
-								th:onclick="${mode2 == 'pageing'} ? 'pcl_modal_pg(this)' : 'go_clt_pg(this)'">
+								th:onclick="${mode2 == 'pageing'} ? 'cl_modal_pg(this)' : 'go_clt_pg(this)'">
 								<i class="bi bi-chevron-double-right"></i></li>
 						</ul>
 					</div>

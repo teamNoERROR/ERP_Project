@@ -2,7 +2,6 @@ package kr.co.noerror.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +11,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,22 +20,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.noerror.DAO.goods_DAO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
+import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class goods_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
@@ -85,9 +79,24 @@ public class goods_controller {
 		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type, sclass, keyword, pageno, post_ea);  //제품 리스트
 		
+		System.out.println("goods_total_sch : " + goods_total_sch);
+		System.out.println("goods_all_list_sch : " + goods_all_list_sch);
+		
 		//페이징 관련 
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total_sch);
-		int bno = this.m_pg.serial_no(goods_total_sch, pageno, post_ea); 
+		int pst_ea = post_ea; 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pst_ea, goods_total_sch);
+		int bno = this.m_pg.serial_no(goods_total_sch, pageno, pst_ea); 
+		
+		//제품타입에 따른 url 분류 
+		if("product".equals(type) || type==null) {
+			m.addAttribute("mmenu","완제품 리스트");
+			this.url = "/goods/products_list.html";
+			
+		}else if("item".equals(type)) {
+			m.addAttribute("mmenu","부자재 리스트");
+			this.url = "/goods/items_list.html";
+			
+		}
 		
 		//검색했을경우 
 		if(sclass != null || keyword != null) {
@@ -112,16 +121,6 @@ public class goods_controller {
 				slist.add(sc_list.getString(i));
 			}
 			m.addAttribute("slist",slist);
-		}
-		
-		//제품타입에 따른 url 분류 
-		if("product".equals(type) || type==null) {
-			m.addAttribute("mmenu","완제품 리스트");
-			this.url = "/goods/products_list.html";
-			
-		}else if("item".equals(type)) {
-			m.addAttribute("mmenu","부자재 리스트");
-			this.url = "/goods/items_list.html";
 			
 		}
 		
@@ -139,70 +138,12 @@ public class goods_controller {
 		
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
+		m.addAttribute("pea", pst_ea);
 		
 		return this.url;
 	}
 
-	/*
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@ResponseBody
-	@GetMapping("/img_attach/{filenm}")
-	public byte[] cdn_listapi(@PathVariable String filenm) {
-	
-		byte[] img = null; //FE에게 CDN경로 이미지명을 전송 
-		String img_url = null; 
-		
-		if("imgfile".equals(filenm)) {  
-		//파라미터값에 맞는 DB에 정보를 확인 후 해당 정보가 있을 경우 DB에 저장된 경로를 변수에 저장 
-			
-			img_url = "http://210.178.108.186/imgfile/"+"2025060400255562612.webp";
-			
-			try {
-				URL url = new URL(img_url);
-				
-				HttpURLConnection httpcon = (HttpURLConnection)url.openConnection();
-				
-				InputStream is = httpcon.getInputStream();  //해당 이미지를 바이트로 가져옴 
-				img = IOUtils.toByteArray(is);  //byte변수에 가져온 이미지 전체를 저장 
-				
-				is.close();
-				httpcon.disconnect();
-						
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-			
-		}else {
-			this.log.info("해당경로에 대한 사항이 없습니다.");
-		}
-		return img;   
-	}
-*/
-	
-	
-	//cdn이미지 요청 api
-	@GetMapping("/img_attach/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<byte[]> getCdnImage(@PathVariable("filename") String filename) {
-		byte[] imgbyte = this.m_file.cdn_img(filename);
-		if (imgbyte == null) {
-			return ResponseEntity.notFound().build();
-		}
 
-		HttpHeaders headers = new HttpHeaders();
-		  
-		String contentType = URLConnection.guessContentTypeFromName(filename);
-		if (contentType == null || !contentType.startsWith("image/")) {
-		    // 모르는 확장자거나 이미지가 아닐 경우에도 PNG로 처리 (이미지 깨짐 방지)
-		    contentType = "image/png";
-		}
-		
-		headers.setContentType(MediaType.parseMediaType(contentType));
-		return new ResponseEntity<>(imgbyte, headers, HttpStatus.OK);
-	}
-	
-	
-	
 	//완제품 등록하기 화면이동 
 	@GetMapping("/products_insert.do")
 	public String products_insert(Model m) throws IOException {
@@ -212,7 +153,6 @@ public class goods_controller {
 		
 		return "/goods/products_insert.html";
 	}
-	
 	
 	//부자재 등록하기 화면이동 
 	@GetMapping("/items_insert.do")
@@ -224,8 +164,7 @@ public class goods_controller {
 		return "/goods/items_insert.html";
 	}
 	
-	
-	//리스트,제품등록화면에서 제품유형 선택시 
+	//제품유형 선택시 
 	@GetMapping("/goods_type.do")
 	public String goods_type(HttpServletResponse res
 							, @RequestParam("type") String goods_type
@@ -269,11 +208,14 @@ public class goods_controller {
 	@PostMapping("/products_insertok.do")
 	public String products_insertok(@ModelAttribute products_DTO pdto,
 									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
+									@RequestParam(name = "url", required = false) String url,
 									HttpServletResponse res) {
+		System.out.println("이미지1 : "+productImage);
+		System.out.println("pdto1 : "+pdto);
 		try {
 			this.pw = res.getWriter();
 			
-			int result = this.g_svc.pd_insert(pdto, productImage);   //db에 데이터 저장 
+			int result = this.g_svc.pd_insert(pdto, productImage, url);   //db에 데이터 저장 
 			if(result > 0) {  
 				this.pw.write("ok");  //제품 등록 완료 
 			}
@@ -296,21 +238,24 @@ public class goods_controller {
 	//제품 등록 (부자재)
 	@PostMapping("/items_insertok.do")
 	public String items_insertok(@ModelAttribute products_DTO pdto,
-									@RequestParam(value = "itmImage", required = false) MultipartFile itmImage,
+									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
+									@RequestParam(name = "url", required = false) String url,
 									HttpServletResponse res) {
+		
+		System.out.println("이미지 : "+productImage);
 		try {
 			this.pw = res.getWriter();
 			
-			int result = this.g_svc.itm_insert(pdto, itmImage);   //db에 데이터 저장
+			int result = this.g_svc.itm_insert(pdto, productImage, url);   //db에 데이터 저장
 			if(result > 0) {  
-				this.pw.write("ok");  //부자재 등록 완료 
+				this.pw.write("ok");  //제품 등록 완료 
 			}
 			else {
-				this.pw.write("fail"); //부자재 등록실패
+				this.pw.write("fail"); //제품 등록실패
 			}
 			
 		} catch (IOException e) {
-			this.pw.write("error"); //부자재 등록실패
+			this.pw.write("ee"); //제품 등록실패
 			this.log.error(e.toString());
 			e.printStackTrace();
 			
@@ -385,7 +330,7 @@ public class goods_controller {
 	//				products_DTO goods_one = this.g_svc.pd_one_detail(pd_code);  //특정게시물 내용 가져오기(이미지 삭제용)
 					if("bom".equals(jo.getString("type"))) {
 						
-						this.d_dto.setCode2(jo.getString("code2"));
+						 this.d_dto.setCode2(jo.getString("code2"));
 						result= this.b_svc.bom_delete(this.d_dto);
 						if(result >= 1) {
 							count++;

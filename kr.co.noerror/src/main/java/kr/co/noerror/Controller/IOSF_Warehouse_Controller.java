@@ -11,14 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
 
@@ -43,9 +41,6 @@ public class IOSF_Warehouse_Controller {
     @Resource(name="IOSF_Warehouse_Service")
        IOSF_Warehouse_Service iosf_service;
 
-    @Resource(name="IOSF_Warehouse_DAO")
-       IOSF_Warehouse_DAO iosf_dao;
-
     @Resource(name="IOSF_DTO")
        IOSF_DTO iosf_dto;
 
@@ -56,149 +51,6 @@ public class IOSF_Warehouse_Controller {
       m.addAttribute("IOSF_DTO", this.iosf_dto);
       return "/warehouse/in_warehouse_insert.html";
    }
-   
-   
-   //부자재 창고 리스트
-   @GetMapping("/warehouses_out_list.do")
-   public String warehouses_out_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
-  
-	      this.map = new HashMap<>();
-	      Map<Object, Object>   iosf_list_map = this.map;
-	   
-	      this.wh_type = "out";
-	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
-	      
-	       m.addAttribute("out_wh_list", iosf_list_map.get("wh_list")); // 리스트
-	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
-	       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
-	       m.addAttribute("currentPage", iosf_list_map.get("currentPage"));   //현재 페이지
-	       m.addAttribute("totalCount", iosf_list_map.get("totalCount"));   //총 게시물 갯수
-	       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
-	       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
-	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
-	   
-	   return "/warehouse/out_warehouses_list.html";
-   }
-   
- //부자재 창고 리스트
-   @GetMapping("/warehouses_fs_list.do")
-   public String warehouses_fs_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
-  
-	   	this.map = new HashMap<>();
-	      Map<Object, Object>   iosf_list_map = this.map;
-	   
-	      this.wh_type = "fs";
-	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
-	      
-	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
-	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
-	       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
-	       m.addAttribute("currentPage", iosf_list_map.get("currentPage"));   //현재 페이지
-	       m.addAttribute("totalCount", iosf_list_map.get("totalCount"));   //총 게시물 갯수
-	       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
-	       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
-	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
-	   
-	   return "/warehouse/fs_warehouses_list.html";
-   }
-   
-   
-   //부자재 창고 리스트
-   @GetMapping("/warehouses_mt_list.do")
-   public String warehouses_mt_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
-  
-	   	this.map = new HashMap<>();
-	      Map<Object, Object>   iosf_list_map = this.map;
-	   
-	      this.wh_type = "mt";
-	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
-	      
-	       m.addAttribute("mt_wh_list", iosf_list_map.get("wh_list")); // 리스트
-	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
-	       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
-	       m.addAttribute("currentPage", iosf_list_map.get("currentPage"));   //현재 페이지
-	       m.addAttribute("totalCount", iosf_list_map.get("totalCount"));   //총 게시물 갯수
-	       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
-	       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
-	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
-	   
-	   return "/warehouse/mt_warehouses_list.html";
-   }
-   
-   
-   //입고 창고 리스트
-   @GetMapping("/warehouses_in_list.do")
-   public String warehouse_in_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
-      
-   
-      this.map = new HashMap<>();
-      Map<Object, Object>   iosf_list_map = this.map;
-   
-      this.wh_type = "in";
-      
-      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
-      
-      m.addAttribute("in_wh_list", iosf_list_map.get("wh_list")); // 리스트
-       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
-       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
-       m.addAttribute("currentPage", iosf_list_map.get("currentPage"));   //현재 페이지
-       m.addAttribute("totalCount", iosf_list_map.get("totalCount"));   //총 게시물 갯수
-       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
-       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
-       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
-      
-       
-      return "/warehouse/in_warehouses_list.html";
-   }
-   
-   //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동(insert)
-   @PostMapping("/IOSF_warehouse_move.do")
-   @ResponseBody
-   public Map<String, Object> IOSF_warehouse_move(@RequestBody List<Map<String, Object>> paramList) {
-
-       int successCount = 0;
-
-       for (Map<String, Object> param : paramList) {
-           String wh_code = (String) param.get("wh_code");
-           String inbound_code = (String) param.get("inbound_code");
-           String item_code = (String) param.get("item_code");
-           String client_code = (String) param.get("client_code");
-           String wh_type = (String) param.get("wh_type");
-
-           System.out.println("wh_code: " + wh_code);
-           System.out.println("inbound_code: " + inbound_code);
-           System.out.println("item_code: " + item_code);
-           System.out.println("client_code: " + client_code);
-           System.out.println("wh_type: " + wh_type);
-
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, inbound_code, item_code, client_code, wh_type);
-           successCount += updatedCount;
-       }
-
-       Map<String, Object> result = new HashMap<>();
-       if (successCount > 0) {
-           result.put("success", true);
-           result.put("message", successCount + "건 이동 완료");
-       } else {
-           result.put("success", false);
-           result.put("message", "이동 처리 실패");
-       }
-
-       return result;
-   }
-  
-   
    
    @PostMapping("/warehouse_in_save.do")
    public String warehouse_in_save(
@@ -239,22 +91,32 @@ public class IOSF_Warehouse_Controller {
       return null;
    }
    
+      //입고 창고 리스트
+      @GetMapping("/warehouses_in_list.do")
+      public String warehouse_in_list(Model m,
+              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+              @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
+         
       
-   
-   //창고 정보 상세 모달 페이지에 결과 값 전달
-   @GetMapping("/mt_warehouse_modal.do")
-   public String mt_warehouse_detail(
-         Model m,
-         @RequestParam(value = "material_code", required = true) String material_code
-         ){
-   
-      this.wh_type = "mt";
-       List<IOSF_DTO>wh_list_details = iosf_service.IOSF_wh_SelectWithCode(material_code, this.wh_type);
-
-       m.addAttribute("wh_details" , wh_list_details);
+         this.map = new HashMap<>();
+         Map<Object, Object>   iosf_list_map = this.map;
       
-      return "/modals/mt_warehouse_modal.html";
-   }
+         this.wh_type = "in";
+         
+         iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
+         
+         m.addAttribute("in_wh_list", iosf_list_map.get("wh_list")); // 리스트
+          m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
+          m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
+          m.addAttribute("currentPage", iosf_list_map.get("currentPage"));   //현재 페이지
+          m.addAttribute("totalCount", iosf_list_map.get("totalCount"));   //총 게시물 갯수
+          m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
+          m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
+          m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
+         
+          
+         return "/warehouse/in_warehouses_list.html";
+      }
       
       
       //창고 정보 상세 모달 페이지에 결과 값 전달
@@ -265,7 +127,7 @@ public class IOSF_Warehouse_Controller {
             ){
       
          this.wh_type = "in";
-          List<IOSF_DTO>wh_list_details = iosf_service.IOSF_wh_SelectWithCode(inbound_code, this.wh_type);
+          List<IOSF_DTO>wh_list_details = iosf_service.IOSF_wh_SelectWithInboundCode(inbound_code, this.wh_type);
 
           m.addAttribute("wh_details" , wh_list_details);
          
@@ -323,7 +185,7 @@ public class IOSF_Warehouse_Controller {
             @RequestParam(value = "inbound_code", required = true) String inbound_code,
             Model m) {
          this.wh_type = "in";
-         List<IOSF_DTO>in_wh_modify_result = iosf_service.IOSF_wh_SelectWithCode(inbound_code, this.wh_type);
+         List<IOSF_DTO>in_wh_modify_result = iosf_service.IOSF_wh_SelectWithInboundCode(inbound_code, this.wh_type);
          m.addAttribute("in_wh_modify" , in_wh_modify_result);
          
          return "/warehouse/in_warehouse_modify.html";
@@ -340,36 +202,8 @@ public class IOSF_Warehouse_Controller {
          
          String result = "";
          this.wh_type = "in";
-         System.out.println("삭제 wh " + wh_code);
-         System.out.println("삭제 inbound " + inbound_code);
          
          int wh_save_result = iosf_service.IOSF_delete_warehouse(wh_code, inbound_code, this.wh_type);
-         System.out.println("결과 " + wh_save_result);
-         
-         if(wh_save_result > 0) {
-            result = "suceses";
-         }
-         else {
-            result = "fail";         
-         }
-         
-         return result;
-      }
-      
-      @PostMapping("/mt_warehouse_delete_page.do")
-      @ResponseBody
-      public String mt_delete_warehouse(
-    		  @RequestParam("wh_code") String wh_code,
-    		  @RequestParam("material_code") String material_code
-    		  ) {
-         // 삭제 로직 수행
-         
-         String result = "";
-         this.wh_type = "mt";
-         System.out.println("삭제 wh " + wh_code);
-         System.out.println("삭제 material_code " + material_code);
-         
-         int wh_save_result = iosf_service.IOSF_delete_warehouse(wh_code, material_code, this.wh_type);
          System.out.println("결과 " + wh_save_result);
          
          if(wh_save_result > 0) {

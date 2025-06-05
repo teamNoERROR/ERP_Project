@@ -21,16 +21,6 @@
 			WH_TYPE = '부자재창고'
 		</where>
 	</if>
-	<if test="wh_tp == 'fs_wh'">
-		<where>
-			WH_TYPE = '완제품창고'
-		</where>
-	</if>
-	<if test="wh_tp == 'out_wh'">
-		<where>
-			WH_TYPE = '출고창고'
-		</where>
-	</if>
 	ORDER BY WIDX DESC
 </select>
 

@@ -76,18 +76,6 @@ public class client_serviceImpl implements client_service {
 		
 		return client_list;
 	}
-
-	//거래처 상세보기
-	@Override
-	public client_DTO clt_one_detail(String code, String cidx) {
-		this.map = new HashMap<>();
-		this.map.put("COMPANY_CODE", code);
-		this.map.put("CIDX", cidx);
-		
-		client_DTO client_one = this.clt_dao.clt_one_detail(this.map);
-		
-		return client_one;
-	}
 	
 	
 	

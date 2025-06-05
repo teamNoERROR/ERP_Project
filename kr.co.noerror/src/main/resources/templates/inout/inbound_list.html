@@ -14,8 +14,8 @@
 				<h2 class="mb-1">입고 리스트</h2>
 			</div>
 
-			<div class="d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
 			<!-- 입고상태 변경 버튼 -->
+				<form class=" d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
 				<div class="d-flex gap-2 align-items-center" >
 					<select class="form-select" id="in_status">
 						<option value="">입고상태</option>
@@ -24,40 +24,23 @@
 						<option value="입고취소">입고취소</option>
 					</select>
 					<button type="button" class="btn btn-info d-flex align-items-center px-2" 
-							style="white-space: nowrap; min-width: 70px;" onclick="inbCngOk()">
+							style="white-space: nowrap; min-width: 70px;" onclick="inboundOk()">
 						<i class="bi bi-arrow-bar-right"></i> 변경
 					</button>
+					
 				</div>
 				
-			<form id="inbnd_search">
-				<div class="d-flex">
-					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
-						<label class="d-flex align-items-center gap-1">
-							<input type="checkbox" name="status" value="가입고" onchange="inStatusCk(this)"
-									th:checked="${statusList != null and #arrays.contains(statusList, '가입고' )}" > 가입고
-						</label>
-						 <label class="d-flex align-items-center gap-1">
-							<input type="checkbox" name="status" value="입고완료" onchange="inStatusCk(this)"
-									th:checked="${statusList != null and #arrays.contains(statusList, '입고완료')}"> 입고완료
-						</label>
-						 <label class="d-flex align-items-center gap-1"> 
-							<input type="checkbox" name="status" value="입고취소" onchange="inStatusCk(this)"
-									th:checked="${statusList != null and  #arrays.contains(statusList, '입고취소')}"> 입고취소&nbsp;&nbsp;
-						</label> 
-					</div>
-					
-					<!-- Search Bar -->
-					<div class="col-auto">
-						<div class="input-group input-group-sm">
-							<input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="검색">
-							<button class="btn btn-primary">
-								<i class="bi bi-search"></i>
-							</button>
-						</div>
+				<!-- Search Bar -->
+				<div class="col-auto">
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control" placeholder="검색">
+						<button class="btn btn-primary" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
 					</div>
 				</div>
 			</form>
-		</div>
+
 			<!-- 입고 List Table-->
 			<div class="table-responsive  rounded" th:fragment="inbndList(inbound_total, inbound_all_list, mode)">
 				<table class="table align-middle table-bordered " style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
@@ -128,19 +111,19 @@
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='inbound',data-pea=${pageinfo.post_ea}, data-status=${#strings.arrayJoin(statusList, ',')}" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='inbound',data-pea=${pageinfo.post_ea}" 
                 	th:onclick="${mode2 == 'inbPageing'} ? 'inbnd_modal_pg(this)' : 'go_in_pg(this)'">
 					<i class="bi bi-chevron-double-left"></i> </li>
                
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='inbound',data-pea=${pageinfo.post_ea}, data-status=${#strings.arrayJoin(statusList, ',')}"
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='inbound',data-pea=${pageinfo.post_ea}"
                 	th:onclick="${mode2 == 'inbPageing'} ? 'inbnd_modal_pg(this)' : 'go_in_pg(this)'">[[${pgn}]]</li>
                 </th:block>
                 
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 } ,data-pea=${pageinfo.post_ea}, data-type='inbound', data-status=${#strings.arrayJoin(statusList, ',')}" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 } ,data-pea=${pageinfo.post_ea}, data-type='inbound'" 
                 	th:onclick="${mode2 == 'inbPageing'} ? 'inbnd_modal_pg(this)' : 'go_in_pg(this)'" >
 					<i class="bi bi-chevron-double-right"></i> </li>
             </ul>

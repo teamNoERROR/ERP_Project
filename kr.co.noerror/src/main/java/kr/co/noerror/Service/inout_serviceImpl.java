@@ -1,6 +1,8 @@
 package kr.co.noerror.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,9 +105,11 @@ public class inout_serviceImpl implements inout_service {
 
 	//입고리스트 총개수 
 	@Override
-	public int inbound_total(String keyword) {
-		this.map = new HashMap<>();
-		this.map.put("keyword", keyword);
+	public int inbound_total(String keyword, String[] status) {
+		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
+		Map<String, Object> map = new HashMap<>();
+		map.put("keyword", keyword);
+		map.put("IN_STATUS", statusList);
 		
 		int inbound_total = this.io_dao.inbound_total(map);
 		return inbound_total;
@@ -113,14 +117,16 @@ public class inout_serviceImpl implements inout_service {
 	
 	//입고리스트 
 	@Override
-	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea) {
+	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea, String[] status) {
 		int start = (pageno - 1) * post_ea;
 		int count = post_ea; 
 		
+		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
 		Map<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
 		map.put("start", start);
 		map.put("count", count);
+		map.put("IN_STATUS", statusList);
 		
 		List<inout_DTO> inbound_all_list = this.io_dao.inbound_all_list(map);  
 		return inbound_all_list;

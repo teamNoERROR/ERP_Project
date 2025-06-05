@@ -2,6 +2,7 @@ package kr.co.noerror.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,15 +51,17 @@ public class inout_controller {
 	public String inbound(Model m
 						,@RequestParam(value = "keyword", required = false) String keyword
 						,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
-		
-		int inbound_total = this.io_svc.inbound_total(keyword); //입고리스트 제품 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea);  //입고리스트 제품 리스트
+						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+						,@RequestParam(value = "status", required = false) String[] status) {
+//		if (status == null) {
+//		    status = new String[] {"가입고", "입고완료", "입고취소"};
+//		}
+		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고리스트 제품 총개수
+		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고리스트 제품 리스트
 		
 		//페이징 관련 
-		int pea = post_ea; 
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, inbound_total);
-		int bno = this.m_pg.serial_no(inbound_total, pageno, pea); 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, inbound_total);
+		int bno = this.m_pg.serial_no(inbound_total, pageno, post_ea); 
 		
 		System.out.println(pageinfo);
 		
@@ -72,6 +75,7 @@ public class inout_controller {
 		m.addAttribute("inbound_all_list",inbound_all_list);
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
+		m.addAttribute("statusList", status);
 		
 		return "/inout/inbound_list.html";
 	}

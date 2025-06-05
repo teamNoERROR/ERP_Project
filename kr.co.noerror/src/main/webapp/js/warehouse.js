@@ -63,12 +63,50 @@ function deleteWarehouse(button) {
   }
  //***************************************************************************************************** */
  
+ //*******************************부자재 모달 리스트 선택 후 반환 **************************************** */
+ function select_iosf_wh() {
+   const selectedRadio = document.querySelector('input[name="iosfSelect"]:checked');
+
+   if (!selectedRadio) {
+     alert('창고를 선택해주세요.');
+     return;
+   }
+
+   const whCode = selectedRadio.value;
+   const whName = selectedRadio.getAttribute('data-wh_name');
+   const whZipcode = selectedRadio.getAttribute('data-wh_zipcode');
+   const whAddr1 = selectedRadio.getAttribute('data-wh_addr1');
+   const whAddr2 = selectedRadio.getAttribute('data-wh_addr2');
+   const whType = selectedRadio.getAttribute('data-wh_type');  // ← 여기서 타입 읽기
+
+   // 예시: 타입별 처리 (원하면 타입별로 다르게 로직 분기 가능)
+   if (whType === '부자재창고') {
+	   document.getElementById('wh_code').value = whCode;
+   		alert("창고를 선택하셨습니다.");
+  
+   } else if (whType === '완제품창고') {
+	  document.getElementById('wh_code').value = whCode;
+	   	alert("창고를 선택하셨습니다.");
+   } else {
+     console.log('기타 창고 타입');
+   }
+
+   
+
+   // 모달 닫기
+   const modalElement = document.getElementById('wh_type_list'); // ← ID 확인하세요
+   const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+   modal.hide();
+ }
+ //***************************************************************************************************** */
+ 
+ 
  //******************************창고 모달 리스트 선택 후 반환 **************************************** */
  function selectWarehouse() {
     const selectedRadio = document.querySelector('input[name="whSelect"]:checked');
 
   if (!selectedRadio) {
-      alert('직원을 선택해주세요.');
+      alert('창고를 선택해주세요.');
       return;
     }
 
@@ -88,9 +126,9 @@ function deleteWarehouse(button) {
     const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
     modal.hide();
   }
- //************************************************************************************************** */
+ //**************************************************************************************************
 
- //전체 창고 -> 창고 선택 탭
+ //********************전체 창고 -> 창고 선택 탭***********************************************************
  function toggleWh(type) {
    	let url = "";
  	if (type == 'all') {
@@ -101,12 +139,105 @@ function deleteWarehouse(button) {
 	}
 	else if(type == 'mt'){		
  	     url = "/warehouses_mt_list.do";		
-	} 
-
-	  	location.href = url; //페이지 이동
+	}
+	else if(type == 'fs'){		
+	 	     url = "/warehouses_fs_list.do";		
+	}
+	else if(type == 'out'){		
+	 	     url = "/warehouses_out_list.do";			
+	}		
+		  
+	location.href = url; //페이지 이동
  }
+ //**************************************************************************************************
 
-  
+ //**************************************부자재 창고로 입고 정보 이동*************************************************
+ 
+ // 부자재 창고 값 셋팅 
+ function selectRow(checkbox) {
+	
+    const inboundCode = checkbox.dataset.inbound_code;
+    const itemCode = checkbox.dataset.item_code;
+    const clientCode = checkbox.dataset.client_code;
+    const whCode = checkbox.dataset.wh_code;
+    const whType = checkbox.dataset.wh_type;
+
+    document.getElementById('inbound_code').value = inboundCode;
+    document.getElementById('item_code').value = itemCode;
+    document.getElementById('client_code').value = clientCode;
+
+		// move-checkbox일 경우 창고 코드 세팅 X
+	  if (!element.classList.contains('move-checkbox')) {
+	    document.getElementById('wh_code').value = whCode;
+	  }
+	document.getElementById('wh_type').value = whType;
+
+	
+    console.log("선택된 값:", inboundCode, itemCode, clientCode, whCode);
+ }
+ 
+//체크박스 형태로 여러개의 값 전송
+ document.addEventListener('DOMContentLoaded', function () {
+	
+	
+   const moveBtn = document.querySelector('.btn-info');
+   if (!moveBtn) return;
+
+   // 복제하여 기존 이벤트 제거
+   const clonedBtn = moveBtn.cloneNode(true);
+   moveBtn.replaceWith(clonedBtn); // 기존 버튼을 교체
+
+   clonedBtn.addEventListener('click', function () {
+     const checkedBoxes = document.querySelectorAll('.move-checkbox:checked');
+     if (checkedBoxes.length === 0) {
+       alert('이동할 항목을 선택해주세요.');
+       return;
+     }
+
+     const moveData = [];
+     checkedBoxes.forEach(box => {
+       const wh_code = box.getAttribute('data-wh_code');
+       const inbound_code = box.getAttribute('data-inbound_code');
+       const item_code = box.getAttribute('data-item_code');
+       const client_code = box.getAttribute('data-client_code');
+       const wh_type = box.getAttribute('data-wh_type');
+	   
+       if (wh_code && inbound_code && item_code && client_code && wh_type) {
+         moveData.push({ wh_code, inbound_code, item_code, client_code ,wh_type});
+       }
+     });
+
+     if (moveData.length === 0) {
+       alert('선택한 항목의 데이터가 누락되었거나 유효하지 않습니다.');
+       return;
+     }
+
+     fetch('/IOSF_warehouse_move.do', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify(moveData)
+     })
+     .then(res => {
+       if (!res.ok) throw new Error('서버 오류');
+       return res.json();
+     })
+     .then(data => {
+       if (data.success) {
+         if (confirm("이동이 완료되었습니다. 부자재 창고 리스트로 이동하시겠습니까?")) {
+           location.href = "/warehouses_mt_list.do";
+         } else {
+           alert("이동만 완료되고 현재 페이지에 머물렀습니다.");
+         }
+       } else {
+         alert("이동 처리 실패: " + (data.message || "알 수 없는 오류"));
+       }
+     })
+     .catch(err => {
+       console.error(err);
+       alert("이동 중 오류가 발생했습니다.");
+     });
+   });
+ });
 
 // ********************************************* 창고 체크박스로 삭제 *****************************************
 function deleteWh(wh_type) {
@@ -127,7 +258,8 @@ function deleteWh(wh_type) {
 
     checkedBoxes.forEach(cb => {
         const wh_code = cb.value;
-        const inbound_code = cb.dataset.inbound;
+        const inbound_code = cb.getAttribute("data-inbound_code");
+        const material_code = cb.getAttribute("data-material_code");
 
         const params = new URLSearchParams();
 
@@ -135,7 +267,13 @@ function deleteWh(wh_type) {
             url = '/in_warehouse_delete_page.do';
             params.append('wh_code', wh_code);
             params.append('inbound_code', inbound_code);
-        } else {
+        }
+		else if(wh_type === 'mt'){
+			url = '/mt_warehouse_delete_page.do';
+			params.append('wh_code', wh_code);
+		    params.append('material_code', material_code);
+		} 
+		else {
             // 기타 유형 처리 (예: all, out 등)
             params.append('wh_code', wh_code);
         }

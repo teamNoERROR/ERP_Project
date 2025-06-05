@@ -14,12 +14,12 @@ import kr.co.noerror.DTO.IOSF_DTO;
 public interface IOSF_Warehouse_Mapper {
 		
 		
-		public List<IOSF_DTO> IOSF_select_wh_list(int startIndex, int pageSize, String wh_type);
+		public List<IOSF_DTO> IOSF_select_wh_list(int startIndex, int pageSize, int endIndex, String wh_type);
 	
 		//창고 저장
 		public int IOSF_save_warehouse(Map<Object, Object> iosf_map);
 		
-		//창고 수정A
+		//창고 수정
 		public int IOSF_modify_warehouse(Map<Object, Object> wh_map);
 		
 		//검색된 게시물 페이지
@@ -32,8 +32,11 @@ public interface IOSF_Warehouse_Mapper {
 	    public int IOSF_getTotalCount(String wh_type);
 	    
 	    //창고 게시물 상세 정보
-	    public List<IOSF_DTO> IOSF_wh_SelectWithInboundCode(String inbound_code, String wh_type);
+	    public List<IOSF_DTO> IOSF_wh_SelectWithCode(String code, String wh_type);
 
 	    //창고 게시물 삭제
-	    public int IOSF_delete_warehouses(String wh_code, String inbound_code, String wh_type);
+	    public int IOSF_delete_warehouses(String wh_code, String code, String wh_type);
+	    
+	    //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동
+	    public int IOSF_warehouse_move(String wh_code, String inbound_code, String client_code, String item_code, String wh_type );
 }

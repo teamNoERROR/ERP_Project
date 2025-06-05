@@ -12,7 +12,7 @@
       <div class="modal-body row justify-content-center d-flex gap-3  mt-3 ">
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2>
+<!-- 				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2> -->
 				<button type="button" class="btn btn-success" onclick="inboundOk()">
 					<i class="bi bi-pencil-square"></i> 저장  	<!--  입고완료상태에서는 disabled 처리 -->
 				</button> 
@@ -27,23 +27,23 @@
 					<tbody>
 						<tr>
 							<td class="info-label">회사명</td>
-							<td class="value-cell" colspan="4">(주) 딸기주스</td>
+							<td class="value-cell" colspan="4">[[${inbnd_detail.get(0).COMPANY_NAME}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">사업자번호</td>
-							<td class="value-cell">102-52-98758</td>
+							<td class="value-cell">[[${inbnd_detail.get(0).BIZ_NUM}]]</td>
 							<td class="info-label">대표자</td>
-							<td class="value-cell" colspan="2">김길동</td>
+							<td class="value-cell" colspan="2">[[${inbnd_detail.get(0).CEO_NAME}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">담당자</td>
-							<td class="value-cell">최누구</td>
+							<td class="value-cell">[[${inbnd_detail.get(0).MANAGER_NAME}]]</td>
 							<td class="info-label">연락처</td>
-							<td class="value-cell" colspan="2">010-6333-5555</td>
+							<td class="value-cell" colspan="2">[[${inbnd_detail.get(0).MNG_TEL_NUM}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">주소</td>
-							<td class="value-cell" colspan="5">서울시 관악구</td>
+<!-- 							<td class="value-cell" colspan="5">( [[${inbnd_detail.get(0).COM_ZIPCODE}]] ) [[${inbnd_detail.get(0).COM_ADDR1}]] [[${inbnd_detail.get(0).COM_ADDR2}]]</td> -->
 						</tr>
 					</tbody>
 				</table>
@@ -55,33 +55,31 @@
 				<table class="table align-middle table-bordered">
 					<tr>
 						<td class="info-label">발주번호</td>
-						<td class="value-cell">PCH-12345</td>
+						<td class="value-cell">[[${inbnd_detail.get(0).PCH_CODE}]]</td>
 						<td class="info-label">주문상태</td>
-						<td class="value-cell">생산완료</td>
+						<td class="value-cell">[[${inbnd_detail.get(0).PCH_STATUS}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">발주일자</td>
-						<td class="value-cell">2025-05-18</td>
+						<td class="value-cell">[[${inbnd_detail.get(0).REQUEST_DATE}]]</td>
 						<td class="info-label">납기요청일</td>
-						<td class="value-cell">2025-06-18</td>
+						<td class="value-cell">[[${inbnd_detail.get(0).DUE_DATE.substring(0,10)}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">결제 금액</td>
-						<td class="value-cell">2,350,000 원</td>
+						<td class="value-cell">[[${#numbers.formatInteger(inbnd_detail.get(0).PAY_AMOUNT,0,'COMMA')}]]</td>
 						<td class="info-label">결제 수단</td>
-						<td class="value-cell">외상ㅋ</td>
+						<td class="value-cell">[[${inbnd_detail.get(0).PAY_METHOD}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">입고처리자</td>
-						<td class="value-cell">김빠빠</td>
+						<td class="value-cell">[[${inbnd_detail.get(0).EMPLOYEE_CODE}]]</td>
 						<td class="info-label">담당자 코드</td>
-						<td class="value-cell"></td>
+						<td class="value-cell">[[${inbnd_detail.get(0).EMPLOYEE_CODE}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">비고</td>
-						<td class="value-cell" colspan="3"></td>
-<!-- 						<td class="info-label"></td> -->
-<!-- 						<td class="value-cell"></td> -->
+						<td class="value-cell" colspan="3">[[${inbnd_detail.get(0).PCH_MEMO}]]</td>
 					</tr>
 				</table>
 			</div>
@@ -89,8 +87,8 @@
 			<!-- 발주항목 List Table -->
 			<div class="table-responsive  rounded">
 				<h5 class="">입고 제품 내역</h5>
-				<table class="table table-hover align-middle table-bordered">
-					<thead class="table-light text-center">
+				<table class="table table-hover align-middle table-bordered text-center">
+					<thead class="table-light ">
 						<tr>
 							<th scope="col"><input type="checkbox"></th>
 							<th scope="col">#</th>
@@ -110,20 +108,19 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr th:each="inbnd, idx : ${inbnd_detail}" >
 							<td><input type="checkbox"></td>
-							<td>3</td>
-							<td>2589-0001</td>
-							<td>오렌지</td>
-							<td>100g</td>
-							<td>ea</td>
-							<td>500</td>
-							<td>입고수량</td>
-							<td>3,000</td>
-							<td>1,500,000</td>
-							<td>식품</td>
-							<td>과일</td>
-<!-- 							<td>비고 없음</td> -->
+							<td>[[${idx.count}]]</td>
+							<td>[[${inbnd.ITEM_CODE}]]</td>
+							<td>[[${inbnd.ITEM_NAME}]]</td>
+							<td>[[${inbnd.ITEM_SPEC}]]</td>
+							<td>[[${inbnd.ITEM_UNIT}]]</td>
+							<td>[[${#numbers.formatInteger(inbnd.P_QTY,0,'COMMA')}]]</td>
+							<td>[[${#numbers.formatInteger(inbnd.ITEM_QTY,0,'COMMA')}]]</td>
+							<td class="text-end">[[${#numbers.formatInteger(inbnd.ITEM_COST,0,'COMMA')}]]</td>
+							<td class="text-end">[[${#numbers.formatInteger(inbnd.ITEM_COST * inbnd.P_QTY,0,'COMMA')}]]</td>
+							<td>[[${inbnd.ITEM_CLASS1}]]</td>
+							<td>[[${inbnd.ITEM_CLASS2}]]</td>
 							<td>
 							<select class="form-select item_deli" id="" >
 								<option value="입고완료" >입고완료</option>
@@ -136,15 +133,14 @@
 					<tfoot>
 						<tr>
 							<td class="info-label" colspan="2">합계</td>
-<!-- 							<td>1</td> -->
 							<td >-</td>
 							<td>-</td>
 							<td>-</td>
 							<td>-</td>
-							<td>1,300</td>
-							<td>5,500</td>
-							<td>2,350,000</td>
-							<td>-</td>
+							<td class="text-end">[[${pch_qty_total}]]</td>  <!-- 총 주문수량 -->
+							<td class="text-end">[[${inb_qty_total}]]</td>  <!-- 총 입고수량 -->
+							<td class="text-end">[[${itm_cost_total}]]</td>  <!-- 총 주문수량 -->
+							<td class="text-end">[[${pch_amount_total}]]</td>		
 							<td>-</td>
 							<td>-</td>
 <!-- 							<td>-</td> -->

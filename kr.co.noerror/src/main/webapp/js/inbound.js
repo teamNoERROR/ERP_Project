@@ -226,11 +226,11 @@ function openInbndDetail(event){
 	
 	var inbnd_code = event.querySelector(".inbnd_code").textContent.trim();
 	var pch_cd = event.querySelector(".pch_code").getAttribute("data-pch");
-
+	var ori_pcd = pch_cd.substring(0, 9)
 	   console.log("inbnd_code:", inbnd_code);
-	   console.log("pch_cd:", pch_cd);
+	   console.log("pch_cd:", ori_pcd);
 
-	fetch("./inbnd_detail_modal.do?pch_code="+pch_cd+"&inbnd_code="+inbnd_code, {
+	fetch("./inbnd_detail_modal.do?pch_code="+ori_pcd+"&inbnd_code="+inbnd_code, {
 		method: "GET",
 		
 	}).then(function(data) {

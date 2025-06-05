@@ -200,8 +200,8 @@ textarea:focus,
 }
 
 .readonly_text{
-color : grey;	
-pointer-events: none;	
+	color : grey;	
+	pointer-events: none;	
 }
 
 /*--------------------------------------------------------------

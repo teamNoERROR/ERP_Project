@@ -3,6 +3,7 @@ package kr.co.noerror.Controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,24 +58,19 @@ public class inout_controller {
 						,@RequestParam(value = "keyword", required = false) String keyword
 						,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+						,@RequestParam(value="status_lst", required=false) String[] status_lst
 						) {
-//		if (status == null) {
-//		    status = new String[] {};
-//		}
+		//리스트 첫접속시 체크박스 상태값
+		if (status_lst == null) {
+			status_lst = new String[] {"가입고", "입고완료", "입고취소"};
+		}
 		
-		
-//		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고리스트 제품 총개수
-//		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고리스트 제품 리스트
-		
-		int inbound_total = this.io_svc.inbound_total(keyword); //입고리스트 제품 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea);  //입고리스트 제품 리스트
-		
+		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status_lst);  //입고리스트 제품 리스트
+		int inbound_total = this.io_svc.inbound_total(keyword, status_lst); //입고리스트 제품 총개수
 		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, inbound_total);
 		int bno = this.m_pg.serial_no(inbound_total, pageno, post_ea); 
-		
-		System.out.println(pageinfo);
 		
 		m.addAttribute("lmenu","입출고관리");
 		m.addAttribute("smenu","자재 입고");
@@ -83,10 +79,10 @@ public class inout_controller {
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("bno", bno);
 		m.addAttribute("inbound_total",inbound_total);
-		m.addAttribute("inbound_all_list",inbound_all_list);
+		m.addAttribute("inbound_all_list",inbound_all_list);  //데이터 리스트 
+		m.addAttribute("statusList", status_lst); //체크박스 상태용
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-//		m.addAttribute("statusList", status);
 		
 		return "/inout/inbound_list.html";
 	}
@@ -113,7 +109,6 @@ public class inout_controller {
 				
 			}else {
 				this.pw.write("fail"); //입고 등록실패
-				
 			}
 			
 		} catch (IOException e) {
@@ -158,6 +153,7 @@ public class inout_controller {
 		m.addAttribute("itm_cost_total", itm_cost_total);
 		m.addAttribute("pch_amount_total", pch_amount_total);
 		m.addAttribute("pch_cd", pch_cd);
+		
 		return "/modals/inbound_detail_modal.html";
 	}
 	
@@ -194,29 +190,6 @@ public class inout_controller {
 		return null;
 	}
 	
-	
-	//입고건 상세보기 
-//	@GetMapping("/inbnd_detail_modal.do")
-//	public String inbnd_detail_modal(Model m, @RequestParam("pch_code") String pch_code
-//									) {
-//		try {
-//			String ori_pch_cd = pch_code.substring(0,9);
-//			System.out.println(ori_pch_cd);
-//			List<pchreq_res_DTO> purchase_details = this.pdao.pchreq_detail(ori_pch_cd);
-//			m.addAttribute("purchase_details",purchase_details);
-//			
-//		} catch (Exception e) {
-//			this.log.error(e.toString());
-//			e.printStackTrace();
-//			
-//		} 
-//		
-//		return "/modals/inbound_detail_modal.html";
-//	}
-	
 
-	
-	
-	
 
 }

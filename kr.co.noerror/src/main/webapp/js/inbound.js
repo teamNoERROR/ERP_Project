@@ -160,7 +160,7 @@ function insert_inBnd(){
 		in_status.focus();	
 		
 	}else if(employee_code.value==""){
-		alert("관리자가 등록되지 않았습니다. ");
+		alert("책임 담당자가 등록되지 않았습니다. ");
 		
 	}else{
 		// 각 항목 입력 확인
@@ -358,17 +358,41 @@ function inbCngOk(){
 /*--------------------------------------------------------------
 체크박스 클릭시 리스트 변경 
 --------------------------------------------------------------*/
-
-function inStatusCk(cbCk){
-	/*var checked = document.querySelectorAll('input[name="status"]:checked');
-	var ck_values = Array.from(checked).map(cb => cb.value);
-	console.log(ck_values)*/
-	var form = document.querySelector("#inbnd_search");
-	form.action = "inbound.do";
-	form.method = "GET";
-	form.submit();
+function inStatusCk(ck){
+	const params = new URLSearchParams();
+	const checked = document.querySelectorAll('input[name="status_lst"]:checked');
+	if(checked.length > 0){
+		Array.from(checked).forEach(cb => {
+		    params.append('status_lst', cb.value);
+	  	});
+	}else {
+		alert("상태값을 최소 하나는 선택해야 합니다.");
+		ck.checked=true;
+		return;
+	}
+	const keyword = document.querySelector('input[name="keyword"]');
+	if (keyword && keyword.value.trim() != "") {
+		params.append('keyword', keyword.value.trim());
+	}
 	
-} 
+	location.href = "inbound.do?" + params.toString();
+}  
+
+
+//검색버튼 
+function inSearch(){
+	var form = document.querySelector("#inbnd_search");
+	if(form.keyword.value.trim() == ""){
+		alert("검색어를 입력하세요");
+		return false;
+	}else {
+		
+		form.method = "GET";
+		form.action = "./inbound.do";
+		return true;
+	}
+	
+}
 /*--------------------------------------------------------------
 입고리스트 페이징 
 --------------------------------------------------------------*/
@@ -390,8 +414,8 @@ function go_in_pg(ee){
 		if (status) {
 		    var statusList = status.split(',');  // 배열로 분리
 		    statusList.forEach((s) => {
-		        params["status"] = params["status"] || [];
-		        params["status"].push(s);
+		        params["status_lst"] = params["status_lst"] || [];
+		        params["status_lst"].push(s);
 		    });
 		}
 		var pString = new URLSearchParams(params).toString();

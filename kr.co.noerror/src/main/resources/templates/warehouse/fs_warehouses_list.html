@@ -42,7 +42,9 @@
 			    <input type="hidden" name="item_code" id="item_code" class="form-control" />
 			    <input type="hidden" id="client_code" class="form-control" />
 			    <input type="hidden" id="wh_type" class="form-control" />
-			    
+			    <input type="hidden" id="in_status" class="form-control" />
+			    <input type="hidden" id="item_count" class="form-control" />
+
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
 			            style="white-space: nowrap; min-width: 70px;">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
@@ -77,7 +79,9 @@
 				      <th>창고코드</th>
 				      <th>창고이름</th>
 				      <th>품목코드</th>
+				      <th>거래처코드</th>
 				      <th>품목명</th>
+				      <th>수량</th>
 				      <th>분류</th>
 				      <th>거래처</th>
 				      <th>입고일자</th>
@@ -101,6 +105,8 @@
 						       th:data-client_code="${fs_wh.client_code}" 
 						       th:data-wh_code="${fs_wh.wh_code}"
 						       data-wh_type="out"
+						       th:data-in_status="${fs_wh.in_status}"
+						       th:data-item_count="${fs_wh.item_count}"
 						       onclick="selectRow(this); event.stopPropagation();" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
@@ -108,11 +114,12 @@
 				      <td th:text="${fs_wh.wh_code}">WH-001</td>
 				      <td th:text="${fs_wh.wh_name}">창고이름</td>
 				      <td th:text="${fs_wh.item_code}">ITEM-123</td>
-				      <td th:hidden="${fs_wh.client_code}">client-123</td>
+				      <td th:text="${fs_wh.client_code}">client-123</td>
 				      <td th:text="${fs_wh.item_name}">나사</td>
+				      <td th:text="${fs_wh.item_count}">12</td>
 				      <td th:text="${fs_wh.category_main + '/' + fs_wh.category_sub}">부품/소모품</td>
 				      <td th:text="${fs_wh.client_name}">삼성전자</td>
-				      <td th:text="${fs_wh.inbound_date}">2025-05-29</td>
+				      <td th:text="${fs_wh.inbound_date2}">2025-05-29</td>
 				      <td th:text="${fs_wh.in_status}"></td>
 				      <td th:text="${fs_wh.use_yn}">Y</td>
 				    </tr>

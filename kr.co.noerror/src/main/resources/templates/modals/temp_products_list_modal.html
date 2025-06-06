@@ -1,4 +1,4 @@
-<div class="modal fade" id="products_modal" tabindex="-1" aria-labelledby="products_modal_label">
+<div class="modal fade" id="products_modal_for_order" tabindex="-1" aria-labelledby="products_modal_label">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -22,31 +22,29 @@
 								<th scope="col">단위</th>
 								<th scope="col">제품원가(원)</th>
 								<th scope="col">판매가(원)</th>
-								<th scope="col">비고</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="p , no : ${products}"
-							    th:attr="data-code=${p.product_code},
-							             data-name=${p.product_name},
-							             data-class1=${p.product_class1},
-							             data-class2=${p.product_class2},
-							             data-spec=${p.product_spec},
-							             data-unit=${p.product_unit},
-							             data-cost=${p.product_cost},
-							             data-price=${p.product_price}"
+							    th:attr="data-code=${p.PRODUCT_CODE},
+							             data-name=${p.PRODUCT_NAME},
+							             data-class1=${p.PRODUCT_CLASS1},
+							             data-class2=${p.PRODUCT_CLASS2},
+							             data-spec=${p.PRODUCT_SPEC},
+							             data-unit=${p.PRODUCT_UNIT},
+							             data-cost=${p.PRODUCT_COST},
+							             data-price=${p.PRODUCT_PRICE}"
 							    style="cursor: pointer;">
 								<td><input type="checkbox" name="product_check"></td>
 								<td>[[${no.count}]]</td>
-								<td>[[${p.product_code}]]</td>
-								<td>[[${p.product_name}]]</td>
-								<td>[[${p.product_class1}]]</td>
-								<td>[[${p.product_class2}]]</td>
-								<td>[[${p.product_spec}]]</td>
-								<td>[[${p.product_unit}]]</td>
-								<td>[[${p.product_cost}]]</td>
-								<td>[[${p.product_price}]]</td>
-								<td>[[${p.memo}]]</td>
+								<td>[[${p.PRODUCT_CODE}]]</td>
+								<td>[[${p.PRODUCT_NAME}]]</td>
+								<td>[[${p.PRODUCT_CLASS1}]]</td>
+								<td>[[${p.PRODUCT_CLASS2}]]</td>
+								<td>[[${p.PRODUCT_SPEC}]]</td>
+								<td>[[${p.PRODUCT_UNIT}]]</td>
+								<td>[[${p.PRODUCT_COST}]]</td>
+								<td>[[${p.PRODUCT_PRICE}]]</td>
 							</tr>
 						</tbody>
 					</table>
@@ -56,7 +54,7 @@
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button" class="btn btn-success selectBtn" onclick="product_select()"><i class="bi bi-pencil-square"></i> 선택</button>
+                <button type="button" class="btn btn-success selectBtn" onclick="product_select_for_order()"><i class="bi bi-pencil-square"></i> 선택</button>
             </div>
         </div>
 

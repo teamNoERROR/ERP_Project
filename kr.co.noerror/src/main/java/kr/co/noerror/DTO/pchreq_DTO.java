@@ -11,7 +11,7 @@ public class pchreq_DTO {
     private String due_date;
     private Long pay_amount;
     private String pay_method;
-    private String emp_code;
+    private String ecode;
     private String memo;
     private String request_date;
     private String modify_date;

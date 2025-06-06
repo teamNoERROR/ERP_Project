@@ -1,4 +1,4 @@
-<div class="modal fade" id="clients_modal" tabindex="-1" aria-labelledby="clients_modal_label">
+<div class="modal fade" id="clients_modal_for_order" tabindex="-1" aria-labelledby="clients_modal_label">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -24,21 +24,21 @@
 						</thead>
 						<tbody>
 							<tr th:each="c , no : ${clients}"
-							    th:attr="data-company_code=${c.company_code},
-							             data-company_name=${c.company_name},
-							             data-biz_num=${c.biz_num},
-							             data-manager_code=${c.manager_code},
-							             data-manager_name=${c.manager_name},
-							             data-phone_num=${c.phone_num}"
+							    th:attr="data-company_code=${c.COMPANY_CODE},
+							             data-company_name=${c.COMPANY_NAME},
+							             data-biz_num=${c.BIZ_NUM},
+							             data-manager_code=${c.MANAGER_CODE},
+							             data-manager_name=${c.MANAGER_NAME},
+							             data-phone_num=${c.MNG_PHONE_NUM}"
 							    style="cursor: pointer;">
 								<td><input type="radio" name="client_check"></td>
 								<td>[[${no.count}]]</td>
-								<td>[[${c.company_code}]]</td>
-								<td>[[${c.company_name}]]</td>
-								<td>[[${c.biz_num}]]</td>
-								<td>[[${c.manager_code}]]</td>
-								<td>[[${c.manager_name}]]</td>
-								<td>[[${c.phone_num}]]</td>
+								<td>[[${c.COMPANY_CODE}]]</td>
+								<td>[[${c.COMPANY_NAME}]]</td>
+								<td>[[${c.BIZ_NUM}]]</td>
+								<td>[[${c.MANAGER_CODE}]]</td>
+								<td>[[${c.MANAGER_NAME}]]</td>
+								<td>[[${c.MNG_PHONE_NUM}]]</td>
 							</tr>
 						</tbody>
 					</table>
@@ -48,7 +48,7 @@
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button" class="btn btn-success selectBtn" onclick="client_select()"><i class="bi bi-pencil-square"></i> 선택</button>
+                <button type="button" class="btn btn-success selectBtn" onclick="client_select_for_order()"><i class="bi bi-pencil-square"></i> 선택</button>
             </div>
         </div>
 

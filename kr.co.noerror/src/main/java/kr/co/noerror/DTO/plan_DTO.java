@@ -22,8 +22,8 @@ public class plan_DTO {
     private String due_date;                  // DATE NOT NULL
     private String company_code;            // VARCHAR2(10 CHAR) NOT NULL
     private String company_name;            
-    private String emp_code;                // VARCHAR2(10 CHAR) NOT NULL
-    private String emp_name;                
+    private String ecode;                // VARCHAR2(10 CHAR) NOT NULL
+    private String ename;                
     private String plan_status;          // VARCHAR2(10 CHAR) NOT NULL ('계획', '생산중', '생산완료')
     private String mrp_status;               // VARCHAR2(10 CHAR) NOT NULL ('미완료', '완료')
     private String memo;                   // CLOB

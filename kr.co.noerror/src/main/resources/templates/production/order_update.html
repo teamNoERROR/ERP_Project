@@ -10,16 +10,16 @@
 		<section class="container ">
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-				<h2 class="mb-1">발주 수정 화면 ([[${details[0].pch_code}]])</h2>
+				<h2 class="mb-1">주문 수정 화면 ([[${details[0].order_code}]])</h2>
 			</div>
 			
 			<div id="frm">
-				<input type="hidden" name="pch_code" th:value="${details[0].pch_code}" />
+				<input type="hidden" name="order_code" th:value="${details[0].order_code}" />
 				<div class="table-responsive  rounded">
 					<table class="table table-bordered align-middle">
 						<thead class="table-light text-center">
 							<tr>
-								<th class="info-label table-light" colspan="5">발주처 정보</th>
+								<th class="info-label table-light" colspan="5">주문처 정보</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -49,16 +49,16 @@
 				</div>
 
 				<div class="table-responsive rounded">
-					<h5>발주정보</h5>
+					<h5>주문정보</h5>
 					<table class="table align-middle table-bordered">
 						<tr>
-							<td class="info-label">발주번호</td>
-							<td class="value-cell" th:text="${details[0].pch_code}"></td>
-							<td class="info-label">발주상태</td>
-							<td class="value-cell" th:text="${details[0].pch_status}"></td>
+							<td class="info-label">주문번호</td>
+							<td class="value-cell" th:text="${details[0].order_code}"></td>
+							<td class="info-label">주문상태</td>
+							<td class="value-cell" th:text="${details[0].order_status}"></td>
 						</tr>
 						<tr>
-							<td class="info-label">발주일자</td>
+							<td class="info-label">주문일자</td>
 							<td class="value-cell" th:text="${details[0].request_date.substring(0,10)}"></td>
 							<td class="info-label">납기요청일</td>
 							<td class="value-cell">
@@ -79,7 +79,7 @@
 							</td>
 						</tr>
 						<tr class="empinfo">
-							<td class="info-label">발주 담당자
+							<td class="info-label">주문 담당자
 								<input type="hidden" class="form-control" name="ecode" id="ecode" th:value="${session.ecode}" readonly>
 							</td>
 							<td class="value-cell">
@@ -104,7 +104,7 @@
 				</div>
 			
 				<div class="table-responsive rounded">
-					<h5>발주 제품 내역</h5>
+					<h5>주문 제품 내역</h5>
 					<table class="table table-hover align-middle table-bordered">
 						<thead class="table-light text-center">
 							<tr>
@@ -122,23 +122,23 @@
 						</thead>
 						<tbody id="product-tbody">
 							<tr th:each="d, no : ${details}">
-								<input type="hidden" class="item-code" th:name="|items[${no.index}].item_code|" th:value="${d.item_code}" />
+								<input type="hidden" class="product-code" th:name="|products[${no.index}].product_code|" th:value="${d.product_code}" />
 								<td th:text="${no.count}"></td>
-								<td th:text="${d.item_code}"></td>
-								<td th:text="${d.item_name}"></td>
-								<td th:text="${d.item_spec}"></td>
+								<td th:text="${d.product_code}"></td>
+								<td th:text="${d.product_name}"></td>
+								<td th:text="${d.product_spec}"></td>
 								<td align="center">
 									<input type="number" class="form-control text-end qty-input"
-										th:name="|items[${no.index}].item_qty|"
-										th:value="${d.item_qty}" min="1"  style="width: 100px;" />
+										th:name="|products[${no.index}].product_qty|"
+										th:value="${d.product_qty}" min="1"  style="width: 100px;" />
 								</td>
-								<td align="center" th:text="${d.item_unit}"></td>
+								<td align="center" th:text="${d.product_unit}"></td>
 								<td align="right" class="cost-input"
-								    th:attr="data-cost=${d.item_cost}"
-								    th:text="${#numbers.formatDecimal(d.item_cost, 0, 'COMMA', 0, 'POINT')}"></td>
-								<td align="right" class="amount-cell" th:text="${#numbers.formatDecimal(d.item_qty * d.item_cost, 0, 'COMMA', 0, 'POINT')}"></td>
-								<td th:text="${d.item_class1}"></td>
-								<td th:text="${d.item_class2}"></td>
+								    th:attr="data-cost=${d.product_cost}"
+								    th:text="${#numbers.formatDecimal(d.product_cost, 0, 'COMMA', 0, 'POINT')}"></td>
+								<td align="right" class="amount-cell" th:text="${#numbers.formatDecimal(d.product_qty * d.product_cost, 0, 'COMMA', 0, 'POINT')}"></td>
+								<td th:text="${d.product_class1}"></td>
+								<td th:text="${d.product_class2}"></td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -160,7 +160,7 @@
 			
 				<!-- 저장 버튼 -->
 				<div class="d-flex justify-content-end mt-4">
-					<button type="button" class="btn btn-primary" onclick="pchreq_update()">
+					<button type="button" class="btn btn-primary" onclick="ordreq_update()">
 						<i class="bi bi-save"></i> 저장
 					</button>
 				</div>

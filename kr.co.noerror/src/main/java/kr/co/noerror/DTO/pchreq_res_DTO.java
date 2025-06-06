@@ -15,8 +15,8 @@ public class pchreq_res_DTO {
     private String modify_date;      // 수정일자
     
     // 발주담당자 정보
-    private String emp_code;         // 담당자 사원고드
-    private String emp_name;         // 담당자명
+    private String ecode = "저장정보 없음";         // 담당자 사원고드
+    private String ename = "저장정보 없음";         // 담당자명
     
     // 결제 정보
     private String pay_method;       // 결제수단

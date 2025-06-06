@@ -1,4 +1,3 @@
-
 //*******************************창고 상세보기에서 삭제*********************************** */
 function deleteWarehouse(button) {
   const confirmed = confirm("정말 삭제하시겠습니까?");
@@ -161,19 +160,23 @@ function deleteWarehouse(button) {
     const clientCode = checkbox.dataset.client_code;
     const whCode = checkbox.dataset.wh_code;
     const whType = checkbox.dataset.wh_type;
+    const inStatus = checkbox.dataset.in_status;
+    const itemCount = checkbox.dataset.item_count;
 
     document.getElementById('inbound_code').value = inboundCode;
     document.getElementById('item_code').value = itemCode;
     document.getElementById('client_code').value = clientCode;
+	document.getElementById('wh_type').value = whType;
+	document.getElementById('in_status').value = inStatus;
+	document.getElementById('item_count').value = itemCount;
 
 		// move-checkbox일 경우 창고 코드 세팅 X
 	  if (!element.classList.contains('move-checkbox')) {
 	    document.getElementById('wh_code').value = whCode;
 	  }
-	document.getElementById('wh_type').value = whType;
 
 	
-    console.log("선택된 값:", inboundCode, itemCode, clientCode, whCode);
+    console.log("선택된 값:", inboundCode, itemCode, clientCode, whCode, inStatus, itemCount);
  }
  
 //체크박스 형태로 여러개의 값 전송
@@ -199,11 +202,12 @@ function deleteWarehouse(button) {
        const wh_code = box.getAttribute('data-wh_code');
        const inbound_code = box.getAttribute('data-inbound_code');
        const item_code = box.getAttribute('data-item_code');
-       const client_code = box.getAttribute('data-client_code');
        const wh_type = box.getAttribute('data-wh_type');
+       const in_status = box.getAttribute('data-in_status');
+       const item_count = box.getAttribute('data-item_count');
 	   
-       if (wh_code && inbound_code && item_code && client_code && wh_type) {
-         moveData.push({ wh_code, inbound_code, item_code, client_code ,wh_type});
+       if (wh_code && inbound_code && item_code && wh_type && in_status && item_count) {
+         moveData.push({ wh_code, inbound_code, item_code ,wh_type, in_status, item_count});
        }
      });
 
@@ -258,21 +262,30 @@ function deleteWh(wh_type) {
 
     checkedBoxes.forEach(cb => {
         const wh_code = cb.value;
-        const inbound_code = cb.getAttribute("data-inbound_code");
+        const in_code = cb.getAttribute("data-in_code");
         const material_code = cb.getAttribute("data-material_code");
+        const finish_code = cb.getAttribute("data-finish_code");
+        const out_code = cb.getAttribute("data-out_code");
+
 
         const params = new URLSearchParams();
 
         if (wh_type === 'in') {
             url = '/in_warehouse_delete_page.do';
-            params.append('wh_code', wh_code);
-            params.append('inbound_code', inbound_code);
+            params.append('in_code', in_code);
         }
 		else if(wh_type === 'mt'){
 			url = '/mt_warehouse_delete_page.do';
-			params.append('wh_code', wh_code);
 		    params.append('material_code', material_code);
-		} 
+		}
+		else if(wh_type === 'fs'){
+					url = '/fs_warehouse_delete_page.do';
+				    params.append('finish_code', finish_code);
+		}
+		else if(wh_type === 'out'){
+					url = '/out_warehouse_delete_page.do';
+				    params.append('out_code', out_code);
+		}   
 		else {
             // 기타 유형 처리 (예: all, out 등)
             params.append('wh_code', wh_code);
@@ -494,5 +507,3 @@ function wh_save() {
     }
 	
 	//**************************************************************************************************
-
-

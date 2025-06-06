@@ -32,17 +32,20 @@ public class IOSF_DTO {
     String item_count;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
     
+    //입고 창고
+    String in_code;				// 입고 창고 인서트 날짜
+    String in_date;				// 입고 창고 인서트 날짜
     
     //출고 창고
-    String out_code;				// 완제품 창고 코드
+    String out_code;				// 완제품창고 인서트 날짜
     String out_date;				// 완제품창고 인서트 날짜
     
     //완제품 창고
-    String finish_code;				// 완제품 창고 코드
+    String finish_code;				// 완제품창고 인서트 날짜
     String finish_date;				// 완제품창고 인서트 날짜
     
     //부자재 창고
-    String material_code;				// 부자재 창고 코드
+    String material_code; 				// 부자재창고 인서트 날짜
     String material_date; 				// 부자재창고 인서트 날짜
     
     // 거래처 정보
@@ -50,6 +53,4 @@ public class IOSF_DTO {
     String client_name;     // 거래처 이름
     String client_use_yn;   // 거래처 사용 여부
     
-    
-	
 }

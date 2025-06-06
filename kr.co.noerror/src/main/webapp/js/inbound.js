@@ -298,14 +298,13 @@ function openInbndDetail(event){
 입고상태 변경 
 --------------------------------------------------------------*/
 function inbCngOk(){
-	var inb_status = document.querySelector("#in_status").value;
 	var inbnd_ckbx = document.querySelectorAll("input[name='inb_sel']:checked");
 	var in_status = document.querySelector("#in_status");
-	console.log(in_status);
+	
 	if(inbnd_ckbx.length==0){
 		alert("입고상태를 변경할 상품이 선택되지 않았습니다.");
 		
-	}else if(inb_status == ""){
+	}else if(in_status.value == ""){
 		alert("입고상태를 선택하세요.");
 		
 	}else{
@@ -321,6 +320,9 @@ function inbCngOk(){
 				statusinb : in_status.value
 			})
 		});
+		
+		console.log(JSON.stringify(status_chg));
+		
 		fetch("./inbnd_ok.do", {
 			method: "PATCH",
 			headers: {"content-type": "application/json"},

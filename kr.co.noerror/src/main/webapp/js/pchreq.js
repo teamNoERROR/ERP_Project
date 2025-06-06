@@ -429,7 +429,7 @@ function pchreq_update() {
 
 //부자재리스트 모달 오픈 
 function openItemList2(){
-	fetch("./item_list2.do", {
+	fetch("./item_list.do", {
 		method: "GET",
 
 	}).then(function(data) {
@@ -438,7 +438,7 @@ function openItemList2(){
 	}).then(function(result) {
 		document.getElementById("modalContainer").innerHTML = result;
 		
-		var modal= new bootstrap.Modal(document.getElementById("items_list2"));
+		var modal= new bootstrap.Modal(document.getElementById("items_list"));
 		modal.show();
 		
 	}).catch(function(error) {

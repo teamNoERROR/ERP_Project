@@ -262,6 +262,7 @@ function openItemList(parentType){
 	});
 }
 
+
 //부자재리스트 모달 페이징
 function itm_modal_pg (page){
 	var parent = page.getAttribute('data-parent');

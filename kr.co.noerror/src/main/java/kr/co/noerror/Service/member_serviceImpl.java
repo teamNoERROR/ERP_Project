@@ -1,5 +1,6 @@
 package kr.co.noerror.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.member_DAO;
 import kr.co.noerror.DTO.file_DTO;
+import kr.co.noerror.DTO.member_DTO;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_unique_code_generator;
@@ -35,6 +37,17 @@ public class member_serviceImpl implements member_service{
 	
 	List<String> list = null; 
 	Map<String, String> map = null;
+	
+	
+	@Override
+	public List<member_DTO> member_all_list() {
+		Map<String, Object> mapinfo = new HashMap<>();
+		List<member_DTO> member_all_list  = this.mb_dao.member_all_list(mapinfo); 
+		return member_all_list;
+	}
+	
+	
+	
 
 
 }

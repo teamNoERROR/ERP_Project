@@ -2,7 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noerror.Mapper.member_mapper">
 
-
+<!-- 사원 전체 리스트 -->
+<select id="member_all_list" resultType="kr.co.noerror.DTO.member_DTO" parameterType="Map">
+	SELECT * FROM EMPLOYEE2
+<!-- 	WHERE 1=1 -->
+<!-- 	AND EMP_USE_FLAG IN -->
+<!-- 	<foreach item="statuslst" collection="EMP_USE_FLAG" open="(" separator="," close=")"> -->
+<!-- 		#{statuslst} -->
+<!-- 	</foreach> -->
+<!-- 	<if test="keyword!= null"> -->
+	
+<!-- 	</if> -->
+	ORDER BY EIDX DESC
+<!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
+</select>
 
 
 </mapper>

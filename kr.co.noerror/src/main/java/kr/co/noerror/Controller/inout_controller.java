@@ -161,6 +161,7 @@ public class inout_controller {
 	//입고상태변경처리
 	@PatchMapping("/inbnd_ok.do")
 	public String inbnd_ok( @RequestBody String inbnd_data, HttpServletResponse res) throws IOException {
+		System.out.println(inbnd_data);
 		try {
 			this.pw = res.getWriter();
 			
@@ -168,10 +169,11 @@ public class inout_controller {
 			int data_ea = ja.length();
 			
 			 Map<String, Integer> status = this.io_svc.in_status_ck(inbnd_data);  //기존 입고처리 유무 확인 
-			if(status.get("aleady_count")>0) {  //기존처리건이 있으면 
-				this.pw.write("기존 처리된 건이"+status.get("aleady_count")+ "개 있습니다.");
-				
-			}else if(data_ea == status.get("updated")) {
+//			if(status.get("aleady_count")>0) {  //기존처리건이 있으면 
+//				this.pw.write("기존 처리된 건이"+status.get("aleady_count")+ "개 있습니다.");
+//				
+//			}else 
+			 if(data_ea == status.get("updated")) {
 				this.pw.write("ok");
 				
 			}else {

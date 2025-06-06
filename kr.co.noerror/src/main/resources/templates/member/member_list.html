@@ -50,7 +50,7 @@
 			<!-- employee List Table -->
 			<div id="contents_container">
 			<div id="table-container" class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bordered text-center" style="white-space: nowrap;">
+				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${member_all_total != 0} ? 'table-hover' : ''">
 					<thead class="table-light">
 						<tr>
 							<th scope="col"><input type="checkbox" disabled></th>
@@ -68,24 +68,23 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr  >
-                			<td class="text-center no_list_tb" colspan="14"> 등록된 사원이 없습니다. </td>
+						<tr th:if="${member_all_total == 0}" >
+                			<td class="text-center no_list_tb" colspan="12"> 등록된 사원이 없습니다. </td>
                 		</tr>
-						<tr   style="cursor: pointer;">	
-							<td><input type="checkbox"></td>
+						<tr th:if="${member_all_total != 0}" th:each="mblist, idx : ${member_all_list}" style="cursor: pointer;">	
+							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
 							<td>5</td>
-							<td>삼성전자</td>
-							<td>010-1234-5678</td>
-							<td>hong@samsung.com</td>
-							<td>서울특별시 강남구</td>
+							<td>[[${mblist.EMPLOYEE_NAME}]]</td>
+							<td>[[${mblist.EMPLOYEE_CODE}]]</td>
+							<td>[[${mblist.EMP_PART}]]</td>
+							<td>[[${mblist.EMP_POSITION}]]</td>
+							<td>[[${mblist.EMP_TEL}]]</td>
+							<td>[[${mblist.EMP_FAX}]]</td>
+							<td>[[${mblist.EMP_PHONE}]]</td>
+							<td>[[${mblist.EMP_EMAIL}]]</td>
+							<td>[[${mblist.EMP_USE_FLAG}]]</td>
 							<td>-</td>
-							<td>4</td>
-							<td>홍길동</td>
-							<td>010-1234-5678</td>
-							<td>hong@samsung.com</td>
-							<td>서울특별시 강남구</td>
 						</tr>
-						
 					</tbody>
 				</table>
 			</div>

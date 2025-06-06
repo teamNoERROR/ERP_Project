@@ -50,7 +50,9 @@
 				      <th>창고코드</th>
 				      <th>창고이름</th>
 				      <th>품목코드</th>
+				      <th>거래처코드</th>
 				      <th>품목명</th>
+				      <th>수량</th>
 				      <th>분류</th>
 				      <th>거래처</th>
 				      <th>입고일자</th>
@@ -73,6 +75,8 @@
 						       th:data-item_code="${out_wh.item_code}" 
 						       th:data-client_code="${out_wh.client_code}" 
 						       th:data-wh_code="${out_wh.wh_code}"
+						       th:data-in_status="${out_wh.in_status}"
+						       th:data-item_count="${out_wh.item_count}"
 						       onclick="selectRow(this); event.stopPropagation();" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
@@ -80,11 +84,12 @@
 				      <td th:text="${out_wh.wh_code}">WH-001</td>
 				      <td th:text="${out_wh.wh_name}">창고이름</td>
 				      <td th:text="${out_wh.item_code}">ITEM-123</td>
-				      <td th:hidden="${out_wh.client_code}">client-123</td>
+				      <td th:text="${out_wh.client_code}">client-123</td>
 				      <td th:text="${out_wh.item_name}">나사</td>
+				      <td th:text="${out_wh.item_count}">12</td>
 				      <td th:text="${out_wh.category_main + '/' + out_wh.category_sub}">부품/소모품</td>
 				      <td th:text="${out_wh.client_name}">삼성전자</td>
-				      <td th:text="${out_wh.inbound_date}">2025-05-29</td>
+				      <td th:text="${out_wh.inbound_date2}">2025-05-29</td>
 				      <td th:text="${out_wh.in_status}"></td>
 				      <td th:text="${out_wh.use_yn}">Y</td>
 				    </tr>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="https://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:fragment="config">
 <meta charset="UTF-8">
 <!-- <title>Insert title here</title> -->
@@ -18,9 +18,6 @@
 <link rel="stylesheet" th:href="@{/css/goods.css?v=1}">
 <link rel="stylesheet" th:href="@{/css/modal.css?v=1}">
 <link rel="stylesheet" th:href="@{/css/member.css?v=1}">
-
-
-<th:block layout:fragment="add-css"></th:block>
 
 
 
@@ -45,8 +42,9 @@
 <script th:src="@{/js/plan.js}" defer></script>
 <script th:src="@{/js/mrp.js}" defer></script>
 <script th:src="@{/js/warehouse.js}" defer></script>
-  <script th:src="@{/js/iosf_warehouse.js}" defer></script>
+<script th:src="@{/js/iosf_warehouse.js}" defer></script>
 <script th:src="@{/js/pchreq.js}" defer></script>
 <script th:src="@{/js/emp.js}" defer></script>
+<script th:src="@{/js/member.js}" defer></script>
 </head>
 </html>

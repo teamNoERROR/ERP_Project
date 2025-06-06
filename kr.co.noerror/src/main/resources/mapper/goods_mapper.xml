@@ -124,7 +124,7 @@ SELECT COUNT(*) AS CNT FROM
   
   <!-- 부자재 -->
   <when test="type =='item'">
-   ITEMS
+   ITM_COMP_VIEW
    <where>
       	<if test="sclass != null">
       	ITEM_CLASS2 = #{sclass}
@@ -137,6 +137,7 @@ SELECT COUNT(*) AS CNT FROM
 				ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
 				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 				) 
       		</if>
@@ -150,6 +151,7 @@ SELECT COUNT(*) AS CNT FROM
 			ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
 			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 		) 
      		</if>
@@ -204,7 +206,7 @@ SELECT COUNT(*) AS CNT FROM
 
   		<!-- 부자재 -->
 	  	<when test="type == 'item'">
-	    SELECT * FROM ITEMS
+	    SELECT * FROM ITM_COMP_VIEW
 	    	<where>
       	<if test="sclass != null">
       	ITEM_CLASS2 = #{sclass}
@@ -217,6 +219,7 @@ SELECT COUNT(*) AS CNT FROM
 				ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
 				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 				) 
       		</if>
@@ -229,7 +232,8 @@ SELECT COUNT(*) AS CNT FROM
 			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+			COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 		) 
      		</if>

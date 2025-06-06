@@ -21,7 +21,6 @@ function goInbndList(){
 	location.href="./inbound.do"
 }
 
-
 /*--------------------------------------------------------------
 발주리스트에서 선택후 인풋란에 붙여넣기  
 --------------------------------------------------------------*/
@@ -71,7 +70,7 @@ function choicePch() {
 };
 
 /*--------------------------------------------------------------
-발주부자재 리스트 로드 
+발주한 부자재 리스트 로드 
 --------------------------------------------------------------*/
 function pchDtlLoad(pch_code){
 	fetch("./purchase_detail_modal.do?code="+pch_code, {
@@ -86,11 +85,12 @@ function pchDtlLoad(pch_code){
 		
 		//기존 행 전체 삭제
 		document.querySelectorAll('tr.item_row').forEach(tr => tr.remove());
+		
 		//결과값 붙이기 
 		result.forEach((resultItem, index) => {
 				
 			var tr = document.createElement('tr');
-		  	tr.className = "item_row"
+		  	tr.className = "item_row " 
 		  	tr.innerHTML = `
 			    <td>`+(index+1)+`</td>
 			    <td class="item_code">`+resultItem.item_code+`</td>
@@ -101,10 +101,10 @@ function pchDtlLoad(pch_code){
 			    <td>`+resultItem.item_class1+`</td>
 				<td>`+resultItem.item_class2+`</td>
 				<td class="text-end">`+resultItem.item_cost+`</td>
-				<td><input type="text" class="form-control item_qty"></td>
+				<td><input type="number" class="form-control item_qty"></td>
 				<td><input type="date" class="form-control item_exp"></td>
 				<td>
-					<select class="form-select item_deli" aria-label="Default select example" >
+					<select class="form-select item_deli" aria-label="Default select example" onchange='noDeli(this)'>
 						<option value="" >선택</option>
 						<option value="납품완료" >납품완료</option>
 						<option value="부분입고">부분입고</option>
@@ -121,7 +121,6 @@ function pchDtlLoad(pch_code){
 	
 }
 
-
 /*--------------------------------------------------------------
 입고리스트 저장버튼 클릭 
 --------------------------------------------------------------*/
@@ -133,42 +132,93 @@ function insert_inBnd(){
 	var item_exp = document.querySelectorAll(".item_exp");  //유통기한
 	var item_deli = document.querySelectorAll(".item_deli");  //입고상태
 	//console.log(item_cd.textContent)
+	
+	var inbDate = new Date(inbound_date.value);
+	var today = new Date();
+    inbDate.setHours(0, 0, 0, 0);
+	today.setHours(0, 0, 0, 0);
+	
 	if(pch_code.value==""){
 		alert("발주내역을 선택하세요.");
 		pch_code.focus();		
+		
 	}else if(wh_code.value == ""){
 		alert("창고이름을 선택하세요.");
 		wh_name.focus();	
+		
 	}else if(inbound_date.value == ""){
 		alert("입고일자를 선택하세요.");
 		inbound_date.focus();	
+		
+	}else if(inbDate > today){
+		alert("입고일자는 오늘 이후의 날짜를 선택할 수 없습니다.");
+		inbound_date.value = "";  //선택날짜 초기화
+		inbound_date.focus();	
+		
 	}else if(in_status.value == ""){
 		alert("입고상태를 선택하세요.");
 		in_status.focus();	
+		
 	}else if(employee_code.value==""){
-		alert("관리자가 등록되지 않았습니다. ")
+		alert("책임 담당자가 등록되지 않았습니다. ");
+		
 	}else{
 		// 각 항목 입력 확인
 		for (var i = 0; i < rows.length; i++) {
-			if (item_qty[i].value.trim() == "" || isNaN(item_qty[i].value) || Number(item_qty[i].value) <= 0) {
-				alert("입고된 수량을 정확히 입력해주세요");
-				item_qty[i].focus();
-				return;
+			var expDate = new Date(item_exp[i].value);
+			expDate.setHours(0, 0, 0, 0);
+			
+			if(item_deli[i].value.trim() != "미납"){
+				if (item_qty[i].value.trim() == "" || isNaN(item_qty[i].value) || Number(item_qty[i].value) <= 0) {
+					alert("입고된 수량을 정확히 입력해주세요");
+					item_qty[i].focus();
+					return;
+				}else if(!reg_num.test(item_qty[i].value)){
+					alert("수량은 숫자만 입력이 가능합니다.");
+					item_qty[i].focus();
+					return;
+				}
+				if (item_exp[i].value.trim() == "") {
+					alert("입고된 상품의 유통기한을 입력해주세요");
+					item_exp[i].focus();
+					return;
+				}else if(expDate < today){
+					alert("유통기한은 오늘 이전의 날짜를 선택할 수 없습니다.");
+					item_exp[i].value = "";  //선택날짜 초기화
+					item_exp[i].focus();	
+					return;
+				}
 			}
-			if (item_exp[i].value.trim() == "") {
-				alert("입고된 상품의 유통기한을 입력해주세요");
-				item_exp[i].focus();
-				return;
-			}
-			if (item_deli[i].value.trim() === "") {
+			if (item_deli[i].value.trim() == "") {
 				alert("입고상태를 선택해주세요");
 				item_deli[i].focus();
+				noDeli(item_deli[i]);
 				return;
 			}
 		}
 		inbndInsertOk();
 	}
 } 
+
+//미납된 상품의 처리 
+function noDeli(deli_value){
+	var tr=deli_value.closest("tr");
+	var exp_input = tr.querySelector(".item_exp");
+	var qty_input = tr.querySelector(".item_qty");
+	
+	if(deli_value.value == "미납"){
+		exp_input.value = "0001-01-01";
+		exp_input.disabled = true;
+		
+		qty_input.value = "0";
+		qty_input.disabled = true;
+		
+	}else{
+		exp_input.value = "";
+		exp_input.disabled = false;
+		qty_input.disabled = false;		
+	}
+}
 
 /*--------------------------------------------------------------
 입고저장 ajax
@@ -200,7 +250,6 @@ function inbndInsertOk(){
 	});
 	
 	fetch("./inbound_insertok.do", {
-
 		method: "PUT",
 		headers: {'content-type': 'application/json'},
 		body : JSON.stringify(in_items)
@@ -225,12 +274,10 @@ function inbndInsertOk(){
 function openInbndDetail(event){
 	
 	var inbnd_code = event.querySelector(".inbnd_code").textContent.trim();
-	var pch_cd = event.querySelector(".pch_code").getAttribute("data-pch");
-	var ori_pcd = pch_cd.substring(0, 9)
-	   console.log("inbnd_code:", inbnd_code);
-	   console.log("pch_cd:", ori_pcd);
+	var pch_cd = event.querySelector(".pch_code").getAttribute("data-pch");  //pch-00000_1
+	var ori_pcd = pch_cd.substring(0, 9);  //pch-00000
 
-	fetch("./inbnd_detail_modal.do?pch_code="+ori_pcd+"&inbnd_code="+inbnd_code, {
+	fetch("./inbnd_detail_modal.do?ori_pcd="+ori_pcd+"&pch_code="+pch_cd+"&inbnd_code="+inbnd_code, {
 		method: "GET",
 		
 	}).then(function(data) {
@@ -251,14 +298,13 @@ function openInbndDetail(event){
 입고상태 변경 
 --------------------------------------------------------------*/
 function inbCngOk(){
-	var inb_status = document.querySelector("#in_status").value;
 	var inbnd_ckbx = document.querySelectorAll("input[name='inb_sel']:checked");
 	var in_status = document.querySelector("#in_status");
-	console.log(in_status);
+	
 	if(inbnd_ckbx.length==0){
 		alert("입고상태를 변경할 상품이 선택되지 않았습니다.");
 		
-	}else if(inb_status == ""){
+	}else if(in_status.value == ""){
 		alert("입고상태를 선택하세요.");
 		
 	}else{
@@ -274,6 +320,9 @@ function inbCngOk(){
 				statusinb : in_status.value
 			})
 		});
+		
+		console.log(JSON.stringify(status_chg));
+		
 		fetch("./inbnd_ok.do", {
 			method: "PATCH",
 			headers: {"content-type": "application/json"},
@@ -311,17 +360,41 @@ function inbCngOk(){
 /*--------------------------------------------------------------
 체크박스 클릭시 리스트 변경 
 --------------------------------------------------------------*/
-
-function inStatusCk(cbCk){
-	/*var checked = document.querySelectorAll('input[name="status"]:checked');
-	var ck_values = Array.from(checked).map(cb => cb.value);
-	console.log(ck_values)*/
-	var form = document.querySelector("#inbnd_search");
-	form.action = "inbound.do";
-	form.method = "GET";
-	form.submit();
+function inStatusCk(ck){
+	const params = new URLSearchParams();
+	const checked = document.querySelectorAll('input[name="status_lst"]:checked');
+	if(checked.length > 0){
+		Array.from(checked).forEach(cb => {
+		    params.append('status_lst', cb.value);
+	  	});
+	}else {
+		alert("상태값을 최소 하나는 선택해야 합니다.");
+		ck.checked=true;
+		return;
+	}
+	const keyword = document.querySelector('input[name="keyword"]');
+	if (keyword && keyword.value.trim() != "") {
+		params.append('keyword', keyword.value.trim());
+	}
 	
-} 
+	location.href = "inbound.do?" + params.toString();
+}  
+
+
+//검색버튼 
+function inSearch(){
+	var form = document.querySelector("#inbnd_search");
+	if(form.keyword.value.trim() == ""){
+		alert("검색어를 입력하세요");
+		return false;
+	}else {
+		
+		form.method = "GET";
+		form.action = "./inbound.do";
+		return true;
+	}
+	
+}
 /*--------------------------------------------------------------
 입고리스트 페이징 
 --------------------------------------------------------------*/
@@ -343,8 +416,8 @@ function go_in_pg(ee){
 		if (status) {
 		    var statusList = status.split(',');  // 배열로 분리
 		    statusList.forEach((s) => {
-		        params["status"] = params["status"] || [];
-		        params["status"].push(s);
+		        params["status_lst"] = params["status_lst"] || [];
+		        params["status_lst"].push(s);
 		    });
 		}
 		var pString = new URLSearchParams(params).toString();

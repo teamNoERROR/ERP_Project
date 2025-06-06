@@ -127,9 +127,9 @@ public class IOSF_Warehouse_Service {
     }
     
     //창고 삭제
-    public int IOSF_delete_warehouse(String wh_code, String code ,String wh_type) {
+    public int IOSF_delete_warehouse(String code, String wh_type) {
     	
-    	int wh_delete_result = iosf_dao.IOSF_delete_warehouses(wh_code, code, wh_type);
+    	int wh_delete_result = iosf_dao.IOSF_delete_warehouses(code,  wh_type);
     	
     	return wh_delete_result;
     }

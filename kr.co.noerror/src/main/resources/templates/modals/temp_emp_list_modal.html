@@ -20,13 +20,13 @@
 						</thead>
 						<tbody>							    
 							<tr th:each="e , no : ${emps}"
-							    th:attr="data-emp_code=${e.emp_code},
-							             data-emp_name=${e.emp_name}"
+							    th:attr="data-ecode=${e.ECODE},
+							             data-ename=${e.ENAME}"
 							    style="cursor: pointer;">
 								<td align="center"><input type="radio" name="emp_check"></td>
 							    <td>[[${no.count}]]</td>
-							    <td>[[${e.emp_code}]]</td>
-							    <td>[[${e.emp_name}]]</td>
+							    <td>[[${e.ECODE}]]</td>
+							    <td>[[${e.ENAME}]]</td>
 							</tr>
 						</tbody>
 					</table>

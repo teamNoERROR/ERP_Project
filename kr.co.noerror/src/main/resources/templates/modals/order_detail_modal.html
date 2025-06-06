@@ -1,33 +1,33 @@
-<div class="modal fade" id="pch_modal" tabindex="-1" aria-labelledby="pd_detail_label" aria-hidden="true" th:fragment="pchDetail" >
+<div class="modal fade" id="ord_modal" tabindex="-1" aria-labelledby="pd_detail_label" aria-hidden="true" th:fragment="ordDetail" >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="pd_detail_label">발주 상세보기</h1>
+				<h1 class="modal-title fs-5" id="pd_detail_label">주문 상세보기</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
 			<div class="modal-body row justify-content-center d-flex gap-3">
 				<div
 					class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-					<h2 class="mb-1">발주번호 : [[${details[0].pch_code}]]</h2>
+					<h2 class="mb-1">주문번호 : [[${details[0].order_code}]]</h2>
 					<div class="d-flex align-items-center gap-2">
-						<!-- 발주코드를 data 속성에 저장 -->
+						<!-- 주문코드를 data 속성에 저장 -->
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
-							th:attr="data-pch-code=${details[0].pch_code}">
-							<option selected value="발주상태 선택">발주상태 선택</option>
-							<option value="발주요청">발주요청</option>
-							<option value="발주취소">발주취소</option>
-							<option value="발주완료">발주완료</option>
-							<option value="진행중">진행중</option>
+							th:attr="data-order-code=${details[0].order_code}">
+							<option selected value="주문상태 선택">주문상태 선택</option>
+							<option value="주문요청">주문요청</option>
+							<option value="주문취소">주문취소</option>
+							<option value="주문확인">주문확인</option>
+							<option value="생산중">생산중</option>
 							<option value="지연중">지연중</option>
-							<option value="가입고">가입고</option>
-							<option value="입고완료">입고완료</option>
+							<option value="생산완료">생산완료</option>
+							<option value="출고완료">출고완료</option>
 							<option value="반품">반품</option>
 						</select>
 
 						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="pch_status_update()">
+							style="white-space: nowrap;" onclick="ord_status_update()">
 							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
 						</button>
 					</div>
@@ -36,7 +36,7 @@
 					<table class="table table-bordered align-middle">
 						<thead class="table-light text-center">
 							<tr>
-								<th class="info-label table-light" colspan="5">발주처 정보</th>
+								<th class="info-label table-light" colspan="5">주문처 정보</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -67,16 +67,16 @@
 				</div>
 
 				<div class="table-responsive  rounded">
-					<h5 class="">발주정보</h5>
+					<h5 class="">주문정보</h5>
 					<table class="table align-middle table-bordered">
 						<tr>
-							<td class="info-label">발주번호</td>
-							<td class="value-cell">[[${details[0].pch_code}]]</td>
-							<td class="info-label">발주상태</td>
-							<td class="value-cell">[[${details[0].pch_status}]]</td>
+							<td class="info-label">주문번호</td>
+							<td class="value-cell">[[${details[0].order_code}]]</td>
+							<td class="info-label">주문상태</td>
+							<td class="value-cell">[[${details[0].order_status}]]</td>
 						</tr>
 						<tr>
-							<td class="info-label">발주일자</td>
+							<td class="info-label">주문일자</td>
 							<td class="value-cell">[[${details[0].request_date.substring(0,10)}]]</td>
 							<td class="info-label">납기요청일</td>
 							<td class="value-cell">[[${details[0].due_date.substring(0,10)}]]</td>
@@ -89,7 +89,7 @@
 							<td class="value-cell">[[${details[0].pay_method}]]</td>
 						</tr>
 						<tr>
-							<td class="info-label">발주 담당자</td>
+							<td class="info-label">주문 담당자</td>
 							<td class="value-cell">[[${details[0].ename}]]</td>
 							<td class="info-label"></td>
 							<td class="value-cell"></td>
@@ -105,7 +105,7 @@
 
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
-					<h5 class="">발주 제품 내역</h5>
+					<h5 class="">주문 제품 내역</h5>
 					<table class="table table-hover align-middle table-bordered">
 						<thead class="table-light text-center">
 							<tr>
@@ -125,18 +125,18 @@
 						<tbody>
 							<tr th:each="d, no : ${details}">
 								<td>[[${no.count}]]</td>
-								<td>[[${d.item_code}]]</td>
-								<td>[[${d.item_name}]]</td>
-								<td>[[${d.item_spec}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_qty, 0,
+								<td>[[${d.product_code}]]</td>
+								<td>[[${d.product_name}]]</td>
+								<td>[[${d.product_spec}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.item_unit}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_cost,
+								<td>[[${d.product_unit}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(d.product_cost,
 									0, 'COMMA', 0, 'POINT')}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_qty *
-									d.item_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.item_class1}]]</td>
-								<td>[[${d.item_class2}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(d.product_qty *
+									d.product_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
+								<td>[[${d.product_class1}]]</td>
+								<td>[[${d.product_class2}]]</td>
 							</tr>
 
 						</tbody>
@@ -161,9 +161,9 @@
 					<!-- 				Action Buttons -->
 					<div class="mt-4 d-flex gap-2">
 						<div class="ms-auto">
-							<th:block th:if="${details[0].pch_status == '발주요청'}">
+							<th:block th:if="${details[0].order_status == '주문요청'}">
 								<a
-									th:href="@{/pchreq_update.do(code=${details[0].pch_code})}"
+									th:href="@{/ordreq_update.do(code=${details[0].order_code})}"
 									class="btn btn-success"> <i class="bi bi-pencil-square"></i>
 									수정
 								</a>

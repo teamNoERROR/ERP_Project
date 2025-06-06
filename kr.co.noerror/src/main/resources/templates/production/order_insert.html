@@ -15,9 +15,12 @@
 			<h5 class="mt-4">주문처 정보</h5>
 			<div class="row mb-3  ">
 				<div class="col-auto d-flex align-items-end ">
-				<button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/clients_modal.do}" data-modal-id="clients_modal" style="cursor: pointer;">
+				<button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/clients_modal.do}" data-modal-id="clients_modal_for_order" style="cursor: pointer;">
 					<i class="bi bi-search"></i>
-				</button>
+				</button> 
+				<!--  <button class="btn btn-primary modal-trigger" type="button" onclick="cltListOpen()" style="cursor: pointer;">
+					<i class="bi bi-search"></i>
+				</button> -->
 				</div>
 				<div class="form-group" style="flex: 1.5">
 					<label class="form-label">거래처코드</label> 
@@ -62,7 +65,7 @@
 							<th style="width: 15%;">주문수량</th>
 							<th style="width: 10%;">단위</th>
 							<th style="width: 10%;">제품단가 (원)</th>
-							<th style="width: 10%;">판매가 (원)</th>
+							<th style="width: 10%;">판매금액 (원)</th>
 							<th style="width: 10%;">삭제</th>
 						</tr>
 					</thead>
@@ -85,7 +88,7 @@
 							<td><input type="text" class="form-control" id="product_cost"
 								placeholder="제품단가" readonly></td>
 							<td><input type="text" class="form-control" id="product_price"
-								placeholder="판매가" readonly></td>
+								placeholder="판매금액" readonly></td>
 							<td class="text-center">
 								<button type="button" class="btn btn-danger btn-sm"
 									onclick="removeProductRow(this)">삭제</button>
@@ -97,7 +100,7 @@
 				
 				<button 
 					class="btn btn-primary modal-trigger" 
-					type="button" th:data-modal-url="@{/products_modal.do}" data-modal-id="products_modal" style="cursor: pointer;">
+					type="button" th:data-modal-url="@{/products_modal.do}" data-modal-id="products_modal_for_order" style="cursor: pointer;">
     				주문종목 찾기
 				</button>
 				<div class="d-flex justify-content-end">

@@ -35,7 +35,7 @@
     due_date,
     pay_amount,
     pay_method,
-    emp_code,
+    ecode,
     memo,
     request_date,
     modify_date
@@ -46,7 +46,7 @@
     #{due_date},
     #{pay_amount},
     #{pay_method},
-    #{emp_code},
+    #{ecode},
     #{memo},
     SYSDATE,
     SYSDATE 
@@ -87,7 +87,7 @@ SELECT * FROM (
 		<if test="search_word != null and search_word != ''">
 		  AND (
 		      cmp.company_name LIKE '%' || #{search_word} || '%' OR
-		      mgr.manager_name LIKE '%' || #{search_word} || '%'
+		      cmp.manager_name LIKE '%' || #{search_word} || '%'
 		  )
 		</if>
 	    <if test="statuses != null and statuses.size() > 0">
@@ -113,7 +113,7 @@ WHERE 1=1
 	  AND (
 	      
 	      cmp.company_name LIKE '%' || #{search_word} || '%' OR
-	      mgr.manager_name LIKE '%' || #{search_word} || '%'
+	      cmp.manager_name LIKE '%' || #{search_word} || '%'
 	  )
 	</if>
     <if test="statuses != null and statuses.size() > 0">
@@ -150,12 +150,12 @@ SELECT
     cmp.mng_phone_num,
     cmp.com_addr1,
     cmp.com_addr2,
-    emp.emp_name
+    emp.ename
 FROM purchase_req_detail prd
 JOIN purchase_req pch ON prd.pch_code = pch.pch_code
 JOIN items itm ON prd.item_code = itm.item_code
 LEFT JOIN client_comp cmp ON itm.company_code = cmp.company_code
-JOIN temp_employ emp ON pch.emp_code = emp.emp_code
+LEFT JOIN employee emp ON pch.ecode = emp.ecode
 WHERE prd.pch_code = #{pch_code}
 </select>
 
@@ -165,7 +165,7 @@ UPDATE purchase_req
 SET
 	due_date = #{due_date},
 	pay_method = #{pay_method},
-	emp_code = #{emp_code},
+	ecode = #{ecode},
 	memo = #{memo},
 	modify_date = SYSDATE
 WHERE pch_code = #{pch_code}

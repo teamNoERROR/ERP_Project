@@ -88,7 +88,7 @@ WHERE 1=1
 </select>
 
 <!-- 주문 목록 출력 -->  
-<select id="orders_modal" resultType="kr.co.noerror.DTO.order_DTO">
+<select id="orders_modal" resultType="kr.co.noerror.DTO.ordreq_DTO">
 SELECT
     ord.order_code,
     ord.product_code,
@@ -107,8 +107,8 @@ JOIN temp_bom_header hdr ON pdt.product_code = hdr.product_code
 </select>
 
 <!-- 사원 목록 출력 -->
-<select id="emps_modal" resultType="kr.co.noerror.DTO.temp_emp_DTO">
-SELECT * FROM temp_employ
+<select id="emps_modal" resultType="kr.co.noerror.DTO.employee_DTO">
+SELECT * FROM employee
 </select>
 
 <!-- plan_code 중복체크 -->

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.ordreq_mapper">
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
+<select id="ordreq_paged_list" resultType="kr.co.noerror.DTO.ordreq_res_DTO" parameterType="Map">
+SELECT * FROM (
+    SELECT inner_result.*, ROWNUM rnum
+    FROM (
+        SELECT ord.*, cmp.company_name, cmp.manager_name
+        FROM order_request ord
+        JOIN client_comp cmp ON ord.company_code = cmp.company_code
+        WHERE 1=1
+		<if test="search_word != null and search_word != ''">
+		  AND (
+		      cmp.company_name LIKE '%' || #{search_word} || '%' OR
+		      cmp.manager_name LIKE '%' || #{search_word} || '%'
+		  )
+		</if>
+	    <if test="statuses != null and statuses.size() > 0">
+	        AND ord.order_status IN
+	        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
+	            #{status}
+	        </foreach>
+	    </if>
+        ORDER BY ord.oidx DESC
+    ) inner_result
+    WHERE ROWNUM &lt; #{end}
+)
+WHERE rnum &gt; #{start}
+</select>
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
+<select id="ordreq_search_count" resultType="int" parameterType="map">
+SELECT COUNT(*) AS total
+FROM order_request ord
+JOIN client_comp cmp ON ord.company_code = cmp.company_code
+WHERE 1=1
+	<if test="search_word != null and search_word != ''">
+	  AND (
+	      
+	      cmp.company_name LIKE '%' || #{search_word} || '%' OR
+	      cmp.manager_name LIKE '%' || #{search_word} || '%'
+	  )
+	</if>
+    <if test="statuses != null and statuses.size() > 0">
+        AND ord.order_status IN
+        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </if>
+</select>
+
+<!--  거래처 목록 출력 -->  
+<select id="clients_for_order" resultType="kr.co.noerror.DTO.client_DTO">
+SELECT
+    company_code,
+    company_name,
+    biz_num,
+    manager_code,
+    manager_name,
+    mng_phone_num
+FROM
+    client_comp
+</select>
+
+<!-- 제품 목록 출력 -->
+<select id="products_list" resultType="kr.co.noerror.DTO.products_DTO">
+	SELECT * FROM products
+</select>
+
+<!-- order_code 중복체크 -->
+<select id="order_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM order_request WHERE ORDER_CODE = #{ORDER_CODE}
+</select>
+
+<!-- 주문정보 저장 -->  
+<insert id="ordreq_insert" parameterType="kr.co.noerror.DTO.ordreq_DTO">
+ INSERT INTO order_request (
+    oidx,
+    order_code,
+    company_code,
+    ecode,
+    order_status,
+    pay_method,
+    pay_amount,
+    due_date,
+    memo,
+    request_date,
+    modify_date
+  ) VALUES (
+    seq_order_request.NEXTVAL,
+    #{order_code},
+    #{company_code},
+    #{ecode},
+    #{order_status},
+    #{pay_method},
+    #{pay_amount},
+    #{due_date},
+    #{memo},
+    SYSDATE,
+    SYSDATE 
+  )
+</insert>
+
+<insert id="ordreq_detail_insert" parameterType="kr.co.noerror.DTO.ordreq_detail_DTO">
+  INSERT INTO order_req_detail (
+    oidx,
+    order_code,
+    product_code,
+    wh_code,
+    product_qty
+  ) VALUES (
+    seq_order_req_detail.NEXTVAL,
+    #{order_code},
+    #{product_code},
+    #{wh_code},
+    #{product_qty}
+  ) 
+</insert>
+
+<!-- 주문 상세정보 조회 -->
+<select id="ordreq_detail" resultType="kr.co.noerror.DTO.ordreq_res_DTO" parameterType="String">
+SELECT
+    ord.oidx, 
+    ord.order_code, 
+    ord.product_code, 
+    prd.product_name,
+    prd.product_spec,
+    prd.product_unit, 
+    ord.product_qty, 
+    prd.product_cost,
+    prd.product_class1,
+    prd.product_class2,
+    orh.due_date, 
+    orh.order_status, 
+    orh.request_date, 
+    orh.pay_amount,
+    orh.pay_method,
+    orh.memo,
+    cmp.company_name, 
+    cmp.biz_num,
+    cmp.ceo_name,
+    cmp.manager_name,
+    cmp.mng_phone_num,
+    cmp.com_addr1,
+    cmp.com_addr2,
+    emp.ename
+FROM order_req_detail ord
+JOIN order_request orh ON ord.order_code = orh.order_code
+JOIN products prd ON ord.product_code = prd.product_code
+JOIN client_comp cmp ON orh.company_code = cmp.company_code
+JOIN employee emp ON orh.ecode = emp.ecode
+WHERE ord.order_code = #{order_code}
+</select>
+
+<!-- 주문정보 수정 -->
+<update id="ordreq_update" parameterType="kr.co.noerror.DTO.ordreq_DTO">
+UPDATE order_request
+SET
+	due_date = #{due_date},
+	pay_method = #{pay_method},
+	ecode = #{ecode},
+	memo = #{memo},
+	modify_date = SYSDATE
+WHERE order_code = #{order_code}
+</update>
+
+<update id="ordreq_detail_update" parameterType="kr.co.noerror.DTO.ordreq_detail_DTO">
+UPDATE order_req_detail
+SET
+	product_qty = #{product_qty}
+WHERE order_code = #{order_code}
+  AND product_code = #{product_code} 
+</update>
+
+<!-- 발주상태 업데이트 -->
+<update id="ord_status_update" parameterType="map">
+UPDATE order_request
+SET order_status = #{order_status}
+WHERE order_code = #{order_code}
+</update>
+
+</mapper>

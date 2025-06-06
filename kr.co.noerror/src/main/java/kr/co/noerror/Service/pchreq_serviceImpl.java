@@ -38,7 +38,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
         params.put("statuses", search_cond.getStatuses());
         params.put("start", paging_info.getStart());
         params.put("end", paging_info.getEnd());
-        
+  
         return this.pchreq_dao.paged_list(params);
 	}
 	
@@ -59,7 +59,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
                 pchreq_req_dto = entry.getValue();
 
                 // 중복 없는 발주 코드 생성
-                String pch_code = this.unique_code_generator.generate("pch-", code -> pchreq_dao.pch_code_check(code) > 0);
+                String pch_code = this.unique_code_generator.generate("PCH-", code -> pchreq_dao.pch_code_check(code) > 0);
 
                 // 발주 헤더 DTO 생성
                 pchreq_DTO pchreq_entity = new pchreq_DTO();
@@ -68,7 +68,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
                 pchreq_entity.setPch_status("발주요청");
                 pchreq_entity.setDue_date(pchreq_req_dto.getDue_date());
                 pchreq_entity.setPay_method(pchreq_req_dto.getPay_method());
-                pchreq_entity.setEmp_code(pchreq_req_dto.getEmp_code());
+                pchreq_entity.setEcode(pchreq_req_dto.getEcode());
                 pchreq_entity.setMemo(pchreq_req_dto.getMemo());
 
                 // 총 금액 계산
@@ -115,7 +115,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
             pchreq_entity.setPch_code(pchreq_req_dto.getPch_code());
             pchreq_entity.setDue_date(pchreq_req_dto.getDue_date());
             pchreq_entity.setPay_method(pchreq_req_dto.getPay_method());
-            pchreq_entity.setEmp_code(pchreq_req_dto.getEmp_code());
+            pchreq_entity.setEcode(pchreq_req_dto.getEcode());
             pchreq_entity.setMemo(pchreq_req_dto.getMemo());
 	        result1 = this.pchreq_dao.pchreq_update(pchreq_entity);
 	

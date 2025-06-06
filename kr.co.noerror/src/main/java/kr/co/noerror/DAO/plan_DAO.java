@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import kr.co.noerror.DTO.order_DTO;
+import kr.co.noerror.DTO.employee_DTO;
+import kr.co.noerror.DTO.ordreq_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
-import kr.co.noerror.DTO.temp_emp_DTO;
 
 @Service
 public class plan_DAO {
@@ -35,13 +35,13 @@ public class plan_DAO {
 		return bom_items;
 	}
 	
-	public List<order_DTO> orders_modal(){
-		List<order_DTO> orders = this.sql.selectList("orders_modal");
+	public List<ordreq_DTO> orders_modal(){
+		List<ordreq_DTO> orders = this.sql.selectList("orders_modal");
 		return orders;
 	}
 	
-	public List<temp_emp_DTO> emps_modal(){
-		List<temp_emp_DTO> emps = this.sql.selectList("emps_modal");
+	public List<employee_DTO> emps_modal(){
+		List<employee_DTO> emps = this.sql.selectList("emps_modal");
 		return emps;		
 	}
 	

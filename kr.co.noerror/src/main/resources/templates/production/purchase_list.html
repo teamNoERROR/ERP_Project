@@ -16,20 +16,18 @@
 
 			<!-- Search Bar -->
 			<form class="row g-2 my-4 justify-content-end" method="get"
-				action="/purchase.do">
+				action="/pchreq_list.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<input type="checkbox" name="pch_status" value="발주요청">
-						&nbsp;발주요청&nbsp; <input type="checkbox" name="pch_status"
-							value="발주취소"> &nbsp;발주취소&nbsp; <input type="checkbox"
-							name="pch_status" value="발주완료"> &nbsp;발주완료&nbsp; <input
-							type="checkbox" name="pch_status" value="진행중">
-						&nbsp;진행중&nbsp; <input type="checkbox" name="pch_status"
-							value="지연중"> &nbsp;지연중&nbsp; <input type="checkbox"
-							name="pch_status" value="가입고"> &nbsp;가입고&nbsp; <input
-							type="checkbox" name="pch_status" value="입고완료">
-						&nbsp;입고완료&nbsp; <input type="checkbox" name="pch_status"
-							value="반품"> &nbsp;반품&nbsp;
+						<input type="checkbox" name="statuses" value="발주요청">&nbsp;발주요청&nbsp;
+						<input type="checkbox" name="statuses" value="발주취소">&nbsp;발주취소&nbsp;
+						<input type="checkbox" name="statuses" value="발주완료">&nbsp;발주완료&nbsp;
+						<input type="checkbox" name="statuses" value="진행중">&nbsp;진행중&nbsp;
+						<input type="checkbox" name="statuses" value="지연중">&nbsp;지연중&nbsp;
+						<input type="checkbox" name="statuses" value="가입고">&nbsp;가입고&nbsp;
+						<input type="checkbox" name="statuses" value="입고완료">&nbsp;입고완료&nbsp;
+						<input type="checkbox" name="statuses" value="반품">
+						&nbsp;반품&nbsp;
 					</div>
 				</div>
 				<div class="col-auto">
@@ -44,105 +42,63 @@
 			</form>
 
 			<!-- 발주 List Table -->
-			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bpurchaseed">
-					<thead class="table-light text-center">
-						<tr>
-							<th scope="col"><input type="checkbox"></th>
-							<th scope="col">#</th>
-							<th scope="col">발주번호</th>
-							<th scope="col">발주일자</th>
-							<th scope="col">발주처명</th>
-							<th scope="col">발주처 담당자</th>
-							<th scope="col">거래금액</th>
-							<th scope="col">납품예정일</th>
-							<th scope="col">발주진행상황</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="p : ${all}" class="modal-trigger"
-							th:data-modal-url="@{/purchase_detail.do(code=${p.pch_code})}"
-							data-modal-id="pch_modal" style="cursor: pointer;">
-							<td><input type="checkbox"></td>
-							<td>[[${p.pidx}]]</td>
-							<td>[[${p.pch_code}]]</td>
-							<td>[[${p.request_date.substring(0, 10)}]]</td>
-							<td>[[${p.company_name}]]</td>
-							<td>[[${p.manager_name}]]</td>
-							<td align="right">[[${#numbers.formatDecimal(p.pay_amount, 0, 'COMMA', 0, 'POINT')}]]</td>
-							<td>[[${p.due_date.substring(0, 10)}]]</td>
-							<td>[[${p.pch_status}]]</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			<div id="list-container">
 
-			<div
-				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-				<div class="d-flex">
-					<!-- Pagination -->
-					<div class="mt-4 d-flex justify-content-center"
-						aria-label="Page navigation">
-						<ul class="pagination">
-							<!-- 이전 블록 -->
-							<li class="page-item"
-								th:classappend="${start_page == 1} ? 'disabled'"><a
-								class="page-link"
-								th:href="@{'/purchase.do'(pageno=${start_page - 1},
-			                            search_word=${search_word},
-			                            purchase_status=${purchase_statuses})}">
-									이전 </a></li>
-
-							<!-- 현재 페이지 블록 -->
-							<li class="page-item"
-								th:each="n : ${#numbers.sequence(start_page, end_page)}"
-								th:classappend="${n == pageno} ? 'active'"><a
-								class="page-link"
-								th:href="@{'/purchase.do'(pageno=${n},
-			                            search_word=${search_word},
-			                            purchase_status=${purchase_statuses})}">
-									[[${n}]] </a></li>
-
-							<!-- 다음 블록 -->
-							<li class="page-item"
-								th:classappend="${end_page >= page_cnt} ? 'disabled'"><a
-								class="page-link"
-								th:href="@{'/purchase.do'(pageno=${end_page + 1},
-			                            search_word=${search_word},
-			                            purchase_status=${purchase_statuses})}">
-									다음 </a></li>
-						</ul>
-					</div>
-
-					<div class="mt-4 ms-1">
-						<select class="form-select" name="post_ea"
-							onchange="location='/purchase.do?views='+this.value">
-							<option value="5" th:selected="${views == 5}">5개씩 보기</option>
-							<option value="10" th:selected="${views == 10}">10개씩 보기</option>
-							<option value="15" th:selected="${views == 15}">15개씩 보기</option>
-							<option value="20" th:selected="${views == 20}">20개씩 보기</option>
-							<option value="25" th:selected="${views == 25}">25개씩 보기</option>
-							<option value="30" th:selected="${views == 30}">30개씩 보기</option>
-						</select>
-					</div>
+				<div id="table-container" class="table-responsive  rounded" >
+					<table class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
+						<thead class="table-light text-center">
+							<tr>
+								<th scope="col">
+									<input type="checkbox" disabled>
+								</th>
+								<th scope="col">#</th>
+								<th scope="col">발주번호</th>
+								<th scope="col">발주일자</th>
+								<th scope="col">발주처명</th>
+								<th scope="col">발주처 담당자</th>
+								<th scope="col">거래금액</th>
+								<th scope="col">납품예정일</th>
+								<th scope="col">발주진행상황</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="p : ${pch_list}" class="modal-trigger"
+								th:data-modal-url="@{/pchreq_detail.do(code=${p.pch_code})}"
+								data-modal-id="pch_modal" style="cursor: pointer;">
+								<td onclick="event.stopPropagation();">
+									<input type="checkbox"></td>
+								<td>[[${p.pidx}]]</td>
+								<td>[[${p.pch_code}]]</td>
+								<td>[[${p.request_date.substring(0, 10)}]]</td>
+								<td>[[${p.company_name}]]</td>
+								<td>[[${p.manager_name}]]</td>
+								<td align="right">[[${#numbers.formatDecimal(p.pay_amount,
+									0, 'COMMA', 0, 'POINT')}]]</td>
+								<td>[[${p.due_date.substring(0, 10)}]]</td>
+								<td>[[${p.pch_status}]]</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-			</div>
-			<!-- Action Buttons -->
-			<div class="mt-4 d-flex gap-2">
-				F
-				<div class="ms-auto">
-					<button type="button" class="btn btn-success"
-						onclick="location.href='/purchase_in.do'">
-						<i class="bi bi-plus-lg"></i> 수기등록
-					</button>
-					<!-- 						<button class="btn btn-danger"> -->
-					<!-- 							<i class="bi bi-trash"></i> 삭제 -->
-					<!-- 						</button> -->
+
+
+				<!-- Pagination -->
+				<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+					<div th:replace="~{/fragments/paging.html :: pagination(${paging}, ${condition}, 'normal')}"></div>
+	
+					<!-- Action Buttons -->
+					<div class="ms-auto">
+						<button type="button" class="btn btn-success" onclick="location.href='/pchreq_insert.do'">
+							<i class="bi bi-plus-lg"></i> 수기등록
+						</button>
+						<!-- 						<button class="btn btn-danger"> -->
+						<!-- 							<i class="bi bi-trash"></i> 삭제 -->
+						<!-- 						</button> -->
+					</div>
 				</div>
 			</div>
 		</section>
 	</main>
-
 
 	<div id="modalContainer"></div>
 
@@ -150,4 +106,3 @@
 
 </body>
 </html>
-

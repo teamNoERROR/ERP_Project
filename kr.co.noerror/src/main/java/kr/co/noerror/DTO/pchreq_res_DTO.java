@@ -23,15 +23,15 @@ public class pchreq_res_DTO {
     private Long pay_amount;      // 결제금액   
     
     // 거래처(발주처) 정보
-    private String company_code;     // 거래처 고유코드
-    private String company_name;     // 거래처 이름
-    private String biz_num;
-    private String ceo_name;
-    private String addr1;
-    private String addr2;
-    private String manager_code;     // 거래처 담당자 고유코드
-    private String manager_name;     // 거래처 담당자 이름
-    private String phone_num;
+    private String company_code = "저장정보 없음";     // 거래처 고유코드
+    private String company_name = "저장정보 없음";     // 거래처 이름
+    private String biz_num = "저장정보 없음";
+    private String ceo_name = "저장정보 없음";
+    private String com_addr1 = "저장정보 없음";
+    private String com_addr2 = "저장정보 없음";
+    private String manager_code = "저장정보 없음";     // 거래처 담당자 고유코드
+    private String manager_name = "저장정보 없음";     // 거래처 담당자 이름
+    private String mng_phone_num = "저장정보 없음";
     
     // 제품 발주 정보
     private String item_code;        // 자재코드

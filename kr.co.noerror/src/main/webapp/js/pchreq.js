@@ -1,80 +1,134 @@
 function addToCart() {
-  const rows = document.querySelectorAll('#mrp tbody tr');
+  const activeTab = document.querySelector('.nav-link.active').id;
   const basket = document.getElementById('basketBody');
+
+  // 기존 아이템 목록 추출 (중복 방지용)
+  const existingItemCodes = new Set([...basket.querySelectorAll('tr[data-item_code]')].map(tr => tr.dataset.item_code));
 
   const groupedItems = {};
 
-  rows.forEach(row => {
-    const checkbox = row.querySelector('input[type="checkbox"]');
-    if (checkbox && checkbox.checked) {
-      const item_code = row.children[3].innerText.trim();
-      const item_type = row.children[4].innerText.trim();
-      const item_name = row.children[5].innerText.trim();
-      const item_unit = row.children[7].innerText.trim();
-      const item_cost = row.children[8].innerText.trim();
-      const purchase_qty = row.children[11].querySelector('input').value;
-      const company_code = row.children[12].innerText.trim();
-      const company_name = row.children[13].innerText.trim();
+  if (activeTab === 'mrp-tab') {
+    const rows = document.querySelectorAll('#mrp tbody tr');
 
-      if (!purchase_qty || purchase_qty <= 0) {
-        alert(`발주수량이 올바르지 않습니다. (${item_code})`);
-        return;
+    rows.forEach(row => {
+      const checkbox = row.querySelector('input[type="checkbox"]');
+      if (checkbox && checkbox.checked) {
+        const item_code = row.children[3].innerText.trim();
+        const item_type = row.children[4].innerText.trim();
+        const item_name = row.children[5].innerText.trim();
+        const item_unit = row.children[7].innerText.trim();
+        const item_cost = row.children[8].innerText.trim();
+        const purchase_qty = row.children[11].querySelector('input').value;
+        const company_code = row.children[12].innerText.trim();
+        const company_name = row.children[13].innerText.trim();
+
+        if (!purchase_qty || purchase_qty <= 0) {
+          alert(`발주수량이 올바르지 않습니다. (${item_code})`);
+          return;
+        }
+
+        if (existingItemCodes.has(item_code)) {
+          alert(`${item_code} 자재는 이미 바구니에 있습니다.`);
+          return;
+        }
+
+        if (!groupedItems[company_code]) {
+          groupedItems[company_code] = {
+            company_name,
+            items: []
+          };
+        }
+
+        groupedItems[company_code].items.push({
+          item_code,
+          item_type,
+          item_name,
+          purchase_qty,
+          item_unit,
+          item_cost
+        });
+
+        existingItemCodes.add(item_code);
       }
+    });
 
-      const already = [...basket.querySelectorAll('tr')].some(r => r.dataset.item_code === item_code);
-      if (already) {
-        alert(`${item_code} 자재는 이미 바구니에 있습니다.`);
-        return;
-      }
+  } else if (activeTab === 'item-tab') {
+	  const rows = document.querySelectorAll('#item tbody tr');
+	  var count = 0;
+	  rows.forEach(row => {
+	    const checkbox = row.querySelector('input[type="checkbox"]');
+	    if (checkbox && checkbox.checked) {
+		  count++;
+	      const item_code = row.children[1].querySelector('input')?.value.trim();
+	      const item_type = row.children[2].querySelector('input')?.value.trim();
+	      const item_name = row.children[3].querySelector('input')?.value.trim();
+	      const purchase_qty = row.children[4].querySelector('input')?.value.trim();
+	      const item_unit = row.children[5].querySelector('input')?.value.trim();
+	      const item_cost = row.children[6].querySelector('input')?.value.trim();
+	      const company_name = row.children[7].querySelector('input')?.value.trim();
+	      const company_code = company_name || "기타";
 
-      if (!groupedItems[company_code]) {
-        groupedItems[company_code] = {
-          company_name,
-          items: []
-        };
-      }
+	      if (!purchase_qty || purchase_qty <= 0) {
+	        alert(`발주수량이 올바르지 않습니다. (${item_code})`);
+	        return;
+	      }
 
-      groupedItems[company_code].items.push({
-        item_code,
-        item_type,
-        item_name,
-        purchase_qty,
-        item_unit,
-        item_cost
-      });
-    }
-  });
+	      if (existingItemCodes.has(item_code)) {
+	        alert(`${item_code} 자재는 이미 바구니에 있습니다.`);
+	        return;
+	      }
 
-  // 기존 목록 초기화
-  basket.innerHTML = '';
+	      if (!groupedItems[company_code]) {
+	        groupedItems[company_code] = {
+	          company_name,
+	          items: []
+	        };
+	      }
 
-  // 화면에 출력
+	      groupedItems[company_code].items.push({
+	        item_code,
+	        item_type,
+	        item_name,
+	        purchase_qty,
+	        item_unit,
+	        item_cost
+	      });
+
+	      existingItemCodes.add(item_code);
+	    }
+	  });
+	}
+	if(count == 0){
+		alert(`검색한 후 최소 1개이상 선택해 주세요.`);
+		return;
+	}
+
+  // 바구니에 추가
   for (const [company_code, group] of Object.entries(groupedItems)) {
-    const company_name = group.company_name;
+    const company_name = group.company_name || '';
     const items = group.items;
 
-    // 🔷 업체 정보 입력 폼
+    // 업체 정보 입력 폼
     const inputRow = document.createElement('tr');
-	inputRow.innerHTML = `
-	  <td colspan="8" style="background-color:#eef; padding:10px;">
-	    <strong>
-	      업체코드: <span id="company_code_${company_code}">${company_code}</span> /
-	      업체명: <span id="company_name_${company_code}">${company_name}</span>
-	    </strong><br/>
-	    납기요청일: <input type="date" name="due_date_${company_code}" style="margin-right: 20px;" />
-	    결제수단: 
-	    <select name="pay_method_${company_code}" style="margin-right: 20px;">
-	      <option value="현금결재">현금결재</option>
-	      <option value="신용카드">신용카드</option>
-	      <option value="계좌이체">계좌이체</option>
-	      <option value="외상">외상</option>
-	    </select>
-	    비고: <input type="text" name="memo_${company_code}" size="40" />
-	  </td>
-	`;
+    inputRow.innerHTML = `
+      <td colspan="8" style="background-color:#eef; padding:10px;">
+        <strong>
+          업체코드: <span id="company_code_${company_code}">${company_code}</span> /
+          업체명: <span id="company_name_${company_code}">${company_name}</span>
+        </strong><br/>
+        납기요청일: <input type="date" name="due_date_${company_code}" style="margin-right: 20px;" />
+        결제수단: 
+        <select name="pay_method_${company_code}" style="margin-right: 20px;">
+          <option value="현금결제">현금결제</option>
+          <option value="신용카드">신용카드</option>
+          <option value="계좌이체">계좌이체</option>
+          <option value="외상">외상</option>
+        </select>
+        비고: <input type="text" name="memo_${company_code}" size="40" />
+      </td>
+    `;
     basket.appendChild(inputRow);
 
-    // 🔷 자재 목록
     items.forEach(item => {
       const tr = document.createElement('tr');
       tr.dataset.item_code = item.item_code;
@@ -94,6 +148,14 @@ function addToCart() {
 }
 
 function pchreq_save() {
+  const empCode = document.getElementById("emp_code").value;
+  const empName = document.getElementById("emp_name").value;
+
+  if (!empCode || !empName) {
+	alert("발주담당자를 선택해주세요.");
+	return;
+  }
+	
   const basketRows = document.querySelectorAll('#basketBody tr');
   const groupedData = {};
   let currentCompanyCode = '';
@@ -135,6 +197,7 @@ function pchreq_save() {
 	      company_name: currentCompanyName,
 	      due_date: currentInputs.due_date,
 	      pay_method: currentInputs.pay_method,
+		  emp_code: empCode,
 	      memo: currentInputs.memo,
 	      items: []
 	    };
@@ -176,7 +239,7 @@ function pchreq_save() {
   .then(response => {
     if (response.success) {
       alert("발주정보 결과 저장 완료!");
-      window.location.href = "/purchase.do";
+      window.location.href = "/pchreq_list.do";
     } else {
       alert("저장 실패: " + response.message);
     }
@@ -184,4 +247,262 @@ function pchreq_save() {
   .catch(err => {
     alert("에러 발생: " + err.message);
   });
+}
+
+function pch_status_update() {
+    const selectEl = document.getElementById("modal-status-select");
+    const selectedStatus = selectEl.value;
+    const pch_code = selectEl.getAttribute("data-pch-code");
+
+    if (selectedStatus === "발주상태 선택") {
+        alert("발주상태를 선택하세요.");
+        return;
+    }
+
+    if (!pch_code) {
+        alert("발주코드를 찾을 수 없습니다.");
+        return;
+    }
+
+    const data = {
+        pch_code: pch_code,
+        pch_status: selectedStatus
+    };
+
+    fetch("/pch_status_update.do", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("상태가 성공적으로 변경되었습니다.");
+            location.reload(); // 또는 모달만 닫기: $('#pch_modal').modal('hide');
+        } else {
+            alert("상태 변경에 실패했습니다.");
+        }
+    })
+    .catch(err => {
+        console.error("에러 발생:", err);
+        alert("서버 오류가 발생했습니다.");
+    });
+}
+
+//발주바구니 비우기
+function clear_cart(){
+	const basket = document.getElementById('basketBody');
+	basket.innerHTML = ''; // 바구니 내용 전체 제거
+}
+
+//주문수량 변경시 구매금액 자동 변경
+document.addEventListener('DOMContentLoaded', function () {
+	const qtyInputs = document.querySelectorAll('.qty-input');
+
+	function updateRowAmount(row) {
+		const qtyInput = row.querySelector('.qty-input');
+		const costCell = row.querySelector('.cost-input');
+		const amountCell = row.querySelector('.amount-cell');
+
+		let qty = parseInt(qtyInput.value);
+		let cost = parseInt(costCell.dataset.cost);
+
+		if (isNaN(qty) || qty < 1) qty = 1;
+		if (isNaN(cost) || cost < 0) cost = 0;
+
+		const amount = qty * cost;
+		amountCell.textContent = amount.toLocaleString();
+		return amount;
+	}
+
+	function updateTotalAmount() {
+		let total = 0;
+		document.querySelectorAll('#product-tbody tr').forEach(row => {
+			const qtyInput = row.querySelector('.qty-input');
+			const costCell = row.querySelector('.cost-input');
+
+			const qty = parseInt(qtyInput.value) || 0;
+			const cost = parseInt(costCell.dataset.cost) || 0;
+			total += qty * cost;
+		});
+
+		document.querySelectorAll('.total-amount').forEach(el => {
+			el.textContent = total.toLocaleString();
+		});
+	}
+
+	function onInputChange() {
+		const row = this.closest('tr');
+		updateRowAmount(row);
+		updateTotalAmount();
+	}
+
+	qtyInputs.forEach(input => input.addEventListener('input', onInputChange));
+});
+
+function pchreq_update() {
+	const frm = document.getElementById('frm');
+
+	const dueDate = frm.querySelector('input[name="due_date"]');
+	const empCode = frm.querySelector('input[name="emp_code"]');
+	const empName = frm.querySelector('input[name="emp_name"]');
+	const payMethod = frm.querySelector('select[name="pay_method"]');
+	const rows = document.querySelectorAll('#product-tbody tr');
+	
+	// 유효성 검사
+	if (!dueDate.value) {
+		alert("납기요청일을 입력하세요.");
+		dueDate.focus();
+		return;
+	} 
+	if (!empName.value.trim()) {
+		alert("발주 담당자를 입력하세요.");
+		empName.focus();
+		return;
+	} 
+	if (!payMethod.value) {
+		alert("결제 수단을 선택하세요.");
+		payMethod.focus();
+		return;
+	} 
+	
+	if (rows.length === 0) {
+		alert('최소 한 개 이상의 제품이 있어야 합니다.');
+		return;
+	}
+
+	const items = [];
+	for (const row of rows) {
+		const itemCode = row.querySelector('.item-code').value;
+		const qtyInput = row.querySelector('.qty-input');
+		const qty = parseInt(qtyInput.value);
+		if (isNaN(qty) || qty < 1) {
+			alert('수량은 1 이상이어야 합니다.');
+			qtyInput.focus();
+			return;
+		}
+		items.push({
+			item_code: itemCode,
+			item_qty: qty
+		});
+	}
+	
+	// 서버로 보낼 데이터 구성
+	const data = {
+		pch_code: frm.querySelector('input[name="pch_code"]').value,
+		due_date: dueDate.value,
+		emp_code: empCode.value,
+		pay_method: payMethod.value,
+		memo: frm.querySelector('textarea[name="memo"]').value,
+		items: items
+	};
+
+	// AJAX 통신 (POST)
+	fetch('/pchreq_updateok.do', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('서버 응답 오류');
+		}
+		return response.json(); 
+	})
+	.then(result => {
+		if (result.success) {
+			alert('발주정보가 수정되었습니다.');
+			window.location.href = "/pchreq_list.do";
+		} else {
+			alert('수정 실패: ' + (result.message || '알 수 없는 오류'));
+		}
+	})
+	.catch(error => {
+		console.error(error);
+		alert('수정 중 오류 발생');
+	});
+}
+
+//부자재리스트 모달 오픈 
+function openItemList2(){
+	fetch("./item_list2.do", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("items_list2"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+function select_items2 () {
+  // 모든 체크된 체크박스를 찾음
+  var selected_box = document.querySelectorAll('input[name="select"]:checked');
+
+  if (selected_box.length == 0) {
+	alert("제품을 1개 이상 선택해 주세요.");
+	
+  }else{
+	  // 부모 테이블 tbody
+	  var tbody = document.querySelector('#pch_items');
+	
+	  //부모 테이블의 기존 행 전체 삭제
+	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+
+	  selected_box.forEach(checkbox => {
+		
+	    var row = checkbox.closest('tr');
+	
+	    var item = {
+	      code: row.dataset.code,
+	      type: '부자재',
+	      name: row.dataset.name,
+	      unit: row.dataset.unit,
+		  cost: row.dataset.cost,
+	      pcomp: row.dataset.company
+	    };
+		
+	    // 부모 화면에 반영
+		appendItemsRow2(tbody, item);
+	  });
+	
+	 // 모달 닫기
+  	var modalElement = document.getElementById("items_list2");
+ 	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
+	}
+  }
+};
+
+//모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
+function appendItemsRow2(tbody, item) {
+  const tr = document.createElement('tr');
+  tr.className = "item_added"
+  tr.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.type}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
+    <td><input type="number" class="form-control" value=""></td>
+    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
+    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
+  `;
+  tbody.append(tr);
 }

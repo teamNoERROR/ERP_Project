@@ -1,6 +1,5 @@
 package kr.co.noerror.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,22 +9,18 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.Controller.order_controller;
-import kr.co.noerror.DAO.bom_DAO;
 import kr.co.noerror.DAO.goods_DAO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
-import kr.co.noerror.Mapper.bom_mapper;
 import kr.co.noerror.Mapper.goods_mapper;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Model.M_random;
+import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
 public class goods_serviceImpl implements goods_service {
@@ -37,8 +32,8 @@ public class goods_serviceImpl implements goods_service {
 	@Resource(name="goods_DAO")
 	goods_DAO g_dao;
 	
-	@Resource(name="M_random")  //랜덤숫자생성 모델 
-	M_random m_rno;
+	@Resource(name="M_unique_code_generator")
+	M_unique_code_generator makeCode;
 	
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
@@ -104,33 +99,30 @@ public class goods_serviceImpl implements goods_service {
 	
 	//완제품 등록
 	@Override
-	public int pd_insert(products_DTO pdto, MultipartFile productImage, String url) {
-		String gd_code;  //랜덤번호 생성 
-		int dupl;  //중복확인
+	public int pd_insert(products_DTO pdto, MultipartFile productImage) {
 		boolean fileattach;
 		int result = 0;
 		try {
-			do {
-		        gd_code = this.m_rno.random_no(); 
-		        pdto.setPRODUCT_CODE(gd_code);
-		        dupl = this.g_dao.code_dupl(pdto);
-		    } while (dupl > 0);
-
+//			
+			String pd_code = this.makeCode.generate("", code -> {
+			    pdto.setPRODUCT_CODE(code); // 코드만 변경
+			    return this.g_dao.code_dupl(pdto) > 0; // dto 전달
+			});
+			pdto.setPRODUCT_CODE(pd_code);
 			
-			
-//			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);
-//			if(fileattach == true) {  //FTP에 파일저장 완료 후 
+			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage);
+			if(fileattach == true) {  //FTP에 파일저장 완료 후 
 				//dto에 파일명 장착
-//				pdto.setFILE_NM(this.f_dto.getFilenm());
-//				pdto.setFILE_RENM(this.f_dto.getFileRenm());
-//				pdto.setAPI_FNM(this.f_dto.getApinm());
-//				pdto.setIMG_SRC(this.f_dto.getImgPath());
+				pdto.setPD_FILE_NM(this.f_dto.getFilenm());
+				pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
+				pdto.setPD_API_FNM(this.f_dto.getApinm());
+				pdto.setPD_IMG_SRC(this.f_dto.getImgPath());
 				
 				result = this.g_dao.pd_insert(pdto);
 				
-//			}else {
-//				result = 0;
-//			}
+			}else { //FTP에 파일저장 실패 
+				result = 0;
+			}
 			
 		} catch (Exception e) {
 			this.log.error(e.toString());
@@ -142,30 +134,29 @@ public class goods_serviceImpl implements goods_service {
 	
 	//부자재 등록
 	@Override
-	public int itm_insert(products_DTO pdto, MultipartFile productImage, String url) {
-		String gd_code;  //랜덤번호 생성 
-		int dupl;  //중복확인
+	public int itm_insert(products_DTO pdto, MultipartFile itmImage) {
 		boolean fileattach;
 		int result = 0;
 		try {
-			do {
-		        gd_code = this.m_rno.random_no(); 
-		        pdto.setITEM_CODE(gd_code);
-		        dupl = this.g_dao.code_dupl(pdto);
-		    } while (dupl > 0);
+			String itm_code = this.makeCode.generate("", code -> {
+			    pdto.setITEM_CODE(code); // 코드만 변경
+			    return this.g_dao.code_dupl(pdto) > 0; 
+			});
+			pdto.setITEM_CODE(itm_code);
 
-//			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage, url);
-//			if(fileattach == true) {  //FTP에 파일저장 완료 후 
+			fileattach = this.m_file.cdn_filesave(this.f_dto, itmImage);
+			if(fileattach == true) {  //FTP에 파일저장 완료 후 
 				//dto에 파일명 장착
-//				pdto.setFILE_NM(this.f_dto.getFilenm());
-//				pdto.setFILE_RENM(this.f_dto.getFileRenm());
-//				pdto.setAPI_FNM(this.f_dto.getApinm());
-//				pdto.setIMG_SRC(this.f_dto.getImgPath());
-				result = this.g_dao.itm_insert(pdto);
+				pdto.setITM_FILE_NM(this.f_dto.getFilenm());
+				pdto.setITM_FILE_RENM(this.f_dto.getFileRenm());
+				pdto.setITM_API_FNM(this.f_dto.getApinm());
+				pdto.setITM_IMG_SRC(this.f_dto.getImgPath());
 				
-//			}else {
-//				result = 0;
-//			}
+				result = this.g_dao.itm_insert(pdto);
+			
+			}else {  //FTP에 파일저장 실패 
+				result = 0;
+			}
 			
 		} catch (Exception e) {
 			this.log.error(e.toString());
@@ -180,9 +171,8 @@ public class goods_serviceImpl implements goods_service {
 		this.map = new HashMap<>();
 		this.map.put("type", type);
 		this.map.put("sclass", sclass);
-		this.map.put("keyword", String.valueOf(keyword).trim());
+		this.map.put("keyword",keyword);
 		int goods_total = this.g_dao.gd_all_ea_sch(map);
-		
 		
 		return goods_total;
 	}
@@ -196,18 +186,14 @@ public class goods_serviceImpl implements goods_service {
 		Map<String, Object> map = new HashMap<>();
 		map.put("type", type);
 		map.put("sclass", sclass);
-		map.put("keyword", String.valueOf(keyword).trim());
+		map.put("keyword",keyword);
 		map.put("start", start);
 		map.put("end", end);
 
 		List<products_DTO> goods_list = this.g_dao.gd_all_list_sch(map); 
 		
-		System.out.println("mao" + map);
-		System.out.println("keywordkeyword" + keyword);
-		
 		return goods_list;
 	}
-	
 	
 		
 	//제품 상세보기
@@ -217,12 +203,13 @@ public class goods_serviceImpl implements goods_service {
 		if("product".equals(type)) {
 			this.map.put("type", type);
 			this.map.put("PRODUCT_CODE", pd_code);
+			
 		}else if("item".equals(type)) {
 			this.map.put("type", type);
 			this.map.put("ITEM_CODE", pd_code);
-			
 		}
 		products_DTO goods_one = this.g_dao.pd_one_detail(this.map);
+		
 		return goods_one;
 	}
 	
@@ -251,8 +238,6 @@ public class goods_serviceImpl implements goods_service {
 		String lclass_ck = this.g_dao.lclass_ck(sclass);
 		return lclass_ck;
 	}
-
-
 
 
 

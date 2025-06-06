@@ -17,8 +17,9 @@
 </select>
 
 <!-- 고유번호 중복체크  -->
-<select id="bom_cd_ck" resultType="int">
-    SELECT BOM_NO.NEXTVAL FROM DUAL
+<select id="bom_cd_ck" resultType="int" parameterType="String">
+<!--     SELECT BOM_NO.NEXTVAL FROM DUAL -->
+	SELECT COUNT(*) AS CNT FROM BOM WHERE BOM_CODE = #{code}
 </select>
 
 <!-- 부모bomcode 찾기 -->

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class controller {
 
@@ -53,6 +55,13 @@ public class controller {
 	public String test(Model m) {
 	
 		return "/temp/warehouse_in.html";
+	}
+	
+	@GetMapping("/session.do")
+	public String session_save(HttpSession session) {
+		session.setAttribute("emp_code", "EMP-00001");
+		session.setAttribute("emp_name", "김철수");
+		return "/Production/temp_session.html";
 	}
 
 }

@@ -29,23 +29,24 @@
   <!-- 검색창 영역 -->
   <div class="col-auto" >
       <div class="col-auto d-flex">
-          <form id="frm_class" class="row g-1 align-items-center" >
-       <input type="hidden" name="type">
+      
+        <!-- 분류로 검색 -->
+          <form id="frm_class" class="row g-1 align-items-center" onsubmit="return pdSearch()">
+       <input type="hidden" name="type" value="item">
       <div class="input-group input-group-sm me-0" style="width: 200px;">
           <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
             <option value="">대분류</option>
-            <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
+             <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
           </select>
           <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
             <th:block >
-            <option value="" th:if="${sclass == null}" >소분류</option>
-            <option  th:if="${sclass != null}" th:value="${sclass}" th:utext="${sclass}">소분류</option>
+            <option value="" th:if="${sclass == null or sclass.isEmpty()}" >소분류</option>
+            <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
             </th:block>
           </select>
         </div>
-      </form>
-       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()">
-        <input type="hidden" name="type">
+        
+        <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
            <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
           <button class="btn btn-primary" >
@@ -61,13 +62,13 @@
 
         <!-- 부자재 List Table -->
         <div id="list-container">
-        <div id="table-container" class="table-responsive  rounded" th:fragment="itemList(goods_total, goods_all_list, mode)">
+        <div id="table-container" class="table-responsive  rounded" th:fragment="itemList(parentType, goods_total, goods_all_list, mode)">
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''" >
                 <thead class="table-light">
                     <tr>
-                        <th scope="col"><input type="checkbox" name="all_sel_box" onclick="all_sel()"></th>
+                        <th scope="col"><input type="checkbox" disabled></th>
                         <th scope="col">#</th>
-                        <th scope="col">제품사진</th>
+                        <th scope="col">IMG</th>
                         <th scope="col">제품코드</th>
                          <th scope="col">제품명</th>
                         <th scope="col">제품유형</th>
@@ -93,6 +94,7 @@
             					data-class1=${(mode == 'modal') ? itmlist.ITEM_CLASS1 : ''}, 
              					data-class2=${(mode == 'modal') ? itmlist.ITEM_CLASS2 : ''}, 
              					data-spec=${(mode == 'modal') ? itmlist.ITEM_SPEC : ''}, 
+             					data-unit=${(mode == 'modal') ? itmlist.ITEM_UNIT : ''}, 
              					data-cost=${(mode == 'modal') ? itmlist.ITEM_COST : ''}, 
              					data-company=${(mode == 'modal') ? itmlist.COMPANY_CODE : ''}"
              			th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"
@@ -104,7 +106,10 @@
                         			data-type="item">
                         </td>
                         <td > [[${bno - idx.index}]]</td>
-                        <td><img src=""></td>
+                        <td class="p-0">
+                        	<img th:if="${itmlist.ITM_FILE_RENM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${itmlist.ITM_FILE_RENM}}" style="width:50px;">
+                        	<img th:if="${itmlist.ITM_FILE_RENM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
+                        </td>
                         <td class="pd_code" >[[${itmlist.ITEM_CODE}]]</td>
                         <td class="text-start">[[${itmlist.ITEM_NAME}]]</td>
                         <td>부자재</td>
@@ -128,23 +133,23 @@
       <div class=" d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
   		 <div class="d-flex">
   		  <!-- Pagination -->
-        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="itemPgList(itmMode)">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="itemPgList(parentType, itmMode)">
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" 
+                	th:attr="data-parent=${parentType}, data-pageno=1, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" 
                 	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'"> 
                 	<i class="bi bi-chevron-double-left"></i> </li>
                 
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:attr="data-parent=${parentType},data-keyword=${keyword}, data-pageno=${pgn}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
                 	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'">[[${pgn}]]</li>
                 </th:block>
                 
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-pageno=${pageinfo.page_ea_total}, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" 
+                	th:attr="data-parent=${parentType}, data-pageno=${pageinfo.page_ea_total}, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" data-parent=${parentType},
                 	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'"> 
                 	<i class="bi bi-chevron-double-right"></i> </li>
             </ul>

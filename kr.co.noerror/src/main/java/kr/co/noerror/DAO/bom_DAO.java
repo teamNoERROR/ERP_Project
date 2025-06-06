@@ -59,8 +59,15 @@ public class bom_DAO {
 		return pd_list;
 	}
 
+	//bom삭제 
 	public int bom_delete(Map<String, Object> p) {
 		int result = this.st.delete("bom_delete", p);
+		return result;
+	}
+
+	//고유번호 중복체크 
+	public int code_dupl_bom(String code) {
+		int result = this.st.delete("bom_cd_ck", code);
 		return result;
 	}
 

@@ -1,11 +1,13 @@
-function removeRow(btn) {
-	const row = btn.closest('tr');
-	row.parentNode.removeChild(row);
-}
+/*--------------------------------------------------------------
+토글버튼 클릭시 페이지 이동
+--------------------------------------------------------------*/
 
 
 
-//bom조회하기로 이동 
+/*--------------------------------------------------------------
+bom조회하기로 이동 
+--------------------------------------------------------------*/
+//
 function bomBtn(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	
@@ -20,9 +22,9 @@ function bomBtn(bom_open){
 			
 			var bom_open = new bootstrap.Modal(document.getElementById('bom_detail'));
 			bom_open.show();
-			bom_detail(pd_code);
+			bomDetailOpen(pd_code);
 
-				}else if(result =="no"){  //등록된 BOM없음 
+		}else if(result =="no"){  //등록된 BOM없음 
 			if(confirm("등록된 BOM 자료가 없습니다. \n지금 등록 하시겠습니까?")){
 				location.href="./bom_insert.do?pd_code="+pd_code;
 				
@@ -39,7 +41,11 @@ function bomBtn(bom_open){
 	});
 }
 
-//bom 상세보기 모달 오픈
+
+/*--------------------------------------------------------------
+bom 상세보기 모달 오픈
+--------------------------------------------------------------*/
+//
 function bomDetailOpen(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	
@@ -53,7 +59,6 @@ function bomDetailOpen(bom_open){
 		document.getElementById("modalContainer").innerHTML = result;
 			var bom_open = new bootstrap.Modal(document.getElementById('bom_detail'));
 			bom_open.show();
-			//bom_detail(pd_code);
 
 		
 	}).catch(function(error) {
@@ -62,13 +67,19 @@ function bomDetailOpen(bom_open){
 }
 
 
-//bom추가하기
+/*--------------------------------------------------------------
+bom추가하기
+--------------------------------------------------------------*/
+//
 function addBom(){
 	location.href="./bom_insert.do";
 }
 
 
-//bom 삭제
+/*--------------------------------------------------------------
+bom 삭제
+--------------------------------------------------------------*/
+//
 function bomDelete(del_pd){
 	var idx = 0;
 	var pd_code;
@@ -119,63 +130,122 @@ function bomDelete(del_pd){
 }
 
 
-
-
-
+/*--------------------------------------------------------------
+bom등록 트리화면 
+--------------------------------------------------------------*/
 var top_pd_nm = document.querySelector("#product_name");
 document.querySelector("#bom_top_pd").innerHTML=`<i class="bi bi-caret-right-fill"></i>`+top_pd_nm.value;
 
-//부자재리스트 모달에서 부자재 한번에 선택하기 
-function select_items () {
-  // 모든 체크된 체크박스를 찾음
-  var selected_box = document.querySelectorAll('input[name="select"]:checked');
 
-  if (selected_box.length == 0) {
-	alert("제품을 1개 이상 선택해 주세요.");
-	
-  }else{
-	  // 부모 테이블 tbody
-	  var tbody = document.querySelector('#bom_items');
-	
-	  //부모 테이블의 기존 행 전체 삭제
-	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+/*--------------------------------------------------------------
+부자재리스트 모달에서 부자재 한번에 선택하기
+--------------------------------------------------------------*/ 
+function removeRow(btn) {
+	var row = btn.closest('tr');
+	row.parentNode.removeChild(row);
+}
 
-	  	  selected_box.forEach(checkbox => {
-		
-	    var row = checkbox.closest('tr');
+function select_items (btn) {
+	const parentType = btn.getAttribute('data-parenttype');
 	
-	    var item = {
-	      code: row.dataset.code,
-	      name: row.dataset.name,
-	      class1: row.dataset.class1,
-	      class2: row.dataset.class2,
-	      spec: row.dataset.spec,
-		  cost: row.dataset.cost,
-	      pcomp: row.dataset.company
-	    };
-		
-	    // 부모 화면에 반영
-		appendItemsRow(tbody, item);
-		
-		document.querySelector("#bom_tr").innerHTML+=`
-			<li> ${item.name} </li>
-		`;
-	  });
+	//부모페이지가 bom페이지 인 경우
+	if(parentType == 'bomPage') {
+	  // 모든 체크된 체크박스를 찾음
+	  var selected_box = document.querySelectorAll('input[name="select"]:checked');
 	
-	 // 모달 닫기
-  	var modalElement = document.getElementById("items_list");
- 	var modal = bootstrap.Modal.getInstance(modalElement);
-	if (modal) {
-	    modal.hide();
-		setTimeout(() => {
-			document.querySelector("body").focus(); // body에 포커스 주기
-		}, 300);
+	  if (selected_box.length == 0) {
+		alert("제품을 1개 이상 선택해 주세요.");
+		
+	  }else{
+		  // 부모 테이블 tbody
+		  var tbody = document.querySelector('#bom_items');
+		
+		  //부모 테이블의 기존 행 전체 삭제
+		  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+	
+		 selected_box.forEach(checkbox => {
+			
+		    var row = checkbox.closest('tr');
+		
+		    var item = {
+		      code: row.dataset.code,
+		      name: row.dataset.name,
+		      class1: row.dataset.class1,
+		      class2: row.dataset.class2,
+		      spec: row.dataset.spec,
+			  cost: row.dataset.cost,
+		      pcomp: row.dataset.company
+		    };
+			
+		    // 부모 화면에 반영
+			appendItemsRow(tbody, item);
+			
+			document.querySelector("#bom_tr").innerHTML+=`
+				<li> ${item.name} </li>
+			`;
+		  });
+		
+		 // 모달 닫기
+	  	var modalElement = document.getElementById("items_list");
+	 	var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	  }
 	}
-  }
+	
+	//부모페이지가 발주페이지인 경우
+	else if(parentType == 'pchreqPage'){
+	  // 모든 체크된 체크박스를 찾음
+	  var selected_box = document.querySelectorAll('input[name="select"]:checked');
+
+	  if (selected_box.length == 0) {
+		alert("제품을 1개 이상 선택해 주세요.");
+		
+	  }else{
+		  // 부모 테이블 tbody
+		  var tbody = document.querySelector('#pch_items');
+		
+		  //부모 테이블의 기존 행 전체 삭제
+		  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+
+		  selected_box.forEach(checkbox => {
+			
+		    var row = checkbox.closest('tr');
+		
+		    var item = {
+		      code: row.dataset.code,
+		      type: '부자재',
+		      name: row.dataset.name,
+		      unit: row.dataset.unit,
+			  cost: row.dataset.cost,
+		      pcomp: row.dataset.company
+		    };
+			
+		    // 부모 화면에 반영
+			appendItemsRow2(tbody, item);
+		  });
+		
+		 // 모달 닫기
+	  	var modalElement = document.getElementById("items_list");
+	 	var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	  }
+    }
 };
 
 
-//모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
+/*--------------------------------------------------------------
+모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
+--------------------------------------------------------------*/
 function appendItemsRow(tbody, item) {
   const tr = document.createElement('tr');
   tr.className = "item_added"
@@ -203,11 +273,26 @@ function appendItemsRow(tbody, item) {
   tbody.append(tr);
 }
 
+//발주 등록화면의 리스트에 붙여넣기
+function appendItemsRow2(tbody, item) {
+  const tr = document.createElement('tr');
+  tr.className = "item_added"
+  tr.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.type}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
+    <td><input type="number" class="form-control" value=""></td>
+    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
+    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
+  `;
+  tbody.append(tr)
+}
 
-
-
-
-//bom등록 저장
+/*--------------------------------------------------------------
+bom등록 저장
+--------------------------------------------------------------*/
 function bomSave(){
 	var tbody = document.querySelector("#bom_items");
 	var rows = tbody.querySelectorAll('.item_added'); // 테이블에서 데이터가 있는 행만 선택

@@ -3,6 +3,7 @@ package kr.co.noerror.DAO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,24 +18,44 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	@Resource(name = "sqltemplate_oracle")
 	private SqlSessionTemplate iosf_ware_st;
 	
-	
+	 @Resource(name="IOSF_DTO")
+	  IOSF_DTO iosf_dto;
+	 
 	Map<Object, Object> params;
 	
+	Random random = new Random();
+	String wh_uq;
 	@Override
 	public int IOSF_warehouse_move(
 			String wh_code, String inbound_code,
-			String client_code, String item_code,
-			String wh_type) {
+			String item_code,
+			String wh_type,
+			String in_status, 
+			String item_count) {
 		
-		System.out.println("+++++" + wh_type);
-		
-		
+		System.out.println("asdasd "+in_status+ "  " + item_count);
+	
+        if("mt".equals(wh_type)) {                	
+        	int randomNumber = 10000 + this.random.nextInt(90000);
+        	 this.wh_uq = "WMT-" + randomNumber;
+        }
+        else if("fs".equals(wh_type)) {                	
+        	int randomNumber = 10000 + this.random.nextInt(90000);
+        	 this.wh_uq = "WFS-" + randomNumber;
+        }
+        else if("out".equals(wh_type)) {                	
+        	int randomNumber = 10000 + this.random.nextInt(90000);
+        	 this.wh_uq = "WOUT-" + randomNumber;
+        }
+        
 		Map<Object, Object> params = new HashMap<>();
 		params.put("wh_code", wh_code);
+		params.put("wh_uq", this.wh_uq);
 		params.put("inbound_code", inbound_code);	
-		params.put("client_code", client_code);	
 		params.put("item_code", item_code);	
 		params.put("wh_type", wh_type);	
+		params.put("item_count", item_count);	
+		params.put("in_status", in_status);	
 		
 		
 		
@@ -130,10 +151,9 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	
 	//창고 게시물 삭제
 	@Override
-	public int IOSF_delete_warehouses(String wh_code, String code, String wh_type) {
+	public int IOSF_delete_warehouses(String code, String wh_type) {
 		
 		this.params = new HashMap<>();
-		this.params.put("wh_code", wh_code);
 		this.params.put("code", code);
 		this.params.put("wh_type", wh_type);
 		int wh_delete_result = this.iosf_ware_st.delete("IOSF_delete_warehouses",this.params);

@@ -35,8 +35,10 @@ public interface IOSF_Warehouse_Mapper {
 	    public List<IOSF_DTO> IOSF_wh_SelectWithCode(String code, String wh_type);
 
 	    //창고 게시물 삭제
-	    public int IOSF_delete_warehouses(String wh_code, String code, String wh_type);
+	    public int IOSF_delete_warehouses(String in_code, String wh_type);
 	    
 	    //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동
-	    public int IOSF_warehouse_move(String wh_code, String inbound_code, String client_code, String item_code, String wh_type );
+	    public int IOSF_warehouse_move(
+	    		String wh_code, String inbound_code, String item_code, 
+	    		String wh_type , String in_status,  String item_count);
 }

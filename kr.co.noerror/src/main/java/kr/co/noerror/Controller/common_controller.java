@@ -70,7 +70,8 @@ public class common_controller {
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
 
-	@Resource(name="M_paging_util")
+
+  @Resource(name="M_paging2")
 	M_paging2 page_util;
 
 	
@@ -180,6 +181,7 @@ public class common_controller {
 	//부자재 리스트 모달 띄우기 
 	@GetMapping("/item_list.do")
 	public String item_list(Model m
+		                  	    ,@RequestParam(value = "parent", required = true) String parent
 								,@RequestParam(value = "type", required = false) String type
 								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value = "products_class2", required = false) String sclass
@@ -195,6 +197,7 @@ public class common_controller {
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total);
 		int bno = this.m_pg.serial_no(goods_total, pageno, post_ea); 
 		
+		m.addAttribute("parentType",parent);
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("bno", bno);
 		m.addAttribute("items_total", goods_total);

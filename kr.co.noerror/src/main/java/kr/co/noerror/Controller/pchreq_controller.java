@@ -196,6 +196,7 @@ public class pchreq_controller {
 	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m) {
 		
 		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
+		System.out.println(details);
 		m.addAttribute("details",details);
 		return "/modals/purchase_detail_modal.html";
 		

@@ -243,8 +243,8 @@ function cl2_modal_pg (page){
 
 /*--------------------------------------------------------------*/
 //부자재리스트 모달 오픈 
-function openItemList(){
-	fetch("./item_list.do", {
+function openItemList(parentType){
+	fetch("./item_list.do?parent=" + parentType, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -264,10 +264,12 @@ function openItemList(){
 
 //부자재리스트 모달 페이징
 function itm_modal_pg (page){
+	var parent = page.getAttribute('data-parent');
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
 	var params = {  
+		    parent: parent,
 		    type: page.getAttribute('data-type'),
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),

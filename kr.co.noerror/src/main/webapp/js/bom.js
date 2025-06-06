@@ -139,52 +139,101 @@ function removeRow(btn) {
 	row.parentNode.removeChild(row);
 }
 
-function select_items () {
-  // 모든 체크된 체크박스를 찾음
-  var selected_box = document.querySelectorAll('input[name="select"]:checked');
-
-  if (selected_box.length == 0) {
-	alert("제품을 1개 이상 선택해 주세요.");
+function select_items (btn) {
+	const parentType = btn.getAttribute('data-parenttype');
 	
-  }else{
-	  // 부모 테이블 tbody
-	  var tbody = document.querySelector('#bom_items');
+	//부모페이지가 bom페이지 인 경우
+	if(parentType == 'bomPage') {
+	  // 모든 체크된 체크박스를 찾음
+	  var selected_box = document.querySelectorAll('input[name="select"]:checked');
 	
-	  //부모 테이블의 기존 행 전체 삭제
-	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
-
-	 selected_box.forEach(checkbox => {
+	  if (selected_box.length == 0) {
+		alert("제품을 1개 이상 선택해 주세요.");
 		
-	    var row = checkbox.closest('tr');
-	
-	    var item = {
-	      code: row.dataset.code,
-	      name: row.dataset.name,
-	      class1: row.dataset.class1,
-	      class2: row.dataset.class2,
-	      spec: row.dataset.spec,
-		  cost: row.dataset.cost,
-	      pcomp: row.dataset.company
-	    };
+	  }else{
+		  // 부모 테이블 tbody
+		  var tbody = document.querySelector('#bom_items');
 		
-	    // 부모 화면에 반영
-		appendItemsRow(tbody, item);
-		
-		document.querySelector("#bom_tr").innerHTML+=`
-			<li> ${item.name} </li>
-		`;
-	  });
+		  //부모 테이블의 기존 행 전체 삭제
+		  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
 	
-	 // 모달 닫기
-  	var modalElement = document.getElementById("items_list");
- 	var modal = bootstrap.Modal.getInstance(modalElement);
-	if (modal) {
-	    modal.hide();
-		setTimeout(() => {
-			document.querySelector("body").focus(); // body에 포커스 주기
-		}, 300);
+		 selected_box.forEach(checkbox => {
+			
+		    var row = checkbox.closest('tr');
+		
+		    var item = {
+		      code: row.dataset.code,
+		      name: row.dataset.name,
+		      class1: row.dataset.class1,
+		      class2: row.dataset.class2,
+		      spec: row.dataset.spec,
+			  cost: row.dataset.cost,
+		      pcomp: row.dataset.company
+		    };
+			
+		    // 부모 화면에 반영
+			appendItemsRow(tbody, item);
+			
+			document.querySelector("#bom_tr").innerHTML+=`
+				<li> ${item.name} </li>
+			`;
+		  });
+		
+		 // 모달 닫기
+	  	var modalElement = document.getElementById("items_list");
+	 	var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	  }
 	}
-  }
+	
+	//부모페이지가 발주페이지인 경우
+	else if(parentType == 'pchreqPage'){
+	  // 모든 체크된 체크박스를 찾음
+	  var selected_box = document.querySelectorAll('input[name="select"]:checked');
+
+	  if (selected_box.length == 0) {
+		alert("제품을 1개 이상 선택해 주세요.");
+		
+	  }else{
+		  // 부모 테이블 tbody
+		  var tbody = document.querySelector('#pch_items');
+		
+		  //부모 테이블의 기존 행 전체 삭제
+		  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+
+		  selected_box.forEach(checkbox => {
+			
+		    var row = checkbox.closest('tr');
+		
+		    var item = {
+		      code: row.dataset.code,
+		      type: '부자재',
+		      name: row.dataset.name,
+		      unit: row.dataset.unit,
+			  cost: row.dataset.cost,
+		      pcomp: row.dataset.company
+		    };
+			
+		    // 부모 화면에 반영
+			appendItemsRow2(tbody, item);
+		  });
+		
+		 // 모달 닫기
+	  	var modalElement = document.getElementById("items_list");
+	 	var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	  }
+    }
 };
 
 
@@ -218,6 +267,22 @@ function appendItemsRow(tbody, item) {
   tbody.append(tr);
 }
 
+//발주 등록화면의 리스트에 붙여넣기
+function appendItemsRow2(tbody, item) {
+  const tr = document.createElement('tr');
+  tr.className = "item_added"
+  tr.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.type}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
+    <td><input type="number" class="form-control" value=""></td>
+    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
+    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
+  `;
+  tbody.append(tr)
+}
 
 /*--------------------------------------------------------------
 bom등록 저장

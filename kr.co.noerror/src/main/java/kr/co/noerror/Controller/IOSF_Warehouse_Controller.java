@@ -173,19 +173,17 @@ public class IOSF_Warehouse_Controller {
            String wh_code = (String) param.get("wh_code");
            String inbound_code = (String) param.get("inbound_code");
            String item_code = (String) param.get("item_code");
-           String client_code = (String) param.get("client_code");
            String wh_type = (String) param.get("wh_type");
+           String in_status = (String) param.get("in_status");
+           String item_count = (String) param.get("item_count");
 
-           System.out.println("wh_code: " + wh_code);
-           System.out.println("inbound_code: " + inbound_code);
-           System.out.println("item_code: " + item_code);
-           System.out.println("client_code: " + client_code);
-           System.out.println("wh_type: " + wh_type);
-
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, inbound_code, item_code, client_code, wh_type);
+           System.out.println("asdasd "+in_status+ "  " + item_count);
+           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, inbound_code, item_code, wh_type, in_status, item_count);
            successCount += updatedCount;
        }
 
+       
+       
        Map<String, Object> result = new HashMap<>();
        if (successCount > 0) {
            result.put("success", true);
@@ -333,17 +331,15 @@ public class IOSF_Warehouse_Controller {
       @PostMapping("/in_warehouse_delete_page.do")
       @ResponseBody
       public String in_delete_warehouse(
-    		  @RequestParam("wh_code") String wh_code,
-    		  @RequestParam("inbound_code") String inbound_code
+    		  @RequestParam("in_code") String in_code
     		  ) {
          // 삭제 로직 수행
          
          String result = "";
          this.wh_type = "in";
-         System.out.println("삭제 wh " + wh_code);
-         System.out.println("삭제 inbound " + inbound_code);
+         System.out.println("삭제 in " + in_code);
          
-         int wh_save_result = iosf_service.IOSF_delete_warehouse(wh_code, inbound_code, this.wh_type);
+         int wh_save_result = iosf_service.IOSF_delete_warehouse(in_code, this.wh_type);
          System.out.println("결과 " + wh_save_result);
          
          if(wh_save_result > 0) {
@@ -359,17 +355,15 @@ public class IOSF_Warehouse_Controller {
       @PostMapping("/mt_warehouse_delete_page.do")
       @ResponseBody
       public String mt_delete_warehouse(
-    		  @RequestParam("wh_code") String wh_code,
     		  @RequestParam("material_code") String material_code
     		  ) {
          // 삭제 로직 수행
          
          String result = "";
          this.wh_type = "mt";
-         System.out.println("삭제 wh " + wh_code);
          System.out.println("삭제 material_code " + material_code);
          
-         int wh_save_result = iosf_service.IOSF_delete_warehouse(wh_code, material_code, this.wh_type);
+         int wh_save_result = iosf_service.IOSF_delete_warehouse(material_code, this.wh_type);
          System.out.println("결과 " + wh_save_result);
          
          if(wh_save_result > 0) {

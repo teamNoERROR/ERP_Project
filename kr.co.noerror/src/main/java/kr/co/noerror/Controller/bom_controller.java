@@ -92,7 +92,6 @@ public class bom_controller {
 		int pea = post_ea; 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, bom_total_sch);
 		int bno = this.m_pg.serial_no(bom_total_sch, pageno, pea); 
-		System.out.println(pageinfo);
 		
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("mmenu","BOM 관리");
@@ -177,8 +176,8 @@ public class bom_controller {
 	@GetMapping("/bom_insert.do")
 	public String bom_insert(Model m, @RequestParam(value="pd_code", required = false)String pd_code)  {
 		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","품목 관리");
-		m.addAttribute("mmenu","완제품 상세보기");
+		m.addAttribute("smenu","bom 관리");
+		m.addAttribute("mmenu","bom 리스트");
 		m.addAttribute("mmmenu","bom 등록하기");
 		
 		products_DTO result = null;
@@ -190,12 +189,8 @@ public class bom_controller {
 		}
 		m.addAttribute("bom_pd",result);
 		
-		
 		return "/goods/bom_insert.html";
 	}
-	
-	
-	
 
 	
 	//bom 등록하기 

@@ -12,13 +12,13 @@
       <div class="modal-body row justify-content-center d-flex gap-3  mt-3 ">
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-<!-- 				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2> -->
+				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2>
 				<button type="button" class="btn btn-success" onclick="inboundOk()">
 					<i class="bi bi-pencil-square"></i> 저장  	<!--  입고완료상태에서는 disabled 처리 -->
 				</button> 
 			</div>
 			<div class="table-responsive  rounded">
-				<table class="table table-bordered align-middle">
+				<table class="table table-bordered align-middle rounded">
 					<thead class="table-light text-center">
 						<tr>
 							<th class="info-label table-light" colspan="5">발주처 정보</th>
@@ -43,7 +43,7 @@
 						</tr>
 						<tr>
 							<td class="info-label">주소</td>
-<!-- 							<td class="value-cell" colspan="5">( [[${inbnd_detail.get(0).COM_ZIPCODE}]] ) [[${inbnd_detail.get(0).COM_ADDR1}]] [[${inbnd_detail.get(0).COM_ADDR2}]]</td> -->
+							<td class="value-cell" colspan="5">( [[${inbnd_detail.get(0).COM_ZIPCODE}]] ) [[${inbnd_detail.get(0).COM_ADDR1}]] [[${inbnd_detail.get(0).COM_ADDR2}]]</td>
 						</tr>
 					</tbody>
 				</table>
@@ -108,7 +108,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="inbnd, idx : ${inbnd_detail}" >
+						<tr th:each="inbnd, idx : ${inbnd_detail}" th:classappend="${pch_cd == inbnd.IND_PCH_CD} ? 'gray-row' : ''">
 							<td><input type="checkbox"></td>
 							<td>[[${idx.count}]]</td>
 							<td>[[${inbnd.ITEM_CODE}]]</td>
@@ -121,7 +121,7 @@
 							<td class="text-end">[[${#numbers.formatInteger(inbnd.ITEM_COST * inbnd.P_QTY,0,'COMMA')}]]</td>
 							<td>[[${inbnd.ITEM_CLASS1}]]</td>
 							<td>[[${inbnd.ITEM_CLASS2}]]</td>
-							<td>
+							<td >
 							<select class="form-select item_deli" id="" >
 								<option value="입고완료" >입고완료</option>
 								<option value="입고취소" >입고취소</option>
@@ -143,7 +143,7 @@
 							<td class="text-end">[[${pch_amount_total}]]</td>		
 							<td>-</td>
 							<td>-</td>
-<!-- 							<td>-</td> -->
+							<td>-</td>
 						</tr>
 					</tfoot>
 				</table>

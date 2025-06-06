@@ -19,7 +19,6 @@
 				<div class="d-flex gap-2 align-items-center" >
 					<select class="form-select" id="in_status">
 						<option value="">입고상태</option>
-<!-- 						<option value="1">가입고</option> -->
 						<option value="입고완료">입고완료</option>
 						<option value="입고취소">입고취소</option>
 					</select>
@@ -29,35 +28,43 @@
 					</button>
 				</div>
 				
-<!-- 			<form id="inbnd_search"> -->
-<!-- 				<div class="d-flex"> -->
-<!-- 					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap"> -->
-<!-- 						<label class="d-flex align-items-center gap-1"> -->
-<!-- 							<input type="checkbox" name="status1" value="가입고" onchange="inStatusCk(this)" -->
-<!-- 									th:checked="${statusList != null and #arrays.contains(statusList, '가입고' )}" > 가입고 -->
-<!-- 						</label> -->
-<!-- 						 <label class="d-flex align-items-center gap-1"> -->
-<!-- 							<input type="checkbox" name="status1" value="입고완료" onchange="inStatusCk(this)" -->
-<!-- 									th:checked="${statusList != null and #arrays.contains(statusList, '입고완료')}"> 입고완료 -->
-<!-- 						</label> -->
-<!-- 						 <label class="d-flex align-items-center gap-1">  -->
-<!-- 							<input type="checkbox" name="status1" value="입고취소" onchange="inStatusCk(this)" -->
-<!-- 									th:checked="${statusList != null and  #arrays.contains(statusList, '입고취소')}"> 입고취소&nbsp;&nbsp; -->
-<!-- 						</label>  -->
-<!-- 					</div> -->
+			
+				<div class="d-flex">
+					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
+						<label class="d-flex align-items-center gap-1">
+							<input type="checkbox" name="status_lst" value="가입고" onchange="inStatusCk(this)"
+									th:checked="${statusList == null or #arrays.contains(statusList, '가입고' )}"> 가입고
+						</label>
+						 <label class="d-flex align-items-center gap-1">
+							<input type="checkbox" name="status_lst" value="입고완료" onchange="inStatusCk(this)"
+									th:checked="${statusList == null or #arrays.contains(statusList, '입고완료' )}"> 입고완료
+						</label>
+						 <label class="d-flex align-items-center gap-1"> 
+							<input type="checkbox" name="status_lst" value="입고취소" onchange="inStatusCk(this)"
+									th:checked="${statusList == null or #arrays.contains(statusList, '입고취소' )}"> 입고취소&nbsp;&nbsp;
+						</label> 
+					</div>
 					
-<!-- 					Search Bar -->
-<!-- 					<div class="col-auto"> -->
-<!-- 						<div class="input-group input-group-sm"> -->
-<!-- 							<input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="검색"> -->
-<!-- 							<button class="btn btn-primary"> -->
-<!-- 								<i class="bi bi-search"></i> -->
-<!-- 							</button> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</form> -->
+					<!-- Search Bar -->
+					<div class="col-auto" >
+					<form id="inbnd_search" onsubmit="return inSearch()">
+					<th:block th:each="status : ${statusList}">
+			    		<input type="hidden" name="status_lst" th:value="${status}" />
+					</th:block>
+						<div class="input-group input-group-sm" style="width:250px;">
+							<input type="text" class="form-control" name="keyword" th:value="${keyword != null ? keyword : ''}" placeholder="검색">
+							<button class="btn btn-primary" >
+								<i class="bi bi-search"></i>
+							</button>
+						</div>
+					</form>
+					</div>
+					
+				</div>
 		</div>
+		
+		
+		
 			<!-- 입고 List Table-->
 			<div class="table-responsive  rounded" th:fragment="inbndList(inbound_total, inbound_all_list, mode)">
 				<table class="table align-middle table-bordered " style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
@@ -150,8 +157,12 @@
         <form id="inbpg_frm">
         <input type="hidden" name="type">
         <input type="hidden" name="pageno" th:value="${pageno}">
+        <input type="hidden" name="keyword" th:value="${keyword}">
+        <th:block th:each="status : ${statusList}">
+    		<input type="hidden" name="status_lst" th:value="${status}" />
+		</th:block>
         <div class="mt-4 ms-1">
-        <select class="form-select" name="post_ea" onchange="inbPostEa()">
+        <select class="form-select" name="post_ea" onchange="inbPostEa('inbound')">
             <option value="5"   th:selected="${pageinfo.post_ea} == '5'" >5개씩 보기</option>
             <option value="10"  th:selected="${pageinfo.post_ea} == '10'" >10개씩 보기</option>
             <option value="15"  th:selected="${pageinfo.post_ea} == '15'" >15개씩 보기</option>

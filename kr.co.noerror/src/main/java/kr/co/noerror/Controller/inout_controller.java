@@ -3,6 +3,7 @@ package kr.co.noerror.Controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,24 +58,19 @@ public class inout_controller {
 						,@RequestParam(value = "keyword", required = false) String keyword
 						,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+						,@RequestParam(value="status_lst", required=false) String[] status_lst
 						) {
-//		if (status == null) {
-//		    status = new String[] {};
-//		}
+		//리스트 첫접속시 체크박스 상태값
+		if (status_lst == null) {
+			status_lst = new String[] {"가입고", "입고완료", "입고취소"};
+		}
 		
-		
-//		int inbound_total = this.io_svc.inbound_total(keyword, status); //입고리스트 제품 총개수
-//		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status);  //입고리스트 제품 리스트
-		
-		int inbound_total = this.io_svc.inbound_total(keyword); //입고리스트 제품 총개수
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea);  //입고리스트 제품 리스트
-		
+		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status_lst);  //입고리스트 제품 리스트
+		int inbound_total = this.io_svc.inbound_total(keyword, status_lst); //입고리스트 제품 총개수
 		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, inbound_total);
 		int bno = this.m_pg.serial_no(inbound_total, pageno, post_ea); 
-		
-		System.out.println(pageinfo);
 		
 		m.addAttribute("lmenu","입출고관리");
 		m.addAttribute("smenu","자재 입고");
@@ -83,10 +79,10 @@ public class inout_controller {
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("bno", bno);
 		m.addAttribute("inbound_total",inbound_total);
-		m.addAttribute("inbound_all_list",inbound_all_list);
+		m.addAttribute("inbound_all_list",inbound_all_list);  //데이터 리스트 
+		m.addAttribute("statusList", status_lst); //체크박스 상태용
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-//		m.addAttribute("statusList", status);
 		
 		return "/inout/inbound_list.html";
 	}
@@ -113,7 +109,6 @@ public class inout_controller {
 				
 			}else {
 				this.pw.write("fail"); //입고 등록실패
-				
 			}
 			
 		} catch (IOException e) {
@@ -132,10 +127,11 @@ public class inout_controller {
 	//입고내역 상세보기 모달
 	@GetMapping("/inbnd_detail_modal.do")
 	public String inbnd_detail_modal(Model m, @RequestParam("inbnd_code") String inbnd_code
-								, @RequestParam("pch_code") String pch_cd) {
-//		String ori_pch_cd = pch_cd.substring(0,9);
+								, @RequestParam("pch_code") String pch_cd
+								, @RequestParam("ori_pcd") String ori_pcd) {
 		
-		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, pch_cd);
+		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, ori_pcd);
+		String ind_pchcd="";
 		int pch_qty_total=0;  //총 주문수량 
 		int inb_qty_total=0;  //총 입고수량 
 		int itm_cost_total=0;  //총 제품 단가
@@ -146,17 +142,17 @@ public class inout_controller {
 		    inb_qty_total += sum.getITEM_QTY();     // ITEM_QTY 누적
 		    itm_cost_total += sum.getITEM_COST();   // ITEM_COST 누적 (단가 총합이 맞는지 확인 필요)
 		    pch_amount_total += sum.getPAY_AMOUNT(); // PAY_AMOUNT 누적
+		    
+		    ind_pchcd += sum.getIND_PCH_CD();
 		}
-		System.out.println(pch_qty_total);
-		System.out.println(inb_qty_total);
-		System.out.println(itm_cost_total);
-		System.out.println(pch_amount_total);
+		System.out.println(ind_pchcd);
 		
 		m.addAttribute("inbnd_detail", inbound_detail);
 		m.addAttribute("pch_qty_total", pch_qty_total);
 		m.addAttribute("inb_qty_total", inb_qty_total);
 		m.addAttribute("itm_cost_total", itm_cost_total);
 		m.addAttribute("pch_amount_total", pch_amount_total);
+		m.addAttribute("pch_cd", pch_cd);
 		
 		return "/modals/inbound_detail_modal.html";
 	}
@@ -194,29 +190,6 @@ public class inout_controller {
 		return null;
 	}
 	
-	
-	//입고건 상세보기 
-//	@GetMapping("/inbnd_detail_modal.do")
-//	public String inbnd_detail_modal(Model m, @RequestParam("pch_code") String pch_code
-//									) {
-//		try {
-//			String ori_pch_cd = pch_code.substring(0,9);
-//			System.out.println(ori_pch_cd);
-//			List<pchreq_res_DTO> purchase_details = this.pdao.pchreq_detail(ori_pch_cd);
-//			m.addAttribute("purchase_details",purchase_details);
-//			
-//		} catch (Exception e) {
-//			this.log.error(e.toString());
-//			e.printStackTrace();
-//			
-//		} 
-//		
-//		return "/modals/inbound_detail_modal.html";
-//	}
-	
 
-	
-	
-	
 
 }

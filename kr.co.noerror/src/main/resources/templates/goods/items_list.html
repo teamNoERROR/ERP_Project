@@ -62,7 +62,7 @@
 
         <!-- 부자재 List Table -->
         <div id="list-container">
-        <div id="table-container" class="table-responsive  rounded" th:fragment="itemList(goods_total, goods_all_list, mode)">
+        <div id="table-container" class="table-responsive  rounded" th:fragment="itemList(parentType, goods_total, goods_all_list, mode)">
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''" >
                 <thead class="table-light">
                     <tr>
@@ -133,23 +133,23 @@
       <div class=" d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
   		 <div class="d-flex">
   		  <!-- Pagination -->
-        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="itemPgList(itmMode)">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="itemPgList(parentType, itmMode)">
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:attr="data-parent=${parentType}, data-pageno=1, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" 
                 	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'"> 
                 	<i class="bi bi-chevron-double-left"></i> </li>
                 
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:attr="data-parent=${parentType},data-keyword=${keyword}, data-pageno=${pgn}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
                 	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'">[[${pgn}]]</li>
                 </th:block>
                 
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-pageno=${pageinfo.page_ea_total}, data-keyword=${keyword}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:attr="data-parent=${parentType}, data-pageno=${pageinfo.page_ea_total}, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" data-parent=${parentType},
                 	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'"> 
                 	<i class="bi bi-chevron-double-right"></i> </li>
             </ul>

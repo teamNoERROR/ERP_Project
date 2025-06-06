@@ -73,8 +73,8 @@ public class common_controller {
 	M_paging m_pg;
 	
 
-  @Resource(name="M_paging_util")
-  M_paging2 page_util;
+    @Resource(name="M_paging2")
+	M_paging2 page_util;
 
 	
 	//관리자 리스트 모달 
@@ -183,6 +183,7 @@ public class common_controller {
 	//부자재 리스트 모달 띄우기 
 	@GetMapping("/item_list.do")
 	public String item_list(Model m
+		                  	    ,@RequestParam(value = "parent", required = true) String parent
 								,@RequestParam(value = "type", required = false) String type
 								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value = "products_class2", required = false) String sclass
@@ -198,6 +199,7 @@ public class common_controller {
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total);
 		int bno = this.m_pg.serial_no(goods_total, pageno, post_ea); 
 		
+		m.addAttribute("parentType",parent);
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("bno", bno);
 		m.addAttribute("items_total", goods_total);
@@ -264,7 +266,7 @@ public class common_controller {
 
       int search_count = this.pchreq_list_service.search_count(search_cond);
 
-      paging_info_DTO paging_info = this.paging_util.calculate(
+      paging_info_DTO paging_info = this.page_util.calculate(
           search_count, 
           search_cond.getPage_no(), 
           search_cond.getPage_size(), 

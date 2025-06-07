@@ -30,7 +30,7 @@ function goodsType(goods_type){
 		var lg_class = "";
 		lg_class = `<option value="">`+"선택"+`</option>`;
 		while(w< l_class.length){
-			lg_class += `<option value="${l_class[w]}">`+l_class[w]+`</option>`;
+			lg_class += `<option value="`+l_class[w]+`">`+l_class[w]+`</option>`;
 			w++;
 		}
 		select_lc.innerHTML=lg_class;
@@ -74,9 +74,14 @@ function lcSc(lc_value) {
 /*--------------------------------------------------------------
 분류로 검색 
 --------------------------------------------------------------*/
-function class_sch(){
+function class_sch(type){
 	var form = document.querySelector("#frm_class");
-	form.action="goods.do";
+	if(type=="product" || type == "item"){
+		form.action="goods.do";
+		
+	}else if(type=="bom") {
+		form.action="bom.do";
+	}
 	form.method="GET";
 	form.submit();
 }

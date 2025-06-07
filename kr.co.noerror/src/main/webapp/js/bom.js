@@ -1,7 +1,6 @@
 /*--------------------------------------------------------------
 bom조회하기로 이동 
 --------------------------------------------------------------*/
-//
 function bomBtn(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	
@@ -39,7 +38,6 @@ function bomBtn(bom_open){
 /*--------------------------------------------------------------
 bom 상세보기 모달 오픈
 --------------------------------------------------------------*/
-//
 function bomDetailOpen(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	
@@ -64,7 +62,6 @@ function bomDetailOpen(bom_open){
 /*--------------------------------------------------------------
 bom추가하기
 --------------------------------------------------------------*/
-//
 function addBom(){
 	location.href="./bom_insert.do";
 }
@@ -73,7 +70,6 @@ function addBom(){
 /*--------------------------------------------------------------
 bom 삭제
 --------------------------------------------------------------*/
-//
 function bomDelete(del_pd){
 	var idx = 0;
 	var pd_code;
@@ -349,4 +345,64 @@ function bomSave(){
 		console.log("통신오류발생" + error);
 	});
 }
+/*--------------------------------------------------------------
+bom 검색
+--------------------------------------------------------------*/
+function bomSearch(){
+	var keyword = document.querySelector("#keyword");
+	var sclass = document.querySelector("#products_class2");
+	var form = document.querySelector("#frm_class");
+	
+	if(sclass.value=="" && keyword.value==""){  //분류, 키워드 모두 없는경우
+		alert("검색어를 입력하세요.");
+		keyword.focus();
+		return false;
+		
+	}else if(sclass.value=="" && keyword.value!="") {  //키워드만 있는경우 
+		sclass.value=null;
+		form.action="bom.do";
+		form.method="GET";
+		form.submit();
+		
+	}else{  
+		form.action="bom.do";
+		form.method="GET";
+		form.submit();
+	}		
+}
 
+/*--------------------------------------------------------------
+bom 페이징 
+--------------------------------------------------------------*/
+function go_bom_pg(ee){
+	var keyword = ee.getAttribute('data-keyword');
+	var page_no = ee.getAttribute('data-pageno');
+	var sclass = ee.getAttribute('data-sclass');
+	
+	var params = {  
+		    pageno: page_no,
+		    post_ea: ee.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["keyword"] = keyword;
+		}
+
+		if (sclass) {  //소분류 선택시 
+		    params["products_class2"] = sclass;
+		}
+
+		var pString = new URLSearchParams(params).toString();
+		location.href = "./bom.do?" + pString;
+}
+
+/*--------------------------------------------------------------
+bom 게시물 개수 선택 
+--------------------------------------------------------------*/
+function bompostEa(){
+	var form = document.querySelector("#bompg_frm");
+	form.method = "GET";
+	form.action = "./bom.do";
+	form.pageno.value = 1; //
+	form.submit();
+}

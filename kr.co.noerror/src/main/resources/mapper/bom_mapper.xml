@@ -64,7 +64,13 @@
 				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
 				) 
       		</if>
       	</if>
@@ -77,7 +83,13 @@
 			PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
 			) 
      	</if>
       </where>
@@ -106,7 +118,13 @@
 				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
 				) 
       		</if>
       	</if>
@@ -119,7 +137,13 @@
 			PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
 			PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
 		) 
      	</if>
   )

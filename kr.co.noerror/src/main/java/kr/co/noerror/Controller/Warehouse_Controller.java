@@ -26,8 +26,6 @@ import kr.co.noerror.Service.Warehouse_Service;
 public class Warehouse_Controller {
 
  
-
-    private final Application application;
     PrintWriter pw = null;
  
     Map<Object, Object> map = null;
@@ -42,9 +40,6 @@ public class Warehouse_Controller {
     String check_insertOrModify;
    
     
-    Warehouse_Controller(Application application) {
-        this.application = application;
-    }	
 
     
     
@@ -106,7 +101,8 @@ public class Warehouse_Controller {
 	        HttpServletResponse res,
 	        HttpServletRequest req
 	) {
-
+		
+		
 		res.setContentType("text/html; charset=UTF-8"); 
 		PrintWriter pwa = null;
 		
@@ -149,6 +145,9 @@ public class Warehouse_Controller {
 			@RequestParam(value = "wh_code", required = true) String wh_code,
 			Model m) {
 		
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		
 		List<WareHouse_DTO>wh_modify_result = ws_service.wh_SelectWithWhCode(wh_code);
 		m.addAttribute("wh_modify" , wh_modify_result);
 		
@@ -184,6 +183,8 @@ public class Warehouse_Controller {
 	        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	        @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) { 
 			
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
 		
 		this.map = new HashMap<>();
 		Map<Object, Object>	wh_list_map = this.map;

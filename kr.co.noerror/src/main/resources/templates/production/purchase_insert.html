@@ -2,217 +2,247 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}"></head>
 <body>
-<header th:replace="~{/common/header.html :: header}"></header>
+	<header th:replace="~{/common/header.html :: header}"></header>
 
-<main class="main">
-  <section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 
-  <div class="container mt-5">
-    <h2 class="mb-4">발주 등록</h2>
+		<div class="container mt-5">
+			<h2 class="mb-4">발주 등록</h2>
 
-    <!-- 상단 탭 -->
-    <div class="mb-4">
-      <ul class="nav nav-tabs" id="orderTab" role="tablist">
-        <li class="nav-item">
-          <button class="nav-link active" id="mrp-tab" data-bs-toggle="tab" data-bs-target="#mrp" type="button" role="tab">MRP 기반</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="supplier-tab" data-bs-toggle="tab" data-bs-target="#supplier" type="button" role="tab">매입처 기준</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="item-tab" data-bs-toggle="tab" data-bs-target="#item" type="button" role="tab">자재 검색</button>
-        </li>
-      </ul>
-      
-      <!-- 바구니 담기 버튼 -->
-	  <div class="d-flex justify-content-end mb-2">
-	    <button class="btn btn-success" onclick="addToCart()"><i class="bi bi-cart"></i> 바구니 담기</button>
-	  </div>
-  
-      <div class="tab-content p-3 border border-top-0" id="orderTabContent">
-        
-        <!-- MRP 기반 -->
-        <div class="tab-pane fade show active" id="mrp" role="tabpanel">
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <form method="get" action="/mrp_result_select.do">
-	              <label class="form-label">MRP코드 검색</label> 
-	              <div class="input-group">
-	                <input type="text" class="form-control" name="mrp_code" placeholder="MRP 코드" th:value="${mrp_code}">
-	                <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
-	              </div>
-              </form>
-            </div>
-              <div class="form-text">* MRP 계산 자료 중 부족수량이 있는 자재만 조회됩니다.</div>
-          </div>
-          
-          <table class="table table-bordered align-middle">
-            <thead class="table-light text-center">
-              <tr>
-                <th style="width:10px;"><input type="checkbox" checked disabled></th>
-                <th>#</th>
-                <th>MRP코드</th>
-                <th>자재코드</th>
-                <th>자재유형</th>
-                <th>자재명</th>
-                <th>소요수량</th>
-                <th>단위</th>
-                <th>단가</th>
-                <th>가용재고</th>
-                <th>부족수량</th>
-                <th>발주수량</th>
-                <th>업체코드</th>
-                <th>업체명</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="m, no : ${mrp_results}" th:if="${m.shortage_stock < 0}">
-                <td><input type="checkbox" checked disabled></td>
-                <th>[[${no.count}]]</th>
-                <td>[[${m.mrp_code}]]</td>
-                <td>[[${m.item_code}]]</td>
-                <td>[[${m.item_type}]]</td>
-                <td>[[${m.item_name}]]</td>
-                <td>[[${m.required_qty}]]</td>
-                <td>[[${m.item_unit}]]</td>
-                <td>[[${m.item_cost}]]</td>
-                <td>[[${m.available_stock}]]</td>
-                <td>[[${m.shortage_stock}]]</td>
-                <td><input type="number" class="form-control" th:value="${-m.shortage_stock}"></td>
-				<td>[[${m.company_code}]]</td>
-				<td>[[${m.company_name}]]</td>
-             </tr>             
-            </tbody>
-          </table>
-        </div>
+			<!-- 상단 탭 -->
+			<div class="mb-4">
+				<ul class="nav nav-tabs" id="orderTab" role="tablist">
+					<li class="nav-item">
+						<button class="nav-link active" id="mrp-tab" data-bs-toggle="tab"
+							data-bs-target="#mrp" type="button" role="tab">MRP 기반</button>
+					</li>
+					<li class="nav-item">
+						<button class="nav-link" id="supplier-tab" data-bs-toggle="tab"
+							data-bs-target="#supplier" type="button" role="tab">매입처
+							기준</button>
+					</li>
+					<li class="nav-item">
+						<button class="nav-link" id="item-tab" data-bs-toggle="tab"
+							data-bs-target="#item" type="button" role="tab">자재 검색</button>
+					</li>
+				</ul>
 
-        <!-- 구매처 기준 -->
-        <div class="tab-pane fade" id="supplier" role="tabpanel">
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <label class="form-label">구매처 검색</label>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="구매처명 또는 코드">
-                <button class="btn btn-outline-primary" type="button"><i class="bi bi-search"></i></button>
-              </div>
-            </div>
-          </div>
-          <table class="table table-bordered align-middle">
-            <thead class="table-light text-center">
-              <tr>
-                <th style="width:10px;"><input type="checkbox"></th>
-                <th>자재코드</th>
-                <th>자재명</th>
-                <th>단위</th>
-                <th>발주수량</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>RM002</td>
-                <td>단무지</td>
-                <td>g</td>
-                <td><input type="number" class="form-control" value="50"></td>
-             </tr>
-            </tbody>
-          </table>
-        </div>
+				<!-- 바구니 담기 버튼 -->
+				<div class="d-flex justify-content-end mb-2">
+					<button class="btn btn-success" onclick="addToCart()">
+						<i class="bi bi-cart"></i> 바구니 담기
+					</button>
+				</div>
 
-        <!-- 자재 검색 -->
-        <div class="tab-pane fade" id="item" role="tabpanel">
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <label class="form-label">자재 검색</label>
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="자재명 또는 코드">
-                <button class="btn btn-outline-primary" type="button" onclick="openItemList('pchreqPage')"><i class="bi bi-search"></i></button>
-              </div>
-            </div>
-          </div>
-          <table class="table table-bordered align-middle">
-            <thead class="table-light text-center">
-              <tr>
-                <th style="width:10px;"><input type="checkbox"></th>
-                <th>자재코드</th>
-                <th>자재유형</th>
-                <th>자재명</th>
-                <th>발주수량</th>
-                <th>단위</th>
-                <th>자재단가</th>
-                <th>발주업체</th>
-              </tr>
-            </thead>
-            <tbody id="pch_items">
-              <tr class="item_add_row">
-                <td><input type="checkbox"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><input type="number" class="form-control" value=""></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+				<div class="tab-content p-3 border border-top-0"
+					id="orderTabContent">
 
-      </div>
-    </div>
+					<!-- MRP 기반 -->
+					<div class="tab-pane fade show active" id="mrp" role="tabpanel">
+						<div class="row mb-3">
+							<div class="col-md-4">
+								<form method="get" action="/mrp_result_select.do">
+									<label class="form-label">MRP코드 검색</label>
+									<div class="input-group">
+										<input type="text" class="form-control" name="mrp_code"
+											placeholder="MRP 코드" th:value="${mrp_code}">
+										<button class="btn btn-outline-primary" type="submit">
+											<i class="bi bi-search"></i>
+										</button>
+									</div>
+								</form>
+							</div>
+							<div class="form-text">* MRP 계산 자료 중 부족수량이 있는 자재만 조회됩니다.</div>
+						</div>
 
-	<!-- 발주담당자 입력 폼 -->
-	<div class="row mb-3 empinfo">
-	  <div class="col-md-4">
-	    <label class="form-label">발주담당자</label>
-		<div>
-		  <input type="hidden" class="form-control" name="ecode" id="ecode" th:value="${session.ecode}" readonly>
+						<table class="table table-bordered align-middle">
+							<thead class="table-light text-center">
+								<tr>
+									<th style="width: 10px;"><input type="checkbox" checked
+										disabled></th>
+									<th>#</th>
+									<th>MRP코드</th>
+									<th>자재코드</th>
+									<th>자재유형</th>
+									<th>자재명</th>
+									<th>소요수량</th>
+									<th>단위</th>
+									<th>단가</th>
+									<th>가용재고</th>
+									<th>부족수량</th>
+									<th>발주수량</th>
+									<th>업체코드</th>
+									<th>업체명</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="m, no : ${mrp_results}"
+									th:if="${m.shortage_stock < 0}">
+									<td><input type="checkbox" checked disabled></td>
+									<th>[[${no.count}]]</th>
+									<td>[[${m.mrp_code}]]</td>
+									<td>[[${m.item_code}]]</td>
+									<td>[[${m.item_type}]]</td>
+									<td>[[${m.item_name}]]</td>
+									<td>[[${m.required_qty}]]</td>
+									<td>[[${m.item_unit}]]</td>
+									<td>[[${m.item_cost}]]</td>
+									<td>[[${m.available_stock}]]</td>
+									<td>[[${m.shortage_stock}]]</td>
+									<td><input type="number" class="form-control"
+										th:value="${-m.shortage_stock}"></td>
+									<td>[[${m.company_code}]]</td>
+									<td>[[${m.company_name}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<!-- 구매처 기준 -->
+					<div class="tab-pane fade" id="supplier" role="tabpanel">
+						<div class="row mb-3">
+							<div class="col-md-4">
+								<label class="form-label">구매처 검색</label>
+								<div class="input-group">
+									<input type="text" class="form-control"
+										placeholder="구매처명 또는 코드">
+									<button class="btn btn-outline-primary" type="button">
+										<i class="bi bi-search"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<table class="table table-bordered align-middle">
+							<thead class="table-light text-center">
+								<tr>
+									<th style="width: 10px;"><input type="checkbox"></th>
+									<th>자재코드</th>
+									<th>자재명</th>
+									<th>단위</th>
+									<th>발주수량</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="checkbox"></td>
+									<td>RM002</td>
+									<td>단무지</td>
+									<td>g</td>
+									<td><input type="number" class="form-control" value="50"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<!-- 자재 검색 -->
+					<div class="tab-pane fade" id="item" role="tabpanel">
+						<div class="row mb-3">
+							<div class="col-md-4">
+								<label class="form-label">자재 검색</label>
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="자재명 또는 코드">
+									<button class="btn btn-outline-primary" type="button"
+										onclick="openItemList('pchreqPage')">
+										<i class="bi bi-search"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<table class="table table-bordered align-middle">
+							<thead class="table-light text-center">
+								<tr>
+									<th style="width: 10px;"><input type="checkbox"></th>
+									<th>자재코드</th>
+									<th>자재유형</th>
+									<th>자재명</th>
+									<th>발주수량</th>
+									<th>단위</th>
+									<th>자재단가</th>
+									<th>발주업체</th>
+								</tr>
+							</thead>
+							<tbody id="pch_items">
+								<tr class="item_add_row">
+									<td><input type="checkbox"></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><input type="number" class="form-control" value=""></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- 발주담당자 입력 폼 -->
+			<div class="row mb-3 empinfo">
+				<div class="col-md-4">
+					<label class="form-label">발주담당자</label>
+					<div>
+						<input type="hidden" class="form-control" name="ecode" id="ecode"
+							th:value="${session.ecode}" readonly>
+					</div>
+					<div class="input-group">
+						<input type="text" class="form-control" name="ename" id="ename"
+							th:value="${session.ename}" readonly>
+						<button type="button"
+							class="btn btn-outline-secondary modal-trigger"
+							th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal"
+							style="cursor: pointer;">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- 하단 공통: 발주 바구니 -->
+			<div class="mt-5">
+
+				<h5>발주 바구니</h5>
+
+				<div class="d-flex justify-content-end mb-2">
+					<button type="button" class="btn btn-primary"
+						onclick="pchreq_save()">
+						<i class="bi bi-bookmark-check"></i> 저장
+					</button>
+					<button type="button" class="btn btn-outline-secondary ms-2"
+						onclick="clear_cart()">
+						<i class="bi bi-x-circle"></i> 초기화
+					</button>
+				</div>
+
+				<table class="table table-bordered align-middle" id="basketTable">
+					<thead class="table-light text-center">
+						<tr>
+							<th>자재코드</th>
+							<th>자재유형</th>
+							<th>자재명</th>
+							<th>발주수량</th>
+							<th>단위</th>
+							<th>자재단가</th>
+							<th>자재구매금액</th>
+							<th>삭제</th>
+						</tr>
+					</thead>
+					<tbody id="basketBody">
+						<!-- 자바스크립트로 동적 추가 -->
+					</tbody>
+				</table>
+
+			</div>
+
 		</div>
-	    <div class="input-group">
-	      <input type="text" class="form-control" name="ename" id="ename" th:value="${session.ename}" readonly>
-          <button type="button" class="btn btn-outline-secondary modal-trigger" 
-                  th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
-              <i class="bi bi-search"></i>
-          </button>
-	    </div>
-	</div>
-	
-    <!-- 하단 공통: 발주 바구니 -->
-    <div class="mt-5">
-    
-      <h5>발주 바구니</h5>
-      
-      <div class="d-flex justify-content-end mb-2">
-	    <button type="button" class="btn btn-primary" onclick="pchreq_save()"><i class="bi bi-bookmark-check"></i> 저장</button>
-	    <button type="button" class="btn btn-outline-secondary ms-2" onclick="clear_cart()"><i class="bi bi-x-circle"></i> 초기화</button>
-	  </div>
+	</main>
 
-      <table class="table table-bordered align-middle" id="basketTable">
-        <thead class="table-light text-center">
-          <tr>
-            <th>자재코드</th>
-            <th>자재유형</th>
-            <th>자재명</th>
-            <th>발주수량</th>
-            <th>단위</th>
-            <th>자재단가</th>
-            <th>자재구매금액</th>
-            <th>삭제</th>
-          </tr>
-        </thead>
-        <tbody id="basketBody">
-          <!-- 자바스크립트로 동적 추가 -->
-        </tbody>
-      </table>
+	<div id="modalContainer"></div>
 
-    </div>
-
-  </div>
-</main>
-
-<div id="modalContainer"></div>
-
-<footer th:replace="~{/common/footer.html :: footer}"></footer>
+	<footer th:replace="~{/common/footer.html :: footer}"></footer>
 
 </body>
 </html>

@@ -58,81 +58,90 @@ function order_select() {
   }
 }
 
-//생산계획 저장
-function plan_save() {
-  // 생산계획 정보 읽기
-  const bom_code = document.getElementById('bom_code').value.trim();
-  const order_code = document.getElementById('order_code').value.trim();
-  const product_code = document.getElementById('product_code').value.trim();
-  const product_qty = document.getElementById('product_qty').value.trim();
-  const priority = document.getElementById('priority').value;
-  const start_date = document.getElementById('start_date').value;
-  const due_date = document.getElementById('due_date').value;
-  const emp_code = document.getElementById('emp_code').value.trim();
-  const memo = document.getElementById('memo').value.trim();
-  const plan_date = new Date().toISOString().slice(0,10); // 오늘 날짜, yyyy-MM-dd 형식
-  const modify_date = plan_date;
-  const company_code = document.getElementById('company_code_hidden').value.trim();
+//주문 생산계획 정보 저장
+function submitOrderPlan() {
+    // 필수 필드 가져오기
+    const order_code = document.querySelector('#order_code').value.trim();
+    const company_code = document.querySelector('#company_code').value.trim();
+    const due_date = document.querySelector('#due_date').value;
+    const priority = document.querySelector('#priority').value;
+    const start_date = document.querySelector('#plan_start_date').value;
+    const end_date = document.querySelector('#plan_end_date').value;
+    const ecode = document.querySelector('#emp_code').value;
+    const ename = document.querySelector('#emp_name').value;
+    const memo = document.querySelector('#plan_note').value;
 
-  const plan_status = "계획";
-  const mrp_status = "완료";
-  
-  if(order_code == ""){
-	alert("주문코드를 조회하여 주문정보를 선택하세요.");
-  }
-  else if(priority == ""){
-	alert("우선순위를 선택하세요.");
-  }
-  else if(start_date == ""){
-	alert("생산시작예정일을 입력하세요.");
-  }
-  else if(due_date == ""){
-	alert("생산완료예정일을 입력하세요.");
-  }
-  else if(emp_code == ""){
-	alert("사원코드를 조회하여 담당자정보를 입력하세요.");
-  }
-  else if(memo == ""){
-  alert("메모를 입력하세요.");
-  }
-  else{
-	const production_plans = {
-	  bom_code: bom_code,
-	  order_code: order_code,
-	  product_code: product_code,
-	  product_qty: parseInt(product_qty, 10),
-	  priority: priority,
-	  start_date: start_date,
-	  due_date: due_date,
-	  company_code: company_code,
-	  emp_code: emp_code,
-	  memo: memo,
-	  plan_date: plan_date,
-	  modify_date: modify_date,
-	  plan_status: plan_status,
-	  mrp_status: mrp_status
-	};
-	
-	fetch('/plan_save.do', {
-	  method: 'POST',
-	  headers: { 'Content-Type': 'application/json' },
-	  body: JSON.stringify(production_plans)
-	})
-	.then(res => {
-	  if (!res.ok) throw new Error("서버 에러");
-	  return res.json();
-	})
-	.then(data => {
-	  if (data.success) {
-	    alert("저장 성공");
-	    window.location.href = "/production.do";
-	  } else {
-	    alert("저장 실패(알수없는 오류");
-	  }
-	})
-	.catch(err => {
-	  alert("저장 실패 (요청 실패): " + err.message);
-	});
-  
-  }
+    // 유효성 검사
+    if (!order_code || !due_date || !start_date || !end_date || !ecode) {
+        alert("필수 항목을 모두 입력해 주세요.");
+        return;
+    }
+
+    // 상세 데이터 수집
+    const productRows = document.querySelectorAll('#plan_detail_products tr.product_row');
+    if (productRows.length === 0) {
+        alert("생산계획 상세 항목이 없습니다.");
+        return;
+    }
+
+    const details = [];
+    let invalidQty = false;
+
+    productRows.forEach(row => {
+        const product_code = row.querySelector('.product_code').innerText.trim();
+        const bom_code = row.querySelector('.bom_code').innerText.trim();
+        const product_qty = parseInt(row.querySelector('.plan_qty').value);
+
+        if (isNaN(product_qty) || product_qty <= 0) {
+            invalidQty = true;
+        }
+
+        details.push({
+            product_code: product_code,
+            bom_code: bom_code,
+            product_qty: product_qty
+        });
+    });
+
+    if (invalidQty) {
+        alert("생산 수량은 0보다 커야 합니다.");
+        return;
+    }
+
+    // Header + Detail 결합
+    const planData = {
+        order_code,
+		company_code,
+        due_date,
+        priority,
+        start_date,
+        end_date,
+        ecode,
+        ename,
+        memo,
+        plan_products: details
+    };
+
+    // 서버 전송
+    fetch('/prdplan_save.do', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(planData)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("저장 성공!");
+            window.location.href = "/production_plan_list.do";
+        } else {
+            alert("저장 실패: " + (result.message || "알 수 없는 오류"));
+        }
+    })
+    .catch(error => {
+        console.error("저장 중 오류 발생:", error);
+        alert("서버 통신 오류 발생");
+    });
 }
+

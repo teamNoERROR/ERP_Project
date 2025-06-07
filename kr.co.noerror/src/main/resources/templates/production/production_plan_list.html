@@ -27,11 +27,8 @@
 				</div>
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<select class="form-select"  name="search_column" style="max-width: 120px;">
-							<option selected value="all">전체</option>
-							<option value="product_name">제품명</option>
-							<option value="company_name">주문처</option>
-						</select> <input type="text" class="form-control" name="search_word" placeholder="검색">
+					    <input type="text" class="form-control" name="search_word"
+							placeholder="검색">
 						<button class="btn btn-primary" type="submit">
 							<i class="bi bi-search"></i>
 						</button>
@@ -46,85 +43,93 @@
 						<tr>
 							<th scope="col"><input type="checkbox"></th>
 							<th scope="col">#</th>
-							<th scope="col">관리번호</th> 
+							<th scope="col">생산계획코드</th> 
+							<th scope="col">주문코드</th> 
+							<th scope="col">납기일</th> 
 							<th scope="col">우선순위</th> 
-							<th scope="col">제품명</th> 
-							<th scope="col">수량</th>
-							<th scope="col">단위</th> 
-							<th scope="col">생산기간</th>  
-							<th scope="col">작성자</th>	<!-- 계획수립 담당자명 -->
-							<th scope="col">주문처</th>	<!-- 주문 고객사 -->
-							<th scope="col">소요자재</th>  <!-- 소요자재 리스트 -->
-							<th scope="col">생산상태</th>   <!-- 계획, 확정, 생산중, 생산완료, 생산지연  -->
-							<th scope="col">등록일</th>   <!-- 생산계획수립일자 -->
+							<th scope="col">생산시작일</th>  
+							<th scope="col">생산종료일</th>  
+							<th scope="col">주문업체</th>	
+							<th scope="col">생산상태</th>  
+							<th scope="col">등록일</th>
 	
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="p : ${all}">
+						<tr th:each="p : ${prd_plans}">
 							<td><input type="checkbox"></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.plan_code}]]</td>
+							<td>[[${p.order_code}]]</td>
+							<td>[[${p.due_date.substring(0, 10)}]]</td>
 							<td>[[${p.priority}]]</td>
-							<td>[[${p.product_name}]]</td>
-							<td>[[${p.product_qty}]]</td>
-							<td>[[${p.product_unit}]]</td>
-							<td>[[${p.start_date.substring(0, 10)}]]~[[${p.due_date.substring(0, 10)}]]</td>
-							<td>[[${p.emp_name}]]</td>
+							<td>[[${p.start_date.substring(0, 10)}]]</td>
+							<td>[[${p.end_date.substring(0, 10)}]]</td>
 							<td>[[${p.company_name}]]</td>
-							<td align="center" style="cursor: pointer; color: blue;" class="modal-trigger" th:data-modal-url="@{'/bom_items.do?code='+${p.bom_code}}" data-modal-id="bom_items"><u>클릭</u></td>
 							<td>[[${p.plan_status}]]</td>
 							<td>[[${p.plan_date.substring(0, 10)}]]</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-			<div
-				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				<!-- Pagination -->
 				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
-					<ul class="pagination">
-						<li class="page-item" th:classappend="${pageno == 1} ? 'disabled'">
-						  <a class="page-link"
-						     th:href="@{'/production.do'(pageno=${pageno > 1 ? pageno - 1 : 1},
-						                          search_column=${search_column},
-						                          search_word=${search_word},
-						                          plan_status=${plan_statuses})}">
-						    이전
-						  </a>
-						</li>
-						
-						<li class="page-item"
-						    th:each="n : ${#numbers.sequence(1, page_cnt)}"
-						    th:classappend="${n == pageno} ? 'active'">
-						  <a class="page-link"
-						     th:href="@{'/production.do'(pageno=${n},
-						                          search_column=${search_column},
-						                          search_word=${search_word},
-						                          plan_status=${plan_statuses})}">
-						    [[${n}]]
-						  </a>
-						</li>
-						
-						<li class="page-item" th:classappend="${pageno == page_cnt} ? 'disabled'">
-						  <a class="page-link"
-						     th:href="@{'/production.do'(pageno=${pageno < page_cnt ? pageno + 1 : page_cnt},
-						                          search_column=${search_column},
-						                          search_word=${search_word},
-						                          plan_status=${plan_statuses})}">
-						    다음
-						  </a>
-						</li>
-					</ul>
-				</div>				<!-- Action Buttons -->
+				    <ul class="pagination mb-0">
+				        <!-- 이전 -->
+				        <li th:classappend="${paging.start_page == 1} ? 'disabled'" class="page-item prev">
+				            <a class="page-link"
+				               th:href="@{'/production.do'(page_no=${paging.start_page - 1},
+				                                            search_word=${condition.search_word},
+				                                            statuses=${condition.statuses},
+				                                            page_size=${condition.page_size})}">
+				            <i class="bi bi-chevron-double-left"></i> </a>
+				        </li>
+			
+				        <!-- 페이지 번호 -->
+				        <li class="page-item" th:each="i : ${#numbers.sequence(paging.start_page, paging.end_page)}"
+				            				th:classappend="${i == paging.page_no} ? 'active'">
+				            <a class="page-link"
+				               th:href="@{'/production.do'(page_no=${i},
+				                                            search_word=${condition.search_word},
+				                                            statuses=${condition.statuses},
+				                                            page_size=${condition.page_size})}">[[${i}]]</a>
+				        </li>
+			
+				        <!-- 다음 -->
+				        <li th:classappend="${paging.end_page >= paging.page_cnt} ? 'disabled'" class="page-item">
+				            <a class="page-link"
+				               th:href="@{'/production.do'(page_no=${paging.end_page + 1},
+				                                            search_word=${condition.search_word},
+				                                            statuses=${condition.statuses},
+				                                            page_size=${condition.page_size})}">
+				            <i class="bi bi-chevron-double-right"></i>  </a>
+				        </li>
+				    </ul>
+					<!-- 페이지당 항목 수 선택 -->
+				    <div class="ms-3">
+				        <select class="form-select form-select-sm"
+				                name="post_ea"
+				                style="width: auto;"
+				                th:attr="onchange=${mode == 'modal'} ? 'pchListOpen3(this)' : 'location.href=\'/production.do?page_size=\' + this.value'">
+				            <option value="5" th:selected="${condition.page_size == 5}">5개씩 보기</option>
+				            <option value="10" th:selected="${condition.page_size == 10}">10개씩 보기</option>
+				            <option value="15" th:selected="${condition.page_size == 15}">15개씩 보기</option>
+				            <option value="20" th:selected="${condition.page_size == 20}">20개씩 보기</option>
+				            <option value="25" th:selected="${condition.page_size == 25}">25개씩 보기</option>
+				            <option value="30" th:selected="${condition.page_size == 30}">30개씩 보기</option>
+				        </select>
+				    </div>
+				</div>
+				<!-- Action Buttons -->
 				<div class="mt-4 d-flex gap-2">
 					<div class="ms-auto">
 						<button type="button" class="btn btn-success" onclick="location.href='/production_in.do'">
-							<i class="bi bi-plus-lg"></i> 추가
+							<i class="bi bi-plus-lg"></i> 수기등록
 						</button>
-						<button class="btn btn-danger">
-							<i class="bi bi-trash"></i> 삭제
-						</button>
+<!-- 						<button class="btn btn-danger"> -->
+<!-- 							<i class="bi bi-trash"></i> 삭제 -->
+<!-- 						</button> -->
 					</div>
 				</div>
 			</div>

@@ -181,4 +181,23 @@ SET order_status = #{order_status}
 WHERE order_code = #{order_code}
 </update>
 
+<!-- 한 주문내역에 포함된 제품목록 출력 -->
+<!-- bom 테이블이 bom_code:product_code:item_code=1:1:N 구조이어서 중복 제거를 위한 SELECT DISTINCT 사용 -->
+<select id="ordreq_products" resultType="kr.co.noerror.DTO.ordreq_res_DTO" parameterType="String" >
+SELECT DISTINCT
+	ord.order_code,
+	prd.product_code,
+	prd.product_name,
+	prd.product_spec,
+	prd.product_unit,
+	ord.product_qty,
+	bom.bom_code
+FROM order_req_detail ord
+JOIN order_request orh ON ord.order_code = orh.order_code
+JOIN products prd ON ord.product_code = prd.product_code
+JOIN client_comp cmp ON orh.company_code = cmp.company_code
+LEFT JOIN bom bom ON prd.product_code = bom.product_code
+WHERE ord.order_code = #{order_code}
+</select>
+
 </mapper>

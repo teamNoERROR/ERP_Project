@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.plan_mapper">
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
+<select id="prdplan_paged_list" resultType="kr.co.noerror.DTO.prdplan_res_DTO" parameterType="Map">
+SELECT * FROM (
+    SELECT inner_result.*, ROWNUM rnum
+    FROM (
+        SELECT pln.*, ord.due_date, cmp.company_name, emp.ename
+        FROM production_plan pln
+        JOIN order_request ord ON pln.order_code = ord.order_code
+        JOIN client_comp cmp ON pln.company_code = cmp.company_code
+        JOIN employee emp ON pln.ecode = emp.ecode
+        WHERE 1=1
+		<if test="search_word != null and search_word != ''">
+		  AND (
+		      cmp.company_name LIKE '%' || #{search_word} || '%' OR
+		      cmp.manager_name LIKE '%' || #{search_word} || '%'
+		  )
+		</if>
+	    <if test="statuses != null and statuses.size() > 0">
+	        AND pln.plan_status IN
+	        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
+	            #{status}
+	        </foreach>
+	    </if>
+        ORDER BY pln.pidx DESC
+    ) inner_result
+    WHERE ROWNUM &lt; #{end}
+)
+WHERE rnum &gt; #{start}
+</select>
+
+<!-- 검색조건과 페이징 처리를 반영한 데이터 갯수 -->
+<select id="prdplan_search_count" resultType="int" parameterType="kr.co.noerror.DTO.search_condition_DTO">
+SELECT COUNT(*) AS total
+	FROM production_plan pln
+	JOIN order_request ord ON pln.order_code = ord.order_code
+	JOIN client_comp cmp ON pln.company_code = cmp.company_code
+	JOIN employee emp ON pln.ecode = emp.ecode
+WHERE 1=1
+	<if test="search_word != null and search_word != ''">
+	  AND (
+	      
+	      cmp.company_name LIKE '%' || #{search_word} || '%' OR
+	      cmp.manager_name LIKE '%' || #{search_word} || '%'
+	  )
+	</if>
+    <if test="statuses != null and statuses.size() > 0">
+        AND pln.plan_status IN
+        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </if>
+</select>
+
+<select id="bom_items" resultType="kr.co.noerror.DTO.temp_bom_DTO" parameterType="String">
+  SELECT 
+    bom.bom_code, 
+    pdt.product_name,
+    itm.item_code, 
+    itm.item_type, 
+    itm.item_name, 
+    itm.item_unit, 
+    itm.unit_price, 
+    bom.quantity 
+  FROM bom bom
+  JOIN items itm ON bom.item_code = itm.item_code
+  JOIN products pdt ON hdr.product_code = pdt.product_code
+  WHERE bom.bom_code = #{bom_code}
+</select>
+
+<!-- 주문 목록 출력 -->  
+<select id="orders_modal" resultType="kr.co.noerror.DTO.ordreq_res_DTO">
+SELECT
+    ord.order_code,
+    ord.product_code,
+    pdt.product_name,
+    ord.product_qty,
+    pdt.product_spec,
+    pdt.product_unit,
+    orh.company_code,
+    cmp.company_name,
+    orh.due_date,
+    bom.bom_code
+FROM order_req_detail ord
+JOIN order_request orh ON ord.order_code = orh.order_code
+JOIN products pdt ON ord.product_code = pdt.product_code
+JOIN client_comp cmp ON orh.company_code = cmp.company_code
+JOIN bom bom ON pdt.product_code = bom.product_code
+</select>
+
+<!-- 사원 목록 출력 -->
+<select id="emps_modal" resultType="kr.co.noerror.DTO.employee_DTO">
+SELECT * FROM employee ORDER BY eidx desc
+</select>
+
+<!-- plan_code 중복체크 -->
+<select id="plan_code_check" parameterType="String" resultType="int">
+ SELECT count(*) FROM production_plan WHERE plan_code = #{plan_code}
+</select>
+
+<!-- 생산계획 저장 -->
+<!-- 헤더 테이블 -->
+<insert id="prdplan_insert" parameterType="kr.co.noerror.DTO.prdplan_DTO">
+  INSERT INTO production_plan (
+    pidx,
+    plan_code,
+    order_code,
+    priority,
+    start_date,
+    end_date,
+    company_code,
+    ecode,
+    plan_status,
+    mrp_status,
+    memo,
+    plan_date,
+    modify_date
+  ) VALUES (
+    production_plan_no.NEXTVAL, 
+    #{plan_code},
+    #{order_code},
+    #{priority},
+    #{start_date},
+    #{end_date},
+    #{company_code},
+    #{ecode},
+    #{plan_status},
+    #{mrp_status},
+    #{memo}, 
+    SYSDATE,
+    SYSDATE 
+  ) 
+</insert>
+
+<!-- 상세 테이블 -->
+<insert id="prdplan_detail_insert" parameterType="kr.co.noerror.DTO.prdplan_detail_DTO">
+  INSERT INTO production_plan_detail (
+    pidx,
+    plan_code,
+    product_code,
+    bom_code,
+    product_qty
+  ) VALUES (
+    production_plan_detail_no.NEXTVAL,
+    #{plan_code},
+    #{product_code},
+    #{bom_code},
+    #{product_qty}
+  )
+</insert>
+
+</mapper>

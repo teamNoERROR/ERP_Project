@@ -14,8 +14,14 @@ import kr.co.noerror.DTO.IOSF_DTO;
 public interface IOSF_Warehouse_Mapper {
 		
 		
-		public List<IOSF_DTO> IOSF_select_wh_list(int startIndex, int pageSize, int endIndex, String wh_type);
-	
+		//iosf 게시판
+		public List<IOSF_DTO> IOSF_select_wh_list(int startIndex, int pageSize, String wh_type);
+
+		//출고 처리
+		public int IOSF_out_complete(String outCode);
+		public int IOSF_out_update(String outCode, String outStatus);
+		
+		
 		//창고 저장
 		public int IOSF_save_warehouse(Map<Object, Object> iosf_map);
 		

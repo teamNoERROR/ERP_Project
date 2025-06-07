@@ -60,8 +60,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/commons-net/commons-net
 	implementation 'commons-net:commons-net:3.11.1'
 	
-	//SFTP 파일전송
-	implementation 'com.jcraft:jsch:0.1.55'
 	
 	//okhttp
 	// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp

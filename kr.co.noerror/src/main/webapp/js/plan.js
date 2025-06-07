@@ -58,6 +58,36 @@ function order_select() {
   }
 }
 
+function emp_select() {
+  // 선택된 라디오 버튼 찾기
+  const selectedRadio = document.querySelector('input[name="emp_check"]:checked');
+  
+  if (!selectedRadio) {
+    alert("사원을 선택하세요.");
+    return;
+  }
+  
+  // 선택된 라디오 버튼의 부모 <tr> 찾기
+  const selectedRow = selectedRadio.closest('tr');
+  
+  // data-* 속성 가져오기
+  const emp_code = selectedRow.getAttribute('data-emp_code');
+  const emp_name = selectedRow.getAttribute('data-emp_name');
+
+  // 각 input 요소에 값 설정
+  // 부모 페이지에서 emp 정보 input들이 순서대로 위치하므로, 아래와 같이 선택
+  const inputs_row4 = window.parent.document.querySelectorAll('.row.mb-3.row4 input.form-control[readonly]');
+  inputs_row4[0].value = emp_code;
+  inputs_row4[1].value = emp_name
+
+  // 모달 닫기
+  const modalEl = document.getElementById('emps_modal');
+  const modalInstance = bootstrap.Modal.getInstance(modalEl);
+  if (modalInstance) {
+    modalInstance.hide();
+  }
+}
+
 //생산계획 저장
 function plan_save() {
   // 생산계획 정보 읽기

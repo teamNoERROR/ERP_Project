@@ -17,8 +17,8 @@ public class inout_DAO {
 	@Qualifier(value="sqltemplate_oracle")
 	private SqlSessionTemplate st;
 	
-//	@Autowired
-//	private inout_mapper io_mapper;
+	@Autowired
+	private inout_mapper io_mapper;
 	
 	//고유코드 중복확인 
 	public int code_dupl_inb(String inb_code) {
@@ -34,7 +34,7 @@ public class inout_DAO {
 
 
 	//입고 총 개수 
-	public int inbound_total(Map<String, Object> map) {
+	public int inbound_total(Map<String, String> map) {
 		int inbnd_insert = this.st.selectOne("inbound_total", map);
 		return inbnd_insert;
 	}
@@ -46,23 +46,9 @@ public class inout_DAO {
 	}
 
 	//입고건 상세보기 
-	public List<inout_DTO> inbound_detail(Map<String, String> map) {
-		List<inout_DTO> inbound_detail = this.st.selectList("inbound_detail",map);
+	public List<inout_DTO> inbound_detail(String inbnd_code) {
+		List<inout_DTO> inbound_detail = this.st.selectList("inbound_detail",inbnd_code);
 		return inbound_detail;
 	}
-
-	//입고상태 확인
-	public int in_status_ck(inout_DTO io_dto) {
-		int  in_status_ck = this.st.selectOne("in_status_ck", io_dto);
-		return  in_status_ck;
-	}
-	
-	//입고처리 
-	public int inbound_ok(inout_DTO io_dto) {
-		int  inbound_ok = this.st.update("inbound_ok", io_dto);
-		return  inbound_ok;
-	}
-
-	
 
 }

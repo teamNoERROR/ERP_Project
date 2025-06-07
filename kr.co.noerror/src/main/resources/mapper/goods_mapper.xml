@@ -22,10 +22,10 @@
 	SELECT
 	<choose>
 	<when test="key2 == 'pd_sc'">
-		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1, jdbcType=VARCHAR}
+		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1}
 	</when>
 	<when test="key2 == 'itm_sc'">
-		ITEMS_CLASS2 FROM ITEMS_CLASS WHERE ITEMS_CLASS1 = #{ITEMS_CLASS1, jdbcType=VARCHAR}
+		ITEMS_CLASS2 FROM ITEMS_CLASS WHERE ITEMS_CLASS1 = #{ITEMS_CLASS1}
 	</when>
 	</choose>
 </select>
@@ -83,77 +83,33 @@
 </insert>
 
 
-
 <!-- 제품 전체 개수(+페이징,검색)  -->
 <select id="gd_all_ea_sch" resultType="int" parameterType="Map">
-SELECT COUNT(*) AS CNT FROM 
+SELECT COUNT(*) FROM
 <choose>
   <!-- 완제품 -->
   <when test="type == null or type == 'product'">
     PRODUCTS
-     <where>
-      	<if test="sclass != null">
-      	PRODUCT_CLASS2 = #{sclass}
-	      	<if test="keyword!= null">
-      		AND ( 
-				PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-				) 
-      		</if>
-      	</if>
-      	<if test="sclass == null and keyword!= null">
-     		( 
-			PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-			PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-		) 
-     		</if>
-      </where>
-  	</when>
+      <if test="sclass != null">
+       	WHERE PRODUCT_CLASS2 = #{sclass}
+      </if>
+      <if test="keyword != null">
+<!--         WHERE  -->
+<!--         <if test="sclass != null">  PRODUCT_CLASS2 = #{sclass} AND</if> -->
+<!--         ( -->
+<!--           PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
+<!--         ) -->
+      </if>
+  </when>
   
   <!-- 부자재 -->
   <when test="type =='item'">
-   ITEMS
-   <where>
-      	<if test="sclass != null">
-      	ITEM_CLASS2 = #{sclass}
-	      	<if test="keyword!= null">
-      		AND ( 
-				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-				) 
-      		</if>
-      	</if>
-      	<if test="sclass == null and keyword!= null">
-     		( 
-			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-		) 
-     		</if>
-      </where>
+    ITEMS
+   
   </when>
 </choose>
 </select>
@@ -164,82 +120,42 @@ SELECT COUNT(*) AS CNT FROM
 <select id="gd_all_list_sch" resultType="kr.co.noerror.DTO.products_DTO" parameterType="Map">
 	SELECT * FROM 
 	(SELECT ROWNUM AS rnum, a.* FROM 
-	(
-	<choose>
-	    <!-- 완제품 -->
-	 	<when test="type == null or type == 'product'">
-	   	SELECT * FROM PRODUCTS
-	      <where>
-	      	<if test="sclass != null">
-	      	PRODUCT_CLASS2 = #{sclass}
-		      	<if test="keyword!= null">
-	      		AND ( 
-					PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-					PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-					) 
-	      		</if>
-	      	</if>
-	      	<if test="sclass == null and keyword!= null">
-      		( 
-				PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-			) 
-      		</if>
-	      </where>
-	    ORDER BY PIDX DESC 
-	  	</when>
+	(SELECT * FROM 
 
-
-  		<!-- 부자재 -->
-	  	<when test="type == 'item'">
-	    SELECT * FROM ITEMS
-	    	<where>
-      	<if test="sclass != null">
-      	ITEM_CLASS2 = #{sclass}
-	      	<if test="keyword!= null">
-      		AND ( 
-				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-				) 
-      		</if>
-      	</if>
-      	<if test="sclass == null and keyword!= null">
-     		( 
-			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
-		) 
-     		</if>
-      </where>
-		ORDER BY IIDX DESC 
-	  </when>
-	</choose>
-	) a
+<choose>
+    <!-- 완제품 -->
+  <when test="type == null or type == 'product'">
+    PRODUCTS
+      <if test="sclass != null">
+        WHERE PRODUCT_CLASS2 = #{sclass}
+      </if>
+      <if test="keyword != null">
+<!--         WHERE -->
+<!--         <if test="sclass != null">  PRODUCT_CLASS2 = #{sclass} AND</if> -->
+<!--         ( -->
+<!--           PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!--           PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
+<!--         ) -->
+      </if>
+    ORDER BY PIDX DESC ) a
 	WHERE ROWNUM &lt;= #{end} )
 	WHERE rnum &gt;= #{start}
+  </when>
+
+
+  <!-- 부자재 -->
+  <when test="type == 'item'">
+    ITEMS
+    
+    
+	ORDER BY IIDX DESC ) a
+	WHERE ROWNUM &lt;= #{end} )
+	WHERE rnum &gt;= #{start}
+  </when>
+</choose>
 	
 </select>
 

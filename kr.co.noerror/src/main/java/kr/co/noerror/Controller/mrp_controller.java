@@ -23,6 +23,7 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.plan_DTO;
+import kr.co.noerror.Model.M_random;
 import kr.co.noerror.Model.mrp_Calulation;
 
 @Controller
@@ -36,8 +37,8 @@ public class mrp_controller {
 	@Resource(name="mrp_Calulation")
 	mrp_Calulation mrp_calc;
 	
-//	@Resource(name="M_random")
-//	M_random mrandom;
+	@Resource(name="M_random")
+	M_random mrandom;
 	
 	@PostMapping("/go_purchase.do")
 	public String go_purchase(@RequestParam("data") String json_data,
@@ -67,13 +68,13 @@ public class mrp_controller {
         String mrp_code = null;
         int count = 0;
         boolean is_duplicated = true;
-//        while(is_duplicated) {
-//        	mrp_code = "mrp-" + this.mrandom.random_no();
-//        	count = this.mdao.mrp_code_check(mrp_code);
-//        	if(count == 0){
-//        		is_duplicated = false;
-//        	}
-//        }
+        while(is_duplicated) {
+        	mrp_code = "mrp-" + this.mrandom.random_no();
+        	count = this.mdao.mrp_code_check(mrp_code);
+        	if(count == 0){
+        		is_duplicated = false;
+        	}
+        }
         
         try {
         	

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import kr.co.noerror.DAO.order_DAO;
 import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.temp_client_DTO;
 import kr.co.noerror.DTO.temp_products_DTO;
+import kr.co.noerror.Model.M_random;
 
 @Controller
 public class order_controller {
@@ -35,8 +37,8 @@ public class order_controller {
 	@Autowired
 	order_DAO odao;
 	
-//	@Resource(name="M_random")
-//	M_random mrandom;
+	@Resource(name="M_random")
+	M_random mrandom;
 	
 	@PostMapping("/order_save.do")
 	@ResponseBody
@@ -47,13 +49,13 @@ public class order_controller {
         String ORDER_CODE = null;
         int count = 0;
         boolean is_duplicated = true;
-//        while(is_duplicated) {
-//        	ORDER_CODE = "ORD-" + this.mrandom.random_no();
-//        	count = this.odao.order_code_check(ORDER_CODE);
-//        	if(count == 0){
-//        		is_duplicated = false;
-//        	}
-//        }
+        while(is_duplicated) {
+        	ORDER_CODE = "ORD-" + this.mrandom.random_no();
+        	count = this.odao.order_code_check(ORDER_CODE);
+        	if(count == 0){
+        		is_duplicated = false;
+        	}
+        }
         
         try {
         	//order_header 테이블에 저장

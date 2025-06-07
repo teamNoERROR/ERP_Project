@@ -18,37 +18,13 @@
 <!-- 입고리스트 전체개수  -->
 <select id="inbound_total" resultType="int" parameterType="Map">
 <!-- 	SELECT COUNT(DISTINCT INBOUND_CODE) AS CNT FROM INBOUND -->
-	SELECT COUNT (*) FROM INBOUND 
-	 WHERE 1=1
-    <if test="keyword != null">
-      AND INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
-    </if>
-	<if test="IN_STATUS != null and IN_STATUS.size() > 0">
-    	AND IN_STATUS IN
-    	<foreach item="status" collection="IN_STATUS" open="(" separator="," close=")">
-    	#{status}
-    	</foreach>
-    </if>
+	SELECT COUNT (*) FROM INB_DETAIL_VIEW
 </select>
 
 
-<!-- 입고 전체 리스트 -->
+
 <select id="inbound_all_list" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
-	SELECT * FROM INBOUND
-	<where>
-	<if test="keyword!= null">
-      AND INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
-    </if>
-    <if test="IN_STATUS != null and IN_STATUS.size() > 0">
-      AND IN_STATUS IN
-      <foreach item="status" collection="IN_STATUS" open="(" separator="," close=")">
-        #{status}
-      </foreach>
-<!--       	<if test="keyword!= null"> -->
-<!--       	AND INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
-<!--       	</if> -->
-    </if>
-  	</where>
+	SELECT * FROM INB_DETAIL_VIEW
 	ORDER BY IIDX DESC
 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
@@ -57,7 +33,6 @@
 <!-- <select id="inbound_total2" resultType="int" parameterType="Map"> -->
 <!-- 	SELECT COUNT (DISTINCT INBOUND_CODE) AS CNT FROM INBOUND -->
 <!-- </select> -->
-
 <!-- 입고 전체 리스트 중복제거 -->
 <!-- <select id="inbound_all_list2" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map"> -->
 <!-- 	SELECT * -->
@@ -73,19 +48,8 @@
 <!-- </select> -->
 
 <!-- 입고 상세보기 모달  -->
-<select id="inbound_detail" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
-	SELECT * FROM PCH_INB_VIEW WHERE INBOUND_CODE = #{inbnd_code} AND PCH_CODE = #{pch_cd} 	
+<select id="inbound_detail" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="String">
+	SELECT * FROM INB_DETAIL_VIEW WHERE INBOUND_CODE = #{inbnd_code} ORDER BY IIDX 	
 </select>
-
-<!-- 입고상태 확인  -->
-<select id="in_status_ck" resultType="int" parameterType="kr.co.noerror.DTO.inout_DTO">
-	SELECT COUNT(*) FROM INBOUND WHERE INBOUND_CODE = #{INBOUND_CODE} AND PCH_CODE = #{PCH_CODE} AND IN_STATUS = '입고완료'
-</select>
-
-
-
-<update id="inbound_ok" parameterType="kr.co.noerror.DTO.inout_DTO">
-UPDATE INBOUND SET IN_STATUS = #{IN_STATUS} WHERE INBOUND_CODE = #{INBOUND_CODE} AND PCH_CODE = #{PCH_CODE}
-</update>
 
 </mapper>

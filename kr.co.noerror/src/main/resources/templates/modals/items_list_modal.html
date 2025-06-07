@@ -9,15 +9,14 @@
 		
 		  
 		  <!-- 테이블 영역 -->
-      <div th:replace="~{/modals/item_list_body_modal.html :: itmMdList(${parentType}, ${items_total}, ${items_list}, 'modal2')}"></div>
+      <div th:replace="~{/modals/item_list_body_modal.html :: itmMdList(${items_total}, ${items_list}, 'modal2')}"></div>
       
       </div>
       <div class="modal-footer">
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button" class="btn btn-success"
-                        th:attr="data-parenttype=${parentType}" onclick="select_items(this)"><i class="bi bi-pencil-square"></i> 선택</button>
+                <button type="button" class="btn btn-success" onclick="select_items()"><i class="bi bi-pencil-square"></i> 선택</button>
                
             </div>
         </div>

@@ -76,17 +76,42 @@ function deleteWarehouse(button) {
    const whZipcode = selectedRadio.getAttribute('data-wh_zipcode');
    const whAddr1 = selectedRadio.getAttribute('data-wh_addr1');
    const whAddr2 = selectedRadio.getAttribute('data-wh_addr2');
-   const whType = selectedRadio.getAttribute('data-wh_type');  // ← 여기서 타입 읽기
+   const whType = selectedRadio.getAttribute('data-wh_type');  
 
    // 예시: 타입별 처리 (원하면 타입별로 다르게 로직 분기 가능)
    if (whType === '부자재창고') {
-	   document.getElementById('wh_code').value = whCode;
+	    document.getElementById('wh_code').value = whCode;
    		alert("창고를 선택하셨습니다.");
+	    document.getElementById('wh_location').value = "("+ whZipcode + ")" + whAddr1 + " " + whAddr2;
+		document.getElementById('wh_type').value = whType;
+		document.getElementById('wh_name').value = whName;
   
    } else if (whType === '완제품창고') {
-	  document.getElementById('wh_code').value = whCode;
-	   	alert("창고를 선택하셨습니다.");
-   } else {
+	    document.getElementById('wh_code').value = whCode;
+		alert("창고를 선택하셨습니다.");
+		document.getElementById('wh_location').value = "("+ whZipcode + ")" + whAddr1 + " " + whAddr2;
+		document.getElementById('wh_type').value = whType;
+        document.getElementById('wh_name').value = whName;
+	   
+		
+   } else if (whType === '입고창고') {
+	   document.getElementById('wh_code').value = whCode;
+	    alert("창고를 선택하셨습니다.");
+	   document.getElementById('wh_location').value = "("+ whZipcode + ")" + whAddr1 + " " + whAddr2;
+	   document.getElementById('wh_type').value = whType;
+	   document.getElementById('wh_name').value = whName;
+	 
+		
+   } else if (whType === '출고창고') {
+	    document.getElementById('wh_code').value = whCode;
+		alert("창고를 선택하셨습니다.");
+		document.getElementById('wh_location').value = "("+ whZipcode + ")" + whAddr1 + " " + whAddr2;
+		document.getElementById('wh_type').value = whType;
+		document.getElementById('wh_name').value = whName;
+		 
+	   }
+   
+   else {
      console.log('기타 창고 타입');
    }
 
@@ -98,6 +123,28 @@ function deleteWarehouse(button) {
    modal.hide();
  }
 
+//******************************창고 페이징************************* */ 
+document.addEventListener('DOMContentLoaded', function () {
+  const pageSizeSelect = document.getElementById('pageSizeSelect');
+  if (!pageSizeSelect) return;
+
+  pageSizeSelect.addEventListener('change', function () {
+    const selectedPageSize = this.value;
+
+    const currentPath = window.location.pathname;
+
+    // 쿼리 파라미터 파싱
+    const params = new URLSearchParams(window.location.search);
+    const whSearch = params.get('wh_search') || '';
+
+    // 쿼리 갱신
+    params.set('page', '1');
+    params.set('pageSize', selectedPageSize);
+
+    const url = `${currentPath}?${params.toString()}`;
+    window.location.href = url;
+  });
+});
  
  
  //******************************창고 모달 리스트 선택 후 반환 **************************************** */
@@ -152,36 +199,41 @@ function deleteWarehouse(button) {
 
  //**************************************창고로 입고 정보 이동*************************************************
  
- // 창고 값 셋팅 
- function selectRow(checkbox) {
-	
-    const inboundCode = checkbox.dataset.inbound_code;
-    const itemCode = checkbox.dataset.item_code;
-    const clientCode = checkbox.dataset.client_code;
-    const whCode = checkbox.dataset.wh_code;
-    const whType = checkbox.dataset.wh_type;
-    const inStatus = checkbox.dataset.in_status;
-    const itemCount = checkbox.dataset.item_count;
+ function selectRow(event,checkbox) {
+	 
+	event.stopPropagation(); // 모달 열리는 <tr> 클릭 이벤트 차단
+    
+	 const inboundCode = checkbox.dataset.inbound_code;
+     const itemCode = checkbox.dataset.item_code;
+     const clientCode = checkbox.dataset.client_code;
+     const whCode = checkbox.dataset.wh_code;
+     const whType = checkbox.dataset.wh_type;
 
-    document.getElementById('inbound_code').value = inboundCode;
-    document.getElementById('item_code').value = itemCode;
-    document.getElementById('client_code').value = clientCode;
-	document.getElementById('wh_type').value = whType;
-	document.getElementById('in_status').value = inStatus;
-	document.getElementById('item_count').value = itemCount;
+     const inStatusRaw = checkbox.dataset.in_status; 
+     const inChange = checkbox.dataset.in_change;
+     const itemCount = checkbox.dataset.item_count;
 
-		// move-checkbox일 경우 창고 코드 세팅 X
-	  if (!element.classList.contains('move-checkbox')) {
-	    document.getElementById('wh_code').value = whCode;
-	  }
+     // inStatusRaw가 없거나 빈 값이면 '입고완료'로 설정
+     const inStatus = (inStatusRaw && inStatusRaw.trim() !== '') ? inStatusRaw : '입고완료';
 
-	
-    console.log("선택된 값:", inboundCode, itemCode, clientCode, whCode, inStatus, itemCount);
+     document.getElementById('inbound_code').value = inboundCode;
+     document.getElementById('item_code').value = itemCode;
+     document.getElementById('client_code').value = clientCode;
+     document.getElementById('wh_type').value = whType;
+     document.getElementById('in_status').value = inStatus;
+     document.getElementById('item_count').value = itemCount;
+
+     if (!checkbox.classList.contains('move-checkbox')) {
+         document.getElementById('wh_code').value = whCode;
+     }
+
+     console.log("선택된 값:", inboundCode, itemCode, clientCode, whCode, inStatus, itemCount);
  }
  
 //체크박스 형태로 여러개의 값 전송
- //document.addEventListener('DOMContentLoaded', function () {
-function whMoveBtn(){
+ document.addEventListener('DOMContentLoaded', function () {
+	
+	
    const moveBtn = document.querySelector('.btn-info');
    if (!moveBtn) return;
 
@@ -205,7 +257,7 @@ function whMoveBtn(){
        const in_status = box.getAttribute('data-in_status');
        const item_count = box.getAttribute('data-item_count');
 	   
-       if (wh_code && inbound_code && item_code && wh_type && in_status && item_count) {
+       if (wh_code && inbound_code && item_code && wh_type && item_count) {
          moveData.push({ wh_code, inbound_code, item_code ,wh_type, in_status, item_count});
        }
      });
@@ -253,7 +305,7 @@ function whMoveBtn(){
        alert("이동 중 오류가 발생했습니다.");
      });
    });
- };
+ });
 
 // ********************************************* 창고 체크박스로 삭제 *****************************************
 function deleteWh(wh_type) {

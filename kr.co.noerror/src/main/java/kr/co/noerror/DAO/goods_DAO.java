@@ -76,6 +76,7 @@ public class goods_DAO {
 
 
 
+
 	//제품 삭제 
 	public int pd_delete(Map<String, Object> p) {
 		int result = this.st.delete("pd_delete", p);

@@ -180,8 +180,9 @@ public class Warehouse_Controller {
 	@GetMapping("/warehouses_list.do")
 	public String warehouses_list(
 			Model m,
-	        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-	        @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) { 
+			@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
 			
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
@@ -190,7 +191,7 @@ public class Warehouse_Controller {
 		Map<Object, Object>	wh_list_map = this.map;
 		
 		
-		wh_list_map = ws_service.warehouse_list(page, wh_search);
+		wh_list_map = ws_service.warehouse_list(page, wh_search, pageSize);
 		
 		m.addAttribute("wh_list", wh_list_map.get("wh_list")); // 리스트
 	    m.addAttribute("search_check", wh_list_map.get("search_check")); // 검색 여부
@@ -200,6 +201,8 @@ public class Warehouse_Controller {
 	    m.addAttribute("totalPages", wh_list_map.get("totalPages"));
 	    m.addAttribute("pageSize", wh_list_map.get("pageSize"));
 	    m.addAttribute("wh_search", wh_list_map.get("wh_search")); // 검색어 유지
+	    m.addAttribute("startPage", wh_list_map.get("startPage")); // 검색어 유지
+	    m.addAttribute("endPage", wh_list_map.get("endPage")); // 검색어 유지
 
 		
 		return "/warehouse/warehouses_list.html";

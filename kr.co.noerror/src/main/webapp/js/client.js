@@ -3,11 +3,6 @@ function clientToggle(type) {
 	location.href = "/client.do?type="+type; //페이지 이동
 }
 
-
-
-
-
-
 //거래처 페이징 
 function go_clt_pg(data){
 	var keyword = data.getAttribute('data-keyword');

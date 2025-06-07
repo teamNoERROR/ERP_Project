@@ -64,11 +64,9 @@
 						</tr>
 						<tr th:if="${client_total != 0}"
 							th:each="cltlist, idx : ${client_list}"
-							th:onclick="${mode != 'modal'} ? 'openCltDetail(this)' : ''" 
-							th:attr="data-idx=${cltlist.CIDX}, data-code=${cltlist.COMPANY_CODE}, data-type='p_client'"
-							style="cursor: pointer;">
+							onclick="open_clt_detail(event)" style="cursor: pointer;">
 							<td onclick="event.stopPropagation()">
-								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="sel_clt2" class="clt2_sb" ></td>
+								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="sel_clt2" class="sb" data-type="p_client"></td>
 							<td>[[${bno - idx.index}]]</td>
 							<td>[[${cltlist.COMPANY_CODE}]]</td>
 							<td>[[${cltlist.COMPANY_NAME}]]</td>

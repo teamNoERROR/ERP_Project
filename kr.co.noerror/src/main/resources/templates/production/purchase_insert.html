@@ -126,7 +126,7 @@
               <label class="form-label">자재 검색</label>
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="자재명 또는 코드">
-                <button class="btn btn-outline-primary" type="button" onclick="openItemList('pchreqPage')"><i class="bi bi-search"></i></button>
+                <button class="btn btn-outline-primary" type="button"><i class="bi bi-search"></i></button>
               </div>
             </div>
           </div>
@@ -139,20 +139,17 @@
                 <th>자재명</th>
                 <th>발주수량</th>
                 <th>단위</th>
-                <th>자재단가</th>
                 <th>발주업체</th>
               </tr>
             </thead>
-            <tbody id="pch_items">
-              <tr class="item_add_row">
+            <tbody>
+              <tr>
                 <td><input type="checkbox"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><input type="number" class="form-control" value=""></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>RM003</td>
+                <td>당근</td>
+                <td>풀무원</td>
+                <td>kg</td>
+                <td><input type="number" class="form-control" value="30"></td>
               </tr>
             </tbody>
           </table>
@@ -161,22 +158,6 @@
       </div>
     </div>
 
-	<!-- 발주담당자 입력 폼 -->
-	<div class="row mb-3 empinfo">
-	  <div class="col-md-4">
-	    <label class="form-label">발주담당자</label>
-		<div>
-		  <input type="hidden" class="form-control" name="emp_code" id="emp_code" th:value="${session.emp_code}" readonly>
-		</div>
-	    <div class="input-group">
-	      <input type="text" class="form-control" name="emp_name" id="emp_name" th:value="${session.emp_name}" readonly>
-          <button type="button" class="btn btn-outline-secondary modal-trigger" 
-                  th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
-              <i class="bi bi-search"></i>
-          </button>
-	    </div>
-	</div>
-	
     <!-- 하단 공통: 발주 바구니 -->
     <div class="mt-5">
     
@@ -184,7 +165,7 @@
       
       <div class="d-flex justify-content-end mb-2">
 	    <button type="button" class="btn btn-primary" onclick="pchreq_save()"><i class="bi bi-bookmark-check"></i> 저장</button>
-	    <button type="button" class="btn btn-outline-secondary ms-2" onclick="clear_cart()"><i class="bi bi-x-circle"></i> 초기화</button>
+	    <button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>
 	  </div>
 
       <table class="table table-bordered align-middle" id="basketTable">

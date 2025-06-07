@@ -14,22 +14,23 @@
       <h2 class="mb-1">입고 창고 등록</h2>
     </div>
 
-    <form id="inboundWhForm" th:action="@{//warehouse_iosf_save.do}" th:object="${IOSF_DTO}" method="post">
+    <form id="inboundWhForm" th:action="@{/warehouse_iosf_save.do}" th:object="${IOSF_DTO}" method="post">
       <input type="hidden" th:field="*{inbound_code}">
 
       <!-- 창고 선택 -->
 <div class="mb-4">
   <label class="form-label d-block mb-2">창고 선택</label>
-  <button class="btn btn-primary modal-trigger mb-3" type="button"
-    th:data-modal-url="@{/warehouse_list.do}"
-    data-modal-id="warehouse_list"
-    style="cursor: pointer;">
-    <i class="bi bi-search"></i> 창고 선택
-  </button>
-
+  <button class="btn btn-primary modal-trigger"
+        type="button"
+        th:data-modal-url="@{/wh_type_list.do(wh_type='in_wh')}"
+        data-modal-id="wh_type_list"
+        style="cursor: pointer;">
+    <i class="bi bi-search">입고 창고 선택</i>
+</button>
   <div class="row gx-3">
     <div class="col-md-4 mb-3">
       <label class="form-label">창고코드</label>
+      <input type="hidden" class="form-control" th:field="*{wh_type}">
       <input type="text" class="form-control" th:field="*{wh_code}">
     </div>
     <div class="col-md-4 mb-3">
@@ -77,8 +78,8 @@
           <label class="form-label">입고 상태</label>
           <select class="form-select" th:field="*{in_status}">
             <option value="" disabled selected>선택</option>
-            <option value="입고">입고</option>
-            <option value="출고">출고</option>
+            <option value="입고">입고완료</option>
+            <option value="출고">출고완료</option>
             <option value="수동조정">수동조정</option>
           </select>
         </div>
@@ -119,11 +120,11 @@
       <div class="mb-4 row gx-3">
         <div class="col-md-6 mb-3">
           <label class="form-label">등록 사원 코드</label>
-          <input type="text" class="form-control" th:field="*{emp_code}" readonly name="emp_code">
+          <input type="text" class="form-control" th:field="*{employee_code}">
         </div>
         <div class="col-md-6 mb-3">
           <label class="form-label">등록 사원 이름</label>
-          <input type="text" class="form-control" id="emp_name" readonly>
+          <input type="text" class="form-control" id="emp_name">
         </div>
       </div>
 

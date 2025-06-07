@@ -10,13 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
-import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.client_service;
 
@@ -72,7 +69,7 @@ public class client_controller {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","거래처 관리");
 		
-		m.addAttribute("keyword",keyword);
+//		m.addAttribute("keyword",keyword);
 		
 		m.addAttribute("bno", bno);
 		m.addAttribute("client_total", client_total);
@@ -83,33 +80,4 @@ public class client_controller {
 		
 		return this.url;
 	}
-	
-	
-	//거래처 상세보기 모달 
-	@PostMapping("/client_detail.do")
-	public String goods_detail(Model m, @RequestParam("cidx") String cidx
-								, @RequestParam("code") String code
-								, @RequestParam("type") String type) {
-		
-		client_DTO client_one = this.clt_svc.clt_one_detail(code, cidx);  //특정게시물 내용 가져오기
-		
-		if(client_one == null) {
-			this.msg = "alert('시스템문제로 해당 거래처의 상세페이지를 불러올 수 없습니다.');"
-					+ "history.go(-1);";
-			m.addAttribute("msg", msg);
-			this.url = "WEB-INF/views/message";
-			
-		}else {
-			m.addAttribute("client_one", client_one);
-			this.url = "/modals/client_detail_modal.html";
-			
-		}
-		return this.url;
-	}
-	
-	
-	
-	
-	
-	
 }

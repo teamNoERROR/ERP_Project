@@ -11,7 +11,7 @@ public class pchreq_req_DTO {
     private String company_name;
     private String due_date;
     private String pay_method;
-    private String emp_code;
+    private String ecode;
     private String memo;
     private List<pchreq_item_DTO> items;
 }

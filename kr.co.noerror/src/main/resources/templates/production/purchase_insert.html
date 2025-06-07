@@ -166,10 +166,10 @@
 	  <div class="col-md-4">
 	    <label class="form-label">발주담당자</label>
 		<div>
-		  <input type="hidden" class="form-control" name="emp_code" id="emp_code" th:value="${session.emp_code}" readonly>
+		  <input type="hidden" class="form-control" name="ecode" id="ecode" th:value="${session.ecode}" readonly>
 		</div>
 	    <div class="input-group">
-	      <input type="text" class="form-control" name="emp_name" id="emp_name" th:value="${session.emp_name}" readonly>
+	      <input type="text" class="form-control" name="ename" id="ename" th:value="${session.ename}" readonly>
           <button type="button" class="btn btn-outline-secondary modal-trigger" 
                   th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
               <i class="bi bi-search"></i>

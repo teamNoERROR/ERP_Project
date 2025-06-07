@@ -148,10 +148,10 @@ function addToCart() {
 }
 
 function pchreq_save() {
-  const empCode = document.getElementById("emp_code").value;
-  const empName = document.getElementById("emp_name").value;
+  const ecode = document.getElementById("ecode").value;
+  const ename = document.getElementById("ename").value;
 
-  if (!empCode || !empName) {
+  if (!ecode || !ename) {
 	alert("발주담당자를 선택해주세요.");
 	return;
   }
@@ -197,7 +197,7 @@ function pchreq_save() {
 	      company_name: currentCompanyName,
 	      due_date: currentInputs.due_date,
 	      pay_method: currentInputs.pay_method,
-		  emp_code: empCode,
+		  ecode: ecode,
 	      memo: currentInputs.memo,
 	      items: []
 	    };
@@ -346,8 +346,8 @@ function pchreq_update() {
 	const frm = document.getElementById('frm');
 
 	const dueDate = frm.querySelector('input[name="due_date"]');
-	const empCode = frm.querySelector('input[name="emp_code"]');
-	const empName = frm.querySelector('input[name="emp_name"]');
+	const ecode = frm.querySelector('input[name="ecode"]');
+	const ename = frm.querySelector('input[name="ename"]');
 	const payMethod = frm.querySelector('select[name="pay_method"]');
 	const rows = document.querySelectorAll('#product-tbody tr');
 	
@@ -357,9 +357,9 @@ function pchreq_update() {
 		dueDate.focus();
 		return;
 	} 
-	if (!empName.value.trim()) {
+	if (!ename.value.trim()) {
 		alert("발주 담당자를 입력하세요.");
-		empName.focus();
+		ename.focus();
 		return;
 	} 
 	if (!payMethod.value) {
@@ -393,7 +393,7 @@ function pchreq_update() {
 	const data = {
 		pch_code: frm.querySelector('input[name="pch_code"]').value,
 		due_date: dueDate.value,
-		emp_code: empCode.value,
+		ecode: ecode.value,
 		pay_method: payMethod.value,
 		memo: frm.querySelector('textarea[name="memo"]').value,
 		items: items
@@ -429,7 +429,7 @@ function pchreq_update() {
 
 //부자재리스트 모달 오픈 
 function openItemList2(){
-	fetch("./item_list2.do", {
+	fetch("./item_list.do", {
 		method: "GET",
 
 	}).then(function(data) {
@@ -438,7 +438,7 @@ function openItemList2(){
 	}).then(function(result) {
 		document.getElementById("modalContainer").innerHTML = result;
 		
-		var modal= new bootstrap.Modal(document.getElementById("items_list2"));
+		var modal= new bootstrap.Modal(document.getElementById("items_list"));
 		modal.show();
 		
 	}).catch(function(error) {

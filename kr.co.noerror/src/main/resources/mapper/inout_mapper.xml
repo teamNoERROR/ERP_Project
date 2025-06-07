@@ -18,37 +18,63 @@
 <!-- 입고리스트 전체개수  -->
 <select id="inbound_total" resultType="int" parameterType="Map">
 <!-- 	SELECT COUNT(DISTINCT INBOUND_CODE) AS CNT FROM INBOUND -->
-	SELECT COUNT (*) FROM INBOUND 
+	SELECT COUNT (*) FROM PCH_INB_VIEW 
 	 WHERE 1=1
-    <if test="keyword != null">
-      AND INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
-    </if>
-	<if test="IN_STATUS != null and IN_STATUS.size() > 0">
+    
+<!-- 	<if test="IN_STATUS != null and IN_STATUS.size() > 0"> -->
     	AND IN_STATUS IN
-    	<foreach item="status" collection="IN_STATUS" open="(" separator="," close=")">
-    	#{status}
+    	<foreach item="statuslst" collection="IN_STATUS" open="(" separator="," close=")">
+    	#{statuslst}
     	</foreach>
-    </if>
+    	 <if test="keyword != null">
+		      AND 
+		      INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      PCH_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      BIZ_NUM LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      WH_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      WH_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      EMPLOYEE_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
+		    </if> 
+<!--     </if> -->
 </select>
 
 
 <!-- 입고 전체 리스트 -->
 <select id="inbound_all_list" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
-	SELECT * FROM INBOUND
-	<where>
-	<if test="keyword!= null">
-      AND INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
-    </if>
-    <if test="IN_STATUS != null and IN_STATUS.size() > 0">
-      AND IN_STATUS IN
-      <foreach item="status" collection="IN_STATUS" open="(" separator="," close=")">
-        #{status}
-      </foreach>
-<!--       	<if test="keyword!= null"> -->
-<!--       	AND INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
-<!--       	</if> -->
-    </if>
-  	</where>
+	SELECT * FROM PCH_INB_VIEW
+	 WHERE 1=1
+
+<!--     <if test="IN_STATUS != null and IN_STATUS.size() > 0"> -->
+		AND IN_STATUS IN
+		<foreach item="statuslst" collection="IN_STATUS" open="(" separator="," close=")">
+		  #{statuslst}
+		</foreach>
+			<if test="keyword!= null ">
+		      AND 
+		      INBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      PCH_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      BIZ_NUM LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      WH_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      WH_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+		      EMPLOYEE_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
+			 </if>
+<!--     </if> -->
 	ORDER BY IIDX DESC
 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>

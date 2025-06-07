@@ -1,11 +1,4 @@
-function removeRow(btn) {
-	const row = btn.closest('tr');
-	row.parentNode.removeChild(row);
-}
 
-
-
-//bom조회하기로 이동 
 function bomBtn(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	

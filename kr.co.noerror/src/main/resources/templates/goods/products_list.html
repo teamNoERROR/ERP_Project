@@ -160,6 +160,7 @@
         <form id="pdpg_frm">
         <input type="hidden" name="type">
         <input type="hidden" name="pageno" th:value="${pageno}">
+     
         <div class="mt-4 ms-1">
         <select class="form-select" name="post_ea" onchange="gdPostEa('product')">
             <option value="5"   th:selected="${pageinfo.post_ea} == '5'" >5개씩 보기</option>

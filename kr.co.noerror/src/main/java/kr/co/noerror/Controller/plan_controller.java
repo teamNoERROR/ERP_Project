@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.plan_DAO;
-import kr.co.noerror.DTO.order_DTO;
+import kr.co.noerror.DTO.employee_DTO;
+import kr.co.noerror.DTO.ordreq_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
-import kr.co.noerror.DTO.temp_emp_DTO;
 
 @Controller
 public class plan_controller {
@@ -66,7 +66,7 @@ public class plan_controller {
             this.pdto.setStart_date((String)plan.get("start_date"));
             this.pdto.setDue_date((String)plan.get("due_date"));
             this.pdto.setCompany_code((String)plan.get("company_code"));
-            this.pdto.setEmp_code((String)plan.get("emp_code"));
+            this.pdto.setEcode((String)plan.get("ecode"));
             this.pdto.setPlan_status((String)plan.get("plan_status"));
             this.pdto.setMrp_status((String)plan.get("mrp_status"));
             this.pdto.setMemo((String)plan.get("memo"));
@@ -92,14 +92,14 @@ public class plan_controller {
 	
 	@GetMapping("/emps_modal.do")
 	public String empls_modal(Model m) {
-		List<temp_emp_DTO> emps = this.pdao.emps_modal();
+		List<employee_DTO> emps = this.pdao.emps_modal();
 		m.addAttribute("emps",emps);
 		return  "/modals/temp_emp_list_modal.html";
 	}
 	
 	@GetMapping("/orders_modal.do")
 	public String orders_modal(Model m) {
-		List<order_DTO> orders = this.pdao.orders_modal();
+		List<ordreq_DTO> orders = this.pdao.orders_modal();
 		m.addAttribute("orders",orders);
 		return  "/modals/temp_order_list_modal.html";
 	}

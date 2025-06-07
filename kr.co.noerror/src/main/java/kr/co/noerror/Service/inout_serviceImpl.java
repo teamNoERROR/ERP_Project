@@ -99,11 +99,12 @@ public class inout_serviceImpl implements inout_service {
 
 	//입고리스트 총개수 
 	@Override
-	public int inbound_total(String keyword) {
-//		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
+	public int inbound_total(String keyword, String[] status_lst) {
+		
+		List<String> statusList = (status_lst == null) ? Collections.emptyList() : Arrays.asList(status_lst);
 		Map<String, Object> map = new HashMap<>();
 		map.put("keyword", keyword);
-//		map.put("IN_STATUS", statusList);
+		map.put("IN_STATUS", statusList);
 		
 		int inbound_total = this.io_dao.inbound_total(map);
 		return inbound_total;
@@ -111,18 +112,18 @@ public class inout_serviceImpl implements inout_service {
 	
 	//입고리스트 
 	@Override
-	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea) {
+	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea, String[] status_lst) {
 		int start = (pageno - 1) * post_ea;
 		int count = post_ea; 
 		
-//		List<String> statusList = (status == null) ? Collections.emptyList() : Arrays.asList(status);
-		Map<String, Object> map = new HashMap<>();
-		map.put("keyword", keyword);
-		map.put("start", start);
-		map.put("count", count);
-//		map.put("IN_STATUS", statusList);
+		List<String> statusList = (status_lst == null) ? Collections.emptyList() : Arrays.asList(status_lst);
+		Map<String, Object> mapp = new HashMap<>();
+		mapp.put("keyword", keyword);
+		mapp.put("start", start);
+		mapp.put("count", count);
+		mapp.put("IN_STATUS", statusList);
 		
-		List<inout_DTO> inbound_all_list = this.io_dao.inbound_all_list(map);  
+		List<inout_DTO> inbound_all_list = this.io_dao.inbound_all_list(mapp);  
 		return inbound_all_list;
 	}
 

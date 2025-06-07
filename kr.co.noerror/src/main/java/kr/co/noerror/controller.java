@@ -50,12 +50,6 @@ public class controller {
 		return "/warehouse/warehouses_it_list.html";
 	}
 	
-
-	@GetMapping("/test.do")
-	public String test(Model m) {
-	
-		return "/temp/warehouse_in.html";
-	}
 	
 	@GetMapping("/session.do")
 	public String session_save(HttpSession session) {

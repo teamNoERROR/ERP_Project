@@ -1,9 +1,6 @@
 package kr.co.noerror.Controller;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,17 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.common_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.employee_DTO;
-import kr.co.noerror.DTO.inout_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
@@ -37,16 +30,13 @@ import kr.co.noerror.Service.client_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inout_service;
-import kr.co.noerror.Service.pchreq_service;
 
 @Controller
 public class common_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
-
 	PrintWriter pw = null;
 
 	private static final int page_block = 3; //페이지 번호 출력갯수
-
 	
 	@Resource(name="employee_DTO")
 	employee_DTO emp_dto;
@@ -71,9 +61,9 @@ public class common_controller {
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
-	
 
-    @Resource(name="M_paging2")
+
+  @Resource(name="M_paging2")
 	M_paging2 page_util;
 
 	
@@ -214,7 +204,6 @@ public class common_controller {
 	    } else {
 	        return "/modals/items_list_modal.html"; 
 	    }
-//			return "/modals/items_list_modal.html";
 	}
 	
 	
@@ -249,7 +238,6 @@ public class common_controller {
 	    } else {
 	        return "/modals/inbound_list_modal.html"; // 일반 뷰 전체
 	    }
-//			return "/modals/inbound_list_modal.html";
 	}
 	
 	//발주 리스트 모달 띄우기 

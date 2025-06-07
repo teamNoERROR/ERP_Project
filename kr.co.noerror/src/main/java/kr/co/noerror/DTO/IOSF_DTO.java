@@ -16,9 +16,11 @@ public class IOSF_DTO {
 	// 창고 정보
 	String win_idx; 	    // 창고 자동증가값
     String wh_code;        // 창고 코드
-    String wh_type;        // 창고 코드
+    String wh_type;        // 창고 유형 -> 입고창고, 부자재창고 ..
     String wh_name;        // 창고 이름
+    String wh_kind;        // 창고 유형 -> in , out, ...
     String wh_location;    // 창고 위치
+    String wh_zipcode, wh_addr1, wh_addr2; //창고 위치 가져옴
     String inbound_code;	// 입고 코드
     String inbound_date2;
     
@@ -52,5 +54,10 @@ public class IOSF_DTO {
     String client_code;     // 거래처 코드
     String client_name;     // 거래처 이름
     String client_use_yn;   // 거래처 사용 여부
+    
+    //등록사원
+    String emp_code;
+    String emp_name;
+    
     
 }

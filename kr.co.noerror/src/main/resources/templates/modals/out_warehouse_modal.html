@@ -2,16 +2,16 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>입고창고 상세보기</title>
+  <title>출고창고 상세보기</title>
 </head>
 <body>
 
-<div class="modal fade" id="wh_in_list" tabindex="-1" aria-labelledby="wh_modal_label" aria-hidden="true">
+<div class="modal fade" id="wh_out_list" tabindex="-1" aria-labelledby="wh_modal_label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="wh_modal_label">입고창고 상세보기</h1>
+        <h1 class="modal-title fs-5" id="wh_modal_label">출고창고 상세보기</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -20,7 +20,7 @@
           <!-- 창고 정보 테이블 -->
 <!-- 창고 정보 테이블 -->
 <div class="table-responsive rounded mb-4">
-  <h5 th:text="${wh_details[0].wh_code} + ' : ' + ${wh_details[0].wh_name}">입고 1 창고 : WH-001</h5>
+  <h5 th:text="${wh_details[0].wh_code} + ' : ' + ${wh_details[0].wh_name}">출고 1 창고 : WH-001</h5>
   <table class="table table-bordered text-center align-middle">
     <tbody>
       <tr>

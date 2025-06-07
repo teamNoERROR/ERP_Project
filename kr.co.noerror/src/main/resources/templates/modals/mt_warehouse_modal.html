@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>입고창고 상세보기</title>
+  <title>부자재 창고 상세보기</title>
 </head>
 <body>
 
@@ -11,61 +11,62 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="wh_modal_label">부자재창고 상세보기</h1>
+        <h1 class="modal-title fs-5" id="wh_modal_label">부자재 창고 상세보기</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body row justify-content-center d-flex gap-3 mt-3">
         <div class="col-md-10">
           <!-- 창고 정보 테이블 -->
-          <div class="table-responsive rounded mb-4">
-            <h5 th:text="${wh_details[0].wh_code} + ' : ' + ${wh_details[0].wh_name}">입고 1 창고 : WH-001</h5>
-            <table class="table table-bordered align-middle">
-              <tbody>
-                <tr>
-                  <th>창고 위치</th>
-                  <td colspan="3" th:text="${wh_details[0].wh_location}">(우편번호) 도로명 주소 상세주소</td>
-                </tr>
-                <tr>
-                  <th>제품 코드</th>
-                  <td th:text="${wh_details[0].item_code}">제품코드</td>
-                  <th>제품 이름</th>
-                  <td th:text="${wh_details[0].item_name}">제품이름</td>
-                </tr>
-                <tr>
-                  <th>제품 대분류</th>
-                  <td th:text="${wh_details[0].category_main}">대분류</td>
-                  <th>제품 소분류</th>
-                  <td th:text="${wh_details[0].category_sub}">소분류</td>
-                </tr>
-                <tr>
-                  <th>제품 사용 여부</th>
-                  <td th:text="${wh_details[0].use_yn}">Y</td>
-                  <th>입고 날짜</th>
-                  <td th:text="${wh_details[0].inbound_date}">2025-05-30</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- 거래처 정보 테이블 -->
-          <div class="table-responsive rounded mb-4">
-            <h5>거래처 정보</h5>
-            <table class="table table-bordered align-middle">
-              <tbody>
-                <tr>
-                  <th>거래처 코드</th>
-                  <td th:text="${wh_details[0].client_code}">CL001</td>
-                  <th>거래처 이름</th>
-                  <td th:text="${wh_details[0].client_name}">업체명</td>
-                  <th>거래처 사용 여부</th>
-                  <td th:text="${wh_details[0].client_use_yn}">Y</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- 버튼 영역 -->
+<!-- 창고 정보 테이블 -->
+<div class="table-responsive rounded mb-4">
+  <h5 th:text="${wh_details[0].wh_code} + ' : ' + ${wh_details[0].wh_name}">부자재 1 창고 : WH-001</h5>
+  <table class="table table-bordered text-center align-middle">
+    <tbody>
+      <tr>
+        <th scope="row">창고 위치</th>
+        <td colspan="3" class="text-start" th:text="${wh_details[0].wh_location}">(우편번호) 도로명 주소 상세주소</td>
+      </tr>
+      <tr>
+        <th scope="row">제품 코드</th>
+        <td th:text="${wh_details[0].item_code}">ITEM-001</td>
+        <th scope="row">제품 이름</th>
+        <td th:text="${wh_details[0].item_name}">나사</td>
+      </tr>
+      <tr>
+        <th scope="row">제품 수량</th>
+        <td th:text="${wh_details[0].item_count}">100</td>
+        <th scope="row">입고 일자</th>
+        <td th:text="${wh_details[0].inbound_date}">2025-05-30</td>
+      </tr>
+      <tr>
+        <th scope="row">대분류</th>
+        <td th:text="${wh_details[0].category_main}">부품</td>
+        <th scope="row">소분류</th>
+        <td th:text="${wh_details[0].category_sub}">소모품</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- 거래처 정보 테이블 -->
+<div class="table-responsive rounded mb-4">
+  <h5>거래처 정보</h5>
+  <table class="table table-bordered text-center align-middle">
+    <tbody>
+      <tr>
+        <th scope="row">거래처 코드</th>
+        <td th:text="${wh_details[0].client_code}">CL001</td>
+        <th scope="row">거래처 사용 여부</th>
+        <td th:text="${wh_details[0].client_use_yn}">Y</td>
+      </tr>
+      <tr>
+        <th scope="row">거래처 이름</th>
+        <td colspan="3" class="text-start" th:text="${wh_details[0].client_name}">삼성전자</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+          <!-- 버튼 영역 
           <div class="modal-footer d-flex justify-content-end">
             <form th:action="@{/in_warehouse_modify_page.do}" method="get" class="d-inline">
               <input type="hidden" name="inbound_code" th:value="${#strings.trim(wh_details[0].inbound_code)}" />
@@ -79,6 +80,7 @@
               		<i class="bi bi-trash"></i> 삭제
             </button>
           </div>
+          -->
 
         </div>
       </div>

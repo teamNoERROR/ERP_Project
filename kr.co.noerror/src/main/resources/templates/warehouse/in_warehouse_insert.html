@@ -10,40 +10,77 @@
   <section class="container" style="max-width: 900px;">
 
     <!-- Title -->
-	<div
-		class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-		<h2 class="mb-1">입고 창고 등록</h2>
-	</div>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+      <h2 class="mb-1">입고 창고 등록</h2>
+    </div>
 
-    <form id="inboundWhForm" th:action="@{/warehouse_in_save.do}" th:object="${IOSF_DTO}" method="post">
-     <input type="hidden" th:field="*{inbound_code}">
+    <form id="inboundWhForm" th:action="@{//warehouse_iosf_save.do}" th:object="${IOSF_DTO}" method="post">
+      <input type="hidden" th:field="*{inbound_code}">
 
-      <!-- 창고 선택 (모달) -->
-      <div class="mb-4">
-        <label class="form-label d-block mb-2">창고 선택</label>
-        <button class="btn btn-primary modal-trigger" type="button" 
-        	th:data-modal-url="@{/warehouse_list.do}"
-        	data-modal-id="warehouse_list" 
-        	style="cursor: pointer;">
-          <i class="bi bi-search"></i> 창고 선택
-        </button>
+      <!-- 창고 선택 -->
+<div class="mb-4">
+  <label class="form-label d-block mb-2">창고 선택</label>
+  <button class="btn btn-primary modal-trigger mb-3" type="button"
+    th:data-modal-url="@{/warehouse_list.do}"
+    data-modal-id="warehouse_list"
+    style="cursor: pointer;">
+    <i class="bi bi-search"></i> 창고 선택
+  </button>
 
-        <div class="d-flex gap-3 flex-wrap">
-          <input type="text" class="form-control" placeholder="창고코드" th:field="*{wh_code}" readonly style="flex: 1 1 120px;">
-          <input type="text" class="form-control" placeholder="창고명" th:field="*{wh_name}" readonly style="flex: 2 1 200px;">
-          <input type="text" class="form-control" placeholder="창고위치" th:field="*{wh_location}" readonly style="flex: 3 1 300px;">
-        </div>
-      </div>
+  <div class="row gx-3">
+    <div class="col-md-4 mb-3">
+      <label class="form-label">창고코드</label>
+      <input type="text" class="form-control" th:field="*{wh_code}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">창고명</label>
+      <input type="text" class="form-control" th:field="*{wh_name}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">창고위치</label>
+      <input type="text" class="form-control" th:field="*{wh_location}">
+    </div>
+  </div>
+</div>
 
       <!-- 제품 정보 -->
+      <div class="mb-4">
+  <label class="form-label d-block mb-2">제품 선택</label>
+  <button class="btn btn-primary modal-trigger mb-3" type="button" 
+    th:data-modal-url="@{/item_list.do}"
+    data-modal-id="items_list" 
+    style="cursor: pointer;"
+    onclick="openItemList('wh')"
+    >
+    <i class="bi bi-search"></i> 제품 선택
+  </button>
+
+  <div class="row gx-3">
+    <div class="col-md-6 mb-3">
+      <label class="form-label">제품코드</label>
+      <input type="text" class="form-control" th:field="*{item_code}">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label">부자재명</label>
+      <input type="text" class="form-control" th:field="*{item_name}">
+    </div>
+  </div>
+</div>
+
+      <!-- 수량 및 변경유형 -->
       <div class="mb-4 row gx-3">
         <div class="col-md-6 mb-3">
-          <label class="form-label">제품코드</label>
-          <input type="text" class="form-control" th:field="*{item_code}">
+          <label class="form-label">수량</label>
+          <input type="number" class="form-control" th:field="*{item_count}" min="0" placeholder="수량 입력">
         </div>
         <div class="col-md-6 mb-3">
-          <label class="form-label">부자재명</label>
-          <input type="text" class="form-control" th:field="*{item_name}">
+          <label class="form-label">입고 상태</label>
+          <select class="form-select" th:field="*{in_status}">
+            <option value="" disabled selected>선택</option>
+            <option value="입고">입고</option>
+            <option value="출고">출고</option>
+            <option value="수동조정">수동조정</option>
+          </select>
         </div>
       </div>
 
@@ -57,13 +94,6 @@
           <label class="form-label">제품 소분류</label>
           <input type="text" class="form-control" th:field="*{category_sub}">
         </div>
-        <div class="col-md-4 mb-3">
-          <label class="form-label">제품 사용여부</label>
-          <select class="form-select" th:field="*{use_yn}">
-            <option value="Y">Y</option>
-            <option value="N">N</option>
-          </select>
-        </div>
       </div>
 
       <!-- 거래처 정보 -->
@@ -74,14 +104,26 @@
         </div>
         <div class="col-md-5 mb-3">
           <label class="form-label">거래처명</label>
-          <input type="text" class="form-control" th:field="*{client_name}">
+          <input type="text" class="form-control">
         </div>
         <div class="col-md-2 mb-3">
           <label class="form-label">사용여부</label>
-          <select id="clientUseYn" class="form-select" th:field="*{client_use_yn}">
+          <select id="clientUseYn" name="clientUseYn" class="form-select">
             <option value="Y">Y</option>
             <option value="N">N</option>
           </select>
+        </div>
+      </div>
+
+      <!-- 등록 사원 정보 -->
+      <div class="mb-4 row gx-3">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">등록 사원 코드</label>
+          <input type="text" class="form-control" th:field="*{emp_code}" readonly name="emp_code">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">등록 사원 이름</label>
+          <input type="text" class="form-control" id="emp_name" readonly>
         </div>
       </div>
 

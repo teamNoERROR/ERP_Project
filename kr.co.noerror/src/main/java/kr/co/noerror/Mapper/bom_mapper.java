@@ -14,7 +14,7 @@ public interface bom_mapper {
 	
 	bom_DTO bom_detail(String pd_code);  //BOM 상세보기
 	
-	int bom_cd_ck();  //bom bidx 조회 
+	int bom_cd_ck(String code);  //고유번호 중복체크  
 	
 	Integer select_pidx(String bom_code); //부모bidx 찾기
 	int insert_item(bom_DTO dto); //BOM 등록
@@ -22,6 +22,6 @@ public interface bom_mapper {
 	int bom_all_ea_sch(Map<String, String> map);	//BOM 총개수(검색) 
 	List<bom_DTO> bom_all_list_sch(Map<String, Object> map);	//BOM 리스트(검색)
 	
-	int bom_delete(Map<String, Object> p);
+	int bom_delete(Map<String, Object> p);  //bom 삭제
 
 }

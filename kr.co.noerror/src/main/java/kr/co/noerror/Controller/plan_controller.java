@@ -17,15 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DAO.order_DAO;
 import kr.co.noerror.DAO.plan_DAO;
 import kr.co.noerror.DTO.order_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
-import kr.co.noerror.DTO.temp_client_DTO;
 import kr.co.noerror.DTO.temp_emp_DTO;
-import kr.co.noerror.DTO.temp_products_DTO;
-import kr.co.noerror.Model.M_random;
 
 @Controller
 public class plan_controller {
@@ -39,8 +35,8 @@ public class plan_controller {
 	@Autowired
 	plan_DAO pdao;
 	
-	@Resource(name="M_random")
-	M_random mrandom;
+//	@Resource(name="M_random")
+//	M_random mrandom;
 	
 	@PostMapping("/plan_save.do")
 	@ResponseBody
@@ -51,13 +47,13 @@ public class plan_controller {
         String plan_code = null;
         int count = 0;
         boolean is_duplicated = true;
-        while(is_duplicated) {
-        	plan_code = "PLN-" + this.mrandom.random_no();
-        	count = this.pdao.plan_code_check(plan_code);
-        	if(count == 0){
-        		is_duplicated = false;
-        	}
-        }
+//        while(is_duplicated) {
+//        	plan_code = "PLN-" + this.mrandom.random_no();
+//        	count = this.pdao.plan_code_check(plan_code);
+//        	if(count == 0){
+//        		is_duplicated = false;
+//        	}
+//        }
         
         try {    	
         	//production_plan 테이블에 저장

@@ -30,14 +30,14 @@
 			<div class="d-flex align-items-center gap-2 mb-2">
 			  <button class="btn btn-primary modal-trigger"
 			        type="button"
-			        th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}"
-			        data-modal-id="wh_type_list"
+			        th:onclick="whSelect('fs_wh','wh_name','wh_code')"
 			        style="cursor: pointer;">
 			    <i class="bi bi-search"></i>
 			</button>
 			
 			  <form class="d-flex align-items-center gap-2 mb-0" >
-			    <input type="text" id="wh_code" class="form-control" style="width: 200px;" placeholder="완제품 창고가 선택됩니다."/>
+			    <input type="text" id="wh_name" class="form-control" style="width: 200px;" placeholder="완제품 창고가 선택됩니다."/>
+			    <input type="hidden" name="wh_code" id="wh_code" class="form-control" />
 			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" />
 			    <input type="hidden" name="item_code" id="item_code" class="form-control" />
 			    <input type="hidden" id="client_code" class="form-control" />

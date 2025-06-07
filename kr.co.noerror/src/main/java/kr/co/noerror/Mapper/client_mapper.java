@@ -14,4 +14,6 @@ public interface client_mapper {
 	int client_total(Map<String, String> map);
 	
 	List<client_DTO> client_list(Map<String, Object> map);
+	
+	client_DTO client_detail(Map<String, String> map);
 }

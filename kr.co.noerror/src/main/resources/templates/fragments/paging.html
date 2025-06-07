@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- 페이징 fragment 정의 -->
+<div th:fragment="pagination (paging, condition, mode)">
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+	    <!-- Pagination -->
+	    <ul class="pagination mb-0">
+	        <!-- 이전 -->
+	        <li th:classappend="${paging.start_page == 1} ? 'disabled'" class="page-item prev">
+	            <a class="page-link"
+	               th:href="@{'/pchreq_list.do'(page_no=${paging.start_page - 1},
+	                                            search_word=${condition.search_word},
+	                                            statuses=${condition.statuses},
+	                                            page_size=${condition.page_size})}">
+	            <i class="bi bi-chevron-double-left"></i> </a>
+	        </li>
+
+	        <!-- 페이지 번호 -->
+	        <li class="page-item" th:each="i : ${#numbers.sequence(paging.start_page, paging.end_page)}"
+	            				th:classappend="${i == paging.page_no} ? 'active'">
+	            <a class="page-link"
+	               th:href="@{'/pchreq_list.do'(page_no=${i},
+	                                            search_word=${condition.search_word},
+	                                            statuses=${condition.statuses},
+	                                            page_size=${condition.page_size})}">[[${i}]]</a>
+	        </li>
+
+	        <!-- 다음 -->
+	        <li th:classappend="${paging.end_page >= paging.page_cnt} ? 'disabled'" class="page-item">
+	            <a class="page-link"
+	               th:href="@{'/pchreq_list.do'(page_no=${paging.end_page + 1},
+	                                            search_word=${condition.search_word},
+	                                            statuses=${condition.statuses},
+	                                            page_size=${condition.page_size})}">
+	            <i class="bi bi-chevron-double-right"></i>  </a>
+	        </li>
+	    </ul>
+
+	    <!-- 페이지당 항목 수 선택 -->
+	    <div class="ms-3">
+	        <select class="form-select form-select-sm"
+	                name="post_ea"
+	                style="width: auto;"
+	                th:attr="onchange=${mode == 'modal'} ? 'pchListOpen3(this)' : 'location.href=\'/pchreq_list.do?page_size=\' + this.value'">
+	            <option value="5" th:selected="${condition.page_size == 5}">5개씩 보기</option>
+	            <option value="10" th:selected="${condition.page_size == 10}">10개씩 보기</option>
+	            <option value="15" th:selected="${condition.page_size == 15}">15개씩 보기</option>
+	            <option value="20" th:selected="${condition.page_size == 20}">20개씩 보기</option>
+	            <option value="25" th:selected="${condition.page_size == 25}">25개씩 보기</option>
+	            <option value="30" th:selected="${condition.page_size == 30}">30개씩 보기</option>
+	        </select>
+	    </div>
+	</div>
+</div>
+
+</div>
+</body>
+</html>

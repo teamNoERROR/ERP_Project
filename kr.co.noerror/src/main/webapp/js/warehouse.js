@@ -180,9 +180,8 @@ function deleteWarehouse(button) {
  }
  
 //체크박스 형태로 여러개의 값 전송
- document.addEventListener('DOMContentLoaded', function () {
-	
-	
+ //document.addEventListener('DOMContentLoaded', function () {
+function whMoveBtn(){
    const moveBtn = document.querySelector('.btn-info');
    if (!moveBtn) return;
 
@@ -254,7 +253,7 @@ function deleteWarehouse(button) {
        alert("이동 중 오류가 발생했습니다.");
      });
    });
- });
+ };
 
 // ********************************************* 창고 체크박스로 삭제 *****************************************
 function deleteWh(wh_type) {

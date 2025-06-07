@@ -160,7 +160,10 @@ function cl2_modal_pg (page){
 
 
 //부자재리스트 모달 오픈 
-function openItemList(){
+function openItemList(type){
+	
+	parentType = type;  // 전역 변수에 저장
+	
 	fetch("./item_list.do", {
 		method: "GET",
 

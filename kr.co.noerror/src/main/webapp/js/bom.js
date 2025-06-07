@@ -126,53 +126,99 @@ var top_pd_nm = document.querySelector("#product_name");
 document.querySelector("#bom_top_pd").innerHTML=`<i class="bi bi-caret-right-fill"></i>`+top_pd_nm.value;
 
 //부자재리스트 모달에서 부자재 한번에 선택하기 
-function select_items () {
-  // 모든 체크된 체크박스를 찾음
-  var selected_box = document.querySelectorAll('input[name="select"]:checked');
+function select_items() {
+  const selected_box = document.querySelectorAll('input[name="select"]:checked');
+    console.log("함수 작동 2");
 
-  if (selected_box.length == 0) {
-	alert("제품을 1개 이상 선택해 주세요.");
+  if (typeof parentType !== 'undefined' && parentType === 'wh') {
+    console.log("함수 작동 1");
+	if (selected_box.length !== 1) {
+      alert("입고하실 부자재를 1개 선택해 주세요.");
+      return;
+    }
 	
-  }else{
-	  // 부모 테이블 tbody
-	  var tbody = document.querySelector('#bom_items');
 	
-	  //부모 테이블의 기존 행 전체 삭제
-	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
+    const selected_tr = selected_box[0].closest("tr");
 
-	  	  selected_box.forEach(checkbox => {
-		
-	    var row = checkbox.closest('tr');
+    const itemCode = selected_tr.dataset.code;
+    const itemName = selected_tr.dataset.name;
+    const class1 = selected_tr.dataset.class1;
+    const class2 = selected_tr.dataset.class2;
+    const clientCode = selected_tr.dataset.company;
+    const clientName = selected_tr.dataset.company_name;
+    const clientFlag = selected_tr.dataset.company_use_flag;
+
+    document.querySelector('input[name="item_code"]').value = itemCode;
+    document.querySelector('input[name="item_name"]').value = itemName;
+    document.querySelector('input[name="category_main"]').value = class1;
+    document.querySelector('input[name="category_sub"]').value = class2;
+    document.querySelector('input[name="client_code"]').value = clientCode;
+    document.querySelector('select[name="clientUseYn"]').value = clientFlag;
+    document.querySelector('input[name="client_code"]').closest('.row').querySelectorAll('input')[1].value = clientName;
+
+    // 모달 닫기
+    const modalElement = document.getElementById("items_list");
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+      modal.hide();
+      setTimeout(() => {
+        document.querySelector("body").focus();
+        document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+      }, 300);
+    }
+
+    return; 
+  }
+  
+  if (typeof parentType !== 'undefined' && parentType != 'wh_inb') {
+	  if (selected_box.length == 0) {
+	    alert("제품을 1개 이상 선택해 주세요.");
+	  } else {
+	    var tbody = document.querySelector('#bom_items');
+	    document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
 	
-	    var item = {
-	      code: row.dataset.code,
-	      name: row.dataset.name,
-	      class1: row.dataset.class1,
-	      class2: row.dataset.class2,
-	      spec: row.dataset.spec,
-		  cost: row.dataset.cost,
-	      pcomp: row.dataset.company
-	    };
-		
-	    // 부모 화면에 반영
-		appendItemsRow(tbody, item);
-		
-		document.querySelector("#bom_tr").innerHTML+=`
-			<li> ${item.name} </li>
-		`;
-	  });
+	    selected_box.forEach(checkbox => {
+	      var row = checkbox.closest('tr');
 	
-	 // 모달 닫기
-  	var modalElement = document.getElementById("items_list");
- 	var modal = bootstrap.Modal.getInstance(modalElement);
-	if (modal) {
-	    modal.hide();
-		setTimeout(() => {
-			document.querySelector("body").focus(); // body에 포커스 주기
-		}, 300);
+	      var item = {
+	        code: row.dataset.code,
+	        name: row.dataset.name,
+	        class1: row.dataset.class1,
+	        class2: row.dataset.class2,
+	        spec: row.dataset.spec,
+	        cost: row.dataset.cost,
+	        pcomp: row.dataset.company
+	      };
+	
+	      // append 전에 null 체크
+	      if (tbody) {
+	        appendItemsRow(tbody, item);
+	      }
+	
+	      document.querySelector("#bom_tr").innerHTML += `<li> ${item.name} </li>`;
+	    });
+	
+	    // 모달 닫기 + backdrop 제거
+	    var modalElement = document.getElementById("items_list");
+	    var modal = bootstrap.Modal.getInstance(modalElement);
+	    if (modal) {
+	      modal.hide();
+	      setTimeout(() => {
+	        document.querySelector("body").focus();
+	        document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
+	        document.body.classList.remove('modal-open');
+	        document.body.style.overflow = '';
+	        document.body.style.paddingRight = '';
+	      }, 300);
+	    }
+	  }
 	}
   }
-};
+  
+
 
 
 //모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 

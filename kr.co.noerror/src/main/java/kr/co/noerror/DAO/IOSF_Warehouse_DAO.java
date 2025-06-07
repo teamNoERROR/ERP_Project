@@ -143,6 +143,15 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		
 		List<IOSF_DTO> wh_detail_result = this.iosf_ware_st.selectList("IOSF_wh_SelectWithCode",this.params);
 		
+		String addr1 = wh_detail_result.get(0).getWh_addr1();
+		String addr2 = wh_detail_result.get(0).getWh_addr2();
+		String zipcode = wh_detail_result.get(0).getWh_zipcode();
+		String address = "(" + zipcode +")" + addr1 + " " + addr2; 
+		
+		
+		System.out.print(address);
+		wh_detail_result.get(0).setWh_location(address);
+		
 		System.out.println("dao " + wh_detail_result.get(0).getMaterial_date());
 		
 		return wh_detail_result;

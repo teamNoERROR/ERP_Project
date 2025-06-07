@@ -94,7 +94,11 @@
              					data-class2=${(mode == 'modal') ? itmlist.ITEM_CLASS2 : ''}, 
              					data-spec=${(mode == 'modal') ? itmlist.ITEM_SPEC : ''}, 
              					data-cost=${(mode == 'modal') ? itmlist.ITEM_COST : ''}, 
-             					data-company=${(mode == 'modal') ? itmlist.COMPANY_CODE : ''}"
+             					data-company=${(mode == 'modal') ? itmlist.COMPANY_CODE : ''},
+                      		    data-company_name=${(mode == 'modal') ? itmlist.COMPANY_NAME : ''},
+                          		data-company_use_flag=${(mode == 'modal') ? itmlist.COM_USE_FLAG : ''}
+             					"
+
              			th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"
                     	style="cursor: pointer;">
                     	

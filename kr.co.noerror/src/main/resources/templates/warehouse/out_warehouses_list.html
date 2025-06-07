@@ -64,7 +64,7 @@
 				    <tr class="modal-trigger"
 				        th:each="out_wh, iterStat : ${out_wh_list}"
 				        th:data-modal-url="@{'/out_warehouse_modal.do?out_code=' + ${out_wh.out_code}}"
-				       	data-modal-id="wh_fs_list"
+				       	data-modal-id="wh_out_list"
 				        style="cursor:pointer;">
 				      <td>
 				      	<input type="checkbox" name="deleteCodes"
@@ -127,9 +127,11 @@
 						<button type="button" class="btn btn-success" onclick="location.href='/warehouses_fs_list.do'">
 						  <i class="bi bi-plus-lg"></i> 추가
 						</button>
+						<!-- 
 						<button class="btn btn-danger" onclick="deleteWh('out')">
 						  <i class="bi bi-trash"></i> 삭제
 						</button>
+						 -->
 					</div>
 				</div>
 			</div>

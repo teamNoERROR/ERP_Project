@@ -112,7 +112,6 @@ public class M_file {
 	public boolean cdn_filesave(file_DTO f_dto, MultipartFile image_file) {
         Session session = null;
         ChannelSftp channelSftp = null;
-        
         try {
         	this.file_rnm = this.file_rename(image_file.getOriginalFilename());  //원래파일명 리네임메소드에 전달 
 

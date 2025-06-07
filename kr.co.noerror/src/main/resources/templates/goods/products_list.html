@@ -38,7 +38,7 @@
              <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
           </select>
           
-          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
+          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch('product')">
             <th:block >
             <option value="" th:if="${sclass == null or sclass.isEmpty()}" >소분류</option>
             <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
@@ -46,9 +46,8 @@
           </select>
         </div>
 <!--          </form> -->
-         
-         <!-- 키워드로 검색 -->
 <!--        <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()"> -->
+       <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
           <button class="btn btn-primary"  >
@@ -90,8 +89,12 @@
                 		<td class="text-center no_list_tb" colspan="14"> 등록된 상품이 없습니다. </td>
                 	</tr>
                 	
-                    <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" onclick="open_gd_detail(event)"  style="cursor: pointer;">
-                        <td onclick="event.stopPropagation()"><input type="checkbox" name="selected_box" class="sb" th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product"></td>
+                    <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" 
+                    	onclick="open_gd_detail(event)"  style="cursor: pointer;">
+                        <td onclick="event.stopPropagation()">
+                        	<input type="checkbox" name="selected_box" class="sb" 
+                        			th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product">
+                        </td>
                         <td > [[${bno - idx.index}]]</td>
                         <td class="p-0">
                         	<img th:if="${pdlist.PD_API_FNM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${pdlist.PD_FILE_RENM}}" style="width:50px;">
@@ -118,11 +121,8 @@
        
 
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-
         <div class="d-flex">
     <!-- Pagination -->
-
-    <input type="hidden" name="t">
         <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
             <ul class="pagination">
                 <li class="page-item page-link prev"  

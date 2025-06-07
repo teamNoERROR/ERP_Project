@@ -101,17 +101,17 @@ public class goods_controller {
 			this.list.add(lc_list.getString(i));
 		}
 		
+		String lclass_ck = this.g_svc.lclass_ck(sclass);
+		JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
+		List<String> slist = new ArrayList<>();
+		for (int i = 0; i < sc_list.length(); i++) {
+			slist.add(sc_list.getString(i));
+		}
+		
+		//소분류로 검색시 검색항목 보여주기 
 		if(sclass!=null) {
-			String lclass_ck = this.g_svc.lclass_ck(sclass);
 			m.addAttribute("lclass_ck",lclass_ck);  //선택한 대분류항목
 			m.addAttribute("sclass",sclass);  //선택한 소분류항목
-
-			JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
-			List<String> slist = new ArrayList<>();
-			for (int i = 0; i < sc_list.length(); i++) {
-				slist.add(sc_list.getString(i));
-			}
-			m.addAttribute("slist",slist);
 		}
 		
 		//제품타입에 따른 url 분류 
@@ -130,10 +130,10 @@ public class goods_controller {
 		m.addAttribute("smenu","품목 관리");
 		
 		m.addAttribute("keyword",keyword);
-		m.addAttribute("lclass",this.list);
+		m.addAttribute("lclass",this.list);  //대분류목록 
+		m.addAttribute("slist",slist);  //소분류목록 
 		
 		m.addAttribute("bno", bno);
-		m.addAttribute("no_goods", "등록된 제품이 없습니다");
 		m.addAttribute("goods_total", goods_total_sch);
 		m.addAttribute("goods_all_list", goods_all_list_sch);
 		
@@ -270,6 +270,7 @@ public class goods_controller {
 	public String products_insertok(@ModelAttribute products_DTO pdto,
 									@RequestParam(value = "productImage", required = false) MultipartFile productImage,
 									HttpServletResponse res) {
+		System.out.println("product : " + pdto);
 		try {
 			this.pw = res.getWriter();
 			
@@ -298,6 +299,7 @@ public class goods_controller {
 	public String items_insertok(@ModelAttribute products_DTO pdto,
 									@RequestParam(value = "itmImage", required = false) MultipartFile itmImage,
 									HttpServletResponse res) {
+		
 		try {
 			this.pw = res.getWriter();
 			

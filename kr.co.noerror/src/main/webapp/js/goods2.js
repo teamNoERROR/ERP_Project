@@ -161,7 +161,7 @@ function go_pd_pg(ee){
 		}
 
 		if (sclass) {  //소분류 선택시 
-		    params["sclass"] = sclass;
+		    params["products_class2"] = sclass;
 		}
 
 		var pString = new URLSearchParams(params).toString();

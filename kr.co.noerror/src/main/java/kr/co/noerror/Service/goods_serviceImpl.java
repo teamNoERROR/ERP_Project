@@ -105,24 +105,28 @@ public class goods_serviceImpl implements goods_service {
 		try {
 //			
 			String pd_code = this.makeCode.generate("", code -> {
-			    pdto.setPRODUCT_CODE(code); // 코드만 변경
+				pdto.setPRODUCT_CODE(code); // 코드만 변경
 			    return this.g_dao.code_dupl(pdto) > 0; // dto 전달
 			});
 			pdto.setPRODUCT_CODE(pd_code);
 			
-			fileattach = this.m_file.cdn_filesave(this.f_dto, productImage);
-			if(fileattach == true) {  //FTP에 파일저장 완료 후 
-				//dto에 파일명 장착
-				pdto.setPD_FILE_NM(this.f_dto.getFilenm());
-				pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
-				pdto.setPD_API_FNM(this.f_dto.getApinm());
-				pdto.setPD_IMG_SRC(this.f_dto.getImgPath());
-				
-				result = this.g_dao.pd_insert(pdto);
-				
-			}else { //FTP에 파일저장 실패 
-				result = 0;
+			//첨부파일 있는경우 
+			if(productImage != null) {
+				fileattach = this.m_file.cdn_filesave(this.f_dto, productImage);
+				if(fileattach == true) {  //FTP에 파일저장 완료 후 
+					//dto에 파일명 장착
+					pdto.setPD_FILE_NM(this.f_dto.getFilenm());
+					pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
+					pdto.setPD_API_FNM(this.f_dto.getApinm());
+					pdto.setPD_IMG_SRC(this.f_dto.getImgPath());
+					
+				}else { //FTP에 파일저장 실패 
+					result = 0;
+				}
 			}
+			
+			//첨부파일 없는경우 
+			result = this.g_dao.pd_insert(pdto);
 			
 		} catch (Exception e) {
 			this.log.error(e.toString());
@@ -144,19 +148,20 @@ public class goods_serviceImpl implements goods_service {
 			});
 			pdto.setITEM_CODE(itm_code);
 
-			fileattach = this.m_file.cdn_filesave(this.f_dto, itmImage);
-			if(fileattach == true) {  //FTP에 파일저장 완료 후 
-				//dto에 파일명 장착
-				pdto.setITM_FILE_NM(this.f_dto.getFilenm());
-				pdto.setITM_FILE_RENM(this.f_dto.getFileRenm());
-				pdto.setITM_API_FNM(this.f_dto.getApinm());
-				pdto.setITM_IMG_SRC(this.f_dto.getImgPath());
-				
-				result = this.g_dao.itm_insert(pdto);
-			
-			}else {  //FTP에 파일저장 실패 
-				result = 0;
+			if(itmImage != null) {
+				fileattach = this.m_file.cdn_filesave(this.f_dto, itmImage);
+				if(fileattach == true) {  //FTP에 파일저장 완료 후 
+					//dto에 파일명 장착
+					pdto.setITM_FILE_NM(this.f_dto.getFilenm());
+					pdto.setITM_FILE_RENM(this.f_dto.getFileRenm());
+					pdto.setITM_API_FNM(this.f_dto.getApinm());
+					pdto.setITM_IMG_SRC(this.f_dto.getImgPath());
+					
+				}else {  //FTP에 파일저장 실패 
+					result = 0;
+				}
 			}
+			result = this.g_dao.itm_insert(pdto);
 			
 		} catch (Exception e) {
 			this.log.error(e.toString());

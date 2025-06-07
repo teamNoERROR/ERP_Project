@@ -32,7 +32,7 @@ function deleteWarehouse(button) {
     console.error(error);
   });
 }
- //************************************************************************************************ */
+
 
  //*******************************관리자 모달 리스트 선택 후 반환 **************************************** */
  function selectEmp() {
@@ -60,7 +60,7 @@ function deleteWarehouse(button) {
     const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
     modal.hide();
   }
- //***************************************************************************************************** */
+
  
  //*******************************부자재 모달 리스트 선택 후 반환 **************************************** */
  function select_iosf_wh() {
@@ -97,7 +97,7 @@ function deleteWarehouse(button) {
    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
    modal.hide();
  }
- //***************************************************************************************************** */
+
  
  
  //******************************창고 모달 리스트 선택 후 반환 **************************************** */
@@ -125,7 +125,7 @@ function deleteWarehouse(button) {
     const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
     modal.hide();
   }
- //**************************************************************************************************
+
 
  //********************전체 창고 -> 창고 선택 탭***********************************************************
  function toggleWh(type) {
@@ -148,11 +148,11 @@ function deleteWarehouse(button) {
 		  
 	location.href = url; //페이지 이동
  }
- //**************************************************************************************************
 
- //**************************************부자재 창고로 입고 정보 이동*************************************************
+
+ //**************************************창고로 입고 정보 이동*************************************************
  
- // 부자재 창고 값 셋팅 
+ // 창고 값 셋팅 
  function selectRow(checkbox) {
 	
     const inboundCode = checkbox.dataset.inbound_code;
@@ -224,17 +224,30 @@ function whMoveBtn(){
        if (!res.ok) throw new Error('서버 오류');
        return res.json();
      })
-     .then(data => {
-       if (data.success) {
-         if (confirm("이동이 완료되었습니다. 부자재 창고 리스트로 이동하시겠습니까?")) {
-           location.href = "/warehouses_mt_list.do";
-         } else {
-           alert("이동만 완료되고 현재 페이지에 머물렀습니다.");
-         }
-       } else {
-         alert("이동 처리 실패: " + (data.message || "알 수 없는 오류"));
-       }
-     })
+	 .then(data => {
+	   if (data.success) {
+	    
+		const wh_type = moveData[0].wh_type; // 첫 항목의 창고 타입 사용 (필요 시 공통성 체크)
+		let wh_kind = "";
+
+		if (wh_type == "in") {
+		    wh_kind = "입고";
+		} else if (wh_type == "mt") {
+		    wh_kind = "부자재";
+		} else if (wh_type == "fs") {
+		    wh_kind = "완제품";
+		} else if (wh_type == "out") {
+		    wh_kind = "출고";
+		}
+	     if (confirm(`이동이 완료되었습니다. ${wh_kind} 리스트로 이동하시겠습니까?`)) {
+	       location.href = `/warehouses_${wh_type}_list.do`;
+	     } else {
+	       alert("이동만 완료되고 현재 페이지에 머물렀습니다.");
+	     }
+	   } else {
+	     alert("이동 처리 실패: " + (data.message || "알 수 없는 오류"));
+	   }
+	 })
      .catch(err => {
        console.error(err);
        alert("이동 중 오류가 발생했습니다.");
@@ -321,7 +334,6 @@ function deleteWh(wh_type) {
     });
 }
 
-// *****************************************************************************************************
 
 
 // ********************************************* 창고 저장 js ********************************************
@@ -456,9 +468,7 @@ function wh_save() {
   frm.submit();
   
   }
- // ********************************************************************************************************
- 
-  
+    
   //**********************************************다음 주소 api********************************************
   function sample6_execDaumPostcode() {
         new daum.Postcode({
@@ -505,4 +515,3 @@ function wh_save() {
         }).open();
     }
 	
-	//**************************************************************************************************

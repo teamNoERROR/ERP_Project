@@ -49,39 +49,106 @@
 </insert>
 
 
-<!-- 제품 전체 개수  -->
+<!-- bom 등록제품 전체 개수  -->
 <select id="bom_all_ea_sch" resultType="int" parameterType="Map">
 	SELECT COUNT(DISTINCT PRODUCT_CODE) AS CNT FROM BPI_VIEW
-<!-- 		<if test="sclass != null"> -->
-<!-- 			<where> -->
-<!-- 			PRODUCT_CLASS2 = #{sclass}  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
-<!-- 		<if test="keyword != null">  -->
-<!-- 			<where> -->
-<!-- 			 (BOM_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 C_PRODUCT_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 C_ITEM_CODE LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 PRODUCT_NAME LIKE '%'||#{keyword}||'%' OR -->
-<!-- 			 ITEM_NAME LIKE '%'||#{keyword}||'%' -->
-<!-- 			 )  -->
-<!-- 			</where> -->
-<!-- 		</if> -->
+	<where>
+      	<if test="sclass != null">
+      	PRODUCT_CLASS2 = #{sclass}
+	      	<if test="keyword!= null">
+      		AND ( 
+				PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+				PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
+				) 
+      		</if>
+      	</if>
+      	<if test="sclass == null and keyword!= null">
+     		( 
+			PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+			PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
+			) 
+     	</if>
+      </where>
 </select>
 
 
 <!-- bom 전체 리스트  -->
 <select id="bom_all_list_sch" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="Map">
 	SELECT *
-	FROM (
-	    SELECT * FROM BPI_VIEW b1
+  	FROM (
+	    SELECT *
+	    FROM BPI_VIEW b1
 	    WHERE BIDX = (
-	        SELECT MAX(BIDX) FROM BPI_VIEW b2
-	        WHERE b2.PRODUCT_CODE = b1.PRODUCT_CODE
-	    )
-	)
-	ORDER BY BIDX DESC
-	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
+	      SELECT MAX(BIDX)
+	      FROM BPI_VIEW b2
+	      WHERE b2.PRODUCT_CODE = b1.PRODUCT_CODE
+    	)
+    	<if test="sclass != null">
+      	AND PRODUCT_CLASS2 = #{sclass}
+	      	<if test="keyword!= null">
+      		AND ( 
+				PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+				PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+				ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
+				) 
+      		</if>
+      	</if>
+      	<if test="sclass == null and keyword!= null">
+     	AND ( 
+			PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
+			PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			BOM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
+			ITM_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'  
+		) 
+     	</if>
+  )
+  ORDER BY BIDX DESC
+  OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
 <delete id="bom_delete"  parameterType="Map">

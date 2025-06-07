@@ -67,6 +67,17 @@ public class bom_controller {
 
 		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass , keyword); //bom리스트 제품 총개수
 		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
+		System.out.println("bom_total_sch : " + bom_total_sch);
+		System.out.println("bom_all_list_sch : " + bom_all_list_sch);
+		
+		//페이징 관련 
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, bom_total_sch);
+		int bno = this.m_pg.serial_no(bom_total_sch, pageno, post_ea); 
+				
+		//검색했을경우 
+		if(sclass != null || keyword != null) {
+			m.addAttribute("mmmenu","검색결과");
+		}
 
 		//리스트의 분류검색 리스트용 
 		JSONArray lc_list = this.g_svc.gd_class("product");  //대분류목록
@@ -74,13 +85,13 @@ public class bom_controller {
 		for (int i = 0; i < lc_list.length(); i++) {
 			this.list.add(lc_list.getString(i));
 		}
-		
+			
 		if(sclass!=null) {
 			String lclass_ck = this.g_svc.lclass_ck(sclass);
 			m.addAttribute("lclass_ck",lclass_ck);
 			m.addAttribute("sclass",sclass);
 
-			JSONArray sc_list = this.g_svc.sc_class(null, lclass_ck);  //소분류 목록
+			JSONArray sc_list = this.g_svc.sc_class("product", lclass_ck);  //소분류 목록
 			List<String> slist = new ArrayList<>();
 			for (int i = 0; i < sc_list.length(); i++) {
 				slist.add(sc_list.getString(i));
@@ -88,11 +99,7 @@ public class bom_controller {
 			m.addAttribute("slist",slist);
 		}
 		
-		//페이징 관련 
-		int pea = post_ea; 
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, pea, bom_total_sch);
-		int bno = this.m_pg.serial_no(bom_total_sch, pageno, pea); 
-		
+		//페이지로 보낼 것들 
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("mmenu","BOM 관리");
 		m.addAttribute("smenu","BOM 리스트");
@@ -101,13 +108,11 @@ public class bom_controller {
 		m.addAttribute("lclass",this.list);
 		
 		m.addAttribute("bno", bno);
-		m.addAttribute("no_goods", "등록된 제품이 없습니다");
 		m.addAttribute("bom_total", bom_total_sch);
 		m.addAttribute("bom_all_list", bom_all_list_sch);
 		
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", pea);
 		
 		return "/goods/bom_list.html";
 		

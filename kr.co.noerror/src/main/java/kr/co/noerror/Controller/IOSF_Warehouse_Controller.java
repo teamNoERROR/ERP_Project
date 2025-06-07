@@ -52,7 +52,10 @@ public class IOSF_Warehouse_Controller {
    
    @GetMapping("/warehouse_in_savePage.do")
    public String warehouse_in_savePage(Model m) {
-      
+	   m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","입고 창고 관리");
+		
       m.addAttribute("IOSF_DTO", this.iosf_dto);
       return "/warehouse/in_warehouse_insert.html";
    }
@@ -64,6 +67,10 @@ public class IOSF_Warehouse_Controller {
            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
            @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
   
+	    m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","출고 창고 관리");
+	   
 	      this.map = new HashMap<>();
 	      Map<Object, Object>   iosf_list_map = this.map;
 	   
@@ -89,6 +96,10 @@ public class IOSF_Warehouse_Controller {
            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
            @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
   
+	   m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","완제품 창고 관리");
+	   
 	   	this.map = new HashMap<>();
 	      Map<Object, Object>   iosf_list_map = this.map;
 	   
@@ -115,6 +126,10 @@ public class IOSF_Warehouse_Controller {
            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
            @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
   
+	   m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","부자재 창고 관리");
+	   
 	   	this.map = new HashMap<>();
 	      Map<Object, Object>   iosf_list_map = this.map;
 	   
@@ -141,7 +156,9 @@ public class IOSF_Warehouse_Controller {
            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
            @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
       
-   
+	   m.addAttribute("lmenu","기준정보관리");
+ 		m.addAttribute("smenu","창고 관리");
+ 		m.addAttribute("mmenu","입고 창고 관리");
       this.map = new HashMap<>();
       Map<Object, Object>   iosf_list_map = this.map;
    
@@ -198,7 +215,7 @@ public class IOSF_Warehouse_Controller {
   
    
    
-   @PostMapping("/warehouse_in_save.do")
+   @PostMapping("/warehouse_iosf_save.do")
    public String warehouse_in_save(
          Model m, 
          IOSF_DTO iosf_dto,
@@ -215,12 +232,12 @@ public class IOSF_Warehouse_Controller {
          int iosf_save = iosf_service.IOSF_warehouse_SaveAndUpdate(iosf_dto, this.check_insertOrModify, this.wh_type);
          if(iosf_save > 0) {
             this.pw.print("<script>"
-                  + "alert('입고 창고가 정상적으로 저장 되었습니다.');"
+                  + "alert('창고가 정상적으로 저장 되었습니다.');"
                   + "location.href='warehouses_in_list.do';"
                   + "</script>");
          }else {
             this.pw.print("<script>"
-                  + "alert('입고 창고 저장 중 문제가 발생하였습니다."
+                  + "alert('창고 저장 중 문제가 발생하였습니다."
                   + "\n 관리자에게 문의하세요');"
                   + "history.go(-1);"
                   + "</script>");
@@ -237,7 +254,35 @@ public class IOSF_Warehouse_Controller {
       return null;
    }
    
+ //창고 정보 상세 모달 페이지에 결과 값 전달
+   @GetMapping("/out_warehouse_modal.do")
+   public String out_warehouse_detail(
+         Model m,
+         @RequestParam(value = "out_code", required = true) String out_code
+         ){
+   
+      this.wh_type = "out";
+       List<IOSF_DTO>wh_list_details = iosf_service.IOSF_wh_SelectWithCode(out_code, this.wh_type);
+
+       m.addAttribute("wh_details" , wh_list_details);
       
+      return "/modals/out_warehouse_modal.html";
+   }
+      
+ //창고 정보 상세 모달 페이지에 결과 값 전달
+   @GetMapping("/fs_warehouse_modal.do")
+   public String fs_warehouse_detail(
+         Model m,
+         @RequestParam(value = "finish_code", required = true) String fs_code
+         ){
+   
+      this.wh_type = "fs";
+       List<IOSF_DTO>wh_list_details = iosf_service.IOSF_wh_SelectWithCode(fs_code, this.wh_type);
+
+       m.addAttribute("wh_details" , wh_list_details);
+      
+      return "/modals/fs_warehouse_modal.html";
+   }
    
    //창고 정보 상세 모달 페이지에 결과 값 전달
    @GetMapping("/mt_warehouse_modal.do")
@@ -269,6 +314,10 @@ public class IOSF_Warehouse_Controller {
          
          return "/modals/in_warehouse_modal.html";
       }
+      
+      
+      
+      
       
       @PostMapping("/in_warehouse_modify.do")
       public String IOSF_modify_warehouse(
@@ -320,7 +369,12 @@ public class IOSF_Warehouse_Controller {
       public String in_modify_warehouse_page(
             @RequestParam(value = "inbound_code", required = true) String inbound_code,
             Model m) {
-         this.wh_type = "in";
+        
+    	 m.addAttribute("lmenu","기준정보관리");
+  		m.addAttribute("smenu","창고 관리");
+  		m.addAttribute("mmenu","입고 창고 관리");
+    	  
+    	  this.wh_type = "in";
          List<IOSF_DTO>in_wh_modify_result = iosf_service.IOSF_wh_SelectWithCode(inbound_code, this.wh_type);
          m.addAttribute("in_wh_modify" , in_wh_modify_result);
          

@@ -21,23 +21,24 @@
   <!-- 검색창 영역 -->
   <div class="col-auto">
       <div class="col-auto d-flex"  >
-       <form id="frm_class" class="row g-1 align-items-center" >
-       <input type="hidden" name="type">
+       
+       <form id="frm_class" class="row g-1 align-items-center" onsubmit="return bomSearch()">
+        <!-- 분류로 검색 -->
+       <input type="hidden" name="type" id="goods_type" value="product">
       <div class="input-group input-group-sm me-0" style="width: 200px;">
           <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
             <option value="">대분류</option>
              <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
           </select>
-          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
+          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch('bom')">
             <th:block >
             <option value="" th:if="${sclass == null}" >소분류</option>
             <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
             </th:block>
-            
           </select>
         </div>
-         </form>
-       <form id="frm_word" class="row g-1 align-items-center" onsubmit="return bomSearch()">
+
+		 <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
           <button class="btn btn-primary" >
@@ -116,32 +117,46 @@
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='product',data-pea=${pea}" onclick="go_pd_pg(this)">이전</li>
+                	th:attr="data-pageno=1, data-keyword=${keyword}, data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_bom_pg(this)">
+					<i class="bi bi-chevron-double-left"></i> </li>
+					
+				<li class="page-item page-link " 
+					th:if="${pageinfo.start_pg > 1}"  
+                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_bom_pg(this)">
+					<i class="bi bi-chevron-left"></i> </li>
+					
                 
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product',data-pea=${pea}, data-sclass = ${sclass}" 
-                	onclick="go_pd_pg(this)" >[[${pgn}]]</li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn},data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	onclick="go_bom_pg(this)" >[[${pgn}]]</li>
                 </th:block>
                 
+                <li class="page-item page-link " 
+                	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
+                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 2},data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_bom_pg(this)" >
+					<i class="bi bi-chevron-right"></i> </li>
+					
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageno +1 }, data-type='product',data-pea=${pea}" onclick="go_pd_pg(this)" >다음</li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total},data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_bom_pg(this)" >
+					<i class="bi bi-chevron-double-right"></i> </li>
             </ul>
         </div>
         
         <!-- 게시물개수 선택  -->
-        <form id="pdpg_frm">
-        <input type="hidden" name="t">
+        <form id="bompg_frm">
         <input type="hidden" name="pageno" th:value="${pageno}">
         <div class="mt-4 ms-1">
-        <select class="form-select" name="post_ea" onchange="postEa()">
-            <option value="5"   th:selected="${pea} == '5'" >5개씩 보기</option>
-            <option value="10"  th:selected="${pea} == '10'" >10개씩 보기</option>
-            <option value="15"  th:selected="${pea} == '15'" >15개씩 보기</option>
-            <option value="20"  th:selected="${pea} == '20'" >20개씩 보기</option>
-            <option value="25"  th:selected="${pea} == '25'" >25개씩 보기</option>
-            <option value="30"  th:selected="${pea} == '30'" >30개씩 보기</option>
+        <select class="form-select" name="post_ea" onchange="bompostEa()">
+            <option value="5"   th:selected="${pageinfo.post_ea} == '5'" >5개씩 보기</option>
+            <option value="10"  th:selected="${pageinfo.post_ea} == '10'" >10개씩 보기</option>
+            <option value="15"  th:selected="${pageinfo.post_ea} == '15'" >15개씩 보기</option>
+            <option value="20"  th:selected="${pageinfo.post_ea} == '20'" >20개씩 보기</option>
+            <option value="25"  th:selected="${pageinfo.post_ea} == '25'" >25개씩 보기</option>
+            <option value="30"  th:selected="${pageinfo.post_ea} == '30'" >30개씩 보기</option>
           </select>
         </div>
           </form>

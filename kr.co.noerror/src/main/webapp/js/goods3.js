@@ -53,7 +53,7 @@ function insertItm(){
 		alert("안전재고수를 입력하세요");
 		itm_safe_stock.focus();	
 				
-	}else if(!reg_num.test(itm_safe_stock.value)){
+	}else if(!reg_num.test(itm_safe_stock.value)){  //숫자만 입력 유효성 검사 
 		alert("안전재고수는 숫자만 입력이 가능합니다.");
 		itm_safe_stock.focus();	
 		
@@ -74,9 +74,7 @@ function insertItm(){
 	}else if(purchase_corp.value==""){
 		alert("거래처를 선택하세요");
 		purchase_corp.focus();		
-	}
-	//파일첨부 함경우 	
-	else if(itmImage){  
+	}else if(itmImage){    //파일첨부 함경우 	
 		var imgSize = itmImage.size; // 파일 크기
 		var maxSize = 2 * 1024 * 1024; // 2MB제한
 			
@@ -175,6 +173,7 @@ function insertItem(){
 		return data.text();
 
 	}).then(function(result) {
+		console.log(result)
 		if(result=="ok"){
 			alert("부자재 등록이 완료되었습니다.");
 			location.href="./goods.do?type=item";
@@ -188,6 +187,7 @@ function insertItem(){
 /*--------------------------------------------------------------
 부자재 페이징
 --------------------------------------------------------------*/
+/*
 function go_itm_pg(ee){
 	var keyword = ee.getAttribute('data-keyword');
 	var page_no = ee.getAttribute('data-pageno');
@@ -210,4 +210,4 @@ function go_itm_pg(ee){
 	var pString = new URLSearchParams(params).toString();
 	location.href = "./goods.do?" + pString;
 }
-
+*/

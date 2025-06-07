@@ -36,9 +36,9 @@
       <div class="input-group input-group-sm me-0" style="width: 200px;">
           <select class="form-select" id="lm_class" onchange="lcSc(this.value)">
             <option value="">대분류</option>
-             <option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
+			<option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
           </select>
-          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch()">
+          <select class="form-select" id="products_class2" name="products_class2" onchange="class_sch('item')">
             <th:block >
             <option value="" th:if="${sclass == null or sclass.isEmpty()}" >소분류</option>
             <option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
@@ -71,7 +71,6 @@
                         <th scope="col">IMG</th>
                         <th scope="col">제품코드</th>
                          <th scope="col">제품명</th>
-                        <th scope="col">제품유형</th>
                         <th scope="col">대분류</th>
                         <th scope="col">소분류</th>
                         <th scope="col">규격</th>
@@ -84,7 +83,7 @@
                 </thead>
                 <tbody>
                 	<tr th:if="${goods_total == 0}" >
-                		<td class="text-center no_list_tb" colspan="14" > 등록된 부자재가 없습니다. </td>
+                		<td class="text-center no_list_tb" colspan="13" > 등록된 부자재가 없습니다. </td>
                 	</tr>
                 	
                     <tr th:each="itmlist,idx : ${goods_all_list}" 
@@ -96,7 +95,11 @@
              					data-spec=${(mode == 'modal') ? itmlist.ITEM_SPEC : ''}, 
              					data-unit=${(mode == 'modal') ? itmlist.ITEM_UNIT : ''}, 
              					data-cost=${(mode == 'modal') ? itmlist.ITEM_COST : ''}, 
-             					data-company=${(mode == 'modal') ? itmlist.COMPANY_CODE : ''}"
+             					data-company=${(mode == 'modal') ? itmlist.COMPANY_CODE : ''},
+                      		    data-company_name=${(mode == 'modal') ? itmlist.COMPANY_NAME : ''},
+                          		data-company_use_flag=${(mode == 'modal') ? itmlist.COM_USE_FLAG : ''}
+             					"
+
              			th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"
                     	style="cursor: pointer;">
                     	
@@ -112,7 +115,6 @@
                         </td>
                         <td class="pd_code" >[[${itmlist.ITEM_CODE}]]</td>
                         <td class="text-start">[[${itmlist.ITEM_NAME}]]</td>
-                        <td>부자재</td>
                         <td >[[${itmlist.ITEM_CLASS1}]]</td>
                         <td>[[${itmlist.ITEM_CLASS2}]]</td>
                          <td>[[${itmlist.ITEM_SPEC}]]</td>
@@ -137,21 +139,32 @@
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-parent=${parentType}, data-pageno=1, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" 
-                	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'"> 
-                	<i class="bi bi-chevron-double-left"></i> </li>
+                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_itm_pg(this)">
+					<i class="bi bi-chevron-double-left"></i> </li>
+					
+				<li class="page-item page-link " 
+					th:if="${pageinfo.start_pg > 1}"  
+                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_itm_pg(this)">
+					<i class="bi bi-chevron-left"></i> </li>
+					
                 
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
                 <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
-                	th:attr="data-parent=${parentType},data-keyword=${keyword}, data-pageno=${pgn}, data-type='item', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
-                	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'">[[${pgn}]]</li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='item',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	onclick="go_itm_pg(this)" >[[${pgn}]]</li>
                 </th:block>
                 
+                <li class="page-item page-link " 
+                	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
+                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 2}, data-type='item',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_itm_pg(this)" >
+					<i class="bi bi-chevron-right"></i> </li>
+					
                 <li class="page-item page-link next" 
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-parent=${parentType}, data-pageno=${pageinfo.page_ea_total}, data-keyword=${keyword}, data-type='item', data-pea=${pea}, data-sclass = ${sclass}" data-parent=${parentType},
-                	th:onclick="${itmMode == 'itmPageing'} ? 'itm_modal_pg(this)' : 'go_itm_pg(this)'"> 
-                	<i class="bi bi-chevron-double-right"></i> </li>
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total}, data-type='item',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_itm_pg(this)" >
+					<i class="bi bi-chevron-double-right"></i> </li>
             </ul>
         </div>
         <form id="pdpg_frm">

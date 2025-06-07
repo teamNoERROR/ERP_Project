@@ -118,7 +118,7 @@ public class bom_serviceImpl implements bom_service{
 	public int bom_all_ea_sch(String sclass, String keyword) {
 		this.map = new HashMap<>();
 		this.map.put("sclass", sclass);
-		this.map.put("keyword", String.valueOf(keyword));
+		this.map.put("keyword",keyword);
 		
 		int bom_total = this.b_dao.bom_all_ea_sch(map);
 		return bom_total;
@@ -131,7 +131,7 @@ public class bom_serviceImpl implements bom_service{
 		int count = post_ea; 
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("keyword", String.valueOf(keyword));
+		map.put("keyword",keyword);
 		map.put("sclass", sclass);
 		map.put("start", start);
 		map.put("count", count);

@@ -1,154 +1,268 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="~{/common/config.html :: config}">
-</head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/common/config.html :: config}"></head>
 <body>
-<header th:replace="~{/common/header.html :: header}"></header>
+	<header th:replace="~{/common/header.html :: header}"></header>
 
-<main class="main">
-<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 
+		<section class="container">
+			<div
+				class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<h2 class="mb-1">생산계획 수기등록</h2>
+			</div>
 
-<section class="container ">
-        <!-- Title -->
-        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">생산계획 등록</h2>
-        
-        </div>
-<!--          
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
-<button type="button" class="btn-close" aria-label="Close"></button>
-</div>
--->
+			<!-- 탭 버튼 -->
+			<div class="col-auto mb-3">
+				<div id="list-type"
+					style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
+					<button id="order-list" class="toggle_btns"
+						onclick="toggleButton9(1)"
+						style="background: #82CCDD; color: #fff;">주문생산</button>
+					<button id="product-list" class="toggle_btns"
+						onclick="toggleButton9(2)"
+						style="background: transparent; color: #000;">재고생산</button>
+				</div>
+			</div>
 
-  <div class="col-auto  mb-3">
-    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
-      <button id="order-list" class="toggle_btns" onclick="toggleButton2(1)" style="background: #82CCDD; color: #fff;">주문생산</button>
-      <button id="product-list" class="toggle_btns" onclick="toggleButton2(2)"   style="background: transparent; color: #000;">재고생산</button>
-    </div>
-  </div>
-  
-<div class="form-section">
-	
-     <div class="row justify-content-center">
-                    <form class=" ">
-                        <div class="row mb-3 row1">
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">주문코드</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="order_code" placeholder="주문코드" readonly>
-                                    <button type="button" class="btn btn-outline-secondary modal-trigger" 
-                                            th:data-modal-url="@{/orders_modal.do}" data-modal-id="orders_modal" style="cursor: pointer;">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">제품코드</label>
-                                <input type="text" class="form-control" id="product_code" placeholder="제품코드" readonly>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">제품명</label>
-                                <input type="text" class="form-control" id="" placeholder="제품명" readonly>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">BOM 코드</label>
-                                <input type="text" class="form-control" id="bom_code" placeholder="BOM 코드" readonly>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 row2">
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">주문업체명</label>
-                                <input type="text" class="form-control" placeholder="주문업체명" readonly>
-                            </div>
-                      
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">주문수량(생산수량)</label>
-                                <input type="number" class="form-control" id="product_qty" placeholder="주문수량" readonly>
-                            </div>
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">제품규격</label>
-                                <input type="text" class="form-control" placeholder="제품규격" readonly>
-                            </div>
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">제품단위</label>
-                                <input type="text" class="form-control" placeholder="제품단위" readonly>
-                            </div> 
-                            
-                        </div>
-                        
-                        <div class="row mb-3 row3">
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">납기일</label>
-                                <input type="text" class="form-control" placeholder="납기일" readonly>
-                            </div>                    
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">우선순위</label>
-                                <select class="form-select" id="priority">
-                                    <option>보통</option>
-                                    <option>높음</option>
-                                    <option>긴급</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">생산시작예정일</label>
-                                <input type="date" class="form-control" id="start_date" required>
-                            </div>
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">생산완료예정일</label>
-                                <input type="date" class="form-control" id="due_date" required>
-                            </div>
-                        </div>                         
-						
-                        <!-- 계획수립자 라인 -->
-                        <div class="row mb-3 row4 empinfo">  
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">사원코드</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="emp_code" placeholder="사원코드" readonly>
-                                    <button type="button" class="btn btn-outline-secondary modal-trigger" 
-                                            th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">작성자</label>
-                                <input type="text" class="form-control" placeholder="작성자" readonly>
-                            </div>
-                        </div>      
-               	     <!-- 비고 라인 -->
-                     <div class="row row5">     
-			            <div class="col-md-12">
-			              <label class="form-label">비고</label>
-			              <textarea class="form-control" rows="2" id="memo"></textarea>
-			            </div>
-			         </div>
-			         
-			         <input type="hidden" id="company_code_hidden">
-
-                       <!-- Action Buttons -->
-							<div class="d-flex justify-content-end  gap-2 mt-4">
-							<button type="button" class="btn btn-primary" onclick="plan_save()"><i class="bi bi-check2-square"></i> 저장</button>
-							<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+			<!-- 주문생산 폼 -->
+			<div class="form-section" id="order-production-form"
+				style="display: block;">
+				<div class="row justify-content-center">
+					<!-- Header 정보 -->
+					<div class="row mb-3">
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">주문코드</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="order_code" readonly>
+								<button type="button" class="btn btn-primary" onclick="ordListOpen()">
+                                	<i class="bi bi-search"></i>
+                                </button>
 							</div>
-                    </form>
-            </div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">주문업체코드</label> <input
+								type="text" class="form-control" id="company_code" readonly>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">주문업체</label> <input
+								type="text" class="form-control" id="company_name" readonly>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">업체담당자</label> <input
+								type="text" class="form-control" id="manager_name"
+								readonly>
+						</div>
+					</div>
 
+					<div class="row mb-3">
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">납기일</label> <input
+								type="date" class="form-control" id="due_date">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">우선순위</label> <select
+								class="form-select" id="priority">
+								<option value="긴급">긴급</option>
+								<option value="높음" selected>높음</option>
+								<option value="보통">보통</option>
+							</select>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">생산시작일</label> <input
+								type="date" class="form-control" id="plan_start_date">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">생산완료일</label> <input
+								type="date" class="form-control" id="plan_end_date">
+						</div>
+					</div>
 
+					<div class="row mb-3 empinfo">
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">사원코드</label>
+							<div class="input-group">
+								<input type="text" class="form-control" name="ecode" id="emp_code"
+									th:value="${session.ecode}" readonly>
+								<button type="button" class="btn btn-primary modal-trigger"
+										th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal"
+										style="cursor: pointer;">
+									<i class="bi bi-search"></i>
+								</button>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">생산계획담당자</label> 
+							<input type="text" class="form-control" name="ename" id="emp_name"
+							      th:value="${session.ename}" readonly>
+						</div>
+						
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">비고</label>
+							<textarea class="form-control" rows="2" id="plan_note"></textarea>
+						</div>
+					</div>
+					
+					<!-- Detail Table -->
+					<div class="table-responsive rounded"
+						style="width: 100%; overflow-x: auto;">
+						<h5>주문 제품 목록</h5>
+						<table
+							class="table align-middle table-hover table-bordered text-center"
+							style="white-space: nowrap;">
+							<thead class="table-light">
+								<tr>
+									<th style="width: 3%;">#</th>
+									<th style="width: 10%;">제품코드</th>
+									<th style="width: 15%;">제품명</th>
+									<th style="width: 10%;">제품규격</th>
+									<th style="width: 7%;">제품단위</th>
+									<th style="width: 10%;">생산수량</th>
+									<th style="width: 10%;">BOM코드</th>
+									<th style="width: 5%;">삭제</th>
+								</tr>
+							</thead>
+							<tbody id="plan_detail_products">
+								<tr class="product_row no_list_tb">
+									<td colspan="8" class="text-center">생산 계획 제품 내역이 없습니다.</td>
+								</tr>
+								<!-- JS로 항목 삽입 -->
+							</tbody>
+						</table>
+					</div>
+				</div>
 
+				<div class="d-flex justify-content-end gap-2">
+					<button type="button" class="btn btn-primary"
+						onclick="submitOrderPlan()">
+						<i class="bi bi-check2-square"></i> 저장
+					</button>
+					<button type="button" class="btn btn-outline-secondary"
+						onclick="resetOrderForm()">
+						<i class="bi bi-x-circle"></i> 초기화
+					</button>
+				</div>
+			</div>
 
+			<!-- 재고생산 폼 -->
+			<div class="form-section" id="stock-production-form"
+				style="display: none;">
+				<div class="row justify-content-center">
+					<div class="row mb-3">
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">제품코드</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="stock_product_code"
+									readonly>
+								<button class="btn btn-primary" onclick="openProductModal()">검색</button>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">제품명</label> <input
+								type="text" class="form-control" id="stock_product_name"
+								readonly>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">생산수량</label> <input
+								type="number" class="form-control" id="stock_quantity">
+						</div>
+					</div>
 
-</div>
+					<div class="row mb-3">
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">생산시작일</label> <input
+								type="date" class="form-control" id="stock_start_date">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">생산완료일</label> <input
+								type="date" class="form-control" id="stock_end_date">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">사원코드</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="stock_emp_code"
+									readonly>
+								<button class="btn btn-primary" onclick="openEmpModal()">검색</button>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">사원명</label> <input
+								type="text" class="form-control" id="stock_emp_name" readonly>
+						</div>
+					</div>
 
-</section>
-</main>
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<label class="form-label fw-semibold">비고</label>
+							<textarea class="form-control" id="stock_note" rows="2"></textarea>
+						</div>
+					</div>
+				</div>
 
+				<div class="d-flex justify-content-end gap-2">
+					<button type="button" class="btn btn-primary"
+						onclick="submitStockPlan()">
+						<i class="bi bi-check2-square"></i> 저장
+					</button>
+					<button type="button" class="btn btn-outline-secondary"
+						onclick="resetStockForm()">
+						<i class="bi bi-x-circle"></i> 초기화
+					</button>
+				</div>
+			</div>
+		</section>
+	</main>
 
-<div id="modalContainer"></div>
+	<div id="modalContainer"></div>
 
-<footer th:replace="~{/common/footer.html :: footer}"></footer>
+	<footer th:replace="~{/common/footer.html :: footer}"></footer>
 
+<script>
+function toggleButton9(type) {
+  const orderBtn = document.getElementById('order-list');
+  const productBtn = document.getElementById('product-list');
+  const orderForm = document.getElementById('order-production-form');
+  const stockForm = document.getElementById('stock-production-form');
+
+  if (type === 1) {
+    orderBtn.style.background = '#82CCDD';
+    orderBtn.style.color = '#fff';
+    productBtn.style.background = 'transparent';
+    productBtn.style.color = '#000';
+    orderForm.style.display = 'block';
+    stockForm.style.display = 'none';
+  } else {
+    orderBtn.style.background = 'transparent';
+    orderBtn.style.color = '#000';
+    productBtn.style.background = '#82CCDD';
+    productBtn.style.color = '#fff';
+    orderForm.style.display = 'none';
+    stockForm.style.display = 'block';
+  }
+}
+
+function resetOrderForm() {
+  const form = document.getElementById('order-production-form');
+  form.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.tagName === 'SELECT') {
+      el.selectedIndex = 1;
+    } else {
+      el.value = '';
+    }
+  });
+}
+
+function resetStockForm() {
+  const form = document.getElementById('stock-production-form');
+  form.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.tagName === 'SELECT') {
+      el.selectedIndex = 0;
+    } else {
+      el.value = '';
+    }
+  });
+}
+</script>
 </body>
 </html>

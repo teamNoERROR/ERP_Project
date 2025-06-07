@@ -98,4 +98,10 @@ public class ordreq_DAO {
 		int result = this.sql.update("ord_status_update", mparam);
 		return result;
 	}
+	
+	//주문코드에 달려있는 제품목록
+	public List<ordreq_res_DTO> ordreq_products(String order_code) {
+		List<ordreq_res_DTO> ordreq_products = this.sql.selectList("ordreq_products", order_code);
+		return ordreq_products;
+	}
 }

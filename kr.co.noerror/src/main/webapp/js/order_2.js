@@ -326,3 +326,152 @@ function ord_status_update() {
     });
 }
 
+//주문 리스트 모달 오픈
+function ordListOpen(){
+	fetch("./ord_list_modal.do", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+				
+		var modal= new bootstrap.Modal(document.getElementById("ordreq_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+//주문리스트 모달 페이징
+function ord_modal_pg (page){
+	var keyword = page.getAttribute('data-keyword');
+	var pageno = page.getAttribute('data-pageno');
+	
+	var params = {  
+		    page_no: pageno,
+		    page_size: page.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["search_word"] = keyword;
+		}
+		var pString = new URLSearchParams(params).toString();
+		
+		
+	fetch("./ord_list_modal.do?"+pString+"&mode=modal2", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.querySelector('#ordreq_list .modal-body').innerHTML = result;
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+/*--------------------------------------------------------------
+모달 주문리스트에서 선택후 주문 정보 인풋란에 붙여넣기  
+--------------------------------------------------------------*/
+function choiceOrd() {
+	var radios = document.querySelectorAll('input[name="choice_ord"]');
+	var selected_radio = null;
+	
+		
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	if (!selected_radio) {
+		alert("주문내역을 선택해 주세요.");
+
+	 }else{
+		var tr = selected_radio.closest('tr');
+		var tdList = tr.querySelectorAll('td');
+		var orderCode =  tdList[2].innerText.trim();
+		var companyCode =  tdList[4].innerText.trim();
+		var companyName =  tdList[5].innerText.trim();
+		var managerName =  tdList[6].innerText.trim();
+		var dueDate =  tdList[8].innerText.trim();
+		
+		//production_plan_insert.html에 붙는 부분
+		var order_code = document.querySelector('#order_code');
+		var company_code = document.querySelector('#company_code');
+		var company_name = document.querySelector('#company_name');
+		var manager_name = document.querySelector('#manager_name');
+		var due_date = document.querySelector('#due_date');
+		  
+		ordDtlLoad(orderCode);   //발주목록 테이블에 붙여넣기
+		
+		order_code.value= orderCode;
+		company_code.value= companyCode;
+		company_name.value= companyName;
+		manager_name.value= managerName;
+		due_date.value= dueDate;
+	
+		// 선택 후 모달 닫기
+	 	var modalElement = document.getElementById("ordreq_list");
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	}
+};
+
+
+/*--------------------------------------------------------------
+주문한 완제품 리스트 로드 
+--------------------------------------------------------------*/
+function ordDtlLoad(order_code){
+	fetch("./ordreq_products.do?code="+order_code, {
+		method: "GET",
+		
+	}).then(function(data) {
+		return data.json();
+
+	}).then(function(result) {
+		var tbody = document.querySelector('#plan_detail_products');
+		
+		//기존 행 전체 삭제
+		document.querySelectorAll('tr.product_row').forEach(tr => tr.remove());
+		
+		//결과값 붙이기 
+		result.forEach((resultProduct, index) => {
+				
+			var tr = document.createElement('tr');
+		  	tr.className = "product_row " 
+			tr.innerHTML = `
+			  <td>${index + 1}</td>
+			  <td class="product_code">${resultProduct.product_code}</td>
+			  <td>${resultProduct.product_name}</td>
+			  <td>${resultProduct.product_spec}</td>
+			  <td>${resultProduct.product_unit}</td>
+			  <td>
+			    <input type="number" class="form-control plan_qty" value="${resultProduct.product_qty}">
+			  </td>
+			  <td class="bom_code">${resultProduct.bom_code}</td>
+			  <td>
+			    <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
+			      삭제
+			    </button>
+			  </td>
+			  `;
+		  	tbody.append(tr);
+		});  
+		  
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
+

@@ -10,23 +10,30 @@ import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.ordreq_DTO;
+import kr.co.noerror.DTO.ordreq_res_DTO;
 import kr.co.noerror.DTO.plan_DTO;
+import kr.co.noerror.DTO.prdplan_DTO;
+import kr.co.noerror.DTO.prdplan_detail_DTO;
+import kr.co.noerror.DTO.prdplan_res_DTO;
+import kr.co.noerror.DTO.search_condition_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
 
 @Service
-public class plan_DAO {
+public class prdplan_DAO {
 	
 	@Autowired
 	@Qualifier(value = "sqltemplate_oracle")
 	private SqlSession sql;
 	
-	public List<plan_DTO> plan_list(Map<String, Object> mparam){
-		List<plan_DTO> all = this.sql.selectList("plan_list", mparam);
+	//검색 및 페이징 후 pchreq 리스트
+	public List<prdplan_res_DTO> prdplan_paged_list(Map<String, Object> mparam){
+		List<prdplan_res_DTO> all = this.sql.selectList("prdplan_paged_list", mparam);
 		return all;
 	}
 	
-	public int plan_count(Map<String, Object> mparam) {
-		int cnt = this.sql.selectOne("plan_count", mparam);
+	//검색후의 pchreq 리스트 갯수
+	public int prdplan_search_count(search_condition_DTO search_cond) {
+		int cnt = this.sql.selectOne("prdplan_search_count", search_cond);
 		return cnt;
 	}
 	
@@ -35,8 +42,8 @@ public class plan_DAO {
 		return bom_items;
 	}
 	
-	public List<ordreq_DTO> orders_modal(){
-		List<ordreq_DTO> orders = this.sql.selectList("orders_modal");
+	public List<ordreq_res_DTO> orders_modal(){
+		List<ordreq_res_DTO> orders = this.sql.selectList("orders_modal");
 		return orders;
 	}
 	
@@ -52,6 +59,16 @@ public class plan_DAO {
 	
 	public int insert_plan(plan_DTO pdto) {
 		int result = this.sql.insert("insert_plan", pdto);
+		return result;
+	}
+	
+	public int prdplan_insert(prdplan_DTO pdto) {
+		int result = this.sql.insert("prdplan_insert", pdto);
+		return result;
+	}
+	
+	public int prdplan_detail_insert(prdplan_detail_DTO detaildto) {
+		int result = this.sql.insert("prdplan_detail_insert", detaildto);
 		return result;
 	}
 }

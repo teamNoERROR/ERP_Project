@@ -32,4 +32,5 @@ public interface ordreq_mapper {
 	int ordreq_update(ordreq_DTO odto);
 	int ordreq_detail_update(ordreq_detail_DTO odto);
 	int ord_status_update(Map<String, String> mparam);
+	List<ordreq_res_DTO> ordreq_products(String order_code);
 }

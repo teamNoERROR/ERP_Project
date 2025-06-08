@@ -127,16 +127,11 @@ function order_save() {
   const companyName = document.getElementById('company_name').value.trim();
   const managerCode = document.getElementById('manager_code').value.trim();
   const managerName = document.getElementById('manager_name').value.trim();
-  
-  // 예시: 주문코드, 주문상태, 요청일자, 납기일 등은 임의값 혹은 별도 UI에서 받아야 함
-  const orderStatus = "주문요청";
-  const dueDate = "2025-06-15";     
-  const ecode = "EMP001";
-  const payMethod = "현금결제";
-  const whCode = "WHS-20390";
-  const memo = "특별한 사항 없음";        
-  const requestDate = new Date().toISOString().slice(0,10); // 오늘 날짜, yyyy-MM-dd 형식
-  const modifyDate = requestDate;
+
+  const dueDate = document.getElementById('dueDate').value;
+  const payMethod = document.getElementById('payMethod').value;
+  const ecode = document.getElementById('ecode').value;
+  const memo = document.getElementById('memo').value;
 
   const productsRows = document.querySelectorAll('#products tr.total-delete');
   if (productsRows.length === 0) {
@@ -162,14 +157,10 @@ function order_save() {
 	orderItems.push({
 	  COMPANY_CODE: companyCode,
 	  ECODE: ecode,
-	  ORDER_STATUS: orderStatus,
 	  PAY_METHOD: payMethod,
 	  DUE_DATE: dueDate,
 	  MEMO: memo,
-	  REQUEST_DATE: requestDate,
-	  MODIFY_DATE: modifyDate,
 	  PRODUCT_CODE: productCode,
-	  WH_CODE: whCode,
 	  PRODUCT_QTY: orderQty,
 	  PRODUCT_AMOUNT: productAmount
 	});
@@ -326,9 +317,10 @@ function ord_status_update() {
     });
 }
 
-//주문 리스트 모달 오픈
+//주문 리스트 모달 오픈 ('주문확인' 상태인것만 오픈)
 function ordListOpen(){
-	fetch("./ord_list_modal.do", {
+	const statuses = ["주문확인"];
+	fetch("./ord_list_modal.do?statuses="+statuses, {
 		method: "GET",
 
 	}).then(function(data) {

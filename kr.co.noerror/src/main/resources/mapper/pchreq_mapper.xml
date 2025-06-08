@@ -16,8 +16,8 @@
     itm.company_code, 
     cmp.company_name
  FROM mrp_result_detail mrp
- JOIN temp_items itm ON mrp.item_code = itm.item_code
- JOIN temp_client_comp cmp ON itm.company_code = cmp.company_code
+ JOIN items itm ON mrp.item_code = itm.item_code
+ LEFT JOIN client_comp cmp ON itm.company_code = cmp.company_code
  WHERE mrp.mrp_code = #{mrp_code}
 </select>
 

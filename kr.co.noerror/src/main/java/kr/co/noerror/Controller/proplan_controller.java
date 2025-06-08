@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.prdplan_DAO;
+import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
+import kr.co.noerror.DTO.pchreq_req_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.prdplan_req_DTO;
 import kr.co.noerror.DTO.prdplan_res_DTO;
@@ -74,10 +77,10 @@ public class proplan_controller {
 	@GetMapping("/bom_items.do")
 	public String bom_items(Model m, @RequestParam(name="code") String bom_code) {
 
-		List<temp_bom_DTO> bom_items = this.pdao.bom_items(bom_code);
+		List<bom_DTO> bom_items = this.pdao.bom_items(bom_code);
 		m.addAttribute("bom_items",bom_items);
-		m.addAttribute("product_name",bom_items.get(0).getProduct_name());
-		return  "/modals/temp_bom_items_modal.html";
+		m.addAttribute("product_name",bom_items.get(0).getPRODUCT_NAME());
+		return  "/modals/bom_items_modal.html";
 	}
 	
 	@GetMapping("/production.do")
@@ -100,5 +103,35 @@ public class proplan_controller {
 		m.addAttribute("condition", search_cond);
 		
 		return "/production/production_plan_list.html";
+	}
+	
+	@GetMapping("/prdplan_detail.do")
+	public String prdplan_detail(@RequestParam(name="code") String plan_code, Model m) {
+		
+		List<prdplan_res_DTO> details = this.pdao.prdplan_detail(plan_code);
+		System.out.println("테스트");
+		System.out.println(details);
+		m.addAttribute("details",details);
+		return "/modals/production_plan_detail_modal.html";
+	}
+	
+	@GetMapping("/prdplan_update.do")
+	public String prdplan_update(@RequestParam(name="code") String plan_code, Model m) {
+		List<prdplan_res_DTO> details = this.pdao.prdplan_detail(plan_code);
+		m.addAttribute("details",details);
+		return "/production/production_plan_update.html";
+	}
+	
+	@PostMapping("/prdplan_updateok.do")
+	@ResponseBody
+	public Map<String, Object> prdplan_updateok(@RequestBody prdplan_req_DTO requestdto) {
+		System.out.println(requestdto);
+		return prdplan_service.prdplan_update(requestdto);
+	}
+	
+	@PostMapping("/plan_status_update.do")
+	@ResponseBody
+	public Map<String, Object> plan_status_update(@RequestBody Map<String, String> requestParam) {
+		return prdplan_service.plan_status_update(requestParam);
 	}
 }

@@ -48,5 +48,5 @@ public class ordreq_res_DTO {
     private String product_class2;      // 소분류
     
     //BOM code
-    private String bom_code = "bom 미생성";
+    private String bom_code = "-";
 }

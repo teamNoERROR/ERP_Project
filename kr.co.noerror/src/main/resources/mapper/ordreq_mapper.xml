@@ -14,7 +14,12 @@ SELECT * FROM (
 		<if test="search_word != null and search_word != ''">
 		  AND (
 		      cmp.company_name LIKE '%' || #{search_word} || '%' OR
-		      cmp.manager_name LIKE '%' || #{search_word} || '%'
+		      cmp.company_code LIKE '%' || #{search_word} || '%' OR
+		      cmp.manager_name LIKE '%' || #{search_word} || '%' OR
+		      ord.order_code LIKE '%' || #{search_word} || '%' OR
+		      ord.request_date LIKE '%' || #{search_word} || '%' OR
+		      ord.due_date LIKE '%' || #{search_word} || '%' OR
+		      ord.order_status LIKE '%' || #{search_word} || '%' 
 		  )
 		</if>
 	    <if test="statuses != null and statuses.size() > 0">
@@ -38,9 +43,13 @@ JOIN client_comp cmp ON ord.company_code = cmp.company_code
 WHERE 1=1
 	<if test="search_word != null and search_word != ''">
 	  AND (
-	      
 	      cmp.company_name LIKE '%' || #{search_word} || '%' OR
-	      cmp.manager_name LIKE '%' || #{search_word} || '%'
+	      cmp.company_code LIKE '%' || #{search_word} || '%' OR
+	      cmp.manager_name LIKE '%' || #{search_word} || '%' OR
+	      ord.order_code LIKE '%' || #{search_word} || '%' OR
+	      ord.request_date LIKE '%' || #{search_word} || '%' OR
+	      ord.due_date LIKE '%' || #{search_word} || '%' OR
+	      ord.order_status LIKE '%' || #{search_word} || '%' 
 	  )
 	</if>
     <if test="statuses != null and statuses.size() > 0">
@@ -108,13 +117,11 @@ FROM
     oidx,
     order_code,
     product_code,
-    wh_code,
     product_qty
   ) VALUES (
     seq_order_req_detail.NEXTVAL,
     #{order_code},
     #{product_code},
-    #{wh_code},
     #{product_qty}
   ) 
 </insert>

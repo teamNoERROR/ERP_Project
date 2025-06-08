@@ -55,19 +55,19 @@ WHERE 1=1
     </if>
 </select>
 
-<select id="bom_items" resultType="kr.co.noerror.DTO.temp_bom_DTO" parameterType="String">
+<select id="bom_items" resultType="kr.co.noerror.DTO.bom_DTO" parameterType="String">
   SELECT 
     bom.bom_code, 
     pdt.product_name,
     itm.item_code, 
-    itm.item_type, 
     itm.item_name, 
+    itm.item_spec, 
     itm.item_unit, 
-    itm.unit_price, 
-    bom.quantity 
+    itm.item_cost, 
+    bom.bom_qty 
   FROM bom bom
   JOIN items itm ON bom.item_code = itm.item_code
-  JOIN products pdt ON hdr.product_code = pdt.product_code
+  JOIN products pdt ON bom.product_code = pdt.product_code
   WHERE bom.bom_code = #{bom_code}
 </select>
 
@@ -151,5 +151,72 @@ SELECT * FROM employee ORDER BY eidx desc
     #{product_qty}
   )
 </insert>
+
+<!-- 생산계획 상세정보 조회 -->
+<select id="prdplan_detail" resultType="kr.co.noerror.DTO.prdplan_res_DTO" parameterType="String">
+SELECT
+    pld.pidx, 
+    pld.plan_code, 
+    pld.product_code, 
+    prd.product_name,
+    prd.product_spec,
+    prd.product_unit, 
+    ord.product_qty, 
+    orh.due_date, 
+    prd.product_cost,
+    prd.product_class1,
+    prd.product_class2,
+    pln.order_code,
+    pln.plan_status, 
+    pln.start_date,
+    pln.end_date,
+    pln.memo,
+    cmp.company_name, 
+    cmp.biz_num,
+    cmp.ceo_name,
+    cmp.manager_name,
+    cmp.mng_phone_num,
+    cmp.com_addr1,
+    cmp.com_addr2,
+    emp.ename
+FROM production_plan_detail pld
+JOIN production_plan pln ON pld.plan_code = pln.plan_code
+JOIN order_request orh ON pln.order_code = orh.order_code
+JOIN order_req_detail ord 
+  ON pln.order_code = ord.order_code 
+ AND pld.product_code = ord.product_code
+JOIN products prd ON pld.product_code = prd.product_code
+LEFT JOIN client_comp cmp ON pln.company_code = cmp.company_code
+LEFT JOIN employee emp ON pln.ecode = emp.ecode
+WHERE pld.plan_code = #{plan_code}
+</select>
+
+<!-- 생산계획정보 수정 -->
+<update id="prdplan_update" parameterType="kr.co.noerror.DTO.prdplan_DTO">
+UPDATE production_plan
+SET
+	priority = #{priority},
+	start_date = #{start_date},
+	end_date = #{end_date},
+	ecode = #{ecode},
+	memo = #{memo},
+	modify_date = SYSDATE
+WHERE plan_code = #{plan_code}
+</update>
+
+<update id="prdplan_detail_update" parameterType="kr.co.noerror.DTO.prdplan_detail_DTO">
+UPDATE production_plan_detail
+SET
+	product_qty = #{product_qty}
+WHERE plan_code = #{plan_code}
+  AND product_code = #{product_code} 
+</update>
+
+<!-- 생산계획상태 업데이트 -->
+<update id="plan_status_update" parameterType="map">
+UPDATE production_plan
+SET plan_status = #{plan_status}
+WHERE plan_code = #{plan_code}
+</update>
 
 </mapper>

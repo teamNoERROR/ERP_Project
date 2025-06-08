@@ -1,35 +1,30 @@
-<div class="modal fade" id="ord_modal" tabindex="-1" aria-labelledby="pd_detail_label" aria-hidden="true" th:fragment="ordDetail" >
+<div class="modal fade" id="prdplan_modal" tabindex="-1" aria-labelledby="prdplan_detail_label" aria-hidden="true" th:fragment="prdplanDetail" >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="pd_detail_label">주문 상세보기</h1>
+				<h1 class="modal-title fs-5" id="prdplan_detail_label">생산계획 상세보기</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
 			<div class="modal-body row justify-content-center d-flex gap-3">
 				<div
 					class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-					<h2 class="mb-1">주문번호 : [[${details[0].order_code}]]</h2>
+					<h2 class="mb-1">생산계획번호 : [[${details[0].plan_code}]]</h2>
 					<div class="d-flex align-items-center gap-2">
-						<!-- 주문코드를 data 속성에 저장 -->
+						<!-- 생산계획코드를 data 속성에 저장 -->
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
-							th:attr="data-order-code=${details[0].order_code}">
-							<option selected value="주문상태 선택">주문상태 선택</option>
-							<option value="주문요청">주문요청</option>
-							<option value="주문취소">주문취소</option>
-							<option value="주문확인">주문확인</option>
-							<option value="주문확인">생산계획수립</option>
-							<option value="주문확인">생산계획확정</option>
-							<option value="지연중">생산지연</option>
+							th:attr="data-plan-code=${details[0].plan_code}">
+							<option selected value="발주상태 선택">생산상태 선택</option>
+							<option value="생산계획수립">생산계획수립</option>
+							<option value="생산계획확정">생산계획확정</option>
 							<option value="생산중">생산중</option>
 							<option value="생산완료">생산완료</option>
-							<option value="출고완료">출고완료</option>
-							<option value="반품">반품</option>
+							<option value="생산지연">생산지연</option>
 						</select>
 
 						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="ord_status_update()">
+							style="white-space: nowrap;" onclick="plan_status_update()">
 							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
 						</button>
 					</div>
@@ -38,13 +33,15 @@
 					<table class="table table-bordered align-middle">
 						<thead class="table-light text-center">
 							<tr>
-								<th class="info-label table-light" colspan="5">주문처 정보</th>
+								<th class="info-label table-light" colspan="5">주문코드 및 주문업체 정보</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
+								<td class="info-label">주문코드</td>
+								<td class="value-cell">[[${details[0].order_code}]]</td>
 								<td class="info-label">회사명</td>
-								<td class="value-cell" colspan="4">[[${details[0].company_name}]]</td>
+								<td class="value-cell" colspan="2">[[${details[0].company_name}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">사업자번호</td>
@@ -69,29 +66,28 @@
 				</div>
 
 				<div class="table-responsive  rounded">
-					<h5 class="">주문정보</h5>
+					<h5 class="">생산계획정보</h5>
 					<table class="table align-middle table-bordered">
 						<tr>
-							<td class="info-label">주문번호</td>
-							<td class="value-cell">[[${details[0].order_code}]]</td>
-							<td class="info-label">주문상태</td>
-							<td class="value-cell">[[${details[0].order_status}]]</td>
+							<td class="info-label">생산계획코드</td>
+							<td class="value-cell">[[${details[0].plan_code}]]</td>
+							<td class="info-label">생산상태</td>
+							<td class="value-cell">[[${details[0].plan_status}]]</td>
 						</tr>
 						<tr>
-							<td class="info-label">주문일자</td>
-							<td class="value-cell">[[${details[0].request_date.substring(0,10)}]]</td>
-							<td class="info-label">납기요청일</td>
+							<td class="info-label">주문납기일</td>
 							<td class="value-cell">[[${details[0].due_date.substring(0,10)}]]</td>
+							<td class="info-label">우선순위</td>
+							<td class="value-cell">[[${details[0].priority}]]</td>
 						</tr>
 						<tr>
-							<td class="info-label">결제 금액</td>
-							<td class="value-cell">[[${#numbers.formatDecimal(details[0].pay_amount,
-								0, 'COMMA', 0, 'POINT')}]] 원</td>
-							<td class="info-label">결제 수단</td>
-							<td class="value-cell">[[${details[0].pay_method}]]</td>
+							<td class="info-label">생산시작예정일자</td>
+							<td class="value-cell">[[${details[0].start_date.substring(0,10)}]]</td>
+							<td class="info-label">생산종료예정일자</td>
+							<td class="value-cell">[[${details[0].end_date.substring(0,10)}]]</td>
 						</tr>
 						<tr>
-							<td class="info-label">주문 담당자</td>
+							<td class="info-label">발주 담당자</td>
 							<td class="value-cell">[[${details[0].ename}]]</td>
 							<td class="info-label"></td>
 							<td class="value-cell"></td>
@@ -107,20 +103,17 @@
 
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
-					<h5 class="">주문 제품 내역</h5>
+					<h5 class="">생산 제품 내역</h5>
 					<table class="table table-hover align-middle table-bordered">
 						<thead class="table-light text-center">
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
 								<th scope="col">제품명</th>
-								<th scope="col">규격</th>
-								<th scope="col">주문수량</th>
-								<th scope="col">단위</th>
-								<th scope="col">제품단가(원)</th>
-								<th scope="col">구매금액(원)</th>
-								<th scope="col">대분류</th>
-								<th scope="col">소분류</th>
+								<th scope="col">제품규격</th>
+								<th scope="col">제품단위</th>
+								<th scope="col">생산수량</th>
+								<th scope="col">BOM코드</th>
 
 							</tr>
 						</thead>
@@ -130,32 +123,13 @@
 								<td>[[${d.product_code}]]</td>
 								<td>[[${d.product_name}]]</td>
 								<td>[[${d.product_spec}]]</td>
+								<td>[[${d.product_unit}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.product_unit}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.product_cost,
-									0, 'COMMA', 0, 'POINT')}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.product_qty *
-									d.product_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.product_class1}]]</td>
-								<td>[[${d.product_class2}]]</td>
+								<td>[[${d.bom_code}]]</td>
 							</tr>
 
 						</tbody>
-						<tfoot>
-							<tr>
-								<td class="info-label" colspan="2">합계</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td align="right">[[${#numbers.formatDecimal(details[0].pay_amount,
-									0, 'COMMA', 0, 'POINT')}]]</td>
-								<td></td>
-								<td></td>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 				<div
@@ -163,9 +137,9 @@
 					<!-- 				Action Buttons -->
 					<div class="mt-4 d-flex gap-2">
 						<div class="ms-auto">
-							<th:block th:if="${details[0].order_status == '주문요청'}">
+							<th:block th:if="${details[0].plan_status == '생산계획수립'}">
 								<a
-									th:href="@{/ordreq_update.do(code=${details[0].order_code})}"
+									th:href="@{/prdplan_update.do(code=${details[0].plan_code})}"
 									class="btn btn-success"> <i class="bi bi-pencil-square"></i>
 									수정
 								</a>

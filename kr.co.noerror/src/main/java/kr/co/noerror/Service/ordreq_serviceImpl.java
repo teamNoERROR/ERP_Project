@@ -61,7 +61,7 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 	        	this.ordreq_dto.setOrder_code(order_code);
 	        	this.ordreq_dto.setCompany_code((String)orders.get(0).get("COMPANY_CODE"));
 	        	this.ordreq_dto.setEcode((String)orders.get(0).get("ECODE"));
-	        	this.ordreq_dto.setOrder_status((String)orders.get(0).get("ORDER_STATUS"));
+	        	this.ordreq_dto.setOrder_status("주문요청");
 	        	this.ordreq_dto.setPay_method((String)orders.get(0).get("PAY_METHOD"));
 	        	this.ordreq_dto.setDue_date((String)orders.get(0).get("DUE_DATE"));
 	        	this.ordreq_dto.setMemo((String)orders.get(0).get("MEMO"));
@@ -80,7 +80,6 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 	            for (Map<String, Object> order : orders) {
 	                this.ord_detail_dto.setOrder_code(order_code);
 	                this.ord_detail_dto.setProduct_code((String)order.get("PRODUCT_CODE"));
-	                this.ord_detail_dto.setWh_code((String)order.get("WH_CODE"));
 	                this.ord_detail_dto.setProduct_qty(Long.parseLong((String)order.get("PRODUCT_QTY")));
 	 
 	                result2 += this.ordreq_dao.ordreq_detail_insert(this.ord_detail_dto);

@@ -134,7 +134,7 @@ function submitOrderPlan() {
     .then(result => {
         if (result.success) {
             alert("저장 성공!");
-            window.location.href = "/production_plan_list.do";
+            window.location.href = "/production.do";
         } else {
             alert("저장 실패: " + (result.message || "알 수 없는 오류"));
         }
@@ -144,4 +144,130 @@ function submitOrderPlan() {
         alert("서버 통신 오류 발생");
     });
 }
+
+function plan_status_update() {
+    const selectEl = document.getElementById("modal-status-select");
+    const selectedStatus = selectEl.value;
+    const plan_code = selectEl.getAttribute("data-plan-code");
+
+    if (selectedStatus === "생산상태 선택") {
+        alert("생산상태를 선택하세요.");
+        return;
+    }
+
+    if (!plan_code) {
+        alert("생산계획코드를 찾을 수 없습니다.");
+        return;
+    }
+
+    const data = {
+        plan_code: plan_code,
+        plan_status: selectedStatus
+    };
+
+    fetch("/plan_status_update.do", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("상태가 성공적으로 변경되었습니다.");
+            location.reload(); 
+        } else {
+            alert("상태 변경에 실패했습니다.");
+        }
+    })
+    .catch(err => {
+        console.error("에러 발생:", err);
+        alert("서버 오류가 발생했습니다.");
+    });
+}
+
+function prdplan_update() {
+	const frm = document.getElementById('frm');
+
+	const priority = frm.querySelector('select[name="priority"]');
+	const startDate = frm.querySelector('input[name="start_date"]');
+	const endDate = frm.querySelector('input[name="end_date"]');
+	const ecode = frm.querySelector('input[name="ecode"]');
+	const ename = frm.querySelector('input[name="ename"]');
+	const memo = frm.querySelector('textarea[name="memo"]');
+	const rows = document.querySelectorAll('#prdplan-tbody tr');
+	
+	// 유효성 검사
+	if (!priority.value) {
+		alert("우선순위를 선택하세요.");
+		priority.focus();
+		return;
+	} 
+	if (!ename.value.trim()) {
+		alert("생산계획 담당자를 입력하세요.");
+		ename.focus();
+		return;
+	} 
+	
+	if (rows.length === 0) {
+		alert('최소 한 개 이상의 제품이 있어야 합니다.');
+		return;
+	}
+
+	const products = [];
+	for (const row of rows) {
+		const productCode = row.querySelector('.product-code').value;
+		const qtyInput = row.querySelector('.qty-input');
+		const qty = parseInt(qtyInput.value);
+		if (isNaN(qty) || qty < 1) {
+			alert('수량은 1 이상이어야 합니다.');
+			qtyInput.focus();
+			return;
+		}
+		products.push({
+			product_code: productCode,
+			product_qty: qty
+		});
+	}
+	
+	// 서버로 보낼 데이터 구성
+	const data = {
+		plan_code: frm.querySelector('input[name="plan_code"]').value,
+		priority: priority.value,
+		start_date: startDate.value,
+		end_date: endDate.value,
+		ecode: ecode.value,
+		memo: memo.value,
+		products: products
+	};
+
+	// AJAX 통신 (POST)
+	fetch('/prdplan_updateok.do', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('서버 응답 오류');
+		}
+		return response.json(); 
+	})
+	.then(result => {
+		if (result.success) {
+			alert('생산계획정보가 수정되었습니다.');
+			window.location.href = "/production.do";
+		} else {
+			alert('수정 실패: ' + (result.message || '알 수 없는 오류'));
+		}
+	})
+	.catch(error => {
+		console.error(error);
+		alert('수정 중 오류 발생');
+	});
+}
+
 

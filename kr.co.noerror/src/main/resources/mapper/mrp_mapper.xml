@@ -3,33 +3,40 @@
 <mapper namespace="kr.co.noerror.Mapper.mrp_mapper">
 
 <!-- 검색조건과 페이징 처리를 반영한 데이터 select -->
-<select id="plans_period" parameterType="Map" resultType="kr.co.noerror.DTO.plan_DTO">
+<select id="plans_period" parameterType="Map" resultType="kr.co.noerror.DTO.prdplan_res_DTO">
 SELECT
     pln.*,
+    pld.product_qty,
+    pld.bom_code,
+    ord.due_date,
     pdt.product_name,
     pdt.product_spec,
     pdt.product_unit,
     cmp.company_name,
-    emp.emp_name
-FROM temp_production_plan pln
-JOIN temp_products pdt ON pln.product_code = pdt.product_code
-JOIN temp_client_comp cmp ON pln.company_code = cmp.company_code
-JOIN temp_employ emp ON pln.emp_code = emp.emp_code
-WHERE pln.plan_status = '계획'
-  AND pln.due_date BETWEEN #{start_date} AND #{end_date}
+    emp.ename
+FROM production_plan pln
+JOIN production_plan_detail pld ON pln.plan_code = pld.plan_code
+JOIN order_request ord ON pln.order_code = ord.order_code
+JOIN products pdt ON pld.product_code = pdt.product_code
+JOIN client_comp cmp ON pln.company_code = cmp.company_code
+JOIN employee emp ON pln.ecode = emp.ecode
+WHERE pln.plan_status = '생산계획확정'
+  AND pln.mrp_status = '미완료'
+  AND ord.due_date BETWEEN #{start_date} AND #{end_date}
+ORDER BY pln.pidx DESC
 </select>
 
 <!-- MRP 계산을 위해 필요한 데이터를 꺼냄 -->
-<select id="boms_for_mrp" parameterType="String" resultType="kr.co.noerror.DTO.temp_bom_DTO">
+<select id="boms_for_mrp" parameterType="String" resultType="kr.co.noerror.DTO.bom_DTO">
   SELECT 
   	  bom.item_code, 
   	  itm.item_type,
   	  itm.item_name, 
-  	  bom.quantity, 
+  	  bom.bom_qty, 
   	  itm.item_unit,
   	  itm.item_cost
-  FROM temp_bom_detail bom
-  JOIN temp_items itm ON bom.item_code = itm.item_code
+  FROM bom bom
+  JOIN items itm ON bom.item_code = itm.item_code
   WHERE bom.bom_code = #{bom_code}
 </select>
 

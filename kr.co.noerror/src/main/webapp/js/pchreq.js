@@ -14,13 +14,12 @@ function addToCart() {
       const checkbox = row.querySelector('input[type="checkbox"]');
       if (checkbox && checkbox.checked) {
         const item_code = row.children[3].innerText.trim();
-        const item_type = row.children[4].innerText.trim();
-        const item_name = row.children[5].innerText.trim();
-        const item_unit = row.children[7].innerText.trim();
-        const item_cost = row.children[8].innerText.trim();
-        const purchase_qty = row.children[11].querySelector('input').value;
-        const company_code = row.children[12].innerText.trim();
-        const company_name = row.children[13].innerText.trim();
+        const item_name = row.children[4].innerText.trim();
+        const item_unit = row.children[6].innerText.trim();
+        const item_cost = row.children[7].innerText.trim();
+        const purchase_qty = row.children[10].querySelector('input').value;
+        const company_code = row.children[11].innerText.trim();
+        const company_name = row.children[12].innerText.trim();
 
         if (!purchase_qty || purchase_qty <= 0) {
           alert(`발주수량이 올바르지 않습니다. (${item_code})`);
@@ -41,7 +40,6 @@ function addToCart() {
 
         groupedItems[company_code].items.push({
           item_code,
-          item_type,
           item_name,
           purchase_qty,
           item_unit,
@@ -60,12 +58,11 @@ function addToCart() {
 	    if (checkbox && checkbox.checked) {
 		  count++;
 	      const item_code = row.children[1].querySelector('input')?.value.trim();
-	      const item_type = row.children[2].querySelector('input')?.value.trim();
-	      const item_name = row.children[3].querySelector('input')?.value.trim();
-	      const purchase_qty = row.children[4].querySelector('input')?.value.trim();
-	      const item_unit = row.children[5].querySelector('input')?.value.trim();
-	      const item_cost = row.children[6].querySelector('input')?.value.trim();
-	      const company_name = row.children[7].querySelector('input')?.value.trim();
+	      const item_name = row.children[2].querySelector('input')?.value.trim();
+	      const purchase_qty = row.children[3].querySelector('input')?.value.trim();
+	      const item_unit = row.children[4].querySelector('input')?.value.trim();
+	      const item_cost = row.children[5].querySelector('input')?.value.trim();
+	      const company_name = row.children[6].querySelector('input')?.value.trim();
 	      const company_code = company_name || "기타";
 
 	      if (!purchase_qty || purchase_qty <= 0) {
@@ -87,7 +84,6 @@ function addToCart() {
 
 	      groupedItems[company_code].items.push({
 	        item_code,
-	        item_type,
 	        item_name,
 	        purchase_qty,
 	        item_unit,
@@ -134,7 +130,6 @@ function addToCart() {
       tr.dataset.item_code = item.item_code;
       tr.innerHTML = `
         <td>${item.item_code}</td>
-        <td>${item.item_type}</td>
         <td>${item.item_name}</td>
         <td>${item.purchase_qty}</td>
         <td>${item.item_unit}</td>

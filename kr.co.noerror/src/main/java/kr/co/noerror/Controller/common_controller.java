@@ -173,7 +173,7 @@ public class common_controller {
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 								,@RequestParam(value="mode", required = false) String mode
 								)  {
-		
+		System.out.println("테스트");
 		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
 		

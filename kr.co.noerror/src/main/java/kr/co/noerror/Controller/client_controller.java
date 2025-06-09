@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.products_DTO;
@@ -107,6 +111,49 @@ public class client_controller {
 		return this.url;
 	}
 	
+	
+	
+	//거래처 등록하기 화면이동 
+	@GetMapping("/client_insert.do")
+	public String products_insert(Model m) throws IOException {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","거래처 관리");
+		m.addAttribute("mmenu","거래처 등록");
+		
+		return "/client/client_insert.html";
+	}
+	
+	
+	
+	//거래처 등록 
+	@PostMapping("/client_insertok.do")
+	public String client_insertok(@ModelAttribute client_DTO cdto,
+									@RequestParam(value = "clientImage", required = false) MultipartFile clientImage,
+									HttpServletResponse res) {
+		System.out.println("cdto : " + cdto);
+		try {
+			this.pw = res.getWriter();
+			
+			int result = this.clt_svc.clt_insert(cdto, clientImage);  
+			
+			if(result > 0) {  
+				this.pw.write("ok");  //거래처 등록 완료 
+			}
+			else {
+				this.pw.write("fail"); //거래처 등록실패
+			}
+			
+		} catch (IOException e) {
+			this.pw.write("error"); //제품 등록실패
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
 	
 	
 	

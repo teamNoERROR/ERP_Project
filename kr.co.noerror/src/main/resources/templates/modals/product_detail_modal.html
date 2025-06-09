@@ -112,8 +112,8 @@
                     BOM 트리
                 </div>
                 <div class="card-body tree">
-                    <ul id="bomTree">
-                        <li >
+                    <ul >
+                        <li class="bomTree">
                             <strong >[[${top_pd}]] ([[${top_pd_code}]]) </strong>
                             <ul >
                                 <li  th:each="bom : ${bom_result}"  th:text="${bom.BOM_SEQ_NO + '. ' + bom.ITEM_NAME}"></li>

@@ -13,7 +13,10 @@
 	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 		<h2 class="mb-1">제품 등록</h2>
 	</div>
-	
+			<!-- 우상단 x 마크  -->     
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+			<button type="button" class="btn-close" aria-label="Close" onclick="goGdList('product')"></button>
+			</div>
 <!--  <form id="frm" method="post" action="./cdn_uploadok.do" enctype="multipart/form-data"> -->
 <div class="form-section">
 <div class="row">
@@ -23,9 +26,9 @@
 		  <div class="image-box mb-2" >
 		    <img id="previewImage" src="./img/no-image.svg" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
 		  </div>
-		
+		  
 		  <!-- 파일 선택 input -->
-		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile('product')" style="width: 250px; ">
 	</div>
 
 <!-- 제품 정보 입력 -->
@@ -120,7 +123,7 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-3">
-	<button type="button" class="btn btn-primary" onclick="insert_pd()"><i class="bi bi-plus-lg"></i> 저장</button>
+	<button type="button" class="btn btn-primary" onclick="insert_pd()"><i class="bi bi-check2-square"></i> 저장</button>
 	<button type="reset" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 	</div>
 </div>

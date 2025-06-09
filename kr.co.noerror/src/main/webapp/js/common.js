@@ -28,22 +28,35 @@ function toggleButton2(type) {
 /*--------------------------------------------------------------
   이미지 첨부시 미리보기
 --------------------------------------------------------------*/
-function previewFile() {
-  const fileInput = document.getElementById('productImage');
-  const preview = document.getElementById('previewImage');
-  const fileNameDisplay = document.getElementById('fileName');
-
-  const file = fileInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      preview.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-
-    // 파일명 표시
-    fileNameDisplay.textContent = file.name;
-  } 
+function previewFile(type) {
+	var fileInput;
+	var preview = document.getElementById('previewImage');
+	//var fileNameDisplay = document.getElementById('fileName');
+	
+	if(type == 'client'){
+	  fileInput = document.getElementById('clientImage');
+	  
+	}else if(type == 'product'){
+		fileInput = document.getElementById('productImage');
+		
+	}else if(type == 'item'){
+		fileInput = document.getElementById('itemImage');
+		
+	}else if(type == "warehouse"){
+		fileInput = document.getElementById('whImage');
+	}
+		
+	var file = fileInput.files[0];
+	if (file) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      preview.src = e.target.result;
+	    };
+	    reader.readAsDataURL(file);
+	
+	    // 파일명 표시
+	    //fileNameDisplay.textContent = file.name;
+	} 
 }
 
 
@@ -193,22 +206,21 @@ function cl_modal_pg (page){
 //발주처리스트 모달 오픈 
 function pcltListOpen(){
 	fetch("./client_list2.do", {
-		method: "GET",
+			method: "GET",
 
-	}).then(function(data) {
-		return data.text();
+		}).then(function(data) {
+			return data.text();
 
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		//var modal= new bootstrap.Modal(document.getElementById("client_list"));
-		var modal= new bootstrap.Modal(document.getElementById("p_client_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
+		}).then(function(result) {
+			document.getElementById("modalContainer").innerHTML = result;
+			
+			var modal= new bootstrap.Modal(document.getElementById("p_client_list"));
+			modal.show();
+			
+		}).catch(function(error) {
+			
+			console.log("통신오류발생" + error);
+		});
 }
 //발주처리스트 모달 페이징
 function cl2_modal_pg (page){
@@ -216,7 +228,6 @@ function cl2_modal_pg (page){
 	var page_no = page.getAttribute('data-pageno');
 	
 	var params = {  
-		    type: page.getAttribute('data-type'),
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),
 		};
@@ -234,7 +245,6 @@ function cl2_modal_pg (page){
 		return data.text();
 
 	}).then(function(result) {
-		//document.querySelector('#client_list .modal-body').innerHTML = result;
 		document.querySelector('#p_client_list .modal-body').innerHTML = result;
 		
 	}).catch(function(error) {

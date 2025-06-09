@@ -2,7 +2,6 @@ package kr.co.noerror.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +11,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
@@ -143,66 +137,7 @@ public class goods_controller {
 		return this.url;
 	}
 
-	/*
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@ResponseBody
-	@GetMapping("/img_attach/{filenm}")
-	public byte[] cdn_listapi(@PathVariable String filenm) {
-	
-		byte[] img = null; //FE에게 CDN경로 이미지명을 전송 
-		String img_url = null; 
-		
-		if("imgfile".equals(filenm)) {  
-		//파라미터값에 맞는 DB에 정보를 확인 후 해당 정보가 있을 경우 DB에 저장된 경로를 변수에 저장 
-			
-			img_url = "http://210.178.108.186/imgfile/"+"2025060400255562612.webp";
-			
-			try {
-				URL url = new URL(img_url);
-				
-				HttpURLConnection httpcon = (HttpURLConnection)url.openConnection();
-				
-				InputStream is = httpcon.getInputStream();  //해당 이미지를 바이트로 가져옴 
-				img = IOUtils.toByteArray(is);  //byte변수에 가져온 이미지 전체를 저장 
-				
-				is.close();
-				httpcon.disconnect();
-						
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-			
-		}else {
-			this.log.info("해당경로에 대한 사항이 없습니다.");
-		}
-		return img;   
-	}
-*/
-	
-	
-	//cdn이미지 요청 api
-	@GetMapping("/img_attach/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<byte[]> getCdnImage(@PathVariable("filename") String filename) {
-		byte[] imgbyte = this.m_file.cdn_img(filename);
-		if (imgbyte == null) {
-			return ResponseEntity.notFound().build();
-		}
 
-		HttpHeaders headers = new HttpHeaders();
-		  
-		String contentType = URLConnection.guessContentTypeFromName(filename);
-		if (contentType == null || !contentType.startsWith("image/")) {
-		    // 모르는 확장자거나 이미지가 아닐 경우에도 PNG로 처리 (이미지 깨짐 방지)
-		    contentType = "image/png";
-		}
-		
-		headers.setContentType(MediaType.parseMediaType(contentType));
-		return new ResponseEntity<>(imgbyte, headers, HttpStatus.OK);
-	}
-	
-	
-	
 	//완제품 등록하기 화면이동 
 	@GetMapping("/products_insert.do")
 	public String products_insert(Model m) throws IOException {
@@ -294,6 +229,7 @@ public class goods_controller {
 		return null;
 	}
 	
+	
 	//제품 등록 (부자재)
 	@PostMapping("/items_insertok.do")
 	public String items_insertok(@ModelAttribute products_DTO pdto,
@@ -304,6 +240,7 @@ public class goods_controller {
 			this.pw = res.getWriter();
 			
 			int result = this.g_svc.itm_insert(pdto, itmImage);   //db에 데이터 저장
+			
 			if(result > 0) {  
 				this.pw.write("ok");  //부자재 등록 완료 
 			}
@@ -330,6 +267,7 @@ public class goods_controller {
 		
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);  //bom상세보기 클릭시
+		
 		if(goods_one == null) {
 			this.msg = "alert('시스템문제로 해당 제품의 상세페이지를 불러올 수 없습니다.');"
 					+ "history.go(-1);";
@@ -353,7 +291,6 @@ public class goods_controller {
 				m.addAttribute("goods_one", goods_one);
 				this.url = "/modals/item_detail_modal.html";
 			}
-			
 		}
 		return this.url;
 	}

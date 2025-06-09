@@ -65,8 +65,9 @@
 									<th>MRP코드</th>
 									<th>자재코드</th>
 									<th>자재명</th>
-									<th>소요수량</th>
+									<th>규격</th>
 									<th>단위</th>
+									<th>소요수량</th>
 									<th>단가</th>
 									<th>가용재고</th>
 									<th>부족수량</th>
@@ -83,8 +84,9 @@
 									<td>[[${m.mrp_code}]]</td>
 									<td>[[${m.item_code}]]</td>
 									<td>[[${m.item_name}]]</td>
-									<td>[[${m.required_qty}]]</td>
+									<td>[[${m.item_spec}]]</td>
 									<td>[[${m.item_unit}]]</td>
+									<td>[[${m.required_qty}]]</td>
 									<td>[[${m.item_cost}]]</td>
 									<td>[[${m.available_stock}]]</td>
 									<td>[[${m.shortage_stock}]]</td>
@@ -153,8 +155,9 @@
 									<th style="width: 10px;"><input type="checkbox"></th>
 									<th>자재코드</th>
 									<th>자재명</th>
-									<th>발주수량</th>
+									<th>규격</th>
 									<th>단위</th>
+									<th>발주수량</th>
 									<th>자재단가</th>
 									<th>발주업체</th>
 								</tr>
@@ -164,8 +167,9 @@
 									<td><input type="checkbox"></td>
 									<td></td>
 									<td></td>
-									<td><input type="number" class="form-control" value=""></td>
 									<td></td>
+									<td></td>
+									<td><input type="number" class="form-control" value=""></td>
 									<td></td>
 									<td></td>
 								</tr>
@@ -218,8 +222,9 @@
 						<tr>
 							<th>자재코드</th>
 							<th>자재명</th>
-							<th>발주수량</th>
+							<th>규격</th>
 							<th>단위</th>
+							<th>발주수량</th>
 							<th>자재단가</th>
 							<th>자재구매금액</th>
 							<th>삭제</th>

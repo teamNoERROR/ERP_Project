@@ -132,7 +132,6 @@ public class goods_controller {
 		m.addAttribute("goods_all_list", goods_all_list_sch);
 		
 		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("pageno", pageno);
 		
 		return this.url;
 	}

@@ -85,7 +85,7 @@ public class bom_serviceImpl implements bom_service{
 		    b_DTO.setPRODUCT_CODE(jo.getString("cProductCode"));
 		    b_DTO.setITEM_CODE(jo.getString("cItemCode"));
 		    b_DTO.setBOM_QTY(jo.getInt("bomQty"));
-		    b_DTO.setUNIT(jo.getString("unit"));
+		    b_DTO.setBOM_UNIT(jo.getString("unit"));
 		    
 		    b_DTO.setBOM_SEQ_NO(w+1);
 		    

@@ -16,9 +16,9 @@ public class bom_DTO {
 	
 	//조인 셀렉트용 변수
 	List<String> items;
-	int IIDX;
+	int IIDX, ITEM_COST;
 	String ITEM_NAME, ITEM_TYPE, ITEM_CLASS1, ITEM_CLASS2;
-	String ITEM_SPEC, ITEM_UNIT, ITEM_COST, COMPANY_CODE;
+	String ITEM_SPEC, ITEM_UNIT, COMPANY_CODE;
 	String ITM_API_FNM, ITM_IMG_SRC;
 	String ITM_USE_FLAG, ITM_EXP_FLAG, ITM_MEMO, ITM_INSERT_DATE;
 	

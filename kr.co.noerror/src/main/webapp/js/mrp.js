@@ -59,7 +59,6 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
     .then(res => res.json())
     .then(result => {
         alert("MRP 계산 완료!");
-        console.log("결과:", result);
 		
 		const tbody = document.getElementById("mrp-result-tbody");
 		    tbody.innerHTML = ""; // 이전 내용 초기화
@@ -71,7 +70,6 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
 		            <td><input type="checkbox" checked disabled class="row-checkbox-result"></td>
 		            <td>${index + 1}</td>
 		            <td>${item.item_code}</td>
-		            <td>${item.item_type}</td>
 		            <td>${item.item_name}</td>
 		            <td>${item.required_qty}</td>
 		            <td>${item.item_unit}</td>
@@ -161,16 +159,15 @@ function collectMRPResultData() {
 
             resultData.push({
                 item_code: cells[2].textContent.trim(),
-                item_type: cells[3].textContent.trim(),
-                item_name: cells[4].textContent.trim(),
-                required_qty: parseInt(cells[5].textContent.trim()),
-                item_unit: cells[6].textContent.trim(),
-                item_cost: cells[7].textContent.trim(),
-                total_stock: parseInt(cells[8].textContent.trim()),
-                safety_stock: parseInt(cells[9].textContent.trim()),
-                reserved_stock: parseInt(cells[10].textContent.trim()),
-                available_stock: parseInt(cells[11].textContent.trim()),
-                shortage_stock: parseInt(cells[12].textContent.trim())
+                item_name: cells[3].textContent.trim(),
+                required_qty: parseInt(cells[4].textContent.trim()),
+                item_unit: cells[5].textContent.trim(),
+                item_cost: cells[6].textContent.trim(),
+                total_stock: parseInt(cells[7].textContent.trim()),
+                safety_stock: parseInt(cells[8].textContent.trim()),
+                reserved_stock: parseInt(cells[9].textContent.trim()),
+                available_stock: parseInt(cells[10].textContent.trim()),
+                shortage_stock: parseInt(cells[11].textContent.trim())
             });
         }
     });

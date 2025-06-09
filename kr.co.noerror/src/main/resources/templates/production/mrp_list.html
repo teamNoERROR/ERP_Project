@@ -15,7 +15,7 @@
   <div class="table-responsive rounded">
     <div class="card shadow">
       <div class="card-body">
-     <div class="mb-2 fw-semibold">▷ 생산예정 품목 조회 (테스트시 기간은 2025-05-25~2025-05-31로 조회해 보세요.)</div>
+     <div class="mb-2 fw-semibold">▷ 생산예정 품목 조회</div>
         <form class="row g-3 align-items-center mb-3"  method="get" action="/production_period.do">
 		  <div class="col-12 d-flex align-items-center flex-wrap gap-2">
 		    <label class="fw-semibold">&nbsp;- 조회 기간 : </label>
@@ -23,8 +23,8 @@
 		    <input type="date" class="form-control" name="end_date" style="max-width: 150px;"> 
 	    	<div class="col-auto">
 				<div class="input-group input-group-sm">
-			        <input type="checkbox" checked disabled> &nbsp;생산계획 확정 &nbsp;
-			        <input type="checkbox" checked disabled> &nbsp;MRP 미계산(예약재고 미반영)&nbsp;
+			        <input type="checkbox" checked disabled> &nbsp;생산계획확정 &nbsp;
+			        <input type="checkbox" checked disabled> &nbsp;MRP미완료&nbsp;
 				</div>
 			</div>
 		    <button class="btn btn-outline-primary" type="submit">
@@ -42,11 +42,11 @@
             <tr>
               <th style="width:10px;"><input type="checkbox" id="check-all-input"></th>
               <th>#</th>
-              <th>관리번호</th>
+              <th>생산계획번호</th>
               <th>제품명</th>
-              <th>수량</th>
               <th>규격</th>
               <th>단위</th>
+              <th>수량</th>
               <th>생산일자</th>
               <th>주문업체명</th>
               <th>BOM코드</th>
@@ -64,18 +64,26 @@
 		      <td>[[${no.count}]]</td>
 		      <td>[[${p.plan_code}]]</td>
 		      <td>[[${p.product_name}]]</td>
-		      <td>[[${p.product_qty}]]</td>
 		      <td>[[${p.product_spec}]]</td>
 		      <td>[[${p.product_unit}]]</td>
+		      <td>[[${p.product_qty}]]</td>
 		      <td>[[${p.due_date.substring(0, 10)}]]</td>
 		      <td>[[${p.company_name}]]</td>
 		      <td>[[${p.bom_code}]]</td>
-		      <td align="center" style="cursor: pointer; color: blue;"
-		          class="modal-trigger"
-		          th:data-modal-url="@{'/bom_items.do?code=' + ${p.bom_code}}"
-		          data-modal-id="bom_items"><u>클릭</u>
-		      </td>
-		      <td>[[${p.emp_name}]]</td>
+		      <!-- case 1: bom_code가 '-'인 경우 -->
+		 	  <td th:if="${p.bom_code == '-'}" align="center">
+			      [[${p.bom_code}]]
+			  </td>
+			  <!-- case 2: bom_code가 '-'가 아닌 경우 -->
+			  <td th:unless="${p.bom_code == '-'}"
+			      align="center"
+			      style="cursor: pointer; color: blue;"
+			      class="modal-trigger"
+			      th:data-modal-url="@{'/bom_items.do?code=' + ${p.bom_code}}"
+			      data-modal-id="bom_items">
+			      <u>클릭</u>
+			  </td>
+		      <td>[[${p.ename}]]</td>
 		    </tr>
 		  </tbody>
         </table>
@@ -111,7 +119,6 @@
                 <th style="width:20px;"><input type="checkbox" id="check-all-result" checked disabled></th>
                 <th style="width:20px;">#</th>
                 <th style="width:120px;">자재코드</th>
-                <th style="width:120px;">자재유형</th>
                 <th style="width:120px;">자재명</th>
                 <th style="width:120px;">필요수량</th>
                 <th style="width:100px;">단위</th>

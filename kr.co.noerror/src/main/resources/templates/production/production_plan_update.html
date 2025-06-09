@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+	<header th:replace="~{/common/header.html :: header}"></header>
+
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+		<section class="container ">
+			<!-- Title -->
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+				<h2 class="mb-1">생산계획 수정 화면 ([[${details[0].plan_code}]])</h2>
+			</div>
+			
+			<div id="frm">
+				<input type="hidden" name="plan_code" th:value="${details[0].plan_code}" />
+				<div class="table-responsive  rounded">
+					<table class="table table-bordered align-middle">
+						<thead class="table-light text-center">
+							<tr>
+								<th class="info-label table-light" colspan="5">주문코드 및 주문업체 정보</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="info-label">주문코드</td>
+								<td class="value-cell">[[${details[0].order_code}]]</td>
+								<td class="info-label">회사명</td>
+								<td class="value-cell" colspan="2">[[${details[0].company_name}]]</td>
+							</tr>
+							<tr>
+								<td class="info-label">사업자번호</td>
+								<td class="value-cell">[[${details[0].biz_num}]]</td>
+								<td class="info-label">대표자</td>
+								<td class="value-cell" colspan="2">[[${details[0].ceo_name}]]</td>
+							</tr>
+							<tr>
+								<td class="info-label">담당자</td>
+								<td class="value-cell">[[${details[0].manager_name}]]</td>
+								<td class="info-label">연락처</td>
+								<td class="value-cell" colspan="2">[[${details[0].mng_phone_num}]]</td>
+							</tr>
+							<tr>
+								<td class="info-label">주소</td>
+								<td class="value-cell" colspan="5">[[${details[0].com_addr1 +
+									details[0].com_addr2}]]</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+
+				<div class="table-responsive  rounded">
+					<h5 class="">생산계획정보</h5>
+					<table class="table align-middle table-bordered">
+						<tr>
+							<td class="info-label">생산계획코드</td>
+							<td class="value-cell">[[${details[0].plan_code}]]</td>
+							<td class="info-label">생산상태</td>
+							<td class="value-cell">[[${details[0].plan_status}]]</td>
+						</tr>
+						<tr>
+							<td class="info-label">주문납기일</td>
+							<td class="value-cell">[[${details[0].due_date.substring(0,10)}]]</td>
+							<td class="info-label">우선순위</td>
+							<td class="value-cell">
+								<select class="form-select" id="priority" name="priority">
+									<option value="긴급" th:selected="${details[0].priority == '긴급'}">긴급</option>
+									<option value="높음" th:selected="${details[0].priority == '높음'}">높음</option>
+									<option value="보통" th:selected="${details[0].priority == '보통'}">보통</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="info-label">생산시작예정일자</td>
+							<td class="value-cell">
+								<input type="date" class="form-control" name="start_date" th:value="${details[0].start_date.substring(0,10)}" />
+							</td>
+							<td class="info-label">생산종료예정일자</td>
+							<td class="value-cell">
+								<input type="date" class="form-control" name="end_date" th:value="${details[0].end_date.substring(0,10)}" />
+							</td>							
+						</tr>
+						<tr class="empinfo">
+							<td class="info-label">발주 담당자
+								<input type="hidden" class="form-control" name="ecode" id="ecode" th:value="${session.ecode}" readonly>
+							</td>
+							<td class="value-cell">
+							    <div class="input-group">
+							      <input type="text" class="form-control" name="ename" id="ename" th:value="${session.ename}" readonly>
+						          <button type="button" class="btn btn-outline-secondary modal-trigger" 
+						                  th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
+						              <i class="bi bi-search"></i>
+						          </button>
+							    </div>
+							</td>
+							<td class="info-label"></td>
+							<td class="value-cell"></td>
+						</tr>
+						<tr>
+							<td class="info-label">비고</td>
+							<td class="value-cell" colspan="3">
+								<textarea class="form-control" name="memo" rows="3" th:text="${details[0].memo}"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- 주문항목 List Table -->
+				<div class="table-responsive  rounded">
+					<h5 class="">생산 제품 내역</h5>
+					<table class="table table-hover align-middle table-bordered">
+						<thead class="table-light text-center">
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">제품코드</th>
+								<th scope="col">제품명</th>
+								<th scope="col">제품규격</th>
+								<th scope="col">제품단위</th>
+								<th scope="col">생산수량</th>
+								<th scope="col">BOM코드</th>
+
+							</tr>
+						</thead>
+						<tbody id="prdplan-tbody">
+							<tr th:each="d, no : ${details}">
+								<input type="hidden" class="product-code" th:name="|products[${no.index}].product_code|" th:value="${d.product_code}" />
+								<td th:text="${no.count}"></td>
+								<td th:text="${d.product_code}"></td>
+								<td th:text="${d.product_name}"></td>
+								<td th:text="${d.product_spec}"></td>
+								<td align="center" th:text="${d.product_unit}"></td>
+								<td align="center">
+									<input type="number" class="form-control text-end qty-input"
+										th:name="|products[${no.index}].product_qty|"
+										th:value="${d.product_qty}" min="1"  style="width: 100px;" />
+								</td>
+								<td th:text="${d.bom_code}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			
+				<!-- 저장 버튼 -->
+				<div class="d-flex justify-content-end mt-4">
+					<button type="button" class="btn btn-primary" onclick="prdplan_update()">
+						<i class="bi bi-save"></i> 저장
+					</button>
+				</div>
+			</div>
+		</section>
+	</main>
+
+
+	<div id="modalContainer"></div>
+
+	<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

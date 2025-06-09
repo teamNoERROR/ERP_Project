@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.ordreq_DTO;
 import kr.co.noerror.DTO.ordreq_res_DTO;
+import kr.co.noerror.DTO.pchreq_DTO;
+import kr.co.noerror.DTO.pchreq_detail_DTO;
+import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.prdplan_DTO;
 import kr.co.noerror.DTO.prdplan_detail_DTO;
@@ -37,8 +41,8 @@ public class prdplan_DAO {
 		return cnt;
 	}
 	
-	public List<temp_bom_DTO> bom_items(String bom_code){
-		List<temp_bom_DTO> bom_items = this.sql.selectList("bom_items", bom_code);
+	public List<bom_DTO> bom_items(String bom_code){
+		List<bom_DTO> bom_items = this.sql.selectList("bom_items", bom_code);
 		return bom_items;
 	}
 	
@@ -69,6 +73,26 @@ public class prdplan_DAO {
 	
 	public int prdplan_detail_insert(prdplan_detail_DTO detaildto) {
 		int result = this.sql.insert("prdplan_detail_insert", detaildto);
+		return result;
+	}
+	
+	public List<prdplan_res_DTO> prdplan_detail(String plan_code){
+		List<prdplan_res_DTO> details = this.sql.selectList("prdplan_detail", plan_code);
+		return details;
+	}
+	
+	public int prdplan_update(prdplan_DTO pdto) {
+		int result = this.sql.update("prdplan_update", pdto);
+		return result;
+	}
+	
+	public int prdplan_detail_update(prdplan_detail_DTO pdto) {
+		int result = this.sql.update("prdplan_detail_update", pdto);
+		return result;		
+	}
+	
+	public int plan_status_update(Map<String, String> mparam) {
+		int result = this.sql.update("plan_status_update", mparam);
 		return result;
 	}
 }

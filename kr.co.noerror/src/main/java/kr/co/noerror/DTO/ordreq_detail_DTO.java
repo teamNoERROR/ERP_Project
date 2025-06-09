@@ -10,6 +10,5 @@ public class ordreq_detail_DTO {
     private Long oidx;
     private String order_code;
     private String product_code;
-    private String wh_code;
     private Long product_qty;
 }

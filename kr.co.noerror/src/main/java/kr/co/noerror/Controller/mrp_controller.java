@@ -22,22 +22,24 @@ import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
-import kr.co.noerror.DTO.plan_DTO;
+import kr.co.noerror.DTO.prdplan_res_DTO;
 import kr.co.noerror.Model.mrp_Calulation;
+import kr.co.noerror.Service.mrp_service;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Controller
 public class mrp_controller {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	private final mrp_service mrp_service;  //mrp_service 생성자 주입
 	
 	@Autowired
 	mrp_DAO mdao;
 	
 	@Resource(name="mrp_Calulation")
 	mrp_Calulation mrp_calc;
-	
-//	@Resource(name="M_random")
-//	M_random mrandom;
 	
 	@PostMapping("/go_purchase.do")
 	public String go_purchase(@RequestParam("data") String json_data,
@@ -59,48 +61,8 @@ public class mrp_controller {
 	
 	@PostMapping("/mrp_save.do")
 	@ResponseBody
-	public Map<String, Object> mrp_save(@RequestBody List<mrp_result_DTO> results) {
-		
-		Map<String, Object> response = new HashMap<>();
-		
-        //중복 없는 mrp코드 생성
-        String mrp_code = null;
-        int count = 0;
-        boolean is_duplicated = true;
-//        while(is_duplicated) {
-//        	mrp_code = "mrp-" + this.mrandom.random_no();
-//        	count = this.mdao.mrp_code_check(mrp_code);
-//        	if(count == 0){
-//        		is_duplicated = false;
-//        	}
-//        }
-        
-        try {
-        	
-        	//mrp_header 테이블에 저장
-        	int result1 = this.mdao.insert_mrp_header(mrp_code);
-        	
-        	//mrp_detail 테이블에 저장
-        	int result2 = 0;
-            for (mrp_result_DTO mdto : results) {
-            	mdto.setMrp_code(mrp_code);
-                result2 += this.mdao.insert_mrp_detail(mdto);
-            }
-
-            if((result1==1) && (result2 == results.size())) {
-	            response.put("success", true);
-	            response.put("mrp_code", mrp_code);
-            }
-            else {
-            	response.put("success", false);
-            }
-
-        } catch (Exception e) {
-        	System.out.println(e);
-            response.put("success", false);
-        }
-
-	    return response;
+	public Map<String, Object> mrp_save(@RequestBody List<mrp_result_DTO> mrp_results) {
+	    return mrp_service.mrp_save(mrp_results);
 	}
 	
 	//mrp 계산 및 계산내역 ajax 리턴
@@ -121,7 +83,7 @@ public class mrp_controller {
 		mparam.put("start_date", start_date); 
 		mparam.put("end_date", end_date);  
 		
-		List<plan_DTO> plans_period = this.mdao.plans_period(mparam);
+		List<prdplan_res_DTO> plans_period = this.mdao.plans_period(mparam);
 		
 		m.addAttribute("lmenu","생산 관리");
 		m.addAttribute("smenu","mrp 계산");

@@ -28,24 +28,50 @@ function toggleButton2(type) {
 /*--------------------------------------------------------------
   이미지 첨부시 미리보기
 --------------------------------------------------------------*/
-function previewFile() {
-  const fileInput = document.getElementById('productImage');
-  const preview = document.getElementById('previewImage');
-  const fileNameDisplay = document.getElementById('fileName');
-
-  const file = fileInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      preview.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-
-    // 파일명 표시
-    fileNameDisplay.textContent = file.name;
-  } 
+function previewFile(type) {
+	var fileInput;
+	var preview = document.getElementById('previewImage');
+	//var fileNameDisplay = document.getElementById('fileName');
+	
+	if(type == 'client'){
+	  fileInput = document.getElementById('clientImage');
+	  
+	}else if(type == 'product'){
+		fileInput = document.getElementById('productImage');
+		
+	}else if(type == 'item'){
+		fileInput = document.getElementById('itemImage');
+		
+	}else if(type == "warehouse"){
+		fileInput = document.getElementById('whImage');
+	}
+		
+	var file = fileInput.files[0];
+	if (file) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      preview.src = e.target.result;
+	    };
+	    reader.readAsDataURL(file);
+	
+	    // 파일명 표시
+	    //fileNameDisplay.textContent = file.name;
+	} 
 }
 
+/*--------------------------------------------------------------
+초기화 버튼 클릭
+--------------------------------------------------------------*/
+function resetBtn(){
+	location.reload();
+}
+
+/*--------------------------------------------------------------
+ 등록화면에서 우상단 x표시 클릭 
+--------------------------------------------------------------*/
+function goBack(){
+	history.go(-1);
+}
 
 /*--------------------------------------------------------------
   창고리스트 모달 
@@ -134,220 +160,3 @@ function choiceWh() {
 	}
 };
 
-/*--------------------------------------------------------------
-	리스트 모달
------------------------------------------------------------ */
-
-//거래처리스트 모달 오픈 
-function cltListOpen(){
-	fetch("./client_list.do", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("client_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-//거래처리스트 모달 페이징
-function cl_modal_pg (page){
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
-	
-	var params = {  
-		    type: page.getAttribute('data-type'),
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
-		};
-		
-		if (keyword) {  //키워드가 있으면
-		    params["keyword"] = keyword;
-		}
-		var pString = new URLSearchParams(params).toString();
-		
-		
-	fetch("./client_list.do?"+pString+"&mode=modal2", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.querySelector('#client_list .modal-body').innerHTML = result;
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-//발주처리스트 모달 오픈 
-function pcltListOpen(){
-	fetch("./client_list2.do", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		//var modal= new bootstrap.Modal(document.getElementById("client_list"));
-		var modal= new bootstrap.Modal(document.getElementById("p_client_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-//발주처리스트 모달 페이징
-function cl2_modal_pg (page){
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
-	
-	var params = {  
-		    type: page.getAttribute('data-type'),
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
-		};
-		
-		if (keyword) {  //키워드가 있으면
-		    params["keyword"] = keyword;
-		}
-		var pString = new URLSearchParams(params).toString();
-		
-		
-	fetch("./client_list2.do?"+pString+"&mode=modal2", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		//document.querySelector('#client_list .modal-body').innerHTML = result;
-		document.querySelector('#p_client_list .modal-body').innerHTML = result;
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-
-//부자재리스트 모달 오픈 
-function openItemList(parentType){
-	
-	
-	fetch("./item_list.do?parent="+parentType, {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("items_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-
-//부자재리스트 모달 페이징
-function itm_modal_pg (page){
-	var parent = page.getAttribute('data-parent');
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
-	
-	var params = {  
-			parent: parent,  
-		    type: page.getAttribute('data-type'),
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
-		};
-		
-		if (keyword) {  //키워드가 있으면
-		    params["keyword"] = keyword;
-		}
-		var pString = new URLSearchParams(params).toString();
-		
-		
-	fetch("./item_list.do?"+pString+"&mode=modal2", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.querySelector('#items_list .modal-body').innerHTML = result;
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-//입고건 리스트 모달 오픈
-function inbndListOpen(){
-	fetch("./inbound_list.do", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("inbounds_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-//입고리스트 모달 페이징
-function inbnd_modal_pg (page){
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
-	
-	var params = {  
-		    type: page.getAttribute('data-type'),
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
-		};
-		
-		if (keyword) {  //키워드가 있으면
-		    params["keyword"] = keyword;
-		}
-		var pString = new URLSearchParams(params).toString();
-		
-		
-	fetch("./inbound_list.do?"+pString+"&mode=modal2", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.querySelector('#inbounds_list .modal-body').innerHTML = result;
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}

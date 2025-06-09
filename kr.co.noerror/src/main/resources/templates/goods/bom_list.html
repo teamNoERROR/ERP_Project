@@ -9,15 +9,12 @@
 <main class="main">
 <section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 <section class="container ">
-        <!-- Title -->
-        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">BOM 관리</h2>
-        </div>
-
-	
-	<div class="row align-items-center justify-content-end my-3">
-
-
+    <!-- Title -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    	<h2 class="mb-1">BOM 관리</h2>
+    </div>
+        
+	<div class="row align-items-center justify-content-end my-4">
   <!-- 검색창 영역 -->
   <div class="col-auto">
       <div class="col-auto d-flex"  >
@@ -40,7 +37,7 @@
 
 		 <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
-          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
+          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="전체 검색">
           <button class="btn btn-primary" >
             <i class="bi bi-search"></i>
           </button>
@@ -53,8 +50,8 @@
 
         <!-- bom List Table -->
      	<div id="contents_container">
-        <div id="table-container" class="table-responsive  rounded" >
-            <table class="table align-middle table-bordered text-center" th:classappend="${bom_total != 0} ? 'table-hover' : ''">
+        <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+            <table class="table align-middle table-bordered text-center" style="white-space: nowrap;"th:classappend="${bom_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
                         <th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled ></th>
@@ -76,7 +73,7 @@
                 <tbody >
                 
                 	<tr th:if="${bom_total == 0}" >
-                		<td class="text-center no_list_tb" colspan="14">  BOM이 등록된 상품이 없습니다. </td>
+                		<td class="text-center no_list_tb" colspan="14"> BOM이 등록된 상품이 없습니다. </td>
                 	</tr>
                 	
                     <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" 
@@ -85,7 +82,8 @@
                         <td onclick="event.stopPropagation()"><input type="checkbox" name="bom_select" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td class="p-0">
-
+							<img th:if="${bomlist.PD_API_FNM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${bomlist.PD_FILE_RENM}" style="width:50px;">
+                        	<img th:if="${bomlist.PD_API_FNM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
                         </td>
                         <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>
                         <td class="text-start">[[${bomlist.PRODUCT_NAME}]]</td>

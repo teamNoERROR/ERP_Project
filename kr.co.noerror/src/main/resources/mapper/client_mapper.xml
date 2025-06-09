@@ -40,11 +40,34 @@ SELECT COUNT(*) FROM CLIENT_COMP
 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
+
 <!-- 거래처 상세보기  -->
 <select id="client_detail" resultType="kr.co.noerror.DTO.client_DTO" parameterType="Map">
 	SELECT * FROM CLIENT_COMP WHERE COMPANY_CODE = #{COMPANY_CODE} AND CIDX = #{CIDX}
 </select>
 
+<!-- 거래처 고유코드 중복검사 -->
+<select id="clt_code_dupl" resultType="int" parameterType="String">
+	SELECT COUNT(*) AS CNT FROM CLIENT_COMP WHERE COMPANY_CODE = #{code}
+</select>
+
+<!-- 거래처 담당자 고유코드 중복검사 -->
+<select id="mng_code_dupl" resultType="int" parameterType="String">
+	SELECT COUNT(*) AS CNT FROM CLIENT_COMP WHERE MANAGER_CODE = #{code}
+</select>
 
 
+<!-- 거래처 등록  -->
+<insert id="clt_insert"  parameterType="kr.co.noerror.DTO.client_DTO">
+	INSERT INTO CLIENT_COMP 
+	VALUES 
+	(CLIENT_COMP_NO.NEXTVAL, #{COMPANY_CODE}, #{COMPANY_NAME}, #{CEO_NAME}, 
+	#{BIZ_NUM}, #{BIZ_TYPE}, #{BIZ_ITEM}, 
+	#{COM_ZIP}, #{COM_ADDR1}, #{COM_ADDR2, jdbcType=VARCHAR},
+	#{COM_FILE_NM, jdbcType=VARCHAR}, #{COM_FILE_RENM, jdbcType=VARCHAR}, #{COM_API_FNM, jdbcType=VARCHAR},
+	#{CLIENT_TYPE}, #{COM_MEMO, jdbcType=CLOB},
+	#{MANAGER_CODE}, #{MANAGER_NAME},#{MNG_EMAIL}, #{MNG_TEL},
+	#{MNG_PHONE}, #{MNG_FAX},#{MNG_PART}, #{MNG_POSITION},
+	#{MNG_MEMO, jdbcType=CLOB}, #{COM_USE_FLAG}, SYSTIMESTAMP, NULL)
+</insert>
 </mapper>

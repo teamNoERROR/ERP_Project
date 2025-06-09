@@ -9,8 +9,8 @@
 				<!-- 제품 이미지 -->
 				<div class="col-md-4 text-center comp_logo mt-3">
 					<th:block>
-					<img th:if="${goods_one.ITM_API_FNM == null}" src="./img/no-image.svg" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
-					<img th:if="${goods_one.ITM_API_FNM != null}" th:src="@{'http://localhost:8081/img_attach/' + ${goods_one.ITM_FILE_RENM}}" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
+					<img th:if="${goods_one.ITM_FILE_NM == null}" src="./img/no-image.svg" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
+					<img th:if="${goods_one.ITM_FILE_NM != null}" th:src="@{'http://localhost:8081/img_attach/' + ${goods_one.ITM_FILE_RENM}}" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
 					</th:block>
 				</div>
 
@@ -21,7 +21,7 @@
 						<table class="table align-middle table-bordered">
 							<tr>
 								<td class="info-label">제품유형</td>
-								<td class="value-cell"> [[${goods_one.ITEM_TYPE}]] </td>
+								<td class="value-cell"> 부자재 </td>
 								<td class="info-label">제품명</td>
 								<td class="value-cell"> [[${goods_one.ITEM_NAME}]] </td>
 							</tr>

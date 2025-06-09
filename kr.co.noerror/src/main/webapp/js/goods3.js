@@ -23,7 +23,7 @@ function addItem(){
 제품 등록하기 + 유효성검사
 --------------------------------------------------------------*/
 function insertItm(){
-	var itmImage = document.querySelector("#productImage").files[0];
+	var itmImage = document.querySelector("#itemImage").files[0];
 	
 	if(itm_type.value ==""){
 		alert("제품유형을 선택하세요");
@@ -146,7 +146,7 @@ function pCltChoice(){
 function insertItem(){
 	var use_flag = document.querySelector('input[name="use_flag"]:checked');
 	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
-	var itmImage = document.querySelector("#productImage").files[0];
+	var itmImage = document.querySelector("#itemImage").files[0];
 	
 	var formData = new FormData();
 	formData.append("ITEM_TYPE", itm_type.value);
@@ -173,41 +173,15 @@ function insertItem(){
 		return data.text();
 
 	}).then(function(result) {
-		console.log(result)
 		if(result=="ok"){
 			alert("부자재 등록이 완료되었습니다.");
 			location.href="./goods.do?type=item";
+			
+		}else if(result=="fail"){
+			alert("시스템문제로 거래처등록에 실패했습니다.\n관리자에게 문의해주세요.");
 		}
 
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	});
 }
-
-/*--------------------------------------------------------------
-부자재 페이징
---------------------------------------------------------------*/
-/*
-function go_itm_pg(ee){
-	var keyword = ee.getAttribute('data-keyword');
-	var page_no = ee.getAttribute('data-pageno');
-	var sclass = ee.getAttribute('data-sclass');
-	
-	var params = {  
-	    type: ee.getAttribute('data-type'),
-	    pageno: page_no,
-	    post_ea: ee.getAttribute('data-pea'),
-	};
-	
-	if (keyword) {  //키워드가 있으면
-	    params["keyword"] = keyword;
-	}
-
-	if (sclass) {  //소분류 선택시 
-	    params["sclass"] = sclass;
-	}
-
-	var pString = new URLSearchParams(params).toString();
-	location.href = "./goods.do?" + pString;
-}
-*/

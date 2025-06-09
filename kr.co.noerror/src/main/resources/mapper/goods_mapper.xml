@@ -31,22 +31,6 @@
 </select>
 
 
-
-<!-- 완제품 식품분류 목록 출력 -->
-<!-- <select id="pd_class_list" resultType="String" parameterType="Map"> -->
-<!-- 	SELECT -->
-<!-- 	<choose> -->
-<!-- 	<when test="key == null"> -->
-<!-- 		DISTINCT PRODUCT_CLASS1 FROM PRODUCTS_CLASS  -->
-<!-- 	</when> -->
-<!-- 	<otherwise> -->
-<!-- 		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1} -->
-<!-- 	</otherwise> -->
-<!-- 	</choose> -->
-<!-- </select> -->
-
-
-
 <!-- 상품코드 중복확인 -->
 <select id="code_dupl" resultType="int" parameterType="kr.co.noerror.DTO.products_DTO">
 	SELECT COUNT(*) AS CNT FROM 
@@ -60,6 +44,7 @@
 	</choose>
 </select>
 
+
 <!-- 완제품 등록  -->
 <insert id="pd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
 	INSERT INTO PRODUCTS 
@@ -71,6 +56,7 @@
 	#{PD_USE_FLAG}, #{PD_EXP_FLAG}, #{PD_MEMO, jdbcType=CLOB}, SYSDATE, NULL)
 </insert>
 
+
 <!-- 부자재 등록  -->
 <insert id="itm_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
 	INSERT INTO ITEMS 
@@ -78,10 +64,9 @@
 	(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
 	#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
 	#{ITEM_COST}, #{ITM_SAFE_STOCK},  
-	#{ITM_FILE_NM, jdbcType=CLOB}, #{ITM_FILE_RENM, jdbcType=VARCHAR}, #{ITM_API_FNM, jdbcType=VARCHAR}, #{ITM_IMG_SRC, jdbcType=CLOB}, 
-	#{COMPANY_CODE}, #{ITM_USE_FLAG}, #{ITM_EXP_FLAG}, #{ITM_MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+	#{ITM_FILE_NM, jdbcType=VARCHAR}, #{ITM_FILE_RENM, jdbcType=VARCHAR}, #{ITM_API_FNM, jdbcType=VARCHAR}, 
+	#{COMPANY_CODE}, #{ITM_USE_FLAG}, #{ITM_EXP_FLAG}, #{ITM_MEMO, jdbcType=CLOB}, SYSTIMESTAMP, NULL)
 </insert>
-
 
 
 <!-- 제품 전체 개수(+페이징,검색)  -->
@@ -157,7 +142,6 @@ SELECT COUNT(*) AS CNT FROM
   </when>
 </choose>
 </select>
-
 
 
 <!-- 제품 전체 리스트  -->
@@ -242,12 +226,6 @@ SELECT COUNT(*) AS CNT FROM
 	WHERE rnum &gt;= #{start}
 	
 </select>
-
-
-
-
-
-
 
 
 <!-- 제품 상세보기 -->

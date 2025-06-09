@@ -87,34 +87,57 @@ public class Warehouse_Service {
     }
 
     // 창고 게시판 목록 및 검색
-    public Map<Object, Object> warehouse_list(int page, String wh_search) {
+    public Map<Object, Object> warehouse_list(int page, String wh_search, int pageSize) {
         
-    	Map<Object, Object> wh_map = new HashMap<>();
+        Map<Object, Object> wh_map = new HashMap<>();
 
         try {
             // 한 페이지당 게시글 수
-            final int pageSize = 5;
             int startIndex = (page - 1) * pageSize;
             int totalCount;
 
             List<WareHouse_DTO> wh_list_result;
-            
+
             boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty());
-            
-            if(isSearch) {	//검색한 경우 (검색된 리스트)
+
+            if (isSearch) {
+                // 검색한 경우
                 wh_list_result = this.ws_dao.search_whpaged(wh_search, startIndex, pageSize);
                 totalCount = this.ws_dao.searchTotal(wh_search);
-            } else {	//검색 안한경우 (전체 리스트)
+            } else {
+                // 검색 안 한 경우
                 wh_list_result = this.ws_dao.select_wh_list(startIndex, pageSize);
                 totalCount = this.ws_dao.getTotalCount();
-                System.out.println("ware : "+totalCount);
+                System.out.println("ware : " + totalCount);
             }
-            
+
             int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-            
+
+            // 페이지 블록 계산 추가 (3개씩 보여주기)
+
+         // 변경된 코드
+         int blockSize = 3; // 한 번에 보여줄 페이지 수 (홀수 권장)
+         int halfBlock = blockSize / 2;
+
+         int startPage = page - halfBlock;
+         int endPage = page + halfBlock;
+
+         // startPage가 1보다 작으면 1로 맞추고 endPage도 조정
+         if (startPage < 1) {
+             startPage = 1;
+             endPage = Math.min(blockSize, totalPages);
+         }
+
+         // endPage가 총 페이지보다 크면 totalPages로 맞추고 startPage도 조정
+         if (endPage > totalPages) {
+             endPage = totalPages;
+             startPage = Math.max(1, endPage - blockSize + 1);
+         }
+            // 디버깅용 로그
             System.out.println("service " + wh_list_result.get(0).getECODE());
             System.out.println("service " + wh_list_result.get(0).getWh_name());
-            
+
+            // 결과 맵 저장
             wh_map.put("wh_list", wh_list_result);
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");
             wh_map.put("wh_check", wh_list_result.isEmpty() ? "nodata" : "yesdata");
@@ -124,7 +147,11 @@ public class Warehouse_Service {
             wh_map.put("pageSize", pageSize);
             wh_map.put("wh_search", wh_search);
 
-        } catch(Exception e) {
+            // 페이징 블록 추가
+            wh_map.put("startPage", startPage);
+            wh_map.put("endPage", endPage);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

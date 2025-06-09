@@ -13,6 +13,7 @@ public class mrp_result_DTO {
     private String item_type;
     private String item_name;
     private int required_qty;
+    private String item_spec;
     private String item_unit;
     private int item_cost;
     private int total_stock;

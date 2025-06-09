@@ -190,8 +190,8 @@ function select_items (btn) {
 			
 			    var item = {
 			      code: row.dataset.code,
-			      type: '부자재',
 			      name: row.dataset.name,
+				  spec: row.dataset.spec,
 			      unit: row.dataset.unit,
 				  cost: row.dataset.cost,
 			      pcomp: row.dataset.company
@@ -338,7 +338,22 @@ function appendItemsRow(tbody, item) {
 }
 
 
-
+//모달에서 선택한 리스트 등록화면(pchreq_insert)의 리스트에 붙여넣기 
+function appendItemsRow2(tbody, item) {
+  const tr = document.createElement('tr');
+  tr.className = "item_added"
+  tr.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.spec}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
+    <td><input type="number" class="form-control" value=""></td>
+    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
+  `;
+  tbody.append(tr);
+}
 
 
 //bom등록 저장

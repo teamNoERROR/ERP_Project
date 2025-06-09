@@ -67,8 +67,6 @@ public class bom_controller {
 
 		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass , keyword); //bom리스트 제품 총개수
 		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
-		System.out.println("bom_total_sch : " + bom_total_sch);
-		System.out.println("bom_all_list_sch : " + bom_all_list_sch);
 		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, bom_total_sch);

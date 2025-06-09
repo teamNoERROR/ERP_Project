@@ -98,7 +98,6 @@ public class common_controller {
 		
 		
 		return  "/modals/wh_type_list_modal.html";
-//		return null;
 	}
 	
 	
@@ -158,15 +157,12 @@ public class common_controller {
 		m.addAttribute("clt_list", client_list);
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", post_ea);
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/client2_list_body_modal.html :: cl2PgList";
 	    } else {
 	        return "/modals/client2_list_modal.html"; // 일반 뷰 전체
 	    }
-		
-//		return "/modals/clientp_list_modal.html";
 	}
 	
 	

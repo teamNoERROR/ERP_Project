@@ -45,8 +45,6 @@
             </th:block>
           </select>
         </div>
-<!--          </form> -->
-<!--        <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()"> -->
        <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
@@ -63,7 +61,7 @@
 
         <!-- 제품 List Table -->
      	<div id="contents_container">
-        <div id="table-container" class="table-responsive  rounded" >
+        <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
@@ -133,7 +131,7 @@
 				<li class="page-item page-link " 
 					th:if="${pageinfo.start_pg > 1}"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-pageno=${pageinfo.start_pg - 1}, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)">
+                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)">
 					<i class="bi bi-chevron-left"></i> </li>
 					
                 
@@ -146,7 +144,7 @@
                 <li class="page-item page-link " 
                 	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
                 	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 1}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)" >
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 2}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)" >
 					<i class="bi bi-chevron-right"></i> </li>
 					
                 <li class="page-item page-link next" 

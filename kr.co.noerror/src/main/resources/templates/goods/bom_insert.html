@@ -18,10 +18,17 @@
 			<div class="col-md-10">
 				<div class="row mb-2 d-flex">
 					<div class="col-md-3 mb-2 ">
-						<label class="form-label ">제품코드</label> 
-						<input type="text" class="form-control" id="product_code" 
-								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CODE} : ''" 
-								th:attr="readonly=${bom_pd != null}" />
+						<label class="form-label">제품코드</label> 
+						<div class="input-group">
+				            <input type="text" class="form-control" id="product_code" 
+									th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CODE} : ''" 
+									th:attr="readonly=${bom_pd != null}" />
+				            <button type="button" 
+				            		th:class="${bom_pd != null} ? 'btn btn-secondary' : 'btn btn-primary'"
+									th:disabled="${bom_pd != null}">
+				                <i class="bi bi-search"></i>
+				            </button>
+	        			</div>
 					</div>
 					<div class="col-md-3">
 						<label class="form-label">제품명</label> 
@@ -80,17 +87,8 @@
 								th:value="${bom_pd != null} ? ${bom_pd.PD_MEMO} : ''" 
 								th:attr="readonly=${bom_pd != null}" />  
 					</div>
-					<div class="col-md-2 d-flex align-items-end justify-content-end"  >
-				<button type="button"
-						th:class="${bom_pd != null} ? 'btn btn-secondary' : 'btn btn-primary'"
-						th:disabled="${bom_pd != null}">
-						<i class="bi bi-search"></i>
-					</button>
-					</div>
 				</div>
 				
-				<div class="row mb-2">
-				</div>
 				
 				
 				<!-- 부자재 데이터 등록 -->
@@ -167,18 +165,18 @@
 			
 				
 				
-				<div class="col-md-2 bom_prev card-body tree">
-				<ul id="bomTree">
-                        <li >
-                            <strong id="bom_top_pd"></strong>
-                            <ul id="bom_tr">
-                               
-                            </ul>
-                        </li>
-                    </ul>
+			<div class="col-md-2 bom_prev card-body tree">
+			<ul id="bomTree">
+              <li>
+                  <strong id="bom_top_pd"></strong>
+                  <ul id="bom_tr">
+                     
+                  </ul>
+              </li>
+          	</ul>
 				
-				</div>
-				</div>
+			</div>
+			</div>
 		</div>
 	</main>
 	<div id="modalContainer"></div>

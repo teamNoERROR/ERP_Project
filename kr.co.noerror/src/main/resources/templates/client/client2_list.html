@@ -27,15 +27,13 @@
 				<!-- 검색창 영역 -->
 				<div class="col-auto">
 					<div class="col-auto d-flex">
-						<form id="frm_word" class="row g-1 align-items-center"
-							onsubmit="return pdSearch()">
+						<form id="frm_word" class="row g-1 align-items-center" onsubmit="return cltSearch()">
 							<div class="input-group input-group-sm" style="width: 250px;">
 								<input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색어를 입력하세요">
 								<button class="btn btn-primary"> <i class="bi bi-search"></i> </button>
 							</div>
 						</form>
 					</div>
-
 				</div>
 			</div>
 

@@ -88,6 +88,7 @@ public class pchreq_controller {
 	@PostMapping("/pchreq_save.do")
 	@ResponseBody
 	public Map<String, Object> pchreq_save(@RequestBody Map<String, pchreq_req_DTO> requestMap) {
+		System.out.println(requestMap);
 		return pchreq_service.pchreq_save(requestMap);
 	}
 	

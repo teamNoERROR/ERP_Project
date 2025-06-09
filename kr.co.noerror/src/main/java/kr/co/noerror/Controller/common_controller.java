@@ -90,12 +90,11 @@ public class common_controller {
 	//유형별 창고리스트 모달 띄우기
 	@GetMapping("/wh_type_list.do")
 	public String wh_type_list(Model m, @RequestParam("wh_type") String wh_type) {
-		System.out.println(wh_type);
+		
 		List<WareHouse_DTO> all_data = this.common_svc.warehouse_list(wh_type);  //DB로드
+		
 		m.addAttribute("no_wh", "등록된 창고가 없습니다" );
 		m.addAttribute("wh_tp_data", all_data);
-		
-		
 		
 		return  "/modals/wh_type_list_modal.html";
 	}

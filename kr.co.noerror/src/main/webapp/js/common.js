@@ -77,10 +77,11 @@ function goBack(){
   창고리스트 모달 
 ----------------------------------------------------------- */
 
-//타입별창고리스트 모달 열기
+
 let targetWhNameId = null;
 let targetWhCodeId = null;
 
+//타입별창고리스트 모달 열기
 function whSelect(wh_type, name_id, code_id){
 	targetWhNameId = name_id;
 	targetWhCodeId = code_id;
@@ -129,11 +130,19 @@ function choiceWh() {
 
 		const whNameInput = document.getElementById(targetWhNameId);
 		const whCodeInput = document.getElementById(targetWhCodeId);
+		const whAddrInput = document.getElementById('wh_location');
+		const whTypeInput = document.getElementById('wh_type');
 		
 		if (whNameInput && whCodeInput) {
 			whNameInput.value = whName;
 			whCodeInput.value = whCode;
 		} 
+		if (whAddrInput) {
+			whAddrInput.value = whZipcode +" "+ whAddr1 +" "+ whAddr2;
+		}
+		if (whTypeInput) {
+			whTypeInput.value = whType;
+		}
 		
 		// 예시: 타입별 처리 (원하면 타입별로 다르게 로직 분기 가능)
 	   if (whType === '부자재창고') {

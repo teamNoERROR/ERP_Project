@@ -13,99 +13,103 @@
         	<h2 class="mb-1">거래처 등록</h2>
         </div>
         
+          <!-- 우상단 x 마크  -->     
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
+</div>
+        
         
 <div class="form-section">
       <div class="row">
         <!-- 이미지 업로드 -->
-	<div class="col-md-3 d-flex flex-column align-items-end">
+	<div class="col-md-3 d-flex flex-column align-items-end mt-4">
 			<!-- 미리보기 네모칸 -->
 		  <div class="image-box mb-2" >
-		    <img id="previewImage" src="" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
+		    <img id="previewImage" src="./img/no-image.svg" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
 		  </div>
 		
 		  <!-- 파일 선택 input -->
-		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+		  <input type="file" id="clientImage" class="form-control"  accept="image/*" onchange="previewFile('client')" style="width: 250px; ">
 	
 	</div>
 
         <!-- 거래처 정보 입력 -->
         <div class="col-md-9">
         
-          <div class="row  mb-3 gap-0">
-          	   <!-- 거래처 정보 -->
+         <!-- 거래처 정보 -->
+          <div class="row  mb-3 ">
             <div class="col-md-2">
               <label class="form-label">거래처 유형</label>
-              <select class="form-select" required>
+              <select class="form-select" id="client_type">
                 <option value="">선택</option>
-                <option>자재 구매처 (발주처) </option>
-                <option>제품 판매처 (거래처) </option>
+                <option value="판매처">제품 판매처 (거래처) </option>
+                <option value="구매처">자재 구매처 (발주처) </option>
               </select>
             </div>
             <div class="col-md-3">
               <label class="form-label">회사명</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="comp_name" >
             </div>
             <div class="col-md-3">
               <label class="form-label">사업자번호</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="biz_num">
             </div>
             <div class="col-md-2">
               <label class="form-label">업종</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="biz_type">
             </div>
             <div class="col-md-2">
-              <label class="form-label">업태</label>
-              <input type="text" class="form-control">
+              <label class="form-label">종목</label>
+              <input type="text" class="form-control" id="biz_item">
             </div>
            </div>
         
             
-            
-            <div class="row  mb-3">
+               <!-- 대표자 정보 -->
+            <div class="row  mb-3 gap-0">
  			<div class="col-md-3">
               <label class="form-label">대표자명</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="ceo_name">
+            </div>
+            
+        </div>
+        
+        
+        <!--거래처 주소 라인  -->
+         <div class="row  mb-3  ">
+            <div class="col-md-10">
+              <label class="form-label">주소</label>
+              <div class="col-auto d-flex   gap-1 align-items-center">
+			    <button type="button" class="btn btn-primary" id="addrBtn" onclick="openAddr()">
+			      <i class="bi bi-search"></i>
+			    </button>
+			     <div class="col-md-2 ">
+              		<input type="text" class="form-control" id="com_zip" placeholder="우편번호" readonly>
+            	</div>
+            	 <div class="col-md-5">
+              <input type="text" class="form-control" id="com_addr1" placeholder="도로명주소" readonly>
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" id="com_addr2" placeholder="상세주소">
+            </div>
+			  	</div>
             </div>
             <div class="col-md-2">
-              <label class="form-label">거래중 여부</label>
-              <div class="radio-group">
-                <input type="radio" id="useY" name="use" value="Y">
-                <label for="useY"> 사용 </label>
-                <input type="radio" id="useN" name="use" value="N">
-                <label for="useN"> 미사용 </label>
-              </div>
-            </div>
-        </div>
-        <!--거래처 주소 라인  -->
-<div class="row  mb-3">
-  <label class="form-label">주소</label>
-  <div class="row gx-1 align-items-center  ms-1">
-  <div class="col-auto d-flex align-items-center">
-    <button class="btn btn-primary" type="button">
-      <i class="bi bi-search"></i>
-    </button>
-  </div>
-  <div class="col ">
-    <div class="row gx-2  align-items-center">
-      <div class="col-md-5 d-flex align-items-center">
-        <input type="text" class="form-control" >
-      </div>
-      <div class="col-md-2 d-flex align-items-center">
-        <input type="text" class="form-control" >
-      </div>
-      <div class="col-md-2 d-flex align-items-center">
-        <input type="text" class="form-control"  >
-      </div>
-    </div>
-  </div>
-</div>
-</div>
+			   <label class="form-label">거래중 여부</label>
+			   <div class="radio-group mt-1">
+			     <label class="me-1"><input type="radio" id="cltUseY" name="com_use_flag" value="Y" class="me-1">사용 &nbsp;</label>
+			     <label class="me-1"><input type="radio" id="cltUseN" name="com_use_flag" value="N" class="me-1"> 미사용 </label>
+			   </div>
+			 </div>
+        
+           </div>
+
 <!-- 거래처 비고라인 -->
           <div class="row mb-4">
             
             <div class="col-md-12">
               <label class="form-label">비고</label>
-              <textarea class="form-control" rows="2"></textarea>
+              <textarea class="form-control" rows="2" id="com_memo"></textarea>
             </div>
           </div>
           
@@ -116,59 +120,62 @@
           
           	<div class="col-md-3">
               <label class="form-label">담당자명</label>
-              <input type="text" class="form-control"  >
+              <input type="text" class="form-control"  id="mng_name">
             </div>
             <div class="col-md-3">
               <label class="form-label">부서</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="mng_part">
             </div>
             <div class="col-md-3">
               <label class="form-label">직급</label>
-              <input type="text" class="form-control"  >
+              <input type="text" class="form-control"  id="mng_position">
             </div>
              <div class="col-md-3">
               <label class="form-label">이메일</label>
-              <input type="text" class="form-control"  >
+              <input type="text" class="form-control"  id="mng_email">
             </div>
             </div>
-            
+
             <div class="row mb-3">
             
             <div class="col-md-3">
               <label class="form-label">직통번호</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="mng_tel">
             </div>
             <div class="col-md-3">
               <label class="form-label">휴대폰번호</label>
-              <input type="text" class="form-control" >
+              <input type="text" class="form-control" id="mng_phone">
             </div>
             <div class="col-md-3">
               <label class="form-label">팩스번호</label>
-              <input type="text" class="form-control"  >
+              <input type="text" class="form-control"  id="mng_fax">
             </div>
           </div>
-          
            <div class="row mb-3">
             
             <div class="col-md-12">
               <label class="form-label">비고</label>
-              <textarea class="form-control" rows="2"></textarea>
+              <textarea class="form-control" rows="2" id="mng_memo"></textarea>
             </div>
           </div>
+</div>
+            
+          
           
       </div>
+      
+      <!-- Action Buttons -->
+		<div class="d-flex justify-content-end  gap-2 mt-4">
+			<button type="button" class="btn btn-primary" onclick="insert_client()"><i class="bi bi-check2-square"></i> 저장</button>
+			<button type="reset" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
+		</div>
           </div>
           
 
 
 
-<!-- Action Buttons -->
-<div class="d-flex justify-content-end  gap-2 mt-4">
-<button type="button" class="btn btn-primary"><i class="bi bi-check2-square"></i> 저장</button>
-<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
-</div>
 
-</div>
+
 
 
 

@@ -15,11 +15,12 @@ function addToCart() {
       if (checkbox && checkbox.checked) {
         const item_code = row.children[3].innerText.trim();
         const item_name = row.children[4].innerText.trim();
+        const item_spec = row.children[5].innerText.trim();
         const item_unit = row.children[6].innerText.trim();
-        const item_cost = row.children[7].innerText.trim();
-        const purchase_qty = row.children[10].querySelector('input').value;
-        const company_code = row.children[11].innerText.trim();
-        const company_name = row.children[12].innerText.trim();
+        const item_cost = row.children[8].innerText.trim();
+        const purchase_qty = row.children[11].querySelector('input').value;
+        const company_code = row.children[12].innerText.trim();
+        const company_name = row.children[13].innerText.trim();
 
         if (!purchase_qty || purchase_qty <= 0) {
           alert(`발주수량이 올바르지 않습니다. (${item_code})`);
@@ -41,8 +42,9 @@ function addToCart() {
         groupedItems[company_code].items.push({
           item_code,
           item_name,
-          purchase_qty,
+          item_spec,
           item_unit,
+          purchase_qty,
           item_cost
         });
 
@@ -59,12 +61,12 @@ function addToCart() {
 		  count++;
 	      const item_code = row.children[1].querySelector('input')?.value.trim();
 	      const item_name = row.children[2].querySelector('input')?.value.trim();
-	      const purchase_qty = row.children[3].querySelector('input')?.value.trim();
+	      const item_spec = row.children[3].querySelector('input')?.value.trim();
 	      const item_unit = row.children[4].querySelector('input')?.value.trim();
-	      const item_cost = row.children[5].querySelector('input')?.value.trim();
-	      const company_name = row.children[6].querySelector('input')?.value.trim();
+	      const purchase_qty = row.children[5].querySelector('input')?.value.trim();
+	      const item_cost = row.children[6].querySelector('input')?.value.trim();
+	      const company_name = row.children[7].querySelector('input')?.value.trim();
 	      const company_code = company_name || "기타";
-
 	      if (!purchase_qty || purchase_qty <= 0) {
 	        alert(`발주수량이 올바르지 않습니다. (${item_code})`);
 	        return;
@@ -85,8 +87,9 @@ function addToCart() {
 	      groupedItems[company_code].items.push({
 	        item_code,
 	        item_name,
-	        purchase_qty,
+	        item_spec,
 	        item_unit,
+	        purchase_qty,
 	        item_cost
 	      });
 
@@ -131,8 +134,9 @@ function addToCart() {
       tr.innerHTML = `
         <td>${item.item_code}</td>
         <td>${item.item_name}</td>
-        <td>${item.purchase_qty}</td>
+        <td>${item.item_spec}</td>
         <td>${item.item_unit}</td>
+        <td>${item.purchase_qty}</td>
         <td>${item.item_cost}</td>
         <td>${item.purchase_qty * item.item_cost}</td>
         <td><button class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button></td>
@@ -201,10 +205,10 @@ function pchreq_save() {
       // 자재 행 처리
       const purchase = {
         item_code: row.children[0].innerText.trim(),
-        item_type: row.children[1].innerText.trim(),
-        item_name: row.children[2].innerText.trim(),
-        item_qty: parseInt(row.children[3].innerText.trim(), 10),
-        item_unit: row.children[4].innerText.trim(),
+        item_name: row.children[1].innerText.trim(),
+        item_type: row.children[2].innerText.trim(),
+        item_unit: row.children[3].innerText.trim(),
+        item_qty: parseInt(row.children[4].innerText.trim(), 10),
         item_cost: parseFloat(row.children[5].innerText.trim()),
         item_amount: parseFloat(row.children[6].innerText.trim())
       };
@@ -422,6 +426,7 @@ function pchreq_update() {
 	});
 }
 
+/*
 //부자재리스트 모달 오픈 
 function openItemList2(){
 	fetch("./item_list.do", {
@@ -470,7 +475,7 @@ function select_items2 () {
 	    };
 		
 	    // 부모 화면에 반영
-		appendItemsRow2(tbody, item);
+		appendItemsRow3(tbody, item);
 	  });
 	
 	 // 모달 닫기
@@ -486,7 +491,7 @@ function select_items2 () {
 };
 
 //모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
-function appendItemsRow2(tbody, item) {
+function appendItemsRow3(tbody, item) {
   const tr = document.createElement('tr');
   tr.className = "item_added"
   tr.innerHTML = `
@@ -501,3 +506,4 @@ function appendItemsRow2(tbody, item) {
   `;
   tbody.append(tr);
 }
+*/

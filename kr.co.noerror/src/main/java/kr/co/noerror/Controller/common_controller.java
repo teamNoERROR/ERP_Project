@@ -98,7 +98,6 @@ public class common_controller {
 		
 		
 		return  "/modals/wh_type_list_modal.html";
-//		return null;
 	}
 	
 	
@@ -139,34 +138,27 @@ public class common_controller {
 	//발주처리스트 모달 띄우기 
 	@GetMapping("/client_list2.do")
 	public String client_list2(Model m
-							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea 
 							,@RequestParam(value="mode", required = false) String mode) {
 		
 		int client_total = this.clt_svc.client_total("p_client"); //제품 총개수
 		List<client_DTO> client_list = this.clt_svc.client_list("p_client", pageno, post_ea);  //제품 리스트
-	
 		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, client_total);
 		int bno = this.m_pg.serial_no(client_total, pageno, post_ea); 
 		
-		m.addAttribute("keyword",keyword);
-		m.addAttribute("bno", bno);
 		m.addAttribute("clt_total", client_total);
 		m.addAttribute("clt_list", client_list);
 		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", post_ea);
+		m.addAttribute("bno", bno);
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/client2_list_body_modal.html :: cl2PgList";
 	    } else {
 	        return "/modals/client2_list_modal.html"; // 일반 뷰 전체
 	    }
-		
-//		return "/modals/clientp_list_modal.html";
 	}
 	
 	

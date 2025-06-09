@@ -407,3 +407,9 @@ table td.info-label {
  #modalContainer2{
  	z-index: 1000 !important;
  }
+ 
+ 
+ 
+ textarea {
+    resize: none;
+  }

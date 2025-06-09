@@ -11,6 +11,7 @@
     mrp.shortage_stock,
     itm.item_type,
     itm.item_name,
+    itm.item_spec,
     itm.item_unit,
     itm.item_cost,
     itm.company_code, 

@@ -13,6 +13,11 @@
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         	<h2 class="mb-1">부자재 등록</h2>
         </div>
+       <!-- 우상단 x 마크  -->     
+		<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+		<button type="button" class="btn-close" aria-label="Close" onclick="goGdList('item')"></button>
+		</div>
+		
 <div class="form-section">
 <div class="row">
 	    <!-- 이미지 업로드 -->
@@ -23,7 +28,7 @@
 		  </div>
 		
 		  <!-- 파일 선택 input -->
-		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+		  <input type="file" id="itemImage" class="form-control"  accept="image/*" onchange="previewFile('item')" style="width: 250px; ">
 	</div>
 
 <!-- 제품 정보 입력 -->
@@ -80,14 +85,14 @@
 		<div class="col-md-2">
 			<label  class="form-label">사용여부</label>
 			<div class="ms-2 mt-1">
-				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 </label>
+				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 &nbsp;</label>
 				<label ><input type="radio" id="useN" name="use_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
 		<div class="col-md-2">
 			<label  class="form-label">유통기한</label> 
 			<div class="ms-2 mt-1">
-				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 </label>
+				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 &nbsp;</label>
 				<label ><input type="radio" id="expireN" name="exp_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
@@ -104,7 +109,7 @@
 			<label class="form-label">거래처코드</label> 
 			<div class="input-group">
 	            <input type="text" class="form-control" placeholder="거래처코드" id="cmp_code" readonly>
-	            <button type="button" class="btn btn-primary" onclick="pCltListOpen()">
+	            <button type="button" class="btn btn-primary" onclick="pcltListOpen()">
 	                <i class="bi bi-search"></i>
 	            </button>
 	        </div>
@@ -134,7 +139,7 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-3">
-	<button type="button" class="btn btn-primary" onclick="insertItm()"><i class="bi bi-plus-lg"></i> 저장</button>
+	<button type="button" class="btn btn-primary" onclick="insertItm()"><i class="bi bi-check2-square"></i> 저장</button>
 	<button type="reset" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 	</div>
 </div>

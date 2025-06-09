@@ -1,5 +1,7 @@
 package kr.co.noerror;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,9 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class controller {
-
+	Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	
 	//메인화면
 	@GetMapping("/")
 	public String index(Model m) {

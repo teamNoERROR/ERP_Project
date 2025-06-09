@@ -1,4 +1,6 @@
-
+/*--------------------------------------------------------------
+bom조회하기로 이동 
+--------------------------------------------------------------*/
 function bomBtn(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	
@@ -33,7 +35,9 @@ function bomBtn(bom_open){
 }
 
 
-
+/*--------------------------------------------------------------
+bom 상세보기 모달 오픈
+--------------------------------------------------------------*/
 function bomDetailOpen(bom_open){
 	var pd_code = bom_open.getAttribute("data-pdcode");
 	
@@ -56,13 +60,17 @@ function bomDetailOpen(bom_open){
 }
 
 
-
+/*--------------------------------------------------------------
+bom추가하기
+--------------------------------------------------------------*/
 function addBom(){
 	location.href="./bom_insert.do";
 }
 
 
-
+/*--------------------------------------------------------------
+bom 삭제
+--------------------------------------------------------------*/
 function bomDelete(del_pd){
 	var idx = 0;
 	var pd_code;
@@ -113,13 +121,16 @@ function bomDelete(del_pd){
 }
 
 
-
-
-
+/*--------------------------------------------------------------
+bom등록 트리화면 
+--------------------------------------------------------------*/
 var top_pd_nm = document.querySelector("#product_name");
 document.querySelector("#bom_top_pd").innerHTML=`<i class="bi bi-caret-right-fill"></i>`+top_pd_nm.value;
 
-//부자재리스트 모달에서 부자재 한번에 선택하기 
+
+/*--------------------------------------------------------------
+부자재리스트 모달에서 부자재 한번에 선택하기
+--------------------------------------------------------------*/ 
 function select_items (btn) {
 	const parentType = btn.getAttribute('data-parenttype');
 	
@@ -190,8 +201,8 @@ function select_items (btn) {
 			
 			    var item = {
 			      code: row.dataset.code,
-			      type: '부자재',
 			      name: row.dataset.name,
+				  spec: row.dataset.spec,
 			      unit: row.dataset.unit,
 				  cost: row.dataset.cost,
 			      pcomp: row.dataset.company
@@ -222,7 +233,6 @@ function select_items (btn) {
 	      alert("입고하실 부자재를 1개 선택해 주세요.");
 	      return;
 	    }
-		
 		
 	    const selected_tr = selected_box[0].closest("tr");
 
@@ -305,11 +315,15 @@ function select_items (btn) {
 };
 
 
-  
+//부자재목록 행 삭제
+function removeItemRow(btn) {
+	const row = btn.closest('tr');
+	row.parentNode.removeChild(row);
+}
 
-
-
-//모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
+/*--------------------------------------------------------------
+모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
+--------------------------------------------------------------*/
 function appendItemsRow(tbody, item) {
   const tr = document.createElement('tr');
   tr.className = "item_added"
@@ -331,17 +345,34 @@ function appendItemsRow(tbody, item) {
 		</select>
 	</td>
     <td class="text-center">
-      <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">삭제</button>
+      <button type="button" class="btn btn-danger btn-sm" onclick="removeItemRow(this)">삭제</button>
     </td>
   `;
   tbody.append(tr);
 }
 
 
+//모달에서 선택한 리스트 등록화면(pchreq_insert)의 리스트에 붙여넣기 
+function appendItemsRow2(tbody, item) {
+  const tr = document.createElement('tr');
+  tr.className = "item_added"
+  tr.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.spec}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
+    <td><input type="number" class="form-control" value=""></td>
+    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
+    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
+  `;
+  tbody.append(tr);
+}
 
 
-
-//bom등록 저장
+/*--------------------------------------------------------------
+bom등록 저장
+--------------------------------------------------------------*/
 function bomSave(){
 	var tbody = document.querySelector("#bom_items");
 	var rows = tbody.querySelectorAll('.item_added'); // 테이블에서 데이터가 있는 행만 선택

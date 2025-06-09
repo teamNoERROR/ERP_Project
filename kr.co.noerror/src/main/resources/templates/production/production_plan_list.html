@@ -18,8 +18,8 @@
 			<form class="row g-2 my-4 justify-content-end"  method="get" action="/production.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-				        <input type="checkbox" name="plan_status" value="계획"> &nbsp;계획&nbsp;
-				        <input type="checkbox" name="plan_status" value="확정"> &nbsp;확정&nbsp;
+				        <input type="checkbox" name="plan_status" value="계획"> &nbsp;생산계획수립&nbsp;
+				        <input type="checkbox" name="plan_status" value="확정"> &nbsp;생산계확정&nbsp;
 				        <input type="checkbox" name="plan_status" value="생산중"> &nbsp;생산중&nbsp;
 				        <input type="checkbox" name="plan_status" value="생산완료"> &nbsp;생산완료&nbsp;
 				        <input type="checkbox" name="plan_status" value="생산지연"> &nbsp;생산지연&nbsp;
@@ -54,10 +54,12 @@
 							<th scope="col">등록일</th>
 	
 						</tr>
-					</thead>
+					</thead>					
 					<tbody>
-						<tr th:each="p : ${prd_plans}">
-							<td><input type="checkbox"></td>
+						<tr th:each="p : ${prd_plans}" class="modal-trigger"
+								th:data-modal-url="@{/prdplan_detail.do(code=${p.plan_code})}"
+								data-modal-id="prdplan_modal" style="cursor: pointer;">
+							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.plan_code}]]</td>
 							<td>[[${p.order_code}]]</td>

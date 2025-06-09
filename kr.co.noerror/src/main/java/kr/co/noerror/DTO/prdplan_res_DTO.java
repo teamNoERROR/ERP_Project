@@ -20,11 +20,17 @@ public class prdplan_res_DTO {
     private String due_date;            
     private String company_code;       
     private String company_name;            
+    private String ceo_name;            
+    private String biz_num;            
+    private String manager_name;            
+    private String mng_phone_num;            
+    private String com_addr1;            
+    private String com_addr2;            
     private String ecode;           
     private String ename;                
     private String plan_status;        
     private String mrp_status;       
-    private String memo;            
+    private String memo;        
     private String plan_date;            
     private String modify_date;          
 }

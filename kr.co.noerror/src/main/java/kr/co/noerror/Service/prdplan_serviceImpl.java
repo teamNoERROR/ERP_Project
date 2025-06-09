@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DAO.prdplan_DAO;
 import kr.co.noerror.DTO.paging_info_DTO;
+import kr.co.noerror.DTO.pchreq_DTO;
+import kr.co.noerror.DTO.pchreq_detail_DTO;
+import kr.co.noerror.DTO.pchreq_item_DTO;
 import kr.co.noerror.DTO.prdplan_DTO;
 import kr.co.noerror.DTO.prdplan_detail_DTO;
 import kr.co.noerror.DTO.prdplan_product_DTO;
@@ -27,11 +30,6 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	private M_unique_code_generator unique_code_generator;
 	
 	@Override
-	public int search_count(search_condition_DTO search_cond) {
-		return this.prdplan_dao.prdplan_search_count(search_cond);
-	}
-	
-	@Override
 	public List<prdplan_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
 		Map<String, Object> params = new HashMap<>();
         params.put("search_word", search_cond.getSearch_word());
@@ -39,6 +37,11 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
         params.put("start", paging_info.getStart());
         params.put("end", paging_info.getEnd());
         return this.prdplan_dao.prdplan_paged_list(params);
+	}
+	
+	@Override
+	public int search_count(search_condition_DTO search_cond) {
+		return this.prdplan_dao.prdplan_search_count(search_cond);
 	}
 	
 	@Override
@@ -71,10 +74,10 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
             // 생산계획 테이블에 저장
             result1 += this.prdplan_dao.prdplan_insert(prdplan_entity);
 
-            cnt += plandto.getPlan_products().size();
+            cnt += plandto.getProducts().size();
 
             // 생산계획상세 테이블에 저장
-            for (prdplan_product_DTO pdto : plandto.getPlan_products()) {
+            for (prdplan_product_DTO pdto : plandto.getProducts()) {
             	prdplan_detail_DTO prdplan_detail_entity = new prdplan_detail_DTO();
             	prdplan_detail_entity.setPlan_code(plan_code);
             	prdplan_detail_entity.setProduct_code(pdto.getProduct_code());
@@ -90,6 +93,56 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
             response.put("success", false);
         }
 
+	    return response;
+	}
+	
+	@Override
+	public Map<String, Object> prdplan_update(prdplan_req_DTO reqdto) {
+    	Map<String, Object> response = new HashMap<>();
+    	int result1 = 0;
+    	int result2 = 0;
+    	try {
+	    	// purchase_req 수정
+	    	prdplan_DTO prdplan_entity = new prdplan_DTO();
+	    	prdplan_entity.setPlan_code(reqdto.getPlan_code());
+	    	prdplan_entity.setPriority(reqdto.getPriority());
+	    	prdplan_entity.setStart_date(reqdto.getStart_date());
+	    	prdplan_entity.setEnd_date(reqdto.getEnd_date());
+	    	prdplan_entity.setEcode(reqdto.getEcode());
+	    	prdplan_entity.setMemo(reqdto.getMemo());
+	        result1 = this.prdplan_dao.prdplan_update(prdplan_entity);
+	
+	        // purchase_req_detail 수정
+	        for (prdplan_product_DTO pdto : reqdto.getProducts()) {
+	        	prdplan_detail_DTO prdplan_detail_entity = new prdplan_detail_DTO();
+	        	prdplan_detail_entity.setPlan_code(reqdto.getPlan_code());
+	        	prdplan_detail_entity.setProduct_code(pdto.getProduct_code());
+	        	prdplan_detail_entity.setProduct_qty((long)pdto.getProduct_qty());
+	            result2 += this.prdplan_dao.prdplan_detail_update(prdplan_detail_entity);
+	        }
+	        
+            response.put("success", ((result1 == 1) && (result2 == reqdto.getProducts().size())));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+        }
+
+        return response;
+	}
+	
+	@Override
+	public Map<String, Object> plan_status_update(Map<String, String> requestParam) {
+		Map<String, Object> response = new HashMap<>();
+    	
+    	try {
+    		int result = this.prdplan_dao.plan_status_update(requestParam);
+    		response.put("success", (result == 1));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("success", false);
+	    }
+	
 	    return response;
 	}
 }

@@ -97,12 +97,56 @@
 					</tbody>
 				</table>
 				</div>
-				
 				<button 
 					class="btn btn-primary modal-trigger" 
 					type="button" th:data-modal-url="@{/products_modal.do}" data-modal-id="products_modal_for_order" style="cursor: pointer;">
     				주문종목 찾기
 				</button>
+				
+				<!-- 추가 정보 입력 필드 영역 시작 -->
+				<h5 class="mt-5">기타 정보</h5>
+				<table class="table table-bordered mt-3">
+				    <thead class="table-light">
+				        <tr><th colspan="6">기타 정보</th></tr>
+				    </thead>
+				    <tbody>
+				        <tr>
+				            <th>주문 납기일자</th>
+				            <td><input type="date" id="dueDate" name="dueDate" class="form-control"></td>
+				            <th>결제 방법</th>
+				            <td>
+				                <select id="payMethod" name="payMethod" class="form-control">
+				                    <option value="현금결제" selected>현금결제</option>
+				                    <option value="신용카드">신용카드</option>
+				                    <option value="계좌이체">계좌이체</option>
+				                    <option value="외상거래">외상거래</option>
+				                </select>
+				            </td>
+				            <th>주문 담당자</th>
+				            <td>
+				                <div class="input-group empinfo">
+				                    <input type="hidden" class="form-control" name="ecode" id="ecode"
+							th:value="${session.ecode}" readonly>
+				                    <input type="text" class="form-control" name="ename" id="ename"
+							th:value="${session.ename}" readonly>
+				                    <button type="button"
+							class="btn btn-outline-secondary modal-trigger"
+							th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal"
+							style="cursor: pointer;"><i class="bi bi-search"></i>
+							        </button>
+				                </div>
+				            </td>
+				        </tr>
+				        <tr>
+				            <th>메모</th>
+				            <td colspan="5">
+				                <textarea id="memo" name="memo" rows="3" class="form-control">특별한 사항 없음</textarea>
+				            </td>
+				        </tr>
+				    </tbody>
+				</table>
+                <!-- 추가 정보 입력 필드 영역 끝 -->
+							
 				<div class="d-flex justify-content-end">
 					<button type="button" class="btn btn-primary" onclick="order_save()"><i class="bi bi-bookmark-check"></i> 저장</button>
 					<button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>

@@ -15,8 +15,8 @@
 								<th scope="col">#</th>
 								<th scope="col">BOM코드</th>
 								<th scope="col">자재코드</th>
-								<th scope="col">자재유형</th>
 								<th scope="col">자재명</th>
+								<th scope="col">자재규격</th>
 								<th scope="col">자재단위</th>
 								<th scope="col">단가</th>
 								<th scope="col">소요량</th>
@@ -25,13 +25,13 @@
 						<tbody>
 							<tr th:each="i, no : ${bom_items}">
 								<td>[[${no.count}]]</td>
-								<td>[[${i.bom_code}]]</td>
-								<td>[[${i.item_code}]]</td>
-								<td>[[${i.item_type}]]</td>
-								<td>[[${i.item_name}]]</td>
-								<td>[[${i.item_unit}]]</td>
-								<td>[[${i.unit_price}]]</td>
-								<td>[[${i.quantity}]]</td>
+								<td>[[${i.BOM_CODE}]]</td>
+								<td>[[${i.ITEM_CODE}]]</td>
+								<td>[[${i.ITEM_NAME}]]</td>
+								<td>[[${i.ITEM_SPEC}]]</td>
+								<td>[[${i.ITEM_UNIT}]]</td>
+								<td>[[${i.ITEM_COST}]]</td>
+								<td>[[${i.BOM_QTY}]]</td>
 							</tr>
 						</tbody>
 					</table>

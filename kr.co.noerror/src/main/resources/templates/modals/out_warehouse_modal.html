@@ -1,93 +1,74 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>출고창고 상세보기</title>
-</head>
-<body>
-
-<div class="modal fade" id="wh_out_list" tabindex="-1" aria-labelledby="wh_modal_label" aria-hidden="true">
+<div class="modal fade" id="warehouse_list" tabindex="-1" aria-labelledby="warehouse_list_label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
     <div class="modal-content">
-
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="wh_modal_label">출고창고 상세보기</h1>
+        <h1 class="modal-title fs-5" id="warehouse_list_label">창고 리스트</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-
-      <div class="modal-body row justify-content-center d-flex gap-3 mt-3">
-        <div class="col-md-10">
-          <!-- 창고 정보 테이블 -->
-<!-- 창고 정보 테이블 -->
-<div class="table-responsive rounded mb-4">
-  <h5 th:text="${wh_details[0].wh_code} + ' : ' + ${wh_details[0].wh_name}">출고 1 창고 : WH-001</h5>
-  <table class="table table-bordered text-center align-middle">
-    <tbody>
-      <tr>
-        <th scope="row">창고 위치</th>
-        <td colspan="3" class="text-start" th:text="${wh_details[0].wh_location}">(우편번호) 도로명 주소 상세주소</td>
-      </tr>
-      <tr>
-        <th scope="row">제품 코드</th>
-        <td th:text="${wh_details[0].item_code}">ITEM-001</td>
-        <th scope="row">제품 이름</th>
-        <td th:text="${wh_details[0].item_name}">나사</td>
-      </tr>
-      <tr>
-        <th scope="row">제품 수량</th>
-        <td th:text="${wh_details[0].item_count}">100</td>
-        <th scope="row">입고 일자</th>
-        <td th:text="${wh_details[0].inbound_date}">2025-05-30</td>
-      </tr>
-      <tr>
-        <th scope="row">대분류</th>
-        <td th:text="${wh_details[0].category_main}">부품</td>
-        <th scope="row">소분류</th>
-        <td th:text="${wh_details[0].category_sub}">소모품</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<!-- 거래처 정보 테이블 -->
-<div class="table-responsive rounded mb-4">
-  <h5>거래처 정보</h5>
-  <table class="table table-bordered text-center align-middle">
-    <tbody>
-      <tr>
-        <th scope="row">거래처 코드</th>
-        <td th:text="${wh_details[0].client_code}">CL001</td>
-        <th scope="row">거래처 사용 여부</th>
-        <td th:text="${wh_details[0].client_use_yn}">Y</td>
-      </tr>
-      <tr>
-        <th scope="row">거래처 이름</th>
-        <td colspan="3" class="text-start" th:text="${wh_details[0].client_name}">삼성전자</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-          <!-- 버튼 영역 
-          <div class="modal-footer d-flex justify-content-end">
-            <form th:action="@{/in_warehouse_modify_page.do}" method="get" class="d-inline">
-              <input type="hidden" name="inbound_code" th:value="${#strings.trim(wh_details[0].inbound_code)}" />
-              <button type="submit" class="btn btn-success">
-                <i class="bi bi-pencil-square"></i> 수정
-              </button>
-            </form>
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                    th:data-modal-url="@{'/in_warehouse_delete_page.do?inbound_code=' + ${#strings.trim(wh_details[0].inbound_code)}}"
-                    onclick="deleteWarehouse(this)">
-              		<i class="bi bi-trash"></i> 삭제
-            </button>
-          </div>
-          -->
-
+      <div class="modal-body row justify-content-center d-flex gap-3">
+        <div class="table-responsive rounded">
+          <table class="table table-hover align-middle table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">번호</th>
+                <th scope="col">창고코드</th>
+                <th scope="col">창고명</th>
+                <th scope="col">우편번호</th>
+                <th scope="col">도로명</th>
+                <th scope="col">상세주소</th>
+                <th scope="col">창고타입</th>
+                <th scope="col">사용여부</th>
+                <th scope="col">생성일</th>
+                <th scope="col">수정일</th>
+                <th scope="col">관리자ID</th>
+                <th scope="col">설명</th>
+                <th scope="col">비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="cursor: pointer;" th:each="wh, iterStat : ${warehouse_list}">
+                <td>
+                  <input type="radio" name="whSelect" th:value="${wh.wh_code}"
+                         th:data-wh_name="${wh.wh_name}"
+                         th:data-wh_zipcode="${wh.wh_zipcode}"
+                         th:data-wh_addr1="${wh.wh_addr1}"
+                         th:data-wh_addr2="${wh.wh_addr2}"
+                         th:data-wh_type="${wh.wh_type}"
+                         th:data-wh_use_flag="${wh.wh_use_flag}"
+                         th:data-wh_insert_date="${wh.wh_insert_date}"
+                         th:data-wh_modify_date="${wh.wh_modify_date}"
+                         th:data-wh_mg_id="${wh.wh_mg_id}"
+                         th:data-wh_desc="${wh.wh_desc}"
+                         th:data-wh_note="${wh.wh_note}">
+                </td>
+                <td>[[${iterStat.count}]]</td>
+                <td>[[${wh.wh_code}]]</td>
+                <td>[[${wh.wh_name}]]</td>
+                <td>[[${wh.wh_zipcode}]]</td>
+                <td>[[${wh.wh_addr1}]]</td>
+                <td>[[${wh.wh_addr2}]]</td>
+                <td>[[${wh.wh_type}]]</td>
+                <td>[[${wh.wh_use_flag}]]</td>
+                <td>[[${wh.wh_insert_date}]]</td>
+                <td>[[${wh.wh_modify_date}]]</td>
+                <td>[[${wh.wh_mg_id}]]</td>
+                <td>[[${wh.wh_desc}]]</td>
+                <td>[[${wh.wh_note}]]</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
+      <div class="modal-footer">
+        <div class="d-flex gap-2">
+          <div class="ms-auto">
+            <button type="button" id="selectWhBtn" class="btn btn-success" onclick="selectWarehouse()">
+              <i class="bi bi-check2-square"></i> 선택
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-</body>
-</html>

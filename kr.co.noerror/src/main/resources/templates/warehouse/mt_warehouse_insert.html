@@ -11,7 +11,7 @@
 
     <!-- Title -->
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-      <h2 class="mb-1">입고 창고 등록</h2>
+      <h2 class="mb-1">부자재 창고 등록</h2>
     </div>
 
     <form id="inboundWhForm" th:action="@{/warehouse_iosf_save.do}" th:object="${IOSF_DTO}" method="post">
@@ -22,24 +22,24 @@
   <label class="form-label d-block mb-2">창고 선택</label>
   <button class="btn btn-primary modal-trigger"
         type="button"
-        th:data-modal-url="@{/wh_type_list.do(wh_type='in_wh')}"
+        th:data-modal-url="@{/wh_type_list.do(wh_type='mt_wh')}"
         data-modal-id="wh_type_list"
         style="cursor: pointer;">
-    <i class="bi bi-search">입고 창고 선택</i>
+    <i class="bi bi-search">부자재 창고 선택</i>
 </button>
   <div class="row gx-3">
     <div class="col-md-4 mb-3">
       <label class="form-label">창고코드</label>
       <input type="hidden" class="form-control" th:field="*{wh_type}">
-      <input type="text" class="form-control"  th:field="*{wh_code}">
+      <input type="text" class="form-control" th:field="*{wh_code}">
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label">창고명</label>
-      <input type="text" class="form-control"  th:field="*{wh_name}">
+      <input type="text" class="form-control" th:field="*{wh_name}">
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label">창고위치</label>
-      <input type="text" class="form-control"  th:field="*{wh_location}">
+      <input type="text" class="form-control" th:field="*{wh_location}">
     </div>
   </div>
 </div>

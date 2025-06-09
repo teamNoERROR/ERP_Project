@@ -45,7 +45,7 @@
 			    <input type="hidden" id="in_status" class="form-control" />
 			    <input type="hidden" id="item_count" class="form-control" />
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
-			            style="white-space: nowrap; min-width: 70px;" onclick="whMoveBtn()">
+			            style="white-space: nowrap; min-width: 70px;">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
 			    </button>
 			  </form>
@@ -101,12 +101,13 @@
 				      	 	   th:value="${in_wh.wh_code}" 
 						       th:data-inbound_code="${in_wh.inbound_code}" 
 						       th:data-item_code="${in_wh.item_code}" 
+						       th:data-in_change="${in_wh.in_change}" 
 						       th:data-wh_code="${in_wh.wh_code}" 
 						       data-wh_type="mt"
 						       th:data-in_status="${in_wh.in_status}"
 						       th:data-item_count="${in_wh.item_count}"
 						       th:data-in_code="${in_wh.in_code}"
-						       onclick="selectRow(this); event.stopPropagation();" />
+						       onclick="selectRow(event,this); " />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
 				      <td th:text="${in_wh.inbound_code}">IN-0001</td>
@@ -115,11 +116,15 @@
 				      <td th:text="${in_wh.item_code}">ITEM-123</td>
 				      <td th:text="${in_wh.client_code}">client-123</td>
 				      <td th:text="${in_wh.item_name}">나사</td>
-				      <td th:text="${in_wh.item_count}">나사</td>
+				      <td th:text="${in_wh.item_count}">12</td>
 				      <td th:text="${in_wh.category_main + '/' + in_wh.category_sub}">부품/소모품</td>
 				      <td th:text="${in_wh.client_name}">삼성전자</td>
-				      <td th:text="${in_wh.inbound_date2}">2025-05-29</td>
-				      <td th:text="${in_wh.in_status}"></td>
+				      <!-- 1. inbound_date2 가 null 또는 빈 문자열이면 in_date 사용 -->
+					  <td th:text="${#strings.isEmpty(in_wh.inbound_date2) ? in_wh.in_date : in_wh.inbound_date2}">2025-05-29</td>
+					  <!-- 2. in_status 가 null 또는 빈 문자열이면 in_change 사용 -->
+					  <td th:text="${#strings.isEmpty(in_wh.in_status) ? in_wh.in_change : in_wh.in_status}">입고완료</td>
+					  <input type="hidden" id="resolved_status" 
+					 	 th:value="${#strings.isEmpty(in_wh.in_status) ? in_wh.in_change : in_wh.in_status}" />
 				      <td th:text="${in_wh.use_yn}">Y</td>
 				    </tr>
 				  </tbody>
@@ -130,37 +135,49 @@
       	  <div th:if="${wh_check == 'nodata'}" class="text-center my-4">
          	   등록된 게시물이 없습니다.
       	  </div>
-			
+			<!-- 페이지 크기 선택 -->
+				<div class="mb-3">
+				  <label for="pageSizeSelect" class="form-label">페이지 크기:</label>
+				  <select id="pageSizeSelect" class="form-select" style="width: auto; display: inline-block;">
+				    <option th:value="5" th:selected="${pageSize == 5}">5개씩</option>
+				    <option th:value="10" th:selected="${pageSize == 10}">10개씩</option>
+				    <option th:value="20" th:selected="${pageSize == 20}">20개씩</option>
+				  </select>
+				</div>
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-				 <!-- 페이징 -->
-			        <nav aria-label="Page navigation">
-			            <ul class="pagination">
-			                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-			                    <a class="page-link" th:href="@{/warehouses_in_list.do(page=${currentPage - 1 > 0 ? currentPage - 1 : 1}, wh_search=${wh_search})}">이전</a>
-			                </li>
+								 <!-- 페이징 -->
+	       <nav aria-label="Page navigation">
+			  <ul class="pagination">
 			
-			                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active'">
-			                    <a class="page-link" th:href="@{/warehouses_in_list.do(page=${i}, wh_search=${wh_search})}" th:text="${i}">1</a>
-			                </li>
+			    <!-- 이전 블록 이동 버튼 -->
+			    <li class="page-item" th:classappend="${startPage > 1} ? '' : 'disabled'">
+			      <a class="page-link"
+			         th:href="@{/warehouses_in_list.do(page=${startPage - 1}, wh_search=${wh_search}, pageSize=${pageSize})}">&laquo;</a>
+			    </li>
 			
-			                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-			                    <a class="page-link" th:href="@{/warehouses_in_list.do(page=${currentPage + 1 <= totalPages ? currentPage + 1 : totalPages}, wh_search=${wh_search})}">다음</a>
-			                </li>
-			                
-			                
-			            </ul>
-			        </nav>
+			    <!-- 페이지 번호 -->
+			    <li class="page-item" 
+			        th:each="i : ${#numbers.sequence(startPage, endPage)}"
+			        th:classappend="${i == currentPage} ? 'active'">
+			      <a class="page-link" 
+			         th:href="@{/warehouses_in_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize})}" 
+			         th:text="${i}">1</a>
+			    </li>
+			
+			    <!-- 다음 블록 이동 버튼 -->
+			    <li class="page-item" th:classappend="${endPage < totalPages} ? '' : 'disabled'">
+			      <a class="page-link"
+			         th:href="@{/warehouses_in_list.do(page=${endPage + 1}, wh_search=${wh_search}, pageSize=${pageSize})}">&raquo;</a>
+			    </li>
+			
+			  </ul>
+			</nav>
 				<!-- Action Buttons -->
 				<div class="mt-4 d-flex gap-2">
 					<div class="ms-auto">
 						 <button type="button" class="btn btn-success" onclick="location.href='/warehouse_in_savePage.do'">
                				 <i class="bi bi-plus-lg"></i> 수기 등록
 						</button>
-						<!-- 
-						<button class="btn btn-danger"  onclick="deleteWh('in')">
-            				<i class="bi bi-trash"></i> 삭제
-          			   </button>
-						 -->
 					</div>
 				</div>
 			</div>

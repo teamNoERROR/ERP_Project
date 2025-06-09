@@ -47,10 +47,95 @@ function previewFile() {
 }
 
 
+/*--------------------------------------------------------------
+  창고리스트 모달 
+----------------------------------------------------------- */
 
+//타입별창고리스트 모달 열기
+let targetWhNameId = null;
+let targetWhCodeId = null;
+
+function whSelect(wh_type, name_id, code_id){
+	targetWhNameId = name_id;
+	targetWhCodeId = code_id;
+	
+	fetch("./wh_type_list.do?wh_type="+wh_type, {
+			method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("wh_type_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+} 
+
+
+
+//창고리스트에서 선택후 인풋란에 붙여넣기 
+function choiceWh() {
+	var radios = document.querySelectorAll('input[name="iosfSelect"]');
+	var selected_radio = null;
+	
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	
+	if (!selected_radio) {
+	alert("창고를 선택해 주세요.");
+
+	 }else{
+		const whCode = selected_radio.value;
+		const whName = selected_radio.getAttribute('data-wh_name');
+		const whZipcode = selected_radio.getAttribute('data-wh_zipcode');
+		const whAddr1 = selected_radio.getAttribute('data-wh_addr1');
+		const whAddr2 = selected_radio.getAttribute('data-wh_addr2');
+		const whType = selected_radio.getAttribute('data-wh_type');  // ← 여기서 타입 읽기
+
+		const whNameInput = document.getElementById(targetWhNameId);
+		const whCodeInput = document.getElementById(targetWhCodeId);
+		
+		if (whNameInput && whCodeInput) {
+			whNameInput.value = whName;
+			whCodeInput.value = whCode;
+		} 
+		
+		// 예시: 타입별 처리 (원하면 타입별로 다르게 로직 분기 가능)
+	   if (whType === '부자재창고') {
+		   document.getElementById('wh_code').value = whCode;
+	   		alert("창고를 선택하셨습니다.");
+	  
+	   } else if (whType === '완제품창고') {
+		  document.getElementById('wh_code').value = whCode;
+		   	alert("창고를 선택하셨습니다.");
+	   } else {
+	     console.log('기타 창고 타입');
+	   }
+		
+	   
+		// 선택 후 모달 닫기
+	 	var modalElement = document.getElementById("wh_type_list");
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	}
+};
 
 /*--------------------------------------------------------------
-  임시
+	리스트 모달
 ----------------------------------------------------------- */
 
 //거래처리스트 모달 오픈 
@@ -160,11 +245,10 @@ function cl2_modal_pg (page){
 
 
 //부자재리스트 모달 오픈 
-function openItemList(type){
+function openItemList(parentType){
 	
-	parentType = type;  // 전역 변수에 저장
 	
-	fetch("./item_list.do", {
+	fetch("./item_list.do?parent="+parentType, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -185,10 +269,12 @@ function openItemList(type){
 
 //부자재리스트 모달 페이징
 function itm_modal_pg (page){
+	var parent = page.getAttribute('data-parent');
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
 	var params = {  
+			parent: parent,  
 		    type: page.getAttribute('data-type'),
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),

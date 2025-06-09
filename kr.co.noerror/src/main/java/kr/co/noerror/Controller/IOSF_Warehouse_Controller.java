@@ -60,12 +60,87 @@ public class IOSF_Warehouse_Controller {
       return "/warehouse/in_warehouse_insert.html";
    }
    
+   @GetMapping("/warehouse_mt_savePage.do")
+   public String warehouse_mt_savePage(Model m) {
+	   m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","부자재 창고 관리");
+		
+      m.addAttribute("IOSF_DTO", this.iosf_dto);
+      return "/warehouse/mt_warehouse_insert.html";
+   }
    
-   //부자재 창고 리스트
+   @GetMapping("/warehouse_fs_savePage.do")
+   public String warehouse_fs_savePage(Model m) {
+	   m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","완제품 창고 관리");
+		
+      m.addAttribute("IOSF_DTO", this.iosf_dto);
+      return "/warehouse/fs_warehouse_insert.html";
+   }
+   
+   @GetMapping("/warehouse_out_savePage.do")
+   public String warehouse_out_savePage(Model m) {
+	   m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","출고 창고 관리");
+		
+      m.addAttribute("IOSF_DTO", this.iosf_dto);
+      return "/warehouse/out_warehouse_insert.html";
+   }
+   
+   
+   @PostMapping("/out_warehouse_complete.do")
+   @ResponseBody
+   public Map<String, Object> out_warehouse_complete(@RequestBody Map<String, List<Map<String, Object>>> payload) {
+       List<Map<String, Object>> items = payload.get("items");
+
+       String outStatus = "출고완료";
+       int successCount = 0;
+       int failCount = 0;
+       int updated = 0;
+       for (Map<String, Object> item : items) {
+           String outCode = (String) item.get("out_code");
+
+
+           try {
+               // 1. 출고상태 변경
+               updated = iosf_dao.IOSF_out_update(outCode, outStatus); // 상태 변경               				
+		
+               /*
+                
+               // 2. 출고 처리
+               int completed = iosf_dao.IOSF_out_complete(outCode); // 처리 완료
+                */
+               
+               if (updated > 0 ) {
+                   successCount++;
+               } else {
+                   failCount++;
+               }
+
+           } catch (Exception e) {
+               e.printStackTrace();
+               failCount++;
+           }
+       }
+
+       Map<String, Object> result = new HashMap<>();
+       result.put("success", failCount == 0); // 하나라도 실패하면 false
+       result.put("successCount", successCount);
+       result.put("failCount", failCount);
+
+       return result;
+   }
+ 
+  
+   //출고 창고 리스트
    @GetMapping("/warehouses_out_list.do")
    public String warehouses_out_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
+		      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
   
 	    m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
@@ -76,7 +151,7 @@ public class IOSF_Warehouse_Controller {
 	   
 	      this.wh_type = "out";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
 	      
 	       m.addAttribute("out_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -86,6 +161,8 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
 	       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
 	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
+	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
+		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
 	   
 	   return "/warehouse/out_warehouses_list.html";
    }
@@ -93,8 +170,9 @@ public class IOSF_Warehouse_Controller {
  //부자재 창고 리스트
    @GetMapping("/warehouses_fs_list.do")
    public String warehouses_fs_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
+		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
   
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
@@ -105,7 +183,7 @@ public class IOSF_Warehouse_Controller {
 	   
 	      this.wh_type = "fs";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
 	      
 	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -115,16 +193,18 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
 	       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
 	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
+	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
+		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
 	   
 	   return "/warehouse/fs_warehouses_list.html";
    }
    
-   
    //부자재 창고 리스트
    @GetMapping("/warehouses_mt_list.do")
    public String warehouses_mt_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
+		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
   
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
@@ -135,7 +215,7 @@ public class IOSF_Warehouse_Controller {
 	   
 	      this.wh_type = "mt";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
 	      
 	       m.addAttribute("mt_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -145,28 +225,32 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
 	       m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
 	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
-	   
+	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
+		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
+	       
 	   return "/warehouse/mt_warehouses_list.html";
    }
+    
    
    
-   //입고 창고 리스트
    @GetMapping("/warehouses_in_list.do")
    public String warehouse_in_list(Model m,
-           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-           @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search) {
-      
-	   m.addAttribute("lmenu","기준정보관리");
- 		m.addAttribute("smenu","창고 관리");
- 		m.addAttribute("mmenu","입고 창고 관리");
-      this.map = new HashMap<>();
-      Map<Object, Object>   iosf_list_map = this.map;
-   
-      this.wh_type = "in";
-      
-      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type);
-      
-      m.addAttribute("in_wh_list", iosf_list_map.get("wh_list")); // 리스트
+          @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
+          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
+       
+       m.addAttribute("lmenu","기준정보관리");
+       m.addAttribute("smenu","창고 관리");
+       m.addAttribute("mmenu","입고 창고 관리");
+       
+       this.map = new HashMap<>();
+       Map<Object, Object> iosf_list_map = this.map;
+
+       this.wh_type = "in";
+
+       iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);  // pageSize도 전달
+
+       m.addAttribute("in_wh_list", iosf_list_map.get("wh_list")); // 리스트
        m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
        m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
        m.addAttribute("currentPage", iosf_list_map.get("currentPage"));   //현재 페이지
@@ -174,9 +258,10 @@ public class IOSF_Warehouse_Controller {
        m.addAttribute("totalPages", iosf_list_map.get("totalPages"));   //총 페이지 갯수
        m.addAttribute("pageSize", iosf_list_map.get("pageSize"));
        m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
-      
-       
-      return "/warehouse/in_warehouses_list.html";
+       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
+	   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
+
+       return "/warehouse/in_warehouses_list.html";
    }
    
    //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동(insert)
@@ -216,25 +301,64 @@ public class IOSF_Warehouse_Controller {
    
    
    @PostMapping("/warehouse_iosf_save.do")
-   public String warehouse_in_save(
+   public String warehouse_iosf_save(
          Model m, 
          IOSF_DTO iosf_dto,
          HttpServletResponse res,
          HttpServletRequest req         ) {
    
       this.check_insertOrModify = "save";   
-      this.wh_type = "in";
+      System.out.println(iosf_dto.getIn_status());
+      String wh_kind = iosf_dto.getWh_type();
+      
+      if(wh_kind.equals("입고창고")){
+    	  this.wh_type = "in";    	  
+      }
+      else if(wh_kind.equals("부자재창고")){
+    	  this.wh_type = "mt";    	  
+      }
+      else if(wh_kind.equals("완제품창고")){
+    	  this.wh_type = "fs";    	  
+      }
+      else if(wh_kind.equals("출고창고")){
+    	  this.wh_type = "out";    	  
+      }
       
       
+      System.out.println("++++ "+wh_kind);
       try {
          res.setContentType("text/html; charset=utf-8");
          this.pw = res.getWriter();
          int iosf_save = iosf_service.IOSF_warehouse_SaveAndUpdate(iosf_dto, this.check_insertOrModify, this.wh_type);
          if(iosf_save > 0) {
+        	 if(wh_kind.equals("입고창고")) {
+        		 System.out.println("함수 작동 중 창고 저장");
             this.pw.print("<script>"
                   + "alert('창고가 정상적으로 저장 되었습니다.');"
                   + "location.href='warehouses_in_list.do';"
                   + "</script>");
+        	 }
+        	 else if(wh_kind.equals("부자재창고")) {
+        		 
+                 this.pw.print("<script>"
+                       + "alert('창고가 정상적으로 저장 되었습니다.');"
+                       + "location.href='warehouses_mt_list.do';"
+                       + "</script>");
+             	 }
+        	 else if(wh_kind.equals("완제품창고")) {
+        		 
+                 this.pw.print("<script>"
+                       + "alert('창고가 정상적으로 저장 되었습니다.');"
+                       + "location.href='warehouses_fs_list.do';"
+                       + "</script>");
+             	 }
+        	 else if(wh_kind.equals("출고창고")) {
+        		 
+                 this.pw.print("<script>"
+                       + "alert('창고가 정상적으로 저장 되었습니다.');"
+                       + "location.href='warehouses_out_list.do';"
+                       + "</script>");
+             	 }
          }else {
             this.pw.print("<script>"
                   + "alert('창고 저장 중 문제가 발생하였습니다."
@@ -431,4 +555,3 @@ public class IOSF_Warehouse_Controller {
       }
 
 }
-

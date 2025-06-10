@@ -100,16 +100,16 @@
 							</td>
 							<td >[[${bno - idx.index}]]</td>
 							<td class="ob_code">[[${outlist.OUTBOUND_CODE}]]</td>
-							<td class="ord_code" th:data-ord="${outlist.ORD_CODE}">[[${outlist.ORD_CODE}]]</td>
+							<td class="ord_code">[[${outlist.ORD_CODE}]]</td>
 							<td>[[${outlist.OUT_STATUS}]]</td>
-							<td>출고담당자명</td>
+							<td>[[${outlist.ENAME}]]</td>
 							<td>[[${outlist.EMPLOYEE_CODE}]]</td>
-							<td>[[${outlist.OUTBOUND_REQ_DATE}]]</td>
-							<td>[[${outlist.OUTBOUND_DATE}]]</td>
-							<td>창고명</td>
+							<td>[[${outlist.DUE_DATE.substring(0,10)}]]</td>
+							<td>[[${outlist.OUTBOUND_DATE.substring(0,10)}]]</td>
+							<td>[[${outlist.WH_NAME}]]</td>
 							<td>[[${outlist.WH_CODE}]]</td>
-							<td>거래처명</td>
-							<td>거래처코드</td>
+							<td>[[${outlist.COMPANY_NAME}]]</td>
+							<td>[[${outlist.COMPANY_CODE}]]</td>
 							<td>[[${outlist.OUT_INSERT_DATE.substring(0,16)}]]</td>
 						</tr>
 					</tbody>

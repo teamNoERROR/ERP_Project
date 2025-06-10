@@ -77,7 +77,6 @@ public class inbound_serviceImpl implements inbound_service {
 		int result = 0;
 		int count = 0;
 		
-		System.out.println("Sy : "+ itm_list.toString());
 		for (inbound_DTO in_dto : itm_list) {
 			result += this.io_dao.inbnd_insert(in_dto);
 			
@@ -85,8 +84,6 @@ public class inbound_serviceImpl implements inbound_service {
 				count++;
 			}
 		}
-		System.out.println("svcIm : " + result);
-		System.out.println("svcIm2 : " + count);
 		
 		if(itm_list.size() == count) {
 			f_result = result;

@@ -47,7 +47,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="출고되는 창고" id="out_wh_name" readonly>
                                     <button type="button" class="btn btn-primary" 
-                                    		onclick="whSelect('out_wh','out_wh_name', 'out_wh_code')" 
+                                    		onclick="whSelect('out_wh','out_wh_name','out_wh_code')" 
                                     		style="cursor: pointer;">
                                         <i class="bi bi-search"></i>
                                     </button>
@@ -114,7 +114,7 @@
                         
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">출고요청일</label>
-                                <input type="date" class="form-control" id="out_req_date">
+                                <input type="date" class="form-control" id="out_req_date" readonly>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">출고일</label>
@@ -134,11 +134,11 @@
                         <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">작성자</label>
-                                <input type="text" class="form-control" value="홍길동" readonly>
+                                <input type="text" class="form-control" value="이명헌" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">사원코드</label>
-                                <input type="text" class="form-control" id="employee_code" value="EMP-12356" readonly>
+                                <input type="text" class="form-control" id="employee_code" value="EMP-00001" readonly>
                             </div>
                         </div>
                            

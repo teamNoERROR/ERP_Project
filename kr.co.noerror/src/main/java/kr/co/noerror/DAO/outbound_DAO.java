@@ -28,6 +28,24 @@ public class outbound_DAO {
 		int result = this.st.selectOne("code_dupl_out",out_code);
 		return result;
 	}
+
+	//출고등록 OUTBOUND 테이블에 저장 
+	public int outbnd_insert(outbound_DTO out_dto) {
+		int result = this.st.insert("insert_outbnd", out_dto);
+		return result;
+	}
+	
+	//출고등록 OUTBOUND_DETAIL 테이블에 저장 
+	public int outbnd_dtl_insert(outbound_DTO out_dto) {
+		int result = this.st.insert("insert_outbnd_dtl", out_dto);
+		return result;
+	}
+
+	public List<outbound_DTO> outbound_detail(Map<String, String> map) {
+		List<outbound_DTO> outbound_detail = this.st.selectList("outbound_detail",map);
+		return outbound_detail;
+	}
+
 	
 	
 }

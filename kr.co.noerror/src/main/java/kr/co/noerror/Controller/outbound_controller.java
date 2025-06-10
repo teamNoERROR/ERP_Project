@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.outbound_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.outbound_service;
@@ -85,7 +86,6 @@ public class outbound_controller {
 	//출고등록
 	@PutMapping("/outbound_insertok.do")
 	public String outbound_insertok(@RequestBody String out_pds, HttpServletResponse res) {
-		System.out.println("out_pds : " + out_pds);
 		try {
 			this.pw = res.getWriter();
 			
@@ -108,6 +108,27 @@ public class outbound_controller {
 		}
 		
 		return null;
+	}
+	
+	
+	
+	//출고내역 상세보기 모달
+	@GetMapping("/outbnd_detail_modal.do")
+	public String inbnd_detail_modal(Model m, @RequestParam("outbnd_code") String ob_code
+									, @RequestParam("ord_code") String ord_code
+									) {
+		
+		List<outbound_DTO> outbound_detail = this.out_svc.outbound_detail(ob_code, ord_code);
+		
+		
+		m.addAttribute("outbound_detail", outbound_detail);
+//		m.addAttribute("pch_qty_total", pch_qty_total);
+//		m.addAttribute("inb_qty_total", inb_qty_total);
+//		m.addAttribute("itm_cost_total", itm_cost_total);
+//		m.addAttribute("pch_amount_total", pch_amount_total);
+//		m.addAttribute("pch_cd", pch_cd);
+		
+		return "/modals/outbound_detail_modal.html";
 	}
 	
 }

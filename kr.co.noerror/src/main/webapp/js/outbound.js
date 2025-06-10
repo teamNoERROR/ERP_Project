@@ -14,7 +14,6 @@ function addOutbound(){
 	location.href="./outbound_insert.do";
 }
 
-
 /*--------------------------------------------------------------
 출고리스트 저장버튼 클릭 
 --------------------------------------------------------------*/
@@ -132,6 +131,7 @@ function outBndInsertOk(){
       	});
 	});
 	console.log(out_pds)
+	
 	fetch("./outbound_insertok.do", {
 		method: "PUT",
 		headers: {'content-type': 'application/json'},
@@ -152,6 +152,30 @@ function outBndInsertOk(){
 }
 
 
+/*--------------------------------------------------------------
+출고건 상세보기 모달 
+--------------------------------------------------------------*/
+function openObDetail(event){
+	
+	var outbnd_code = event.querySelector(".ob_code").textContent.trim();
+	var ord_code = event.querySelector(".ord_code").textContent.trim();  
+
+	fetch("./outbnd_detail_modal.do?outbnd_code="+outbnd_code+"&ord_code="+ord_code, {
+		method: "GET",
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+			var modal;
+			document.getElementById("modalContainer").innerHTML = result;
+			modal = new bootstrap.Modal(document.getElementById("out_detail_modal"));
+			modal.show();
+		
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
 
 
 

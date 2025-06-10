@@ -548,7 +548,6 @@ function ordDtlLoad2(order_code){
 						<option value="" >선택</option>
 						<option value="출고완료" >출고완료</option>
 						<option value="부분출고">부분출고</option>
-						<option value="미출고">미출고</option>
 					</select>
 				</td>
 			  `;

@@ -50,7 +50,8 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 	
 	@Override
     public Map<String, Object> ordreq_save(List<Map<String, Object>> orders) {
-
+		System.out.println("orders : " + orders);
+		System.out.println("orders2 : " + orders.size());
 		 Map<String, Object> response = new HashMap<>();
 	        
 	        //중복 없는 주문코드 생성

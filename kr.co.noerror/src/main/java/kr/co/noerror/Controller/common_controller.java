@@ -29,7 +29,7 @@ import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Service.client_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
-import kr.co.noerror.Service.inout_service;
+import kr.co.noerror.Service.inbound_service;
 
 @Controller
 public class common_controller {
@@ -48,7 +48,7 @@ public class common_controller {
 	private goods_service g_svc;  //품목 서비스
 	
 	@Autowired
-	private inout_service io_svc;  //입출고리스트 서비스 
+	private inbound_service io_svc;  //입출고리스트 서비스 
 	
 	@Autowired
 	private client_service clt_svc;  //거래처 서비스
@@ -103,11 +103,12 @@ public class common_controller {
 	//거래처리스트 모달 띄우기 
 	@GetMapping({"/client_list.do"})
 	public String client_list(Model m
+			 				,@RequestParam(value = "parent", required = true) String parent
 							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea 
 							,@RequestParam(value="mode", required = false) String mode) {
-		
+		System.out.println(parent);
 		int client_total = this.clt_svc.client_total("client"); //제품 총개수
 		List<client_DTO> client_list = this.clt_svc.client_list("client", pageno, post_ea);  //제품 리스트
 	
@@ -116,13 +117,15 @@ public class common_controller {
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, client_total);
 		int bno = this.m_pg.serial_no(client_total, pageno, post_ea); 
 		
+		m.addAttribute("parentType",parent);
+		
 		m.addAttribute("keyword",keyword);
-		m.addAttribute("bno", bno);
+	
 		m.addAttribute("clt_total", client_total);
 		m.addAttribute("clt_list", client_list);
+		
 		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", post_ea);
+		m.addAttribute("bno", bno);
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/client_list_body_modal.html :: pgList";
@@ -172,7 +175,7 @@ public class common_controller {
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 								,@RequestParam(value="mode", required = false) String mode
 								)  {
-		System.out.println("테스트");
+		
 		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
 		

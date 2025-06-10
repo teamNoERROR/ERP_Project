@@ -85,7 +85,10 @@ public class ordreq_controller {
 	
 	//modal에 주문리스트 띄우기
 	@GetMapping("/ord_list_modal.do")
-	public String orders_modal(@ModelAttribute search_condition_DTO search_cond, Model model, @RequestParam(value="mode", required = false) String mode) {
+	public String orders_modal(@ModelAttribute search_condition_DTO search_cond
+								, Model model
+								, @RequestParam(value="mode", required = false) String mode
+								, @RequestParam(value = "parent", required = true) String parent) {
 		
 	    int search_count = this.ordreq_list_service.search_count(search_cond);
 	    
@@ -101,6 +104,7 @@ public class ordreq_controller {
 	    model.addAttribute("all", ord_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
+	    model.addAttribute("parentType",parent);
 	    
 		if ("modal2".equals(mode)) {
 	        return "/modals/order_list_body_modal.html :: ordMdList";

@@ -12,13 +12,13 @@
 <section class="container ">
         <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">입고내역 수기등록</h2>
+        	<h2 class="mb-1">입고 등록</h2>
         
         </div>
    
   <!-- 우상단 x 마크  -->     
 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
-<button type="button" class="btn-close" aria-label="Close" onclick="goInbndList()"></button>
+<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
 </div>
 
 <div class="form-section">
@@ -56,7 +56,7 @@
              <div class="row mb-3">
                       
             <!-- 주문항목 List Table -->
-			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+			<div class="table-responsive rounded" style="width: 100%; overflow-x: auto;">
 				<h5 >발주 제품 내역</h5>
 				<table class="table align-middle table-hover table-bordered text-center" style="white-space: nowrap;" >
 					<thead class="table-light ">
@@ -107,7 +107,7 @@
                         <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">작성자</label>
-                                <input type="text" class="form-control" value="홍길동" readonly>
+                                <input type="text" class="form-control"  value="홍길동" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">사원코드</label>
@@ -129,11 +129,6 @@
 				<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 			</div>
             </div>
-
-
-
-
-
 </div>
 
 </section>

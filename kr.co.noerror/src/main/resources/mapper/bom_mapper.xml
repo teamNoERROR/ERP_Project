@@ -45,7 +45,7 @@
 <insert id="insert_item" parameterType="kr.co.noerror.DTO.bom_DTO">
     INSERT INTO BOM
     VALUES
-    (BOM_NO.NEXTVAL, #{BOM_CODE}, #{PARENT_IDX, jdbcType=INTEGER}, #{PRODUCT_CODE}, #{ITEM_CODE}, #{BOM_LEVEL}, #{BOM_SEQ_NO}, #{BOM_QTY}, #{UNIT}, SYSTIMESTAMP, NULL)
+    (BOM_NO.NEXTVAL, #{BOM_CODE}, #{PARENT_IDX, jdbcType=INTEGER}, #{PRODUCT_CODE}, #{ITEM_CODE}, #{BOM_LEVEL}, #{BOM_SEQ_NO}, #{BOM_QTY}, #{BOM_UNIT}, SYSTIMESTAMP, NULL)
 </insert>
 
 

@@ -25,18 +25,18 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.bom_DTO;
-import kr.co.noerror.DTO.inout_DTO;
+import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.Model.M_paging;
-import kr.co.noerror.Service.inout_service;
+import kr.co.noerror.Service.inbound_service;
 
 @Controller
-public class inout_controller {
+public class inbound_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	PrintWriter pw = null;
 	
 	@Autowired
-	private inout_service io_svc;
+	private inbound_service io_svc;
 	
 	@Autowired
 	pchreq_DAO pdao;
@@ -44,8 +44,8 @@ public class inout_controller {
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
 	
-	@Resource(name="inout_DTO")
-	inout_DTO io_dto;
+	@Resource(name="inbound_DTO")
+	inbound_DTO io_dto;
 	
 	List<String> list = null; 
 	Map<String, String> map = null;
@@ -65,7 +65,7 @@ public class inout_controller {
 			status_lst = new String[] {"가입고", "입고완료", "입고취소"};
 		}
 		
-		List<inout_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status_lst);  //입고리스트 제품 리스트
+		List<inbound_DTO> inbound_all_list = this.io_svc.inbound_all_list(keyword, pageno, post_ea, status_lst);  //입고리스트 제품 리스트
 		int inbound_total = this.io_svc.inbound_total(keyword, status_lst); //입고리스트 제품 총개수
 		
 		//페이징 관련 
@@ -130,14 +130,14 @@ public class inout_controller {
 								, @RequestParam("pch_code") String pch_cd
 								, @RequestParam("ori_pcd") String ori_pcd) {
 		
-		List<inout_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, ori_pcd);
+		List<inbound_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, ori_pcd);
 		String ind_pchcd="";
 		int pch_qty_total=0;  //총 주문수량 
 		int inb_qty_total=0;  //총 입고수량 
 		int itm_cost_total=0;  //총 제품 단가
 		int pch_amount_total=0;  //총 구매금액
 		
-		for(inout_DTO sum : inbound_detail) {
+		for(inbound_DTO sum : inbound_detail) {
 			pch_qty_total += sum.getP_QTY();        // P_QTY 누적
 		    inb_qty_total += sum.getITEM_QTY();     // ITEM_QTY 누적
 		    itm_cost_total += sum.getITEM_COST();   // ITEM_COST 누적 (단가 총합이 맞는지 확인 필요)

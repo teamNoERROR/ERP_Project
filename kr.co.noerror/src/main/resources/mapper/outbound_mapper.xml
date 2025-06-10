@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.outbound_mapper">
+
+<!-- 고유코드 중복확인 -->
+<select id="code_dupl_out" resultType="int" parameterType="String">
+	SELECT COUNT(*) AS CNT FROM OUTBOUND WHERE OUTBOUND_CODE = #{out_code}
+</select>
+
+<!-- 출고 전체 리스트 -->
+<select id="outbound_all_list" resultType="kr.co.noerror.DTO.outbound_DTO" parameterType="Map">
+	SELECT * FROM OUTBOUND_VIEW
+<!-- 	 WHERE 1=1 -->
+<!-- 		AND OUT_STATUS IN -->
+<!-- 		<foreach item="o_statuslst" collection="OUT_STATUS" open="(" separator="," close=")"> -->
+<!-- 		  #{o_statuslst} -->
+<!-- 		</foreach> -->
+<!-- 			<if test="keyword!= null "> -->
+<!-- 		      AND  -->
+<!-- 		      OUTBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      ORD_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      WH_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      WH_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      EMPLOYEE_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      ENAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
+<!-- 		      OUT_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
+<!-- 			 </if> -->
+<!--     </if> -->
+	ORDER BY OIDX DESC
+	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
+</select>
+
+
+</mapper>

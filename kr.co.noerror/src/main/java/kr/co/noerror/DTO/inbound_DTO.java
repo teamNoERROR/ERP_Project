@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 import lombok.Data;
 
 @Data
-@Repository("inout_DTO")
-public class inout_DTO {
+@Repository("inbound_DTO")
+public class inbound_DTO {
 	
 	int IIDX, ITEM_QTY;
 	String INBOUND_CODE, PCH_CODE, ITEM_CODE, ITEM_DEL, ITEM_EXP, WH_CODE;

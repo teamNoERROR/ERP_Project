@@ -17,8 +17,7 @@
 			<div class="d-flex">
 				<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
 					<label class="d-flex align-items-center gap-1">
-						<input type="checkbox" name="emp_lst" value="재직중" onchange="empStatusCk(this)"
-								> 재직중
+						<input type="checkbox" name="emp_lst" value="재직중" onchange="empStatusCk(this)" checked> 재직중
 					</label>
 					 <label class="d-flex align-items-center gap-1">
 						<input type="checkbox" name="emp_lst" value="휴직중" onchange="empStatusCk(this)"
@@ -55,8 +54,8 @@
 						<tr>
 							<th scope="col"><input type="checkbox" disabled></th>
 							<th scope="col">#</th>
-							<th scope="col">사원명</th>
 							<th scope="col">사원코드</th>
+							<th scope="col">사원명</th>
 							<th scope="col">부서</th>
 							<th scope="col">직급</th>
 							<th scope="col">전화번호</th>
@@ -74,8 +73,8 @@
 						<tr th:if="${member_all_total != 0}" th:each="mblist, idx : ${member_all_list}" style="cursor: pointer;">	
 							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
 							<td>5</td>
-							<td>[[${mblist.EMPLOYEE_NAME}]]</td>
-							<td>[[${mblist.EMPLOYEE_CODE}]]</td>
+							<td>[[${mblist.ECODE}]]</td>
+							<td>[[${mblist.ENAME}]]</td>
 							<td>[[${mblist.EMP_PART}]]</td>
 							<td>[[${mblist.EMP_POSITION}]]</td>
 							<td>[[${mblist.EMP_TEL}]]</td>
@@ -83,7 +82,7 @@
 							<td>[[${mblist.EMP_PHONE}]]</td>
 							<td>[[${mblist.EMP_EMAIL}]]</td>
 							<td>[[${mblist.EMP_USE_FLAG}]]</td>
-							<td>-</td>
+							<td>[[${mblist.ROLES}]]</td>
 						</tr>
 					</tbody>
 				</table>

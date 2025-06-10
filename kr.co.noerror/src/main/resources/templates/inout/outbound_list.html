@@ -14,91 +14,156 @@
 				<h2 class="mb-1">출고 리스트</h2>
 			</div>
 
-			<!-- 창고이동버튼 -->
-			<form class=" d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
+
+			<div class=" d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
 				<div class="d-flex gap-2 align-items-center" >
-					<select class="form-select" aria-label="Default select example">
-						<option selected>출고상태</option>
-						<option value="1">출고대기</option>
-						<option value="3">출고취소</option>
-						<option value="3">출고완료</option>
+					<select class="form-select" id="out_status">
+						<option value="">출고상태</option>
+						<option value="출고완료">출고완료</option>
+						<option value="출고취소">출고취소</option>
 					</select>
-					<button type="button"  class="btn btn-info d-flex align-items-center px-2" style="white-space: nowrap; min-width: 70px;"><i class="bi bi-arrow-bar-right"></i> 변경</button>
+					<button type="button"  class="btn btn-info d-flex align-items-center px-2" 
+							style="white-space: nowrap; min-width: 70px;" onclick="obCngOk()">
+						<i class="bi bi-arrow-bar-right"></i> 변경
+					</button>
 					
 				</div>
+				
+				<div class="d-flex">
+					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
+						<label class="d-flex align-items-center gap-1">
+							<input type="checkbox" name="out_status_lst" value="출고대기" onchange="outStatusCk(this)"
+									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고대기' )}"> 출고대기
+						</label>
+						<label class="d-flex align-items-center gap-1"> 
+							<input type="checkbox" name="out_status_lst" value="부분출고" onchange="outStatusCk(this)"
+									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '부분출고' )}"> 부분출고
+						</label>
+						 <label class="d-flex align-items-center gap-1"> 
+							<input type="checkbox" name="out_status_lst" value="출고완료" onchange="outStatusCk(this)"
+									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고완료' )}"> 출고완료
+						</label>
+						<label class="d-flex align-items-center gap-1"> 
+							<input type="checkbox" name="out_status_lst" value="출고취소" onchange="outStatusCk(this)"
+									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고취소' )}"> 출고취소&nbsp;&nbsp;
+						</label> 
+					</div>
 				<!-- Search Bar -->
 				<div class="col-auto">
-					<div class="input-group input-group-sm">
-						<select class="form-select" style="max-width: 120px;">
-							<option selected>전체</option>
-							<option value="1">자재명</option>
-							<option value="2">거래처명</option>
-						</select> 
-						<input type="text" class="form-control" placeholder="검색">
-						<button class="btn btn-primary" type="submit">
+				<form id="ob_search" onsubmit="return outSearch()">
+					<th:block th:each="o_status : ${out_statusList}">
+			    		<input type="hidden" name="out_status_lst" th:value="${o_status}" />
+					</th:block>
+					<div class="input-group input-group-sm" style="width:250px;">
+						<input type="text" class="form-control"name="keyword" th:value="${keyword != null ? keyword : ''}"  placeholder="전체 검색">
+						<button class="btn btn-primary">
 							<i class="bi bi-search"></i>
 						</button>
 					</div>
+				</form>
 				</div>
-			</form>
+				</div>
+			</div>
 
 			<!-- 출고 List Table-->
-			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bordered " style="white-space: nowrap;">
-					<thead class="table-light text-center">
+			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${outbound_total != 0} ? 'table-hover' : ''">
+					<thead class="table-light">
 						<tr >
-							<th scope="col" ><input type="checkbox"></th>
+							<th scope="col" ><input type="checkbox" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">출고코드</th>
 							<th scope="col">주문코드</th>
 							<th scope="col">출고상태</th>
 							<th scope="col">출고처리자</th>
 							<th scope="col">사원코드</th>
-							<th scope="col">창고명</th>
+							<th scope="col">출고요청일</th>
+							<th scope="col">출고완료일</th>
+							<th scope="col">출고창고명</th>	
 							<th scope="col">창고코드</th>	
 							<th scope="col">거래처명</th>
 							<th scope="col">거래처 코드</th>
+							<th scope="col">등록일</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="modal-trigger" th:data-modal-url="@{/modals/outbound_modal.html}" data-modal-id="out_modal" id="wh_in_md" style="cursor: pointer;">							
-							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
-							<td >5</td>
-							<td>OUT-004</td>
-							<td>ORD-123 </td>
-							<td>출고대기</td>
-							<td>김미미</td>
-							<td>EMP-111</td>
-							<td>출고 4 창고</td>
-							<td>WH-589</td>
-							<td>주식회사 어쩌라고</td>
-							<td>CO-014</td>
+					
+						<tr th:if="${outbound_total == 0}" >
+                			<td class="text-center no_list_tb" colspan="14" > 등록된 출고건이 없습니다. </td>
+                		</tr>
+						<tr th:if="${outbound_total != 0}" th:each="outlist, idx : ${outbound_all_list}" 
+							onclick="openObDetail(this)" style="cursor: pointer;">							
+							<td onclick="event.stopPropagation();">
+								<input type="checkbox" name="ob_sel" class="ob_sb"
+										th:attr="data-ordcode=${outlist.ORD_CODE}, data-inbcode=${outlist.OUTBOUND_CODE}" 
+										th:disabled="${outlist.OUT_STATUS == '출고완료'}" />
+							</td>
+							<td >[[${bno - idx.index}]]</td>
+							<td class="ob_code">[[${outlist.OUTBOUND_CODE}]]</td>
+							<td class="ord_code" th:data-ord="${outlist.ORD_CODE}">[[${outlist.ORD_CODE}]]</td>
+							<td>[[${outlist.OUT_STATUS}]]</td>
+							<td>출고담당자명</td>
+							<td>[[${outlist.EMPLOYEE_CODE}]]</td>
+							<td>[[${outlist.OUTBOUND_REQ_DATE}]]</td>
+							<td>[[${outlist.OUTBOUND_DATE}]]</td>
+							<td>창고명</td>
+							<td>[[${outlist.WH_CODE}]]</td>
+							<td>거래처명</td>
+							<td>거래처코드</td>
+							<td>[[${outlist.OUT_INSERT_DATE.substring(0,16)}]]</td>
 						</tr>
-						
 					</tbody>
 				</table>
 			</div>
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+			<div class="d-flex">
 				<!-- Pagination -->
-				<div class="mt-4 d-flex justify-content-center"
-					aria-label="Page navigation">
+				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
 					<ul class="pagination">
-						<li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-						<li class="page-item active"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">다음</a></li>
+						<li class="page-item page-link prev"  
+		                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
+		                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.pageno -1 }, data-pea=${pageinfo.post_ea}, data-status=${#strings.arrayJoin(out_statusList, ',')}" 
+		                	onclick="go_out_pg(this)">
+							<i class="bi bi-chevron-double-left"></i> 
+						</li>
+		               
+		                <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
+		                <li class="page-item page-link pgnum" th:classappend ="${pageinfo.pageno == pgn} ? 'curpg' : ''" 
+		                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-pea=${pageinfo.post_ea}, data-status=${#strings.arrayJoin(out_statusList, ',')}"
+		                	onclick="go_out_pg(this)">[[${pgn}]]</li>
+		                </th:block>
+		                
+		                <li class="page-item page-link next" 
+		                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+		                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.pageno +1 } ,data-pea=${pageinfo.post_ea}, data-status=${#strings.arrayJoin(out_statusList, ',')}" 
+		                	onclick="go_out_pg(this)" >
+							<i class="bi bi-chevron-double-right"></i> 
+						</li>
 					</ul>
 				</div>
+				 <!-- 게시물개수 선택  -->
+        <form id="obpg_frm">
+        <input type="hidden" name="pageno" th:value="${pageno}">
+        <input type="hidden" name="keyword" th:value="${keyword}">
+       
+        <div class="mt-4 ms-1">
+        <select class="form-select" name="post_ea" onchange="outPostEa()">
+            <option value="5"   th:selected="${pageinfo.post_ea} == '5'" >5개씩 보기</option>
+            <option value="10"  th:selected="${pageinfo.post_ea} == '10'" >10개씩 보기</option>
+            <option value="15"  th:selected="${pageinfo.post_ea} == '15'" >15개씩 보기</option>
+            <option value="20"  th:selected="${pageinfo.post_ea} == '20'" >20개씩 보기</option>
+            <option value="25"  th:selected="${pageinfo.post_ea} == '25'" >25개씩 보기</option>
+            <option value="30"  th:selected="${pageinfo.post_ea} == '30'" >30개씩 보기</option>
+          </select>
+        </div>
+          </form>
+         </div>
 				<!-- Action Buttons -->
 				<div class="mt-4 d-flex gap-2">
 					<div class="ms-auto">
-						<button type="button" class="btn btn-success">
+						<button type="button" class="btn btn-success" onclick="addOutbound()">
 							<i class="bi bi-plus-lg"></i> 수기등록
 						</button>
-<!-- 						<button class="btn btn-danger"> -->
-<!-- 							<i class="bi bi-trash"></i> 삭제 -->
-<!-- 						</button> -->
 					</div>
 				</div>
 			</div>

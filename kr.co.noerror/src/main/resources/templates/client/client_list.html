@@ -45,7 +45,7 @@
 			</div>
 
 			<!-- Client List Table -->
-			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" th:fragment="clientList(client_total, client_list, mode)">
+			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" th:fragment="clientList(parentType, client_total, client_list, mode)">
 				<table class="table align-middle table-bordered text-center" 
 						style="white-space: nowrap;"
 						th:classappend="${client_total != 0} ? 'table-hover' : ''">
@@ -72,7 +72,9 @@
 
 						<tr th:if="${client_total != 0}"
 							th:each="cltlist, idx : ${client_list}"
-							th:attr="data-idx=${cltlist.CIDX}, data-code=${cltlist.COMPANY_CODE}, data-type='client'"
+							th:attr="data-idx=${cltlist.CIDX}, data-mngcode=${cltlist.MANAGER_CODE},
+									data-mngphn=${cltlist.MNG_PHONE},
+									data-type='client'"
 							th:onclick="openCltDetail(this)" style="cursor: pointer;">
 							<td onclick="event.stopPropagation()">
 								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="sel_clt" class="clt_sb"></td>
@@ -95,38 +97,38 @@
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				<div class="d-flex">
 					<!-- Pagination -->
-					<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="clientPgList(mode2)">
+					<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="clientPgList(parentType, mode2)">
 						<ul class="pagination">
 							<li class="page-item page-link prev"  
-			                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-			                	th:attr="data-keyword=${keyword}, data-pageno=${pageno -1 }, data-type='client', data-pea=${pageinfo.post_ea}" 
+			                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+			                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.pageno -1 }, data-type='client', data-pea=${pageinfo.post_ea}" 
 			                	th:onclick="${mode2 == 'pageing'} ? 'pcl_modal_pg(this)' : 'go_clt_pg(this)'">
 								<i class="bi bi-chevron-double-left"></i> 
 							</li>
 								
 							<li class="page-item page-link " 
 								th:if="${pageinfo.start_pg > 1}"  
-			                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
+			                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
 			                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-type='client', data-pea=${pageinfo.post_ea}"
 			               		th:onclick="go_clt_pg(this)">
 								<i class="bi bi-chevron-left"></i> </li>
 								
 			                
 			                <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
-			                <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
+			                <li class="page-item page-link pgnum" th:classappend ="${pageinfo.pageno == pgn} ? 'curpg' : ''" 
 			                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='client', data-pea=${pageinfo.post_ea}" 
 			                	th:onclick="${mode2 == 'pageing'} ? 'pcl_modal_pg(this)' : 'go_clt_pg(this)'">[[${pgn}]]</li>
 			                </th:block>
 			                
 			                <li class="page-item page-link " 
 			                	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
-			                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+			                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
 			                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 1}, data-type='client', data-pea=${pageinfo.post_ea}" 
 			                	th:onclick="go_clt_pg(this)" >
 								<i class="bi bi-chevron-right"></i> </li>
 								
 			                <li class="page-item page-link next" 
-			                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+			                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
 			                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total}, data-type='client', data-pea=${pageinfo.post_ea}" 
 			                	th:onclick="${mode2 == 'pageing'} ? 'pcl_modal_pg(this)' : 'go_clt_pg(this)'">
 								<i class="bi bi-chevron-double-right"></i> </li>

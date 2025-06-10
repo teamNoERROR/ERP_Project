@@ -1,6 +1,5 @@
-<div class="modal-body row  d-flex align-items-center gap-3 " th:fragment="ordMdList(ord_list, mode)">
+<div class="modal-body row  d-flex align-items-center gap-3 " th:fragment="ordMdList(parentType, ord_list, mode)">
 		 <!-- 검색창 영역 -->
-		 <!-- 
 		  <div class="d-flex justify-content-end mb-2">
 		    <form class="row g-2 align-items-center ">
 		      <div class="col-auto">
@@ -13,13 +12,13 @@
 		      </div>
 		    </form>
 		  </div>
-		  -->
+
 		  
 		  <!-- 테이블 영역 -->
-		<div th:replace="~{/production/order_list.html :: ordModalList( ${ord_list}, 'modal')}" ></div>
+		<div th:replace="~{/production/order_list.html :: ordModalList(${parentType}, ${ord_list}, 'modal')}" ></div>
 		
 		<!-- 페이징 -->
-		<div th:replace="~{/production/order_list.html :: ordPgList('ordPageing')}" ></div>
+		<div th:replace="~{/production/order_list.html :: ordPgList(${parentType}, 'ordPageing')}" ></div>
 
       </div>
 <!--       <div class="modal-footer"> -->

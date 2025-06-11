@@ -167,10 +167,10 @@ function inbndInsertOk(){
 function openInbndDetail(event){
 	
 	var inbnd_code = event.querySelector(".inbnd_code").textContent.trim();
-	var pch_cd = event.querySelector(".pch_code").getAttribute("data-pch");  //pch-00000_1
-	var ori_pcd = pch_cd.substring(0, 9);  //pch-00000
+	var pch_cd =   event.querySelector(".pch_code").textContent.trim();  //pch-00000 
+	var ind_pcd = event.querySelector(".pch_code").getAttribute("data-indpch"); //pch-00000_1
 
-	fetch("./inbnd_detail_modal.do?ori_pcd="+ori_pcd+"&pch_code="+pch_cd+"&inbnd_code="+inbnd_code, {
+	fetch("./inbnd_detail_modal.do?pch_code="+pch_cd+"&inbnd_code="+inbnd_code+"&ind_pcd="+ind_pcd, {
 		method: "GET",
 		
 	}).then(function(data) {
@@ -205,11 +205,11 @@ function inbCngOk(){
 		var status_chg = new Array();
 		inbnd_ckbx.forEach(inchk => {
 			inb_code = inchk.getAttribute("data-inbcode");
-			pch_code = inchk.getAttribute("data-pchcode");
+			indpchcd = inchk.getAttribute("data-indpch");
 			
 			status_chg.push({ 
 				code: inb_code, 
-				code2: pch_code,
+				code2: indpchcd,
 				statusinb : in_status.value
 			})
 		});

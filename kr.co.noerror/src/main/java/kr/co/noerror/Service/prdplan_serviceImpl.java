@@ -46,7 +46,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	
 	@Override
 	public Map<String, Object> prdplan_save(prdplan_req_DTO plandto) {
-		
+		System.out.println("plandto : " + plandto);
 		Map<String, Object> response = new HashMap<>();
 		
         int result1 = 0;

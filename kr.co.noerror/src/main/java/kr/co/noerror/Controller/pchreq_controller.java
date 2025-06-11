@@ -115,17 +115,10 @@ public class pchreq_controller {
 	
 	//발주리스트 모달연계용 서브페이지 
 	@GetMapping("/pchreq_list_sub.do")
-	public String pchreq_list_sub (@ModelAttribute search_condition_DTO search_cond, Model model) {
+	public String pchreq_list_sub (@ModelAttribute search_condition_DTO search_cond, Model model
+								,@RequestParam(value="mode", required = false) String mode) {
 		
-		if (search_cond.getStatuses() != null && !search_cond.getStatuses().isEmpty()) {
-			System.out.println(search_cond.getStatuses().get(0));
-		    List<String> statuses = search_cond.getStatuses().stream()
-		        .filter(s -> s != null && !s.trim().isEmpty())
-		        .collect(Collectors.toList());
-		    search_cond.setStatuses(statuses);
-		}
-		
-	    int search_count = this.pchreq_list_service.search_count(search_cond);
+		int search_count = this.pchreq_list_service.search_count(search_cond);
 	    
 	    paging_info_DTO paging_info = this.m_pg2.calculate(
 	    		search_count, 
@@ -140,7 +133,12 @@ public class pchreq_controller {
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
 	    
-	    return "/production/purchase_list_sub.html";
+//	    return "/production/purchase_list_sub.html";
+	    if ("modal2".equals(mode)) {
+	        return "/modals/purchase_list_body_modal.html :: pchMdList";
+	    } else {
+	        return "/modals/purchase_list_modal.html"; // 일반 뷰 전체
+	    }
 	}
 	
 	/*

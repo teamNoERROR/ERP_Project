@@ -128,9 +128,12 @@ public class inbound_controller {
 	@GetMapping("/inbnd_detail_modal.do")
 	public String inbnd_detail_modal(Model m, @RequestParam("inbnd_code") String inbnd_code
 								, @RequestParam("pch_code") String pch_cd
-								, @RequestParam("ori_pcd") String ori_pcd) {
+								, @RequestParam("ind_pcd") String ind_pcd
+								//, @RequestParam("ori_pcd") String ori_pcd
+								) {
 		
-		List<inbound_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, ori_pcd);
+		List<inbound_DTO> inbound_detail = this.io_svc.inbound_detail(inbnd_code, pch_cd);
+		
 		String ind_pchcd="";
 		int pch_qty_total=0;  //총 주문수량 
 		int inb_qty_total=0;  //총 입고수량 
@@ -145,14 +148,13 @@ public class inbound_controller {
 		    
 		    ind_pchcd += sum.getIND_PCH_CD();
 		}
-		System.out.println(ind_pchcd);
 		
 		m.addAttribute("inbnd_detail", inbound_detail);
 		m.addAttribute("pch_qty_total", pch_qty_total);
 		m.addAttribute("inb_qty_total", inb_qty_total);
 		m.addAttribute("itm_cost_total", itm_cost_total);
 		m.addAttribute("pch_amount_total", pch_amount_total);
-		m.addAttribute("pch_cd", pch_cd);
+		m.addAttribute("ind_pcd", ind_pcd);
 		
 		return "/modals/inbound_detail_modal.html";
 	}
@@ -162,6 +164,7 @@ public class inbound_controller {
 	@PatchMapping("/inbnd_ok.do")
 	public String inbnd_ok( @RequestBody String inbnd_data, HttpServletResponse res) throws IOException {
 		System.out.println(inbnd_data);
+		
 		try {
 			this.pw = res.getWriter();
 			

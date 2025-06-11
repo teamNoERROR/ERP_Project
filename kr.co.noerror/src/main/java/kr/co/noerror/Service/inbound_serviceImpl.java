@@ -57,7 +57,8 @@ public class inbound_serviceImpl implements inbound_service {
 		    
 		    inbound_DTO dto = new inbound_DTO();
 		    
-		    dto.setPCH_CODE(jo.getString("PCH_CODE")+"_"+(w+1));
+		    dto.setPCH_CODE(jo.getString("PCH_CODE"));
+		    dto.setIND_PCH_CD(jo.getString("PCH_CODE")+"_"+(w+1));
 		    dto.setITEM_CODE(jo.getString("ITEM_CODE"));
 		    dto.setITEM_DEL(jo.getString("ITEM_DEL"));
 		    dto.setITEM_QTY(jo.getInt("ITEM_QTY"));
@@ -140,6 +141,9 @@ public class inbound_serviceImpl implements inbound_service {
 		
 		JSONArray ja = new JSONArray(inbnd_data);
 		int data_ea = ja.length();
+		System.out.println("data_ea " + data_ea);
+		
+		
 		int aleady_count = 0;
 		int update_count = 0;
 		int result = 0;
@@ -152,7 +156,7 @@ public class inbound_serviceImpl implements inbound_service {
 		    
 		    inbound_DTO io_dto = new inbound_DTO();
 		    io_dto.setINBOUND_CODE(jo.getString("code"));
-		    io_dto.setPCH_CODE(jo.getString("code2"));
+		    io_dto.setIND_PCH_CD(jo.getString("code2"));
 		    io_dto.setIN_STATUS(jo.getString("statusinb"));
 		    
 		    result = this.io_dao.in_status_ck(io_dto);
@@ -178,6 +182,7 @@ public class inbound_serviceImpl implements inbound_service {
 	    }
 	    result_map.put("aleady_count", 0);
 	    result_map.put("updated", update_count);
+	    System.out.println("update_count : " + update_count);
 	    
 	    return result_map;
 	}

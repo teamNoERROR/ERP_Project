@@ -70,7 +70,7 @@ public class proplan_controller {
 	@PostMapping("/prdplan_save.do")
 	@ResponseBody
     public Map<String, Object> prdplan_save(@RequestBody prdplan_req_DTO plandto) {
-		System.out.println(plandto);
+		System.out.println("plandto2 : " + plandto);
 		return this.prdplan_service.prdplan_save(plandto);
     }
 	
@@ -109,7 +109,6 @@ public class proplan_controller {
 	public String prdplan_detail(@RequestParam(name="code") String plan_code, Model m) {
 		
 		List<prdplan_res_DTO> details = this.pdao.prdplan_detail(plan_code);
-		System.out.println("테스트");
 		System.out.println(details);
 		m.addAttribute("details",details);
 		return "/modals/production_plan_detail_modal.html";

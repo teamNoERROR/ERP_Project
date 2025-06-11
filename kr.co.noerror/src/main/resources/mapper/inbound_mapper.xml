@@ -12,7 +12,7 @@
     VALUES
     (INBOUND_NO.NEXTVAL, #{INBOUND_CODE}, #{PCH_CODE}, 
     #{ITEM_CODE}, #{ITEM_DEL}, #{ITEM_QTY}, #{ITEM_EXP}, 
-    #{WH_CODE}, #{IN_STATUS}, #{INBOUND_DATE}, #{EMPLOYEE_CODE}, #{INB_MEMO}, SYSTIMESTAMP, NULL)
+    #{WH_CODE}, #{IN_STATUS}, #{IND_PCH_CD}, #{INBOUND_DATE}, #{EMPLOYEE_CODE}, #{INB_MEMO}, SYSTIMESTAMP, NULL)
 </insert>
 
 <!-- 입고리스트 전체개수  -->
@@ -103,15 +103,16 @@
 	SELECT * FROM PCH_INB_VIEW WHERE INBOUND_CODE = #{inbnd_code} AND PCH_CODE = #{pch_cd} 	
 </select>
 
-<!-- 입고상태 변경  -->
+
+<!-- 입고상태 변경 기존건 체크  -->
 <select id="in_status_ck" resultType="int" parameterType="kr.co.noerror.DTO.inbound_DTO">
-	SELECT COUNT(*) FROM INBOUND WHERE INBOUND_CODE = #{INBOUND_CODE} AND PCH_CODE = #{PCH_CODE} AND IN_STATUS = '입고완료'
+	SELECT COUNT(*) FROM INBOUND WHERE INBOUND_CODE = #{INBOUND_CODE} AND IND_PCH_CD = #{IND_PCH_CD} AND IN_STATUS = '입고완료'
 </select>
 
 
-
+<!-- 입고상태 변경 -->
 <update id="inbound_ok" parameterType="kr.co.noerror.DTO.inbound_DTO">
-UPDATE INBOUND SET IN_STATUS = #{IN_STATUS} WHERE INBOUND_CODE = #{INBOUND_CODE} AND PCH_CODE = #{PCH_CODE}
+UPDATE INBOUND SET IN_STATUS = #{IN_STATUS} WHERE INBOUND_CODE = #{INBOUND_CODE} AND IND_PCH_CD = #{IND_PCH_CD}
 </update>
 
 </mapper>

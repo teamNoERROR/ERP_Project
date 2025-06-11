@@ -24,8 +24,9 @@ public class mrp_Calulation {
 		Map<String, mrp_result_DTO> aggregated = new HashMap<>();
 		
 		for (mrp_input_DTO input : mrp_inputs) {
+			System.out.println(input.getBom_code());
 			List<bom_DTO> boms = this.mdao.boms_for_mrp(input.getBom_code());
-			
+			System.out.println("테스트"+boms);
 			for (bom_DTO bom : boms) {
 				String item_code = bom.getITEM_CODE();
 				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();

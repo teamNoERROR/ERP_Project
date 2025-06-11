@@ -59,6 +59,9 @@ body {
 	background-color: var(--hover-color);
 }
 
+.bcmenu{
+	top : 0;
+}
 .main {
 	width: 100%;
 	min-height: 88vh;

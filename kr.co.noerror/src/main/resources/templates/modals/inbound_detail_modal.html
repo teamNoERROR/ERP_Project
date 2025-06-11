@@ -39,11 +39,11 @@
 							<td class="info-label">담당자</td>
 							<td class="value-cell">[[${inbnd_detail.get(0).MANAGER_NAME}]]</td>
 							<td class="info-label">연락처</td>
-							<td class="value-cell" colspan="2">[[${inbnd_detail.get(0).MNG_TEL_NUM}]]</td>
+							<td class="value-cell" colspan="2">[[${inbnd_detail.get(0).MNG_TEL}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">주소</td>
-							<td class="value-cell" colspan="5">( [[${inbnd_detail.get(0).COM_ZIPCODE}]] ) [[${inbnd_detail.get(0).COM_ADDR1}]] [[${inbnd_detail.get(0).COM_ADDR2}]]</td>
+							<td class="value-cell" colspan="5">( [[${inbnd_detail.get(0).COM_ZIP}]] ) [[${inbnd_detail.get(0).COM_ADDR1}]] [[${inbnd_detail.get(0).COM_ADDR2}]]</td>
 						</tr>
 					</tbody>
 				</table>
@@ -108,7 +108,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="inbnd, idx : ${inbnd_detail}" th:classappend="${pch_cd == inbnd.IND_PCH_CD} ? 'gray-row' : ''">
+						<tr th:each="inbnd, idx : ${inbnd_detail}" th:classappend="${ind_pcd == inbnd.IND_PCH_CD} ? 'gray-row' : ''">
 							<td><input type="checkbox"></td>
 							<td>[[${idx.count}]]</td>
 							<td>[[${inbnd.ITEM_CODE}]]</td>

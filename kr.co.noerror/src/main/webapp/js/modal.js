@@ -168,8 +168,9 @@ function itm_modal_pg (page){
 /*--------------------------------------------------------------
 	완제품 리스트 모달 오픈 
 ----------------------------------------------------------- */
-function pdListOpen(){
-	fetch("./product_list.do", {
+function pdListOpen(prt){
+	
+	fetch("./product_md_list.do?parent="+prt, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -189,10 +190,12 @@ function pdListOpen(){
 
 //완제품 모달 페이징
 function pd_modal_pg (page){
+	var parent = page.getAttribute('data-parent');
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
 	var params = {  
+			parent: parent, 
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),
 		};

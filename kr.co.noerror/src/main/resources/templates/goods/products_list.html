@@ -61,11 +61,11 @@
 
         <!-- 제품 List Table -->
      	<div id="contents_container">
-        <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" th:fragment="productList(goods_total, goods_all_list, mode)">
+        <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" th:fragment="productList(parentType, goods_total, goods_all_list, mode)">
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
-                        <th scope="col"><input type="checkbox" disabled></th>
+                        <th scope="col"><input th:type="${mode == 'modal3'} ? 'radio' : 'checkbox'" disabled></th>
                         <th scope="col">#</th>
                         <th scope="col">IMG</th>
                         <th scope="col">제품코드</th>
@@ -99,7 +99,7 @@
              					data-price=${(mode == 'modal') ? pdlist.PRODUCT_PRICE : ''}"
                     	th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()">
-                        	<input th:type="${mode == 'modal'} ? radio : checkbox" th:name="${mode == 'modal'} ? 'select' : 'selected_box'" class="sb" 
+                        	<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" th:name="${mode == 'modal'} ? 'select' : 'selected_box'" class="sb" 
                         			th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product">
                         </td>
                         <td > [[${bno - idx.index}]]</td>
@@ -130,7 +130,7 @@
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         <div class="d-flex">
     <!-- Pagination -->
-        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="productPgList(mode2)">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="productPgList(parentType, mode2)">
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"

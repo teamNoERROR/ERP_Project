@@ -1,4 +1,4 @@
-window.onload = function (item_code){
+function item_stock (){
 	fetch("/item_stock.do?item_code=" + item_code, {
 		method: "GET"
 

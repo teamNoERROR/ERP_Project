@@ -34,7 +34,8 @@
 				            <button type="button" 
 				            		th:class="${bom_pd != null} ? 'btn btn-secondary' : 'btn btn-primary'"
 									th:disabled="${bom_pd != null}"
-									th:onclick="pdListOpen()">
+									
+									th:onclick="pdListOpen('bomPdOpen')">
 				                <i class="bi bi-search"></i>
 				            </button>
 	        			</div>

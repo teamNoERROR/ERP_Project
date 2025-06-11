@@ -106,6 +106,10 @@ public class pchreq_controller {
 
 	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
 
+	    model.addAttribute("lmenu","구매영업관리");
+	    model.addAttribute("smenu","발주 관리");
+		model.addAttribute("mmenu","발주 리스트");
+		
 	    model.addAttribute("pch_list", pch_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
@@ -192,7 +196,7 @@ public class pchreq_controller {
 	
 	@GetMapping("/pchreq_detail.do")
 	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m) {
-		
+		System.out.println("pch_code : " + pch_code);
 		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
 		System.out.println(details);
 		m.addAttribute("details",details);

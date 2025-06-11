@@ -25,9 +25,11 @@ import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
+import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Model.M_unique_code_generator;
 import kr.co.noerror.Service.generic_list_service;
+import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.ordreq_service;
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +55,12 @@ public class ordreq_controller {
 	
 	@Autowired
 	M_paging2 m_pg2;
+	
+	@Resource(name="M_paging")  //페이징생성 모델 
+	M_paging m_pg;
+	
+	@Autowired
+	private goods_service g_svc;  //품목 서비스
 		
 	@PostMapping("/order_save.do")
 	@ResponseBody
@@ -121,11 +129,31 @@ public class ordreq_controller {
 		return ordreq_products;
 	}
 	
+	//제품 리스트 모달 띄우기(orderPage)
 	@GetMapping("/products_modal.do")
-	public String products_modal(Model m) {
-		List<products_DTO> products = this.odao.products_list();
+	public String products_modal(Model m
+								,@RequestParam(value="mode", required = false) String mode
+								,@RequestParam(value = "keyword", required = false) String keyword
+								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+								) {
+		
+		List<products_DTO> products = this.g_svc.gd_all_list_sch("product", null, keyword, pageno, post_ea);  //제품 리스트
+		System.out.println("products : " + products.size() );
+		
+		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, products.size());
+		int bno = this.m_pg.serial_no(products.size(), pageno, post_ea); 
+		
 		m.addAttribute("products",products);
-		return  "/modals/temp_products_list_modal.html";
+		m.addAttribute("pageinfo", pageinfo);
+		m.addAttribute("bno", bno);
+		m.addAttribute("keyword",keyword);
+		
+		if ("modal2".equals(mode)) {
+	        return "/modals/product_list_body_modal2.html :: pdMdList2";
+	    } else {
+	    	return  "/modals/product_list_modal2.html";
+	    }
 	}
 	
 	@GetMapping("/clients_modal.do")

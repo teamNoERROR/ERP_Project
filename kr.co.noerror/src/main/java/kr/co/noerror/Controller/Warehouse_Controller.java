@@ -49,6 +49,7 @@ public class Warehouse_Controller {
 	public String insert_warehouse(Model m, WareHouse_DTO wareInsertDTO) {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","창고 등록");		
 		m.addAttribute("wareInsertDTO", wareInsertDTO);
 
 		return "/warehouse/warehouse_insert.html";
@@ -147,6 +148,7 @@ public class Warehouse_Controller {
 		
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","창고 정보 수정");
 		
 		List<WareHouse_DTO>wh_modify_result = ws_service.wh_SelectWithWhCode(wh_code);
 		m.addAttribute("wh_modify" , wh_modify_result);
@@ -191,8 +193,8 @@ public class Warehouse_Controller {
 		this.map = new HashMap<>();
 		Map<Object, Object>	wh_list_map = this.map;
 		
-		
 		wh_list_map = ws_service.warehouse_list(page, wh_search, pageSize);
+		System.out.println(wh_list_map);
 		
 		m.addAttribute("wh_list", wh_list_map.get("wh_list")); // 리스트
 	    m.addAttribute("search_check", wh_list_map.get("search_check")); // 검색 여부
@@ -200,7 +202,7 @@ public class Warehouse_Controller {
 	    m.addAttribute("currentPage", wh_list_map.get("currentPage"));
 	    m.addAttribute("totalCount", wh_list_map.get("totalCount"));
 	    m.addAttribute("totalPages", wh_list_map.get("totalPages"));
-	    m.addAttribute("pageSize", wh_list_map.get("pageSize"));
+	    m.addAttribute("pageSize", wh_list_map.get("pageSize"));  //한번에 보이는 게시글 수 
 	    m.addAttribute("wh_search", wh_list_map.get("wh_search")); // 검색어 유지
 	    m.addAttribute("startPage", wh_list_map.get("startPage")); // 검색어 유지
 	    m.addAttribute("endPage", wh_list_map.get("endPage")); // 검색어 유지

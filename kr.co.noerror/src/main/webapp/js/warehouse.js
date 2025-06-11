@@ -411,7 +411,7 @@ function wh_save() {
   }
 
   // 이미지
-  const imageInput = form.querySelector('#productImage');
+  const imageInput = form.querySelector('#whImage');
   const image = imageInput.files[0];
 
   if (!image) {

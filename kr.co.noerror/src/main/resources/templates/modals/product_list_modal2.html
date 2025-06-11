@@ -1,0 +1,25 @@
+<div class="modal fade" id="products_modal_for_order" tabindex="-1" aria-labelledby="products_modal_label">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="staticBackdropLabel">품목 리스트</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			
+			<!-- 테이블 영역 -->
+			<div th:replace="~{/modals/product_list_body_modal2.html :: pdMdList2(${parentType}, ${pd_total}, ${pd_list}, 'modal2')}"></div>
+			
+			
+			<div class="modal-footer">
+       <!-- Action Buttons -->
+        <div class="d-flex gap-2"> 
+            <div class="ms-auto">
+                <button type="button" class="btn btn-success selectBtn" onclick="product_select_for_order()"><i class="bi bi-pencil-square"></i> 선택</button>
+            </div>
+        </div>
+
+      </div>
+		</div>
+	</div>
+</div>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.noerror.Mapper.inout_mapper">
+<mapper namespace="kr.co.noerror.Mapper.inbound_mapper">
 <!-- 고유코드 중복확인 -->
 <select id="code_dupl_inb" resultType="int" parameterType="String">
 	SELECT COUNT(*) AS CNT FROM INBOUND WHERE INBOUND_CODE = #{inb_code}
 </select>
 
 <!-- 자재입고등록 -->
-<insert id="insert_inbnd" parameterType="kr.co.noerror.DTO.inout_DTO">
+<insert id="insert_inbnd" parameterType="kr.co.noerror.DTO.inbound_DTO">
     INSERT INTO INBOUND
     VALUES
     (INBOUND_NO.NEXTVAL, #{INBOUND_CODE}, #{PCH_CODE}, 
     #{ITEM_CODE}, #{ITEM_DEL}, #{ITEM_QTY}, #{ITEM_EXP}, 
-    #{WH_CODE}, #{IN_STATUS}, #{INBOUND_DATE}, #{EMPLOYEE_CODE}, #{INB_MEMO}, SYSTIMESTAMP, NULL)
+    #{WH_CODE}, #{IN_STATUS}, #{IND_PCH_CD}, #{INBOUND_DATE}, #{EMPLOYEE_CODE}, #{INB_MEMO}, SYSTIMESTAMP, NULL)
 </insert>
 
 <!-- 입고리스트 전체개수  -->
@@ -48,7 +48,7 @@
 
 
 <!-- 입고 전체 리스트 -->
-<select id="inbound_all_list" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
+<select id="inbound_all_list" resultType="kr.co.noerror.DTO.inbound_DTO" parameterType="Map">
 	SELECT * FROM PCH_INB_VIEW
 	 WHERE 1=1
 
@@ -99,19 +99,20 @@
 <!-- </select> -->
 
 <!-- 입고 상세보기 모달  -->
-<select id="inbound_detail" resultType="kr.co.noerror.DTO.inout_DTO" parameterType="Map">
+<select id="inbound_detail" resultType="kr.co.noerror.DTO.inbound_DTO" parameterType="Map">
 	SELECT * FROM PCH_INB_VIEW WHERE INBOUND_CODE = #{inbnd_code} AND PCH_CODE = #{pch_cd} 	
 </select>
 
-<!-- 입고상태 확인  -->
-<select id="in_status_ck" resultType="int" parameterType="kr.co.noerror.DTO.inout_DTO">
-	SELECT COUNT(*) FROM INBOUND WHERE INBOUND_CODE = #{INBOUND_CODE} AND PCH_CODE = #{PCH_CODE} AND IN_STATUS = '입고완료'
+
+<!-- 입고상태 변경 기존건 체크  -->
+<select id="in_status_ck" resultType="int" parameterType="kr.co.noerror.DTO.inbound_DTO">
+	SELECT COUNT(*) FROM INBOUND WHERE INBOUND_CODE = #{INBOUND_CODE} AND IND_PCH_CD = #{IND_PCH_CD} AND IN_STATUS = '입고완료'
 </select>
 
 
-
-<update id="inbound_ok" parameterType="kr.co.noerror.DTO.inout_DTO">
-UPDATE INBOUND SET IN_STATUS = #{IN_STATUS} WHERE INBOUND_CODE = #{INBOUND_CODE} AND PCH_CODE = #{PCH_CODE}
+<!-- 입고상태 변경 -->
+<update id="inbound_ok" parameterType="kr.co.noerror.DTO.inbound_DTO">
+UPDATE INBOUND SET IN_STATUS = #{IN_STATUS} WHERE INBOUND_CODE = #{INBOUND_CODE} AND IND_PCH_CD = #{IND_PCH_CD}
 </update>
 
 </mapper>

@@ -28,8 +28,8 @@
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
 					    <input type="text" class="form-control" name="search_word"
-							placeholder="검색">
-						<button class="btn btn-primary" type="submit">
+							placeholder="전체 검색">
+						<button class="btn btn-primary">
 							<i class="bi bi-search"></i>
 						</button>
 					</div>
@@ -37,11 +37,11 @@
 			</form>
 
 			<!-- Client List Table -->
-			<div class="table-responsive  rounded">
-				<table class="table table-hover align-middle table-bordered" th:fragment="tables">
-					<thead class="table-ligh text-center">
+			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${prd_plans.size() != 0} ? 'table-hover' : ''" th:fragment="tables">
+					<thead class="table-ligh ">
 						<tr>
-							<th scope="col"><input type="checkbox"></th>
+							<th scope="col"><input type="checkbox" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">생산계획코드</th> 
 							<th scope="col">주문코드</th> 
@@ -56,6 +56,9 @@
 						</tr>
 					</thead>					
 					<tbody>
+						<tr th:if="${prd_plans.size() == 0}" >
+                			<td class="text-center no_list_tb" colspan="11" > 등록된 생산계획이 없습니다. </td>
+                		</tr>
 						<tr th:each="p : ${prd_plans}" class="modal-trigger"
 								th:data-modal-url="@{/prdplan_detail.do(code=${p.plan_code})}"
 								data-modal-id="prdplan_modal" style="cursor: pointer;">
@@ -109,8 +112,8 @@
 				        </li>
 				    </ul>
 					<!-- 페이지당 항목 수 선택 -->
-				    <div class="ms-3">
-				        <select class="form-select form-select-sm"
+				    <div class="ms-1">
+				        <select class="form-select"
 				                name="post_ea"
 				                style="width: auto;"
 				                th:attr="onchange=${mode == 'modal'} ? 'pchListOpen3(this)' : 'location.href=\'/production.do?page_size=\' + this.value'">

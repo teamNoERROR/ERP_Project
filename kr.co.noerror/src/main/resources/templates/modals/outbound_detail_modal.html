@@ -1,4 +1,4 @@
-<div class="modal fade"  id="out_modal"  tabindex="-1" aria-labelledby="out_modal_label" aria-hidden="true">
+<div class="modal fade"  id="out_detail_modal"  tabindex="-1" aria-labelledby="out_detail_modal_label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,7 +9,7 @@
        
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
-				<h2 class="mb-1">출고번호 : OUT-10101 </h2>
+				<h2 class="mb-1">출고번호 : [[${outbound_detail.get(0).OUTBOUND_CODE}]] </h2>
 				<button type="button" class="btn btn-success">
 					<i class="bi bi-pencil-square"></i> 출고완료처리  	<!--  출고완료상태에서는 disabled 처리 -->
 				</button> 
@@ -24,23 +24,23 @@
 					<tbody>
 						<tr>
 							<td class="info-label">회사명</td>
-							<td class="value-cell" colspan="4">(주) 딸기주스</td>
+							<td class="value-cell" colspan="4">[[${outbound_detail.get(0).COMPANY_NAME}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">사업자번호</td>
-							<td class="value-cell">102-52-98758</td>
+							<td class="value-cell">[[${outbound_detail.get(0).BIZ_NUM}]]</td>
 							<td class="info-label">대표자</td>
-							<td class="value-cell" colspan="2">김길동</td>
+							<td class="value-cell" colspan="2">[[${outbound_detail.get(0).CEO_NAME}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">담당자</td>
-							<td class="value-cell">최누구</td>
+							<td class="value-cell">[[${outbound_detail.get(0).MANAGER_NAME}]]</td>
 							<td class="info-label">연락처</td>
-							<td class="value-cell" colspan="2">010-6333-5555</td>
+							<td class="value-cell" colspan="2">[[${outbound_detail.get(0).MNG_TEL}]]</td>
 						</tr>
 						<tr>
 							<td class="info-label">주소</td>
-							<td class="value-cell" colspan="5">서울시 관악구</td>
+							<td class="value-cell" colspan="5">( [[${outbound_detail.get(0).COM_ZIP}]] ) [[${outbound_detail.get(0).COM_ADDR1}]] [[${outbound_detail.get(0).COM_ADDR2}]]</td>
 						</tr>
 					</tbody>
 				</table>
@@ -52,31 +52,31 @@
 				<table class="table align-middle table-bordered">
 					<tr>
 						<td class="info-label">주문번호</td>
-						<td class="value-cell">ORD-12345</td>
+						<td class="value-cell">[[${outbound_detail.get(0).ORD_CODE}]]</td>
 						<td class="info-label">주문상태</td>
-						<td class="value-cell">생산완료</td>
+						<td class="value-cell">[[${outbound_detail.get(0).ORDER_STATUS}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">주문일자</td>
-						<td class="value-cell">2025-05-18</td>
+						<td class="value-cell">[[${outbound_detail.get(0).REQUEST_DATE.substring(0,10)}]]</td>
 						<td class="info-label">납기요청일</td>
-						<td class="value-cell">2025-06-18</td>
+						<td class="value-cell">[[${outbound_detail.get(0).DUE_DATE.substring(0,10)}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">결제 금액</td>
-						<td class="value-cell">2,350,000 원</td>
+						<td class="value-cell">[[${outbound_detail.get(0).PAY_AMOUNT}]] 원</td>
 						<td class="info-label">결제 수단</td>
-						<td class="value-cell">외상ㅋ</td>
+						<td class="value-cell">[[${outbound_detail.get(0).PAY_METHOD}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">출고처리자</td>
-						<td class="value-cell">김빠빠</td>
+						<td class="value-cell">[[${outbound_detail.get(0).ENAME}]]</td>
 						<td class="info-label">담당자 코드</td>
-						<td class="value-cell">뜨</td>
+						<td class="value-cell">[[${outbound_detail.get(0).EMPLOYEE_CODE}]]</td>
 					</tr>
 					<tr>
 						<td class="info-label">비고</td>
-						<td class="value-cell" colspan="3"></td>
+						<td class="value-cell" colspan="3">[[${outbound_detail.get(0).OUT_MEMO}]]</td>
 <!-- 						<td class="info-label"></td> -->
 <!-- 						<td class="value-cell"></td> -->
 					</tr>
@@ -86,73 +86,42 @@
 			<!-- 주문항목 List Table -->
 			<div class="table-responsive  rounded">
 				<h5 class="">출고 제품 내역</h5>
-				<table class="table table-hover align-middle table-bordered">
-					<thead class="table-light text-center">
-						<tr>
-							<th scope="col"><input type="checkbox"></th>
+				<table class="table table-hover align-middle table-bordered text-center">
+					<thead class="table-light ">
+						<tr >
+							<th scope="col"><input type="checkbox" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">제품코드</th>
 							<th scope="col">제품명</th>
 							<th scope="col">규격</th>
-							<th scope="col">단위</th>
 							<th scope="col">주문수량</th>
+							<th scope="col">단위</th>
+							<th scope="col">출고수량</th>
 							<th scope="col">제품단가(원)</th>
 							<th scope="col">판매금액(원)</th>
 							<th scope="col">대분류</th>
 							<th scope="col">소분류</th>
-							<th scope="col">비고</th>
-							<th scope="col">주문상태</th>
+							<th scope="col">출고상태</th>
 							
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>3</td>
-							<td>2589-0001</td>
-							<td>오렌지</td>
-							<td>100g</td>
-							<td>ea</td>
-							<td>500</td>
-							<td>3,000</td>
-							<td>1,500,000</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td>비고 없음</td>
-							<td>발주요청</td>
+						<tr th:each="outbnd, idx : ${outbound_detail}" >
+							<td><input type="checkbox" disabled></td>
+							<td>[[${idx.count}]]</td>
+							<td>[[${outbnd.PRODUCT_CODE}]]</td>
+							<td>[[${outbnd.PRODUCT_NAME}]]</td>
+							<td>[[${outbnd.PRODUCT_SPEC}]]</td>
+							<td>[[${outbnd.ORD_QTY}]]</td>
+							<td>[[${outbnd.PRODUCT_UNIT}]]</td>
+							<td>[[${outbnd.PRODUCT_QTY}]]</td>
+							<td class="text-end">[[${#numbers.formatInteger(outbnd.PRODUCT_COST,0,'COMMA')}]]</td>
+							<td>-</td>
+							<td>[[${outbnd.PRODUCT_CLASS1}]]</td>
+							<td>[[${outbnd.PRODUCT_CLASS2}]]</td>
+							<td>[[${outbnd.IND_OUT_STATUS}]]</td>
 							
 						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>2</td>
-							<td>2580-0001</td>
-							<td>사과</td>
-							<td>100g</td>
-							<td>ea</td>
-							<td>100</td>
-							<td>1,500</td>
-							<td>150,000</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td>비고 없음</td>
-							<td>발주요청</td>
-						</tr>
-						<tr>
-							<td><input type="checkbox"></td>
-							<td>1</td>
-							<td>2581-0001</td>
-							<td>키위</td>
-							<td>50g</td>
-							<td>ea</td>
-							<td>700</td>
-							<td>1,000</td>
-							<td>700,000</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td>비고 없음</td>
-							<td>발주요청</td>
-						</tr>
-
 					</tbody>
 					<tfoot>
 						<tr>
@@ -181,8 +150,8 @@
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button"  class="btn btn-success"><i class="bi bi-pencil-square"></i> 수정</button>
-                <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button>
+<!--                 <button type="button"  class="btn btn-success"><i class="bi bi-pencil-square"></i> 수정</button> -->
+<!--                 <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button> -->
             </div>
         </div>
 

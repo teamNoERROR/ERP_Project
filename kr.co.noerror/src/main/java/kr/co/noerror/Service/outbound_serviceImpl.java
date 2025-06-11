@@ -1,0 +1,137 @@
+package kr.co.noerror.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import jakarta.annotation.Resource;
+import kr.co.noerror.DAO.outbound_DAO;
+import kr.co.noerror.DTO.inbound_DTO;
+import kr.co.noerror.DTO.outbound_DTO;
+import kr.co.noerror.Mapper.outbound_mapper;
+import kr.co.noerror.Model.M_paging;
+import kr.co.noerror.Model.M_unique_code_generator;
+
+@Service
+public class outbound_serviceImpl implements outbound_service{
+	
+	@Autowired
+	outbound_mapper out_mapper;
+	
+	@Resource(name="outbound_DAO")
+	outbound_DAO out_dao;
+	
+	@Resource(name="M_unique_code_generator")
+	M_unique_code_generator makeCode;  //고유코드 생성모델
+	
+	@Resource(name="M_paging")  //페이징생성 모델 
+	M_paging m_pg;
+	
+	List<String> list = null; 
+	Map<String, String> map = null;
+
+	//출고리스트 
+	@Override
+	public List<outbound_DTO> outbound_all_list(String keyword, Integer pageno, int post_ea, String[] out_status_lst) {
+		int start = (pageno - 1) * post_ea;
+		int count = post_ea; 
+		
+		List<String> out_statusList = (out_status_lst == null) ? Collections.emptyList() : Arrays.asList(out_status_lst);
+		Map<String, Object> mapp = new HashMap<>();
+		mapp.put("keyword", keyword);
+		mapp.put("start", start);
+		mapp.put("count", count);
+		mapp.put("OUT_STATUS", out_statusList);
+		
+		List<outbound_DTO> outbound_all_list = this.out_dao.outbound_all_list(mapp);  
+		return outbound_all_list;
+		
+	}
+
+	//출고 등록 
+	@Override
+	public int outbnd_insert(String out_pds) {
+		int f_result=0;
+		System.out.println(out_pds);
+		 //고유코드생성
+        String out_code = this.makeCode.generate("OUT-", code -> this.out_dao.code_dupl_out(code) > 0);
+        
+        JSONArray ja = new JSONArray(out_pds);
+        JSONObject jo = ja.getJSONObject(0);
+		int pd_ea = ja.length();
+		System.out.println("pd_ea : "+ pd_ea);
+		outbound_DTO out_dto = new outbound_DTO();
+		
+		//OUTBOUND 테이블에 저장
+		out_dto.setOUTBOUND_CODE(out_code);
+		out_dto.setORD_CODE(jo.getString("ORD_CODE"));
+		out_dto.setWH_CODE(jo.getString("WH_CODE"));
+		out_dto.setOUT_STATUS(jo.getString("OUT_STATUS"));
+		out_dto.setOUTBOUND_DATE(jo.getString("OUTBOUND_DATE"));
+		out_dto.setEMPLOYEE_CODE(jo.getString("EMPLOYEE_CODE"));
+		out_dto.setOUT_MEMO(jo.getString("OUT_MEMO"));
+		
+		int result = this.out_dao.outbnd_insert(out_dto);
+		
+		List<outbound_DTO> out_pd_list = new ArrayList<>();
+		int result2 = 0;
+		
+		//OUTBOUND_DETAIL 테이블에 저장 
+		for (int w = 1; w < pd_ea; w++) {
+			JSONObject jo2 = ja.getJSONObject(w);
+			 outbound_DTO out_detail = new outbound_DTO();
+			 
+			 out_detail.setOUTBOUND_CODE(out_dto.getOUTBOUND_CODE());
+			 out_detail.setORD_CODE(out_dto.getORD_CODE());
+			 out_detail.setPRODUCT_CODE(jo2.getString("PRODUCT_CODE"));
+			 out_detail.setPRODUCT_QTY(jo2.getInt("PRODUCT_QTY"));
+			 out_detail.setIND_OUT_STATUS(jo2.getString("IND_OUT_STATUS")); 
+
+			 out_pd_list.add(out_detail);
+		}
+		
+		for (outbound_DTO detail_dto : out_pd_list) {
+			result2 += this.out_dao.outbnd_dtl_insert(detail_dto);
+		}
+		if(result == 1 && result2 == pd_ea-1) {
+			f_result = result;
+		}
+		
+		return f_result;
+	}
+
+	//출고 상세보기 
+	@Override
+	public List<outbound_DTO> outbound_detail(String ob_code, String ord_code) {
+		this.map = new HashMap<>();
+		this.map.put("outbnd_code", ob_code);
+		this.map.put("ord_cd", ord_code);
+		
+		List<outbound_DTO> outbound_detail = this.out_dao.outbound_detail(this.map);
+		
+		
+//		String ind_pchcd="";
+//		int pch_qty_total=0;  //총 주문수량 
+//		int inb_qty_total=0;  //총 입고수량 
+//		int itm_cost_total=0;  //총 제품 단가
+//		int pch_amount_total=0;  //총 구매금액
+//		
+//		for(outbound_DTO sum : outbound_detail) {
+//			pch_qty_total += sum.getP_QTY();        // P_QTY 누적
+//		    inb_qty_total += sum.getITEM_QTY();     // ITEM_QTY 누적
+//		    itm_cost_total += sum.getITEM_COST();   // ITEM_COST 누적 (단가 총합이 맞는지 확인 필요)
+//		    pch_amount_total += sum.getPAY_AMOUNT(); // PAY_AMOUNT 누적
+//		    
+//		    ind_pchcd += sum.getIND_PCH_CD();
+//		}
+		return outbound_detail;
+	}
+}

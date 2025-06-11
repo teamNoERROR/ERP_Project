@@ -31,7 +31,7 @@ public class pchreq_res_DTO {
     private String com_addr2 = "-";
     private String manager_code = "-";     // 거래처 담당자 고유코드
     private String manager_name = "-";     // 거래처 담당자 이름
-    private String mng_phone_num = "-";
+    private String mng_phone = "-";
     
     // 제품 발주 정보
     private String item_code;        // 자재코드

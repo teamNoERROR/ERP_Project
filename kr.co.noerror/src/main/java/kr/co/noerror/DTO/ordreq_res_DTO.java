@@ -34,7 +34,7 @@ public class ordreq_res_DTO {
     private String com_addr2 = "저장정보 없음";
     private String manager_code = "저장정보 없음";     // 거래처 담당자 고유코드
     private String manager_name = "저장정보 없음";     // 거래처 담당자 이름
-    private String mng_phone_num = "저장정보 없음";
+    private String mng_phone = "저장정보 없음";
     
     // 제품 주문 정보
     private String product_code;        // 제품코드
@@ -46,6 +46,7 @@ public class ordreq_res_DTO {
     private Long product_cost;       // 제품단가
     private String product_class1;      // 대분류
     private String product_class2;      // 소분류
+    private int product_price;		//판매가
     
     //BOM code
     private String bom_code = "-";

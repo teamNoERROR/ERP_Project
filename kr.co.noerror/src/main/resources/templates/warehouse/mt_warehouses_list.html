@@ -53,7 +53,7 @@
 			    <input type="hidden" id="in_status" class="form-control" />
 			    <input type="hidden" id="item_count" class="form-control" />
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
-			            style="white-space: nowrap; min-width: 70px;">
+			            style="white-space: nowrap; min-width: 70px;" onclick="whMove()">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
 			    </button>
 			  </form>
@@ -155,11 +155,11 @@
 					
 					
 					<!-- 이전 블록 이동 버튼 -->
-				<li class="page-item"  th:if="${startPage > 1}"  th:classappend="${currentPage > 1} ? '' : 'disabled'">
-                	<a class="page-link" th:href="@{/warehouses_mt_list.do(page=${startPage - 2}, wh_search=${wh_search}, pageSize=${pageSize})}">
-			        <i class="bi bi-chevron-left"></i>
-			        </a>
-				</li>
+<!-- 				<li class="page-item"  th:if="${startPage > 1}"  th:classappend="${currentPage > 1} ? '' : 'disabled'"> -->
+<!--                 	<a class="page-link" th:href="@{/warehouses_mt_list.do(page=${startPage - 2}, wh_search=${wh_search}, pageSize=${pageSize})}"> -->
+<!-- 			        <i class="bi bi-chevron-left"></i> -->
+<!-- 			        </a> -->
+<!-- 				</li> -->
 				
 				
 					    <!-- 페이지 번호 -->
@@ -173,11 +173,11 @@
 					
 					
 					<!-- 다음 블록 이동 버튼 -->
-			     <li class="page-item  "  th:if="${endPage < totalPages}" th:classappend="${endPage < totalPages} ? '' : 'disabled'">
-					<a class="page-link" th:href="@{/warehouses_mt_list.do(page=${endPage + 2}, wh_search=${wh_search}, pageSize=${pageSize})}">
-					<i class="bi bi-chevron-right"></i> 
-					</a>
-				</li>
+<!-- 			     <li class="page-item  "  th:if="${endPage < totalPages}" th:classappend="${endPage < totalPages} ? '' : 'disabled'"> -->
+<!-- 					<a class="page-link" th:href="@{/warehouses_mt_list.do(page=${endPage + 2}, wh_search=${wh_search}, pageSize=${pageSize})}"> -->
+<!-- 					<i class="bi bi-chevron-right"></i>  -->
+<!-- 					</a> -->
+<!-- 				</li> -->
 				
 				
 					       <!-- 끝페이지로 -->

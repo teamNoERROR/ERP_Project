@@ -91,7 +91,7 @@ function submitOrderPlan() {
         const product_code = row.querySelector('.product_code').innerText.trim();
         const bom_code = row.querySelector('.bom_code').innerText.trim();
         const product_qty = parseInt(row.querySelector('.plan_qty').value);
-
+		console.log("sss"+product_code);
         if (isNaN(product_qty) || product_qty <= 0) {
             invalidQty = true;
         }
@@ -119,7 +119,7 @@ function submitOrderPlan() {
         ecode,
         ename,
         memo,
-        plan_products: details
+        products: details
     };
 
     // 서버 전송

@@ -52,7 +52,7 @@
 			    		<input type="hidden" name="status_lst" th:value="${status}" />
 					</th:block>
 						<div class="input-group input-group-sm" style="width:250px;">
-							<input type="text" class="form-control" name="keyword" th:value="${keyword != null ? keyword : ''}" placeholder="검색">
+							<input type="text" class="form-control" name="keyword" th:value="${keyword != null ? keyword : ''}" placeholder="전체 검색">
 							<button class="btn btn-primary" >
 								<i class="bi bi-search"></i>
 							</button>
@@ -67,8 +67,8 @@
 		
 			<!-- 입고 List Table-->
 			<div class="table-responsive  rounded" th:fragment="inbndList(inbound_total, inbound_all_list, mode)">
-				<table class="table align-middle table-bordered " style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
-					<thead class="table-light text-center">
+				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
+					<thead class="table-light">
 						<tr>
 							<th scope="col" ><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
 							<th scope="col">#</th>
@@ -100,26 +100,26 @@
 							  onclick="openInbndDetail(this)" style="cursor: pointer;">							
 							<td onclick="event.stopPropagation();">
 								<input type="checkbox" name="inb_sel" class="inb_sb"
-										th:attr="data-pchcode=${inlist.IND_PCH_CD}, data-inbcode=${inlist.INBOUND_CODE}" 
+										th:attr="data-pchcode=${inlist.IND_PCH_CD}, data-inbcode=${inlist.INBOUND_CODE}, data-indpch=${inlist.IND_PCH_CD}" 
 										th:disabled="${inlist.IN_STATUS == '입고완료' or inlist.IN_STATUS == '입고취소'}" />
 							</td>
 							<td >[[${bno - idx.index}]]</td>
 							<td class="inbnd_code">[[${inlist.INBOUND_CODE}]]</td>
-							<td class="pch_code" th:data-pch="${inlist.IND_PCH_CD}">[[${inlist.IND_PCH_CD.substring(0,9)}]]</td>
-							<td>제품명</td>
+							<td class="pch_code" th:data-indpch="${inlist.IND_PCH_CD}">[[${inlist.PCH_CODE}]]</td>
+							<td>[[${inlist.ITEM_NAME}]]</td>
 							<td>[[${inlist.ITEM_CODE}]]</td>
-							<td>규격</td>
+							<td>[[${inlist.ITEM_SPEC}]]</td>
 							<td>[[${inlist.ITEM_QTY}]]</td>
-							<td>단위</td>
+							<td>[[${inlist.ITEM_UNIT}]]</td>
 							<td>[[${inlist.ITEM_EXP}]]</td>
 							<td>[[${inlist.IN_STATUS}]]</td>
 							<td>입고처리자</td>
 							<td>[[${inlist.EMPLOYEE_CODE}]]</td>
 							<td>[[${inlist.INBOUND_DATE}]]</td>
-							<td>창고명</td>
+							<td>[[${inlist.WH_NAME}]]</td>
 							<td>[[${inlist.WH_CODE}]]</td>
-							<td>발주처명</td>
-							<td>발주처코드</td>
+							<td>[[${inlist.COMPANY_NAME}]]</td>
+							<td>[[${inlist.COMPANY_CODE}]]</td>
 							<td>[[${inlist.INB_INSERT_DATE.substring(0,16)}]]</td>
 						</tr>
 						

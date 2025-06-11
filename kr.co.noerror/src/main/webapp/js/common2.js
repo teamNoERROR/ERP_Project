@@ -264,25 +264,7 @@ function inbnd_modal_pg (page){
 }
 
 
-//발주건 리스트 모달 오픈
-function pchListOpen(){
-	fetch("./pch_list.do", {
-		method: "GET",
 
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("purchase_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
 
 //페이징에서 리스트 모달 오픈
 function pchListOpen2(el) {
@@ -339,36 +321,7 @@ function pchListOpen3(selectEl) {
 		});
 }
 
-//발주리스트 모달 페이징
-function pch_modal_pg (page){
-	var search_word = page.getAttribute('data-keyword');
-	var pageno = page.getAttribute('data-pageno');
-	
-	var params = {  
-		    pageno: pageno,
-		    page_ea: page.getAttribute('data-pea'),
-		};
-		
-		if (search_word) {  //키워드가 있으면
-		    params["search_word"] = search_word;
-		}
-		var pString = new URLSearchParams(params).toString();
-		
-		
-	fetch("./pch_list.do?"+pString+"&mode=modal2", {
-		method: "GET",
 
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.querySelector('#purchase_list .modal-body').innerHTML = result;
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
 
 /*
 //발주내역 상세보기  

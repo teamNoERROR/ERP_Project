@@ -23,7 +23,7 @@ public class prdplan_res_DTO {
     private String ceo_name;            
     private String biz_num;            
     private String manager_name;            
-    private String mng_phone_num;            
+    private String mng_phone;            
     private String com_addr1;            
     private String com_addr2;            
     private String ecode;           

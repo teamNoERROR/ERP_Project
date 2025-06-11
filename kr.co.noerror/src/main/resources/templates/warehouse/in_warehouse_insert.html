@@ -20,26 +20,31 @@
       <!-- 창고 선택 -->
 <div class="mb-4">
   <label class="form-label d-block mb-2">창고 선택</label>
-  <button class="btn btn-primary modal-trigger"
-        type="button"
-        th:data-modal-url="@{/wh_type_list.do(wh_type='in_wh')}"
-        data-modal-id="wh_type_list"
+<!--   <button class="btn btn-primary modal-trigger" -->
+<!--         type="button" -->
+<!--         th:data-modal-url="@{/wh_type_list.do(wh_type='in_wh')}" -->
+<!--         data-modal-id="wh_type_list" -->
+<!--         style="cursor: pointer;"> -->
+<!--     <i class="bi bi-search">입고 창고 선택</i> -->
+<!-- </button> -->
+<button class="btn btn-primary " type="button"
+       onclick="whSelect('in_wh','wh_name','wh_code')" 
         style="cursor: pointer;">
     <i class="bi bi-search">입고 창고 선택</i>
 </button>
   <div class="row gx-3">
     <div class="col-md-4 mb-3">
       <label class="form-label">창고코드</label>
-      <input type="hidden" class="form-control" th:field="*{wh_type}">
-      <input type="text" class="form-control"  th:field="*{wh_code}">
+      <input type="hidden" id="wh_type" class="form-control" th:field="*{wh_type}">
+      <input type="text" id="wh_code" class="form-control" th:field="*{wh_code}" readonly>
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label">창고명</label>
-      <input type="text" class="form-control"  th:field="*{wh_name}">
+      <input type="text" id="wh_name" class="form-control" th:field="*{wh_name}" readonly>
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label">창고위치</label>
-      <input type="text" class="form-control"  th:field="*{wh_location}">
+      <input type="text" id="wh_location" class="form-control" th:field="*{wh_location}" readonly>
     </div>
   </div>
 </div>

@@ -186,6 +186,7 @@ public class Warehouse_Controller {
 			
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
+		m.addAttribute("mmenu","창고 리스트");
 		
 		this.map = new HashMap<>();
 		Map<Object, Object>	wh_list_map = this.map;

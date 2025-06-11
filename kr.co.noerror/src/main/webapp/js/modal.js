@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------
 	거래처 리스트 모달 
 ----------------------------------------------------------- */
-function cltListOpen(){
-	fetch("./client_list.do", {
+function cltListOpen(parentType){
+	fetch("./client_list.do?parent="+parentType, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -22,11 +22,13 @@ function cltListOpen(){
 
 //거래처리스트 모달 페이징
 function cl_modal_pg (page){
+	var parent = page.getAttribute('data-parent');
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
 	var params = {  
-		    type: page.getAttribute('data-type'),
+			parent: parent,  
+		  //  type: page.getAttribute('data-type'),
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),
 		};
@@ -109,7 +111,6 @@ function cl2_modal_pg (page){
 	부자재리스트 모달 오픈
 ----------------------------------------------------------- */
 function openItemList(parentType){
-	
 	
 	fetch("./item_list.do?parent="+parentType, {
 		method: "GET",
@@ -270,3 +271,58 @@ function inbnd_modal_pg (page){
 		console.log("통신오류발생" + error);
 	});
 }
+
+/*--------------------------------------------------------------
+	주문건 리스트 모달 오픈 ('주문확인' 상태인것만 오픈)
+----------------------------------------------------------- */
+function ordListOpen(parentType){
+	const statuses = ["주문확인"];
+	fetch("./ord_list_modal.do?statuses="+statuses+"&parent="+parentType, {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+				
+		var modal= new bootstrap.Modal(document.getElementById("ordreq_list"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+//주문리스트 모달 페이징
+function ord_modal_pg (page){
+	var keyword = page.getAttribute('data-keyword');
+	var pageno = page.getAttribute('data-pageno');
+	
+	var params = {  
+		    page_no: pageno,
+		    page_size: page.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["search_word"] = keyword;
+		}
+		var pString = new URLSearchParams(params).toString();
+		
+		
+	fetch("./ord_list_modal.do?"+pString+"&mode=modal2", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.querySelector('#ordreq_list .modal-body').innerHTML = result;
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+

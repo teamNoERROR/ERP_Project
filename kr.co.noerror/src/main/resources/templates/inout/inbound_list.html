@@ -52,7 +52,7 @@
 			    		<input type="hidden" name="status_lst" th:value="${status}" />
 					</th:block>
 						<div class="input-group input-group-sm" style="width:250px;">
-							<input type="text" class="form-control" name="keyword" th:value="${keyword != null ? keyword : ''}" placeholder="검색">
+							<input type="text" class="form-control" name="keyword" th:value="${keyword != null ? keyword : ''}" placeholder="전체 검색">
 							<button class="btn btn-primary" >
 								<i class="bi bi-search"></i>
 							</button>
@@ -67,8 +67,8 @@
 		
 			<!-- 입고 List Table-->
 			<div class="table-responsive  rounded" th:fragment="inbndList(inbound_total, inbound_all_list, mode)">
-				<table class="table align-middle table-bordered " style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
-					<thead class="table-light text-center">
+				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${inbound_total != 0} ? 'table-hover' : ''">
+					<thead class="table-light">
 						<tr>
 							<th scope="col" ><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
 							<th scope="col">#</th>

@@ -13,20 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DAO.inout_DAO;
-import kr.co.noerror.DTO.inout_DTO;
-import kr.co.noerror.Mapper.inout_mapper;
+import kr.co.noerror.DAO.inbound_DAO;
+import kr.co.noerror.DTO.inbound_DTO;
+import kr.co.noerror.Mapper.inbound_mapper;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
-public class inout_serviceImpl implements inout_service {
+public class inbound_serviceImpl implements inbound_service {
 
 	@Autowired
-	inout_mapper io_mapper;
+	inbound_mapper io_mapper;
 	
-	@Resource(name="inout_DAO")
-	inout_DAO io_dao;
+	@Resource(name="inbound_DAO")
+	inbound_DAO io_dao;
 	
 	@Resource(name="M_unique_code_generator")
 	M_unique_code_generator makeCode;  //고유코드 생성모델
@@ -34,8 +34,8 @@ public class inout_serviceImpl implements inout_service {
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
 		
-	@Resource(name="inout_DTO")
-	inout_DTO io_dto;
+	@Resource(name="inbound_DTO")
+	inbound_DTO io_dto;
 	
 	List<String> list = null; 
 	Map<String, String> map = null;
@@ -50,12 +50,12 @@ public class inout_serviceImpl implements inout_service {
 		JSONArray ja = new JSONArray(inbnd_item);
 		int item_ea = ja.length();
 		
-		List<inout_DTO> itm_list = new ArrayList<>();
+		List<inbound_DTO> itm_list = new ArrayList<>();
 		
 		for (int w = 0; w < item_ea; w++) {
 		    JSONObject jo = ja.getJSONObject(w);
 		    
-		    inout_DTO dto = new inout_DTO();
+		    inbound_DTO dto = new inbound_DTO();
 		    
 		    dto.setPCH_CODE(jo.getString("PCH_CODE")+"_"+(w+1));
 		    dto.setITEM_CODE(jo.getString("ITEM_CODE"));
@@ -76,17 +76,14 @@ public class inout_serviceImpl implements inout_service {
 		int f_result=0;
 		int result = 0;
 		int count = 0;
-		System.out.println("Sy : "+ itm_list.toString());
-		for (inout_DTO in_dto : itm_list) {
+		
+		for (inbound_DTO in_dto : itm_list) {
 			result += this.io_dao.inbnd_insert(in_dto);
 			
 			if(result >= 1) {
 				count++;
 			}
 		}
-		System.out.println("svcIm : " + result);
-		System.out.println("svcIm2 : " + count);
-		
 		
 		if(itm_list.size() == count) {
 			f_result = result;
@@ -112,7 +109,7 @@ public class inout_serviceImpl implements inout_service {
 	
 	//입고리스트 
 	@Override
-	public List<inout_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea, String[] status_lst) {
+	public List<inbound_DTO> inbound_all_list(String keyword, Integer pageno, int post_ea, String[] status_lst) {
 		int start = (pageno - 1) * post_ea;
 		int count = post_ea; 
 		
@@ -123,17 +120,17 @@ public class inout_serviceImpl implements inout_service {
 		mapp.put("count", count);
 		mapp.put("IN_STATUS", statusList);
 		
-		List<inout_DTO> inbound_all_list = this.io_dao.inbound_all_list(mapp);  
+		List<inbound_DTO> inbound_all_list = this.io_dao.inbound_all_list(mapp);  
 		return inbound_all_list;
 	}
 
 	//입고건 상세보기 
 	@Override
-	public List<inout_DTO> inbound_detail(String inbnd_code, String pch_cd) {
+	public List<inbound_DTO> inbound_detail(String inbnd_code, String pch_cd) {
 		this.map = new HashMap<>();
 		this.map.put("inbnd_code", inbnd_code);
 		this.map.put("pch_cd", pch_cd);
-		List<inout_DTO> inbound_detail = this.io_dao.inbound_detail(this.map);
+		List<inbound_DTO> inbound_detail = this.io_dao.inbound_detail(this.map);
 		return inbound_detail;
 	}
 
@@ -147,13 +144,13 @@ public class inout_serviceImpl implements inout_service {
 		int update_count = 0;
 		int result = 0;
 		int result2 = 0;
-		List<inout_DTO> updateList = new ArrayList<>();
+		List<inbound_DTO> updateList = new ArrayList<>();
 		Map<String, Integer> result_map = new HashMap<>();
 		 
 		for (int w = 0; w < data_ea; w++) {
 		    JSONObject jo = ja.getJSONObject(w);
 		    
-		    inout_DTO io_dto = new inout_DTO();
+		    inbound_DTO io_dto = new inbound_DTO();
 		    io_dto.setINBOUND_CODE(jo.getString("code"));
 		    io_dto.setPCH_CODE(jo.getString("code2"));
 		    io_dto.setIN_STATUS(jo.getString("statusinb"));
@@ -173,7 +170,7 @@ public class inout_serviceImpl implements inout_service {
 	    }
 	    
 	    //전부 '입고완료'가 아닌 경우에만 상태면 list의 dto들 dao로 보냄 
-	    for (inout_DTO dto : updateList) {
+	    for (inbound_DTO dto : updateList) {
 	        result2 = this.io_dao.inbound_ok(dto);  // 입고완료 처리
 	        if (result2 > 0) {
 	        	update_count++;
@@ -183,7 +180,6 @@ public class inout_serviceImpl implements inout_service {
 	    result_map.put("updated", update_count);
 	    
 	    return result_map;
-		
 	}
 
 

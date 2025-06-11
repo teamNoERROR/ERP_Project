@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DTO.inout_DTO;
+import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.member_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.member_service;

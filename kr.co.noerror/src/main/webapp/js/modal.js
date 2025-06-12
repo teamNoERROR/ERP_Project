@@ -110,8 +110,19 @@ function cl2_modal_pg (page){
 /*--------------------------------------------------------------
 	부자재리스트 모달 오픈
 ----------------------------------------------------------- */
+//bom등록화면에서 완제품 미선택시 아이템 추가 방지 
+function open_itm_list() {
+    var productCode = document.getElementById('product_code').value;
+    
+    if (!productCode || productCode.trim() === "") {
+        alert("제품을 먼저 선택해주세요.");
+        return; 
+    }
+    openItemList('bomPage'); 
+}
+
+//부자재리스트 모달 오픈 
 function openItemList(parentType){
-	
 	fetch("./item_list.do?parent="+parentType, {
 		method: "GET",
 
@@ -133,7 +144,8 @@ function openItemList(parentType){
 
 //부자재리스트 모달 페이징
 function itm_modal_pg (page){
-	var parent = page.getAttribute('data-parent');
+	console.log(page)
+	//var parent = page.getAttribute('data-parent');
 	var keyword = page.getAttribute('data-keyword');
 	var page_no = page.getAttribute('data-pageno');
 	
@@ -206,7 +218,7 @@ function pd_modal_pg (page){
 		var pString = new URLSearchParams(params).toString();
 		
 		
-	fetch("./product_list.do?"+pString+"&mode=modal2", {
+	fetch("./product_md_list.do?"+pString+"&mode=modal2", {
 		method: "GET",
 
 	}).then(function(data) {

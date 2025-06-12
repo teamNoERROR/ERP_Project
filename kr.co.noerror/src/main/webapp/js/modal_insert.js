@@ -129,7 +129,7 @@ function select_items (btn) {
 			appendItemsRow(tbody, item);
 			
 			document.querySelector("#bom_tr").innerHTML+=`
-				<li> ${item.name} </li>
+				<li class="bomlow"> ${item.name} </li>
 			`;
 		  });
 		
@@ -286,7 +286,7 @@ function removeItemRow(btn) {
 /*--------------------------------------------------------------
 부자재 리스트 모달에서 선택한 항목들 등록화면의 리스트에 붙여넣기 
 --------------------------------------------------------------*/
-//모달에서 선택한 리스트 등록화면(bom_insert)의 리스트에 붙여넣기 
+//모달에서 선택한 부자재 리스트 등록화면(bom_insert)의 리스트에 붙여넣기 
 function appendItemsRow(tbody, item) {
   const tr = document.createElement('tr');
   tr.className = "item_added"
@@ -331,6 +331,83 @@ function appendItemsRow2(tbody, item) {
   `;
   tbody.append(tr);
 }
+
+
+/*--------------------------------------------------------------
+완제품 리스트 모달에서 선택한 제품 등록화면의 리스트에 붙여넣기 
+--------------------------------------------------------------*/
+//BOM 등록화면에서 
+function pdChoice(parentType) {
+	console.log(parentType.getAttribute("data-parenttype"))
+	var radios = document.querySelectorAll('input[name="selectpd"]');
+	var selected_radio = null;
+	var ptype = parentType.getAttribute("data-parenttype");
+	
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	if (!selected_radio) {
+		alert("BOM을 등록할 제품을 선택해 주세요.");
+		return;
+	 }
+	 if(ptype == "bomPdOpen"){
+		
+		var tr = selected_radio.closest('tr');
+		var tdList = tr.querySelectorAll('td');
+		
+		var pd_cd = tr.getAttribute("data-code");
+		var pd_nm = tr.getAttribute("data-name");
+		var pd_tp = tdList[5].innerText.trim();
+		var pd_cl1 = tr.getAttribute("data-class1");
+		var pd_cl2 = tr.getAttribute("data-class2");
+		var pd_sp = tr.getAttribute("data-spec");
+		var pd_un = tr.getAttribute("data-unit");
+		var pd_cst = tr.getAttribute("data-cost");
+		var pd_prc = tr.getAttribute("data-price");
+		var pd_mm = tr.getAttribute("data-memo");
+		
+		var product_code = document.querySelector('#product_code');
+		var product_name = document.querySelector('#product_name');
+		var product_type = document.querySelector('#product_type');
+		var product_cls1 = document.querySelector('#product_cls1');
+		var product_cls2 = document.querySelector('#product_cls2');
+		var product_spec = document.querySelector('#product_spec');
+		var product_unit = document.querySelector('#product_unit');
+		var product_cst = document.querySelector('#product_cst');
+		var product_prc = document.querySelector('#product_prc');
+		var product_memo = document.querySelector('#product_memo');
+		
+		var fmt_cost = Number(pd_cst).toLocaleString();
+		var fmt_cost2 = Number(pd_prc).toLocaleString();
+		
+		product_code.value= pd_cd;
+		product_name.value= pd_nm;
+		product_type.value= pd_tp;
+		product_cls1.value= pd_cl1;
+		product_cls2.value= pd_cl2;
+		product_spec.value= pd_sp;
+		product_unit.value= pd_un;
+		product_cst.value = fmt_cost;
+		product_prc.value = fmt_cost2;
+		product_memo.value= pd_mm;
+		
+		var top_pd = product_name;
+		document.querySelector("#bom_top_pd").innerHTML=`<i class="bi bi-caret-right-fill"></i>`+top_pd.value;
+	}
+	
+	// 선택 후 모달 닫기
+ 	var modalElement = document.getElementById("product_list");
+	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
+	}
+}
+
 
 
 /*--------------------------------------------------------------

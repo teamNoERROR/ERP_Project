@@ -33,9 +33,10 @@
 
 <!-- 제품 정보 입력 -->
 <div class="col-md-9">
+<div class="text-end mb-3">* : 필수입력</div>
 	<div class="row mb-3">
 		<div class="col-md-4">
-			<label class="form-label">제품유형</label>
+			<label class="form-label">제품유형*</label>
 			<select class="form-select" id="goods_type" onchange="goodsType(this.value)">
 				<option value="">선택</option>
 				<option value="product">완제품</option>
@@ -43,13 +44,13 @@
 			</select>
 		</div>
 		<div class="col-md-4">
-			<label class="form-label">대분류</label>
+			<label class="form-label">대분류*</label>
 			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value,type)">
 				<option value="" >선택</option>
 			</select>
 		</div>
 		<div class="col-md-4">
-			<label class="form-label">소분류</label>
+			<label class="form-label">소분류*</label>
 			 <select class="form-select" id="products_class2">
 				<option value="">선택</option>
 			</select>
@@ -59,15 +60,15 @@
 
 	<div class="row mb-3">
 		<div class="col-md-5">
-			 <label class="form-label">제품명</label>
+			 <label class="form-label">제품명*</label>
 			<input type="text" class="form-control" id="product_name">
 		</div>
 		<div class="col-md-2">
-			<label class="form-label">제품규격</label>
+			<label class="form-label">제품규격*</label>
 	        <input type="text" class="form-control" id="product_spec">
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">제품단위</label>
+			<label  class="form-label">제품단위*</label>
 			<select class="form-select" id="product_unit">
 				<option value="">선택</option>
 				<option value="ea">ea</option>
@@ -85,27 +86,27 @@
 	<!-- 사용여부라인 -->
 	<div class="row mb-3">
 		<div class="col-md-2">
-			<label  class="form-label">사용여부</label>
+			<label  class="form-label">사용여부*</label>
 			<div class="ms-2 mt-1">
 				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 </label>
 				<label ><input type="radio" id="useN" name="use_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">유통기한</label> 
+			<label  class="form-label">유통기한*</label> 
 			<div class="ms-2 mt-1">
 				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 </label>
 				<label><input type="radio" id="expireN" name="exp_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">제품단가 (원)</label>
+			<label  class="form-label">제품단가 (원)*</label>
 			<input type="text" class="form-control" id="product_cost">
 		</div>
 		
 		<!-- 선택제품이 완제품일 경우 -->
 		<div class=" col-md-2 " >
-		<label class="form-label ss">판매가 (원)</label>	
+		<label class="form-label ss">판매가 (원)*</label>	
 		<input type="text" class="form-control" id="product_price">
 		</div>
 	</div>

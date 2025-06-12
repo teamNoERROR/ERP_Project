@@ -177,6 +177,7 @@ public class common_controller {
 		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
 		
+		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total);
 		int bno = this.m_pg.serial_no(goods_total, pageno, post_ea); 
@@ -187,8 +188,6 @@ public class common_controller {
 		m.addAttribute("items_total", goods_total);
 		m.addAttribute("items_list", goods_all_list);
 		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("pageno", pageno);
-		m.addAttribute("pea", post_ea);
 		
 		
 		if ("modal2".equals(mode)) {
@@ -202,25 +201,27 @@ public class common_controller {
 	//제품 리스트 모달 띄우기 
 	@GetMapping("/product_md_list.do")
 	public String inbound_list_modal(Model m
-								,@RequestParam(value = "parent", required = true) String parent
-								,@RequestParam(value = "keyword", required = false) String keyword
-								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
-								,@RequestParam(value="mode", required = false) String mode
+									,@RequestParam(value = "parent", required = true) String parent
+									,@RequestParam(value = "type", required = false) String type
+									,@RequestParam(value = "keyword", required = false) String keyword
+									,@RequestParam(value = "products_class2", required = false) String sclass
+									,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+									,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+									,@RequestParam(value="mode", required = false) String mode
 								)  {
-		int goods_total_sch = this.g_svc.gd_all_ea_sch("product", null, keyword); //제품 총개수
-		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch("product", null, keyword, pageno, post_ea);  //제품 리스트
+		int goods_total_sch = this.g_svc.gd_all_ea_sch("product", sclass, keyword); //제품 총개수
+		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch("product",sclass, keyword, pageno, post_ea);  //제품 리스트
 
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total_sch);
 		int bno = this.m_pg.serial_no(goods_total_sch, pageno, post_ea); 
 		
-			m.addAttribute("parentType",parent);
-			m.addAttribute("keyword",keyword);
-			m.addAttribute("bno", bno);
-			m.addAttribute("pd_total", goods_total_sch);
-			m.addAttribute("pd_list", goods_all_list_sch);
-			m.addAttribute("pageinfo", pageinfo);
+		m.addAttribute("parentType",parent);
+		m.addAttribute("keyword",keyword);
+		m.addAttribute("bno", bno);
+		m.addAttribute("pd_total", goods_total_sch);
+		m.addAttribute("pd_list", goods_all_list_sch);
+		m.addAttribute("pageinfo", pageinfo);
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/product_list_body_modal.html :: pdMdList";

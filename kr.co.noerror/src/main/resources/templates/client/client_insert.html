@@ -37,9 +37,10 @@
         <div class="col-md-9">
         
          <!-- 거래처 정보 -->
+         <div class="text-end mb-3">* : 필수입력</div>
           <div class="row  mb-3 ">
             <div class="col-md-2">
-              <label class="form-label">거래처 유형</label>
+              <label class="form-label">거래처 유형*</label>
               <select class="form-select" id="client_type">
                 <option value="">선택</option>
                 <option value="판매처">제품 판매처 (거래처) </option>
@@ -47,19 +48,19 @@
               </select>
             </div>
             <div class="col-md-3">
-              <label class="form-label">회사명</label>
+              <label class="form-label">회사명*</label>
               <input type="text" class="form-control" id="comp_name" >
             </div>
             <div class="col-md-3">
-              <label class="form-label">사업자번호</label>
-              <input type="text" class="form-control" id="biz_num">
+              <label class="form-label">사업자번호*</label>
+              <input type="text" class="form-control" id="biz_num" maxlength="12">
             </div>
             <div class="col-md-2">
-              <label class="form-label">업종</label>
+              <label class="form-label">업종*</label>
               <input type="text" class="form-control" id="biz_type">
             </div>
             <div class="col-md-2">
-              <label class="form-label">종목</label>
+              <label class="form-label">종목*</label>
               <input type="text" class="form-control" id="biz_item">
             </div>
            </div>
@@ -68,7 +69,7 @@
                <!-- 대표자 정보 -->
             <div class="row  mb-3 gap-0">
  			<div class="col-md-3">
-              <label class="form-label">대표자명</label>
+              <label class="form-label">대표자명*</label>
               <input type="text" class="form-control" id="ceo_name">
             </div>
             
@@ -78,7 +79,7 @@
         <!--거래처 주소 라인  -->
          <div class="row  mb-3  ">
             <div class="col-md-10">
-              <label class="form-label">주소</label>
+              <label class="form-label">주소*</label>
               <div class="col-auto d-flex   gap-1 align-items-center">
 			    <button type="button" class="btn btn-primary" id="addrBtn" onclick="openAddr()">
 			      <i class="bi bi-search"></i>
@@ -95,9 +96,9 @@
 			  	</div>
             </div>
             <div class="col-md-2">
-			   <label class="form-label">거래중 여부</label>
-			   <div class="radio-group mt-1">
-			     <label class="me-1"><input type="radio" id="cltUseY" name="com_use_flag" value="Y" class="me-1">사용 &nbsp;</label>
+			   <label class="form-label">거래중 여부*</label>
+			   <div class="radio-group ">
+			     <label class="me-1"><input type="radio" id="cltUseY" name="com_use_flag" value="Y" class="me-1">사용</label>
 			     <label class="me-1"><input type="radio" id="cltUseN" name="com_use_flag" value="N" class="me-1"> 미사용 </label>
 			   </div>
 			 </div>
@@ -119,19 +120,19 @@
           <div class="row my-4">
           
           	<div class="col-md-3">
-              <label class="form-label">담당자명</label>
+              <label class="form-label">담당자명*</label>
               <input type="text" class="form-control"  id="mng_name">
             </div>
             <div class="col-md-3">
-              <label class="form-label">부서</label>
+              <label class="form-label">부서*</label>
               <input type="text" class="form-control" id="mng_part">
             </div>
             <div class="col-md-3">
-              <label class="form-label">직급</label>
+              <label class="form-label">직급*</label>
               <input type="text" class="form-control"  id="mng_position">
             </div>
              <div class="col-md-3">
-              <label class="form-label">이메일</label>
+              <label class="form-label">이메일*</label>
               <input type="text" class="form-control"  id="mng_email">
             </div>
             </div>
@@ -139,11 +140,11 @@
             <div class="row mb-3">
             
             <div class="col-md-3">
-              <label class="form-label">직통번호</label>
+              <label class="form-label">직통번호*</label>
               <input type="text" class="form-control" id="mng_tel">
             </div>
             <div class="col-md-3">
-              <label class="form-label">휴대폰번호</label>
+              <label class="form-label">휴대폰번호*</label>
               <input type="text" class="form-control" id="mng_phone">
             </div>
             <div class="col-md-3">

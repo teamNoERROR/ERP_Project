@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">전화번호</label>
-                        <input type="text" class="form-control"  th:value="${wh_modify[0].wh_number}" name="wh_number">
+                        <input type="text" class="form-control"  th:value="${wh_modify[0].wh_number}" name="wh_number" maxlength="12">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">사용 여부</label>
@@ -84,7 +84,7 @@
                                     <input type="text" class="form-control" placeholder="도로명주소" th:value="${wh_modify[0].wh_addr1}" name="wh_addr1" readonly>
                                 </div>
                                 <div class="col-md-5 d-flex align-items-center">
-                                    <input type="text" class="form-control" placeholder="상세주소" th:value="${wh_modify[0].wh_addr2}" name="wh_addr2" readonly>
+                                    <input type="text" class="form-control" placeholder="상세주소" th:value="${wh_modify[0].wh_addr2}" name="wh_addr2" >
                                 </div>
                             </div>
                         </div>

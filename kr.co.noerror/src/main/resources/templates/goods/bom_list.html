@@ -54,7 +54,7 @@
             <table class="table align-middle table-bordered text-center" style="white-space: nowrap;"th:classappend="${bom_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
-                        <th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled ></th>
+                        <th scope="col"><input type="checkbox" disabled ></th>
                         <th scope="col">#</th>
                         <th scope="col">IMG</th>
                         <th scope="col">제품코드</th>
@@ -78,8 +78,17 @@
                 	
                     <tr th:if="${bom_total != 0}" th:each="bomlist, idx : ${bom_all_list}" 
                     	th:data-pdcode="${bomlist.PRODUCT_CODE}" th:data-idx="${bomlist.PIDX}" 
+                    	th:attr="
+							     data-name=${bomlist.PRODUCT_NAME},
+							     data-class1=${bomlist.PRODUCT_CLASS1},
+							     data-class2=${bomlist.PRODUCT_CLASS2},
+							     data-spec=${bomlist.PRODUCT_SPEC},
+							     data-unit=${bomlist.PRODUCT_UNIT},
+							     data-cost=${bomlist.PRODUCT_COST},
+							     data-price=${bomlist.PRODUCT_PRICE}"
                     	onclick="bomDetailOpen(this)"  style="cursor: pointer;">
-                        <td onclick="event.stopPropagation()"><input type="checkbox" name="bom_select" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
+                        <td onclick="event.stopPropagation()">
+                        	<input type="checkbox"  th:name="${mode == 'modal'} ? 'bomSelected' : 'bom_select'" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td class="p-0">
 <!-- 							<img th:if="${bomlist.PD_API_FNM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${bomlist.PD_FILE_RENM}" style="width:50px;"> -->

@@ -3,19 +3,15 @@
 <head th:replace="~{/common/config.html :: config}">
 </head>
 <body>
-	<header >
-	<div th:replace="~{/common/header.html :: header}"></div>
-	<div th:replace="~{/common/header.html :: breadcrumb}"></div>
-	</header>
+	<header th:replace="~{/common/header.html :: header}"></header>
 
 	<main class="main">
-		<section ></section>
-
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 
 		<div class="container mt-5">
-			<h2 class="mb-4">주문 등록</h2>
+			<h2 class="mb-5">주문 등록</h2>
 			
-			<h5 class="mt-4">주문처 정보</h5>
+			<h5 class="my-4">주문처 정보</h5>
 			<div class="row mb-3  ">
 					
 <!-- 				<div class="form-group col-auto d-flex align-items-end "> -->

@@ -52,12 +52,12 @@
                 <tr>
                     <th scope="col"><input type="checkbox" disabled></th>
                     <th scope="col">#</th>
-                    <th scope="col">창고코드</th>
-                    <th scope="col">창고명</th>
-                    <th scope="col">위치</th>
+                    <th scope="col" style="width:100px;">창고코드</th>
+                    <th scope="col" style="width:50%;">창고명</th>
                     <th scope="col">대표관리자</th>
                     <th scope="col">연락처</th>
                     <th scope="col">창고구분</th>
+                    <th scope="col">위치</th>
                     <th scope="col">사용여부</th>
                     <th scope="col">저장품목수</th>
                     <th scope="col">전체재고수</th>
@@ -78,16 +78,17 @@
     				 th:data-modal-url="@{'/warehouse_modal.do?wh_code=' + ${#strings.trim(wh.wh_code)}}" 
     				 data-modal-id="wh_list"
     				 style="cursor:pointer;">
-                    <td><input type="checkbox" name="deleteCodes" 
-                    	th:value="${wh.wh_code}" onclick="event.stopPropagation();" />
+                    <td onclick="event.stopPropagation();" >
+                    	<input type="checkbox" name="deleteCodes" th:disabled="${#strings.trim(wh.wh_code) == 'WHS-80967'}"
+                    			th:value="${wh.wh_code}" />
                     </td>
                     <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
                     <td th:text="${wh.wh_code}"></td>
                     <td th:text="${wh.wh_name}"></td>
-                    <td th:text="${'(' + wh.wh_zipcode +') ' + wh.wh_addr1 + ' ' + wh.wh_addr2}"></td>
                     <td th:text="${wh.ENAME}"></td>
                     <td th:text="${wh.EMP_TEL}"></td>
                     <td th:text="${wh.wh_type}"></td>
+                    <td th:text="${'(' + wh.wh_zipcode +') ' + wh.wh_addr1 + ' ' + wh.wh_addr2}"></td>
                     <td th:text="${wh.wh_use_flag}"></td>
                     <td ></td>
                     <td ></td>

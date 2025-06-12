@@ -19,7 +19,7 @@
 <!-- 							<option value="생산계획수립">생산계획수립</option> -->
 							<option value="생산계획확정">생산계획확정</option>
 							<option value="생산중">생산중</option>
-							<option value="생산완료">생산완료</option>
+							<option value="생산완료" th:selected="${details[0].plan_status == '생산완료'}">생산완료</option>
 							<option value="생산지연">생산지연</option>
 						</select>
 						

@@ -152,32 +152,6 @@
         SYSTIMESTAMP
     )
    </if>
-   
-   <if test="wh_type == 'out'">
-    INSERT INTO WAREHOUSE_OUT (
-        WOUT_IDX,
-        INBOUND_CODE,
-        WH_CODE,
-        WOUT_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
-        CHANGE_TYPE,
-        EMPLOYEE_CODE,
-        OUT_INSERT_DATE
-        
-    ) VALUES (
-   	    OUT_WAREHOUSE_NO.NEXTVAL,
-        #{iosf_dto.inbound_code},
-        #{iosf_dto.wh_code},
-        #{iosf_dto.out_code},
-        #{iosf_dto.item_code},
-        #{iosf_dto.item_count},
-        #{iosf_dto.in_status},
-        #{iosf_dto.employee_code},  
-        SYSTIMESTAMP
-    )
-   </if>
-
 </insert>
 
 <update id="IOSF_modify_warehouse" parameterType="map">
@@ -340,7 +314,7 @@ SELECT *
 FROM (
   SELECT A.*, ROWNUM AS RNUM
   FROM (
-    SELECT DISTINCT
+    SELECT
       fs.WFS_IDX AS wfs_idx,
       fs.WFS_CODE AS wfs_code,
       fs.WH_CODE AS wh_code,

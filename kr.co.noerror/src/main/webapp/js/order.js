@@ -121,7 +121,7 @@ function client_select_for_order() {
 //주문 품목 목록 선택 및 작성
 function product_select_for_order() {
   // 모든 체크된 체크박스를 찾음
-  const checkboxes = document.querySelectorAll('input[name="product_check"]:checked');
+  const checkboxes = document.querySelectorAll('input[name="bomSelected"]:checked');
 
   if (checkboxes.length === 0) {
     alert('제품을 선택해 주세요.');
@@ -139,7 +139,7 @@ function product_select_for_order() {
     const row = checkbox.closest('tr');
 
     const product = {
-      code: row.dataset.code,
+      code: row.getAttribute("data-pdcode"),
       name: row.dataset.name,
       class1: row.dataset.class1,
       class2: row.dataset.class2,
@@ -147,6 +147,7 @@ function product_select_for_order() {
 	  unit: row.dataset.unit,
       cost: row.dataset.cost,
       price: row.dataset.price
+	  
     };
 	 	
     // 부모 화면에 반영
@@ -154,7 +155,7 @@ function product_select_for_order() {
   });
 
   // 모달 닫기
-  const modalEl = document.getElementById('products_modal_for_order');
+  const modalEl = document.getElementById('bom_list_modal');
   const modalInstance = bootstrap.Modal.getInstance(modalEl);
   modalInstance.hide();
 }

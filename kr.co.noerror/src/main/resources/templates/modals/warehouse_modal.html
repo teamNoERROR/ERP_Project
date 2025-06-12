@@ -112,8 +112,10 @@
    						 <i class="bi bi-pencil-square"></i> 수정
  					 </button>
 				</form>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                <button type="button" class="btn " data-bs-dismiss="modal"
       				  th:data-modal-url="@{'/warehouse_delete_page.do?wh_code=' + ${#strings.trim(wh_dtails[0].wh_code)}}"
+       			  	  th:disabled="${#strings.trim(wh_dtails[0].wh_code) == 'WHS-80967'}" 
+       			  	  th:classappend="${#strings.trim(wh_dtails[0].wh_code) == 'WHS-80967'} ? ' btn-secondary' : 'btn-danger'" 
        			  	  onclick="deleteWarehouse(this)">
   					  <i class="bi bi-trash"></i> 삭제
 				</button>

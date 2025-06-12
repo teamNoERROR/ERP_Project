@@ -67,7 +67,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
             prdplan_entity.setEnd_date(plandto.getEnd_date());
             prdplan_entity.setCompany_code(plandto.getCompany_code());
             prdplan_entity.setEcode(plandto.getEcode());
-            prdplan_entity.setPlan_status("계획");
+            prdplan_entity.setPlan_status("생산계획수립");
             prdplan_entity.setMrp_status("미완료");
             prdplan_entity.setMemo(plandto.getMemo());
 

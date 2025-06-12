@@ -233,6 +233,99 @@ function pd_modal_pg (page){
 	});
 }
 
+
+
+
+
+//완제품 모달 페이징(product_list_body_modal2)
+function pd_modal_pg2 (page){
+	var keyword = page.getAttribute('data-keyword');
+	var page_no = page.getAttribute('data-pageno');
+	
+	var params = {  
+		    pageno: page_no,
+		    post_ea: page.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["keyword"] = keyword;
+		}
+		var pString = new URLSearchParams(params).toString();
+		
+		
+	fetch("./products_modal.do?"+pString+"&mode=modal2", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.querySelector('#products_modal_for_order .modal-body').innerHTML = result;
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+/*--------------------------------------------------------------
+	bom등록된 제품 리스트 모달 오픈 
+----------------------------------------------------------- */
+function bomListOpen(){
+	
+	fetch("./bom_md_list.do", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("bom_list_modal"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+//bom완제품 모달 페이징
+function bom_modal_pg (page){
+	var parent = page.getAttribute('data-parent');
+	var keyword = page.getAttribute('data-keyword');
+	var page_no = page.getAttribute('data-pageno');
+	
+	var params = {  
+			parent: parent, 
+		    pageno: page_no,
+		    post_ea: page.getAttribute('data-pea'),
+		};
+		
+		if (keyword) {  //키워드가 있으면
+		    params["keyword"] = keyword;
+		}
+		var pString = new URLSearchParams(params).toString();
+		
+		
+	fetch("./bom_md_list.do?"+pString+"&mode=modal2", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.querySelector('#bom_list_modal .modal-body').innerHTML = result;
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+
+
 /*--------------------------------------------------------------
 	입고건 리스트 모달 오픈
 ----------------------------------------------------------- */
@@ -345,7 +438,7 @@ function ord_modal_pg (page){
 	발주건 리스트 모달 오픈
 ----------------------------------------------------------- */
 function pchListOpen(){
-	fetch("./pchreq_list_sub.do", {
+	fetch("./pch_list_modal.do", {
 		method: "GET",
 
 	}).then(function(data) {
@@ -379,7 +472,7 @@ function pch_modal_pg (page){
 		var pString = new URLSearchParams(params).toString();
 		
 		
-	fetch("./pchreq_list_sub.do?"+pString+"&mode=modal2", {
+	fetch("./pch_list_modal.do?"+pString+"&mode=modal2", {
 		method: "GET",
 
 	}).then(function(data) {
@@ -387,6 +480,59 @@ function pch_modal_pg (page){
 
 	}).then(function(result) {
 		document.querySelector('#purchase_list .modal-body').innerHTML = result;
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+/*--------------------------------------------------------------
+	사원 리스트 모달 오픈
+----------------------------------------------------------- */
+function empListOpen(){
+	fetch("./emp_list_modal.do", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.getElementById("modalContainer").innerHTML = result;
+		
+		var modal= new bootstrap.Modal(document.getElementById("member_list_modal"));
+		modal.show();
+		
+	}).catch(function(error) {
+		
+		console.log("통신오류발생" + error);
+	});
+}
+
+//발주리스트 모달 페이징
+function emp_modal_pg (page){
+	var search_word = page.getAttribute('data-keyword');
+	var pageno = page.getAttribute('data-pageno');
+	
+	var params = {  
+		    pageno: pageno,
+		    page_ea: page.getAttribute('data-pea'),
+		};
+		
+		if (search_word) {  //키워드가 있으면
+		    params["search_word"] = search_word;
+		}
+		var pString = new URLSearchParams(params).toString();
+		
+		
+	fetch("./emp_list_modal.do?"+pString+"&mode=modal2", {
+		method: "GET",
+
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		document.querySelector('#member_list_modal .modal-body').innerHTML = result;
 		
 	}).catch(function(error) {
 		

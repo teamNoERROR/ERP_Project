@@ -46,8 +46,9 @@ public class member_controller {
 //		if (status_lst == null) {
 //			status_lst = new String[] {"가입고", "입고완료", "입고취소"};
 //		}
+		String role;
 		
-		List<member_DTO> member_all_list = this.mb_svc.member_all_list();  //입고리스트 제품 리스트
+		List<member_DTO> member_all_list = this.mb_svc.member_all_list();  //사원 리스트
 		
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","사용자관리");

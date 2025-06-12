@@ -84,6 +84,10 @@ public class ordreq_controller {
 	    
 	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info);
 
+	    model.addAttribute("lmenu","구매영업관리");
+	    model.addAttribute("smenu","주문 관리");
+	    model.addAttribute("mmenu","주문 리스트");
+	    
 	    model.addAttribute("all", ord_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
@@ -91,35 +95,7 @@ public class ordreq_controller {
 	    return "/production/order_list.html";
 	}
 	
-	//modal에 주문리스트 띄우기
-	@GetMapping("/ord_list_modal.do")
-	public String orders_modal(@ModelAttribute search_condition_DTO search_cond
-								, Model model
-								, @RequestParam(value="mode", required = false) String mode
-								, @RequestParam(value = "parent", required = true) String parent) {
-		
-	    int search_count = this.ordreq_list_service.search_count(search_cond);
-	    
-	    paging_info_DTO paging_info = this.m_pg2.calculate(
-	    		search_count, 
-	    		search_cond.getPage_no(), 
-	    		search_cond.getPage_size(), 
-	    		page_block
-	    );
-	    
-	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info);
-
-	    model.addAttribute("all", ord_list);
-	    model.addAttribute("paging", paging_info);
-	    model.addAttribute("condition", search_cond);
-	    model.addAttribute("parentType",parent);
-	    
-		if ("modal2".equals(mode)) {
-	        return "/modals/order_list_body_modal.html :: ordMdList";
-	    } else {
-	        return "/modals/order_list_modal.html"; 
-	    }
-	}
+	
 	
 	//생산계획 작성시 주문코드에 해당하는 제품목록 제공
 	@ResponseBody
@@ -129,51 +105,31 @@ public class ordreq_controller {
 		return ordreq_products;
 	}
 	
-	//제품 리스트 모달 띄우기(orderPage)
-	@GetMapping("/products_modal.do")
-	public String products_modal(Model m
-								,@RequestParam(value="mode", required = false) String mode
-								,@RequestParam(value = "keyword", required = false) String keyword
-								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
-								) {
-		
-		List<products_DTO> products = this.g_svc.gd_all_list_sch("product", null, keyword, pageno, post_ea);  //제품 리스트
-		System.out.println("products : " + products.size() );
-		
-		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, products.size());
-		int bno = this.m_pg.serial_no(products.size(), pageno, post_ea); 
-		
-		m.addAttribute("products",products);
-		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("bno", bno);
-		m.addAttribute("keyword",keyword);
-		
-		if ("modal2".equals(mode)) {
-	        return "/modals/product_list_body_modal2.html :: pdMdList2";
-	    } else {
-	    	return  "/modals/product_list_modal2.html";
-	    }
-	}
 	
+	/*
 	@GetMapping("/clients_modal.do")
 	public String clients_modal(Model m) {
 		List<client_DTO> clients = this.odao.clients_for_order();
 		m.addAttribute("clients",clients);
 		return  "/modals/temp_client_list_modal.html";
-	}
+	}*/
+	
+	
 	
 	@GetMapping("/order_insert.do")
 	public String order_insert(Model m) {
 		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","주문관리");
-		m.addAttribute("mmenu","주문등록");
+		m.addAttribute("smenu","주문 관리");
+		m.addAttribute("mmenu","주문 등록");
 		return "/production/order_insert.html";
 	}
 	
+	
+	//주문건 상세보기 
 	@GetMapping("/ordreq_detail.do")
 	public String ordreq_detail(@RequestParam(name="code") String order_code, Model m) {
 		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);
+		System.out.println("details : " + details);
 		m.addAttribute("details",details);
 		return "/modals/order_detail_modal.html";
 	}

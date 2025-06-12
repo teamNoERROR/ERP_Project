@@ -1,0 +1,30 @@
+<div class="modal-body row  d-flex align-items-center gap-3 " th:fragment="bomMdList(bom_total, bom_list, mode)">
+		 <!-- 검색창 영역 -->
+		  <div class="d-flex justify-content-end mb-2">
+		    <form class="row g-2 align-items-center ">
+		      <div class="col-auto">
+		        <div class="input-group input-group-sm">
+		          <input type="text" class="form-control" placeholder="검색어를 입력하세요">
+		          <button class="btn btn-primary">
+		            <i class="bi bi-search"></i>
+		          </button>
+		        </div>
+		      </div>
+		    </form>
+		  </div>
+		  
+		  <!-- 테이블 영역 -->
+		<div th:replace="~{/goods/bom_list.html :: bomList(${bom_total}, ${bom_all_list},'modal')}"></div>
+		
+		<!-- 페이징 -->
+		<div th:replace="~{/goods/bom_list.html :: bomPgList('bomPageing')}" ></div>
+      </div>
+<!--       <div class="modal-footer"> -->
+       <!-- Action Buttons -->
+<!--         <div class="d-flex gap-2">  -->
+<!--             <div class="ms-auto"> -->
+<!--                 <button type="button" class="btn btn-success" onclick=""><i class="bi bi-pencil-square"></i> 선택</button> -->
+               
+<!--             </div> -->
+<!--         </div> -->
+<!-- </div> -->

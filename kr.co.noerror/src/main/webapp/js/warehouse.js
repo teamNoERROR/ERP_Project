@@ -426,6 +426,7 @@ function wh_save() {
     return;
   }
   
+  /*
   //전화번호
   const whNumberInput = form.querySelector('[name="wh_number"]');
   let whNumber = whNumberInput.value.trim().replace(/-/g, ''); // 하이픈 제거
@@ -435,7 +436,8 @@ function wh_save() {
     whNumberInput.focus();
     return;
   }
-
+	*/
+	
 
   // 사용여부
   const whUseFlag = form.querySelector('input[name="wh_use_flag"]:checked');
@@ -453,6 +455,7 @@ function wh_save() {
     return;
   }
   
+  
   // 창고 주소 - 상세주소 필수
   const whAddr2 = form.querySelector('[name="wh_addr2"]').value.trim();
   if (!whAddr2) {
@@ -460,6 +463,7 @@ function wh_save() {
     form.querySelector('[name="wh_addr2"]').focus();
     return;
   }
+
 
   // 우편번호 - 숫자 5자리
   const whZip = form.querySelector('[name="wh_zipcode"]').value.trim();
@@ -470,13 +474,14 @@ function wh_save() {
   }
 
   // 관리자명
-  const mgName = form.querySelector('[name="wh_mg_name"]').value.trim();
+  const mgName = form.querySelector('[name="wh_mg_name"]').value;
   if (!mgName) {
-    alert("창고 관리자명을 입력해주세요.");
+    alert("창고 관리자를 선택해주세요.");
     form.querySelector('[name="wh_mg_name"]').focus();
     return;
   }
 
+  /*
   // 사원번호 (영문+숫자, 4~10자리)
   const mgId = form.querySelector('[name="wh_mg_id"]').value.trim();
   if (!/^[a-zA-Z0-9]{4,10}$/.test(mgId)) {
@@ -484,7 +489,13 @@ function wh_save() {
     form.querySelector('[name="wh_mg_id"]').focus();
     return;
   }
-
+*/
+	const mgId = form.querySelector('[name="wh_mg_id"]').value.trim();
+  if (!/^[A-Z]{3}-\d{5}$/.test(mgId)) {
+    alert("사원번호를 입력해주세요.");
+    form.querySelector('[name="wh_mg_id"]').focus();
+    return;
+  }
   // 부서/직급
   const mgMp = form.querySelector('[name="wh_mg_mp"]').value.trim();
   if (!mgMp) {
@@ -493,7 +504,7 @@ function wh_save() {
     return;
   }
 
-   
+   /*
   // 연락처 (휴대폰 형식: 0102223344)
   const mgPh = form.querySelector('[name="wh_mg_ph"]').value.trim();
   if (!/^01[0-9]-\d{3,4}-\d{4}$/.test(mgPh)) {
@@ -501,6 +512,7 @@ function wh_save() {
     form.querySelector('[name="wh_mg_ph"]').focus();
     return;
   }
+  */
   // 설명 (선택사항 - 길이 제한)
   const desc = form.querySelector('[name="wh_desc"]').value.trim();
   if (desc.length > 500) {
@@ -518,7 +530,7 @@ function wh_save() {
   }
 
   // 모든 조건 통과 시 제출
-  frm.submit();
+  form.submit();
   
   }
     

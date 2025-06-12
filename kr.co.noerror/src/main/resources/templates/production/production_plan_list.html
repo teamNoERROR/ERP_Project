@@ -62,7 +62,7 @@
 						<tr th:each="p : ${prd_plans}" class="modal-trigger"
 								th:data-modal-url="@{/prdplan_detail.do(code=${p.plan_code})}"
 								data-modal-id="prdplan_modal" style="cursor: pointer;">
-							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
+							<td onclick="event.stopPropagation();"><input type="checkbox" disabled></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.plan_code}]]</td>
 							<td>[[${p.order_code}]]</td>

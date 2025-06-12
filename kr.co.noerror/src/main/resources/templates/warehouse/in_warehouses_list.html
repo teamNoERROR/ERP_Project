@@ -68,7 +68,7 @@
 <!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
 <!-- 			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option> -->
 <!-- 			      </select>  -->
-			      <input type="text" name="wh_search" class="form-control" placeholder="창고코드/창고명으로 검색" th:value="${wh_search}">
+			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/창고명으로 검색" th:value="${wh_search}">
 			      <button class="btn btn-primary" >
 			        <i class="bi bi-search"></i>
 			      </button>
@@ -102,7 +102,7 @@
 				  </thead>
 				  <tbody>
 				  	<tr th:if="${wh_check == 'nodata'}" >
-                		<td class="text-center no_list_tb" colspan="13" > 등록된 입고 창고가 없습니다. </td>
+                		<td class="text-center no_list_tb" colspan="13" > 입고 창고에 보관된 제품이 없습니다. </td>
                 	</tr>
 				    <tr class="modal-trigger"
 				        th:each="in_wh, iterStat : ${in_wh_list}"

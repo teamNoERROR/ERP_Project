@@ -1,4 +1,4 @@
-<div class="modal-body row justify-content-center d-flex gap-3" th:fragment="pdMdList2(parentType, pd_total, pd_list, mode)">
+<div class="modal-body row justify-content-center d-flex gap-3" th:fragment="pdMdList2( pd_total, pd_list, mode)">
 					 <!-- 검색창 영역 -->
 		  <div class="d-flex justify-content-end mb-2">
 		    <form class="row g-2 align-items-center ">
@@ -58,7 +58,42 @@
 				</div>
 				
 		<!-- 페이징 -->
-		<div th:replace="~{/goods/products_list.html :: productPgList(${parentType}, 'pd_pageing')}" ></div>
+		 <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item page-link prev"  
+                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)" >
+					<i class="bi bi-chevron-double-left"></i> </li>
+					
+				<li class="page-item page-link " 
+					th:if="${pageinfo.start_pg > 1}"  
+                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">
+					<i class="bi bi-chevron-left"></i> </li>
+					
+                
+                <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
+                <li class="page-item page-link pgnum" th:classappend ="${pageinfo.pageno == pgn} ? 'curpg' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product', data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">[[${pgn}]]</li>
+                </th:block>
+                
+                <li class="page-item page-link " 
+                	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
+                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 2}, data-type='product',data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">
+					<i class="bi bi-chevron-right"></i> </li>
+					
+                <li class="page-item page-link next" 
+                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total}, data-type='product',data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">
+					<i class="bi bi-chevron-double-right"></i> </li>
+            </ul>
+        </div>
 	</div>
 			
 		

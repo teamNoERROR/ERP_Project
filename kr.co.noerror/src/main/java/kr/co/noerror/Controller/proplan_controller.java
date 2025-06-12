@@ -51,18 +51,21 @@ public class proplan_controller {
 	@Autowired
 	M_paging2 m_pg2;
 	
+	/*
 	@GetMapping("/emps_modal.do")
 	public String empls_modal(Model m) {
 		List<employee_DTO> emps = this.pdao.emps_modal();
 		m.addAttribute("emps",emps);
 		return  "/modals/temp_emp_list_modal.html";
 	}
+	*/
 	
+	//생산계획 리스트
 	@GetMapping("/production_in.do")
 	public String production2(Model m) {
 		m.addAttribute("lmenu","생산 관리");
-		m.addAttribute("smenu","생산계획리스트");
-		m.addAttribute("mmenu","생산계획등록");
+		m.addAttribute("smenu","생산 계획");
+		m.addAttribute("mmenu","생산계획 등록");
 		return "/production/production_plan_insert.html";
 	}
 
@@ -83,6 +86,7 @@ public class proplan_controller {
 		return  "/modals/bom_items_modal.html";
 	}
 	
+	
 	@GetMapping("/production.do")
 	public String production(Model m, @ModelAttribute search_condition_DTO search_cond) {
 		
@@ -98,6 +102,10 @@ public class proplan_controller {
 		List<prdplan_res_DTO> prd_plans = this.prdplan_list_service.paged_list(search_cond, paging_info);
 		System.out.println(prd_plans);
 		
+		m.addAttribute("lmenu","생산 관리");
+		m.addAttribute("smenu","생산 계획");
+		m.addAttribute("mmenu","생산 계획 리스트");
+		
 		m.addAttribute("prd_plans", prd_plans);
 		m.addAttribute("paging", paging_info);
 		m.addAttribute("condition", search_cond);
@@ -105,11 +113,12 @@ public class proplan_controller {
 		return "/production/production_plan_list.html";
 	}
 	
+	//생산계획 상세보기 
 	@GetMapping("/prdplan_detail.do")
 	public String prdplan_detail(@RequestParam(name="code") String plan_code, Model m) {
 		
 		List<prdplan_res_DTO> details = this.pdao.prdplan_detail(plan_code);
-		System.out.println(details);
+		
 		m.addAttribute("details",details);
 		return "/modals/production_plan_detail_modal.html";
 	}

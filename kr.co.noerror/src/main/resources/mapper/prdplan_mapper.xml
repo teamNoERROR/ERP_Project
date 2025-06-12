@@ -11,7 +11,7 @@ SELECT * FROM (
         FROM production_plan pln
         JOIN order_request ord ON pln.order_code = ord.order_code
         JOIN client_comp cmp ON pln.company_code = cmp.company_code
-        JOIN employee emp ON pln.ecode = emp.ecode
+        JOIN employee2 emp ON pln.ecode = emp.ecode
         WHERE 1=1
 		<if test="search_word != null and search_word != ''">
 		  AND (
@@ -38,7 +38,7 @@ SELECT COUNT(*) AS total
 	FROM production_plan pln
 	JOIN order_request ord ON pln.order_code = ord.order_code
 	JOIN client_comp cmp ON pln.company_code = cmp.company_code
-	JOIN employee emp ON pln.ecode = emp.ecode
+	JOIN employee2 emp ON pln.ecode = emp.ecode
 WHERE 1=1
 	<if test="search_word != null and search_word != ''">
 	  AND (
@@ -187,7 +187,7 @@ JOIN order_req_detail ord
  AND pld.product_code = ord.product_code
 JOIN products prd ON pld.product_code = prd.product_code
 LEFT JOIN client_comp cmp ON pln.company_code = cmp.company_code
-LEFT JOIN employee emp ON pln.ecode = emp.ecode
+LEFT JOIN employee2 emp ON pln.ecode = emp.ecode
 WHERE pld.plan_code = #{plan_code}
 </select>
 

@@ -16,9 +16,9 @@
 							style="max-width: 150px;"
 							th:attr="data-order-code=${details[0].order_code}">
 							<option selected value="주문상태 선택">주문상태 선택</option>
-							<option value="주문요청">주문요청</option>
-							<option value="주문취소">주문취소</option>
+<!-- 							<option value="주문요청">주문요청</option> -->
 							<option value="주문확인">주문확인</option>
+							<option value="주문취소">주문취소</option>
 							<option value="주문확인">생산계획수립</option>
 							<option value="주문확인">생산계획확정</option>
 							<option value="지연중">생산지연</option>
@@ -28,9 +28,8 @@
 							<option value="반품">반품</option>
 						</select>
 
-						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="ord_status_update()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
+						<button type="button" class="btn btn-info" style="white-space: nowrap;" onclick="ord_status_update()">
+							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
 					</div>
 				</div>
@@ -114,13 +113,13 @@
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
 								<th scope="col">제품명</th>
+								<th scope="col">대분류</th>
+								<th scope="col">소분류</th>
 								<th scope="col">규격</th>
 								<th scope="col">주문수량</th>
 								<th scope="col">단위</th>
 								<th scope="col">제품단가(원)</th>
 								<th scope="col">구매금액(원)</th>
-								<th scope="col">대분류</th>
-								<th scope="col">소분류</th>
 
 							</tr>
 						</thead>
@@ -129,6 +128,8 @@
 								<td>[[${no.count}]]</td>
 								<td>[[${d.product_code}]]</td>
 								<td>[[${d.product_name}]]</td>
+								<td>[[${d.product_class1}]]</td>
+								<td>[[${d.product_class2}]]</td>
 								<td>[[${d.product_spec}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
@@ -137,23 +138,21 @@
 									0, 'COMMA', 0, 'POINT')}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_qty *
 									d.product_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.product_class1}]]</td>
-								<td>[[${d.product_class2}]]</td>
 							</tr>
 
 						</tbody>
 						<tfoot>
 							<tr>
-								<td class="info-label" colspan="2">합계</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td class="info-label" colspan="9">합계</td>
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
 								<td align="right">[[${#numbers.formatDecimal(details[0].pay_amount,
 									0, 'COMMA', 0, 'POINT')}]]</td>
-								<td></td>
-								<td></td>
 							</tr>
 						</tfoot>
 					</table>

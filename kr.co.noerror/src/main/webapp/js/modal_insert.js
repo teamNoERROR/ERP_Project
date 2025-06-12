@@ -436,7 +436,7 @@ function choiceClt(parentType) {
 		var com_name = tdList[3].innerText.trim();
 		var bnum = tdList[6].innerText.trim();
 		var mng_code = tr.getAttribute("data-mngcode").trim();
-		var mng_name = tdList[4].innerText.trim();
+		var mng_name = tdList[7].innerText.trim();
 		var phnum = tr.getAttribute("data-mngphn").trim();
 		
 		var company_code = document.querySelector('#company_code');
@@ -489,10 +489,10 @@ function choiceOrd(parentType) {
 		var tdList = tr.querySelectorAll('td');
 		
 		var orderCode =  tdList[2].innerText.trim();
-		var companyCode =  tdList[4].innerText.trim();
-		var companyName =  tdList[5].innerText.trim();
-		var managerName =  tdList[6].innerText.trim();
-		var dueDate =  tdList[8].innerText.trim();
+		var companyCode =  tdList[3].innerText.trim();
+		var companyName =  tdList[4].innerText.trim();
+		var managerName =  tdList[5].innerText.trim();
+		var dueDate =  tdList[7].innerText.trim();
 		
 		//production_plan_insert.html에 붙는 부분
 		var order_code = document.querySelector('#order_code');
@@ -704,7 +704,7 @@ function pchDtlLoad(pch_code){
 		
 		//결과값 붙이기 
 		result.forEach((resultItem, index) => {
-				
+			
 			var tr = document.createElement('tr');
 		  	tr.className = "item_row " 
 		  	tr.innerHTML = `
@@ -729,10 +729,59 @@ function pchDtlLoad(pch_code){
 				</td>
 			  `;
 		  	tbody.append(tr);
+			document.querySelector(".item_qty").valueAsDate = new Date();	
 		});  
 		  
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	});
-	
 }
+
+/*--------------------------------------------------------------
+	사원 리스트모달 
+--------------------------------------------------------------*/
+//발주리스트모달에서 선택후 인풋란에 붙여넣기 
+function choiceEmp() {
+	var radios = document.querySelectorAll('input[name="selectMem"]');
+	var selected_radio = null;
+		
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	if (!selected_radio) {
+		alert("직원을 선택해 주세요.");
+
+	 }else{
+		var tr = selected_radio.closest('tr');
+		var tdList = tr.querySelectorAll('td');
+		
+		var emp_code =  tdList[2].innerText.trim();
+		var emp_name = tdList[3].innerText.trim();
+		var emp_part = tdList[4].innerText.trim();
+		var emp_position = tdList[5].innerText.trim();
+		var emp_tel = tdList[6].innerText.trim();
+		
+		var wh_mg_cd = document.querySelector('#wh_mg_cd');
+		var wh_mg_name = document.querySelector('#wh_mg_name');
+		var wh_mg_mp = document.querySelector('#wh_mg_mp');
+		var wh_mg_ph = document.querySelector('#wh_mg_ph');
+		  
+		wh_mg_cd.value= emp_code;
+		wh_mg_name.value= emp_name;
+		wh_mg_mp.value= emp_part + "/" + emp_position;
+		wh_mg_ph.value= emp_tel;
+	
+		
+		// 선택 후 모달 닫기
+	 	var modalElement = document.getElementById("member_list_modal");
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+		    modal.hide();
+			setTimeout(() => {
+				document.querySelector("body").focus(); // body에 포커스 주기
+			}, 300);
+		}
+	}
+};

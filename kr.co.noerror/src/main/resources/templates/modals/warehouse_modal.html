@@ -31,7 +31,7 @@
            -->
 
             <div class="table-responsive rounded">
-              <h5 th:text="${wh_dtails[0].wh_code} + ' : ' + ${wh_dtails[0].wh_name}">입고 1 창고 : WH-001</h5>
+              <h5 th:text="${wh_dtails[0].wh_name} + ' : ' + ${wh_dtails[0].wh_code}"></h5>
               <table class="table align-middle table-bordered">
                 <tr>
                   <td class="info-label">창고 유형</td>
@@ -47,15 +47,15 @@
                 </tr>
                 <tr>
                   <td class="info-label">창고생성자</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].ENAME}">김호진</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].ENAME}"></td>
                   <td class="info-label">등록일</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].wh_insert_date}">2010-05-18</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].wh_insert_date.substring(0,10)}"></td>
                 </tr>
                 <tr>
                   <td class="info-label">설명</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].wh_desc}">부자재 발주품 입고창고</td>
-                  <td class="info-label"></td>
-                  <td class="value-cell"></td>
+                  <td class="value-cell" colspan="3" th:text="${wh_dtails[0].wh_desc}"></td>
+<!--                   <td class="info-label"></td> -->
+<!--                   <td class="value-cell"></td> -->
                 </tr>
                 <tr>
                   <td class="info-label">비고</td>
@@ -71,29 +71,31 @@
               <table class="table align-middle table-bordered">
                 <tr>
                   <td class="info-label">관리자명</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].ENAME}">서태웅</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].ENAME}"></td>
                   <td class="info-label">사원번호</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].ECODE}">EMP-001</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].ECODE}"></td>
                 </tr>
                 <tr>
                   <td class="info-label">이메일</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].EEMAIL}">example@abc.com</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].EMP_EMAIL}"></td>
                   <td class="info-label">직통번호</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].EPHONE}">02-9876-5432</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].EMP_TEL}"></td>
                 </tr>
                 <tr>
                   <td class="info-label">팩스번호</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].EFAX}">02-8765-4321</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].EMP_FAX}"></td>
                   <td class="info-label">휴대폰번호</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].EPHONE}">010-1234-5678</td>
+                  <td class="value-cell" th:text="${wh_dtails[0].EMP_PHONE}"></td>
                 </tr>
                 <tr>
                   <td class="info-label">부서/직급</td>
-                  <td class="value-cell" th:text="${wh_dtails[0].EPART} + ' / ' + ${wh_dtails[0].EPOSITION}">전산부 / 대리</td>
+                  <td class="value-cell"  th:text="${wh_dtails[0].EMP_PART} + ' / ' + ${wh_dtails[0].EMP_POSITION}"></td>
+                	<td class="info-label"></td>
+                	<td></td>
                 </tr>
                 <tr>
                   <td class="info-label">비고</td>
-                  <td class="value-cell" colspan="3" th:text="${wh_dtails[0].wh_note}">없음</td>
+                  <td class="value-cell" colspan="3" th:text="${wh_dtails[0].wh_note}"></td>
                 </tr>
               </table>
             </div>

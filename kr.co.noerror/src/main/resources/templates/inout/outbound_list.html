@@ -31,13 +31,9 @@
 				
 				<div class="d-flex">
 					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
-						<label class="d-flex align-items-center gap-1">
-							<input type="checkbox" name="out_status_lst" value="출고대기" onchange="outStatusCk(this)"
-									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고대기' )}"> 출고대기
-						</label>
 						<label class="d-flex align-items-center gap-1"> 
 							<input type="checkbox" name="out_status_lst" value="부분출고" onchange="outStatusCk(this)"
-									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '부분출고' )}"> 부분출고
+									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고요청' )}"> 출고요청
 						</label>
 						 <label class="d-flex align-items-center gap-1"> 
 							<input type="checkbox" name="out_status_lst" value="출고완료" onchange="outStatusCk(this)"

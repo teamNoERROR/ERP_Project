@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noerror.Mapper.inventory_mapper">
+
+
+<!-- 입고창고 + 부자재창고 아이템별 재고수 -->
+<select id="ind_item_stock" resultType="int" parameterType="String">
+	SELECT SUM(ITEM_QTY) AS TOTAL_QTY
+	FROM (
+	  SELECT ITEM_QTY FROM WAREHOUSE_INB WHERE ITEM_CODE = #{ITEM_CODE}
+	  UNION ALL
+	  SELECT ITEM_QTY FROM WAREHOUSE_MATERIAL WHERE ITEM_CODE = #{ITEM_CODE}
+	);
+</select>
+
+<!--  개별 완제품 재고수  -->
+<select id="ind_pd_stock" resultType="int" parameterType="String">
+	SELECT 
+		NVL(SUM(CASE WHEN CHANGE_TYPE = '입고' THEN PD_QTY ELSE 0 END), 0) -
+		NVL(SUM(CASE WHEN CHANGE_TYPE = '출고' THEN PD_QTY ELSE 0 END), 0) AS IND_PD_STOCK
+	FROM WAREHOUSE_FINISH
+	WHERE PRODUCT_CODE = #{PRODUCT_CODE}
+</select>
+
+<!--  완제품 리스트  -->
+<select id="pd_stock_list" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="Map">
+	SELECT * FROM PD_STOCK_VIEW ORDER BY PIDX DESC
+<!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
+</select>
+
+
+</mapper>

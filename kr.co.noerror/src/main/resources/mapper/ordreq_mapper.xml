@@ -157,7 +157,7 @@ FROM order_req_detail ord
 JOIN order_request orh ON ord.order_code = orh.order_code
 JOIN products prd ON ord.product_code = prd.product_code
 JOIN client_comp cmp ON orh.company_code = cmp.company_code
-JOIN employee emp ON orh.ecode = emp.ecode
+JOIN employee2 emp ON orh.ecode = emp.ecode
 WHERE ord.order_code = #{order_code}
 </select>
 

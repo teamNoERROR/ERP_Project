@@ -58,6 +58,10 @@ function order_select() {
   }
 }
 
+
+
+
+
 //주문 생산계획 정보 저장
 function submitOrderPlan() {
     // 필수 필드 가져오기
@@ -205,7 +209,7 @@ function prdplan_update() {
 		return;
 	} 
 	if (!ename.value.trim()) {
-		alert("생산계획 담당자를 입력하세요.");
+		alert("생산계획 담당자가 입력되지 않았습니다.");
 		ename.focus();
 		return;
 	} 

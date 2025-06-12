@@ -32,7 +32,7 @@
 
 
 <!-- 상품코드 중복확인 -->
-<select id="code_dupl" resultType="int" parameterType="kr.co.noerror.DTO.products_DTO">
+<select id="code_dupl_gd" resultType="int" parameterType="kr.co.noerror.DTO.products_DTO">
 	SELECT COUNT(*) AS CNT FROM 
 	<choose>
 		<when test="PRODUCT_TYPE == 'product' or PRODUCT_TYPE == 'half'">

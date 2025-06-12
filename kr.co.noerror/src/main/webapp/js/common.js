@@ -1,3 +1,13 @@
+function settingToday(){
+	document.querySelector("#plan_start_date").value = new Date().toISOString().split('T')[0];
+	document.querySelector("#dueDate").value = new Date().toISOString().split('T')[0];
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	  settingToday();
+});
+
+
 /*--------------------------------------------------------------
   이미지 첨부시 미리보기
 --------------------------------------------------------------*/

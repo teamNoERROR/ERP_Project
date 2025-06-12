@@ -43,8 +43,8 @@
 			<!-- 발주 List Table -->
 			<div id="list-container">
 
-				<div id="table-container" class="table-responsive  rounded" >
-					<table class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
+				<div id="table-container" class="table-responsive  rounded" th:fragment="pchModalList(pch_list, mode)" >
+					<table class="table table-bordered text-center align-middle table-bpurchaseed" th:classappend="${pch_list.size() != 0} ? 'table-hover' : ''" >
 						<thead class="table-light text-center">
 							<tr>
 								<th scope="col">
@@ -61,6 +61,9 @@
 							</tr>
 						</thead>
 						<tbody>
+							<tr th:if="${pch_list.size() == 0}" >
+		                		<td class="text-center no_list_tb" colspan="9" > 등록된 발주건이 없습니다. </td>
+		                	</tr>
 							<tr th:each="p : ${pch_list}" class="modal-trigger"
 								th:data-modal-url="@{/pchreq_detail.do(code=${p.pch_code})}"
 								data-modal-id="pch_modal" style="cursor: pointer;">
@@ -81,19 +84,56 @@
 				</div>
 
 
-				<!-- Pagination -->
-				<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-					<div th:replace="~{/fragments/paging.html :: pagination(${paging}, ${condition}, 'normal')}"></div>
-	
-					<!-- Action Buttons -->
-					<div class="ms-auto">
-						<button type="button" class="btn btn-success" onclick="location.href='/pchreq_insert.do'">
-							<i class="bi bi-plus-lg"></i> 수기등록
-						</button>
-						<!-- 						<button class="btn btn-danger"> -->
-						<!-- 							<i class="bi bi-trash"></i> 삭제 -->
-						<!-- 						</button> -->
-					</div>
+				<div class=" d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		  		 <div class="d-flex">
+		  		  <!-- Pagination -->
+		        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="pchPgList(pchMode)">
+		            <ul class="pagination">
+		                <li class="page-item page-link prev"  
+		                	th:classappend="${1 >= paging.page_no} ? 'disabled' : ''"
+		                	th:attr="data-pageno=1, data-keyword=${condition.search_word}" 
+		                	onclick="pch_modal_pg(this)" >
+							<i class="bi bi-chevron-double-left"></i> </li>
+							
+						<li class="page-item page-link " 
+							th:if="${paging.start_page > 1}"  
+		                	th:classappend="${1 >= paging.page_no} ? 'disabled' : ''"
+		                	th:attr="data-pageno=${paging.start_page - 2}, data-keyword=${condition.search_word}" 
+		                	onclick="pch_modal_pg(this)"  >
+							<i class="bi bi-chevron-left"></i> </li>
+							
+		                
+		                <th:block th:each="pgn : ${#numbers.sequence(paging.start_page, paging.end_page)}"  >
+		                <li class="page-item page-link pgnum" th:classappend ="${paging.page_no == pgn} ? 'curpg' : ''" 
+		                	th:attr="data-keyword=${condition.search_word}, data-pageno=${pgn}" 
+		                	onclick="pch_modal_pg(this)"   >[[${pgn}]]</li>
+		                </th:block>
+		                
+		                <li class="page-item page-link " 
+		                	th:if="${paging.end_page < paging.page_cnt}"
+		                	th:classappend="${paging.page_no >= paging.page_cnt} ? 'disabled' : ''" 
+		                	th:attr="data-keyword=${condition.search_word}, data-pageno=${paging.end_page + 2}" 
+		                	onclick="pch_modal_pg(this)"  >
+							<i class="bi bi-chevron-right"></i> </li>
+							
+		                <li class="page-item page-link next" 
+		                	th:classappend="${paging.page_no >= paging.page_cnt} ? 'disabled' : ''" 
+		                	th:attr="data-keyword=${condition.search_word}, data-pageno=${paging.page_cnt}" 
+		                	onclick="pch_modal_pg(this)"  >
+							<i class="bi bi-chevron-double-right"></i> </li>
+		            </ul>
+			        </div>
+			        
+			        </div>
+			        <!-- Action Buttons -->
+			        <div class=" d-flex gap-2"> 
+			            <!-- Action Buttons -->
+							<div class="ms-auto">
+								<button type="button" class="btn btn-success" onclick="location.href='/pchreq_insert.do'">
+									<i class="bi bi-plus-lg"></i> 수기등록
+								</button>
+							</div>
+			        </div>
 				</div>
 			</div>
 		</section>

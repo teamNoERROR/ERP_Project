@@ -167,7 +167,7 @@ public class IOSF_Warehouse_Controller {
 	   return "/warehouse/out_warehouses_list.html";
    }
    
- //부자재 창고 리스트
+ //완제품 창고 리스트
    @GetMapping("/warehouses_fs_list.do")
    public String warehouses_fs_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -176,7 +176,7 @@ public class IOSF_Warehouse_Controller {
   
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
-		m.addAttribute("mmenu","완제품 창고 관리");
+		m.addAttribute("mmenu","완제품 창고");
 	   
 	   	this.map = new HashMap<>();
 	      Map<Object, Object>   iosf_list_map = this.map;

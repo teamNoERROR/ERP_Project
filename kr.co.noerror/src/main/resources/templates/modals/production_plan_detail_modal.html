@@ -14,18 +14,20 @@
 						<!-- 생산계획코드를 data 속성에 저장 -->
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
-							th:attr="data-plan-code=${details[0].plan_code}">
+							th:attr="data-plan-code=${details[0].plan_code}" th:disabled="${details[0].plan_status == '생산완료'}">
 							<option selected value="발주상태 선택">생산상태 선택</option>
-							<option value="생산계획수립">생산계획수립</option>
+<!-- 							<option value="생산계획수립">생산계획수립</option> -->
 							<option value="생산계획확정">생산계획확정</option>
 							<option value="생산중">생산중</option>
 							<option value="생산완료">생산완료</option>
 							<option value="생산지연">생산지연</option>
 						</select>
-
-						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="plan_status_update()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
+						
+						<button type="button" class="btn"  
+									th:classappend="${details[0].plan_status == '생산완료'} ? ' btn-secondary' : ' btn-info'"
+    								th:disabled="${details[0].plan_status == '생산완료'}"
+									style="white-space: nowrap;" onclick="plan_status_update()">
+							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
 					</div>
 				</div>

@@ -54,13 +54,13 @@
 							<th scope="col"><input type="checkbox" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">주문번호</th>
-							<th scope="col">주문일자</th>
 							<th scope="col">거래처코드</th>
 							<th scope="col">거래처명</th>
 							<th scope="col">담당자명</th>
 							<th scope="col">거래금액</th>
 							<th scope="col">납품예정일</th>
 							<th scope="col">주문진행상황</th>
+							<th scope="col">등록일</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -75,7 +75,6 @@
 									<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="choice_ord"></td>
 							<td>[[${o.oidx}]]</td>
 							<td>[[${o.order_code}]]</td>
-							<td>[[${o.request_date.substring(0, 10)}]]</td>
 							<td>[[${o.company_code}]]</td>
 							<td>[[${o.company_name}]]</td>
 							<td>[[${o.manager_name}]]</td>
@@ -83,6 +82,7 @@
 								0, 'COMMA', 0, 'POINT')}]] 원</td>
 							<td>[[${o.due_date.substring(0, 10)}]]</td>
 							<td>[[${o.order_status}]]</td>
+							<td>[[${o.request_date.substring(0,10)}]]</td>
 						</tr>
 					</tbody>
 				</table>

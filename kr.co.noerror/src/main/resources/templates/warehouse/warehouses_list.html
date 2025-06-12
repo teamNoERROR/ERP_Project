@@ -59,6 +59,8 @@
                     <th scope="col">연락처</th>
                     <th scope="col">창고구분</th>
                     <th scope="col">사용여부</th>
+                    <th scope="col">저장품목수</th>
+                    <th scope="col">전체재고수</th>
                     <th scope="col">등록일</th>
                 </tr>
                 </thead>
@@ -84,9 +86,11 @@
                     <td th:text="${wh.wh_name}"></td>
                     <td th:text="${'(' + wh.wh_zipcode +') ' + wh.wh_addr1 + ' ' + wh.wh_addr2}"></td>
                     <td th:text="${wh.ENAME}"></td>
-                    <td th:text="${wh.EPHONE}"></td>
+                    <td th:text="${wh.EMP_TEL}"></td>
                     <td th:text="${wh.wh_type}"></td>
                     <td th:text="${wh.wh_use_flag}"></td>
+                    <td ></td>
+                    <td ></td>
                     <td th:text="${wh.wh_insert_date.substring(0,10)}"></td>
                 </tr>
                 

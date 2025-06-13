@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +13,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.common_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
+import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
@@ -31,6 +37,7 @@ import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.client_service;
+import kr.co.noerror.Service.common_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inbound_service;
@@ -49,7 +56,7 @@ public class common_controller {
 	employee_DTO emp_dto;
 	
 	@Autowired
-	common_DAO common_svc;
+	common_service common_svc;
 	
 	@Autowired
 	private goods_service g_svc;  //품목 서비스
@@ -434,5 +441,20 @@ public class common_controller {
 	}
 		
 
-
+	 @PostMapping("/outPd_listMd.do")
+	 public String out_pd_list(){
+		 return "/modals/out_pd_modal.html"; 
+	 }
+	 
+	 @PostMapping("/outPd_listMd2.do")
+//	 @ResponseBody
+	 public String out_pd_list_Modal(HttpServletResponse res, @RequestBody String out_pd_data) throws IOException {
+		 this.pw = res.getWriter();
+		 
+		 String out_pd_list = this.common_svc.out_pd_list(out_pd_data);  
+		 this.pw.print(out_pd_list);
+		 
+		 return null; 
+   
+	 }
 }

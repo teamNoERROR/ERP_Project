@@ -51,7 +51,7 @@
 							</tr>
 							<tr>
 								<td class="info-label">재고 합계</td>
-								<td class="value-cell"></td>
+								<td class="value-cell" th:text="${ind_pd_stock[goods_one.PRODUCT_CODE] == null ? 0 : ind_pd_stock[goods_one.PRODUCT_CODE]} ">[[${ind_pd_stock[pdlist.PRODUCT_CODE]}]]</td>
 								<td class="info-label">안전 재고수</td>
 								<td class="value-cell">[[${goods_one.PD_SAFE_STOCK}]]</td>
 							</tr>

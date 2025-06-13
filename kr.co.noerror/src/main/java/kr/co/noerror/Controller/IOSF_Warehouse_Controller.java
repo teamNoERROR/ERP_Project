@@ -1,15 +1,20 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -554,4 +559,25 @@ public class IOSF_Warehouse_Controller {
          return result;
       }
 
+      
+      @PostMapping("/outProduct.do")
+      public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
+  		this.pw = res.getWriter();
+  		
+  		try {
+  			
+//  			int out_product = iosf_service.out_product(outData);
+  			
+  		} catch (Exception e) {
+  			this.log.error(e.toString());
+  			e.printStackTrace();
+  		}
+  		
+  		return null;
+  	}
+      
+      
+      
+      
+      
 }

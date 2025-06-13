@@ -72,12 +72,15 @@ public class IOSF_DTO {
     
     String plan_code;  //생산계획번호 
     int pd_qty;	//변화수량 
+    
+    String pidx;
     String product_code; // 제품 코드
     String product_name; //제품명  
     String product_class1;
     String product_class2;
     String pd_file_renm;
     String pd_api_fnm;
-    
+    String pd_insert_date;
+    int ind_pd_stock;
     
 }

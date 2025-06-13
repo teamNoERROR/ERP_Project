@@ -60,16 +60,14 @@
                         <th scope="col" style="width:220px;">상세이력</th>
                     </tr>
                 </thead>
-                <tbody >
+                <tbody id="stock_tb">
                 
                 	<tr th:if="${stock_pd_total == 0}" >
                 		<td class="text-center no_list_tb" colspan="8"> 등록된 상품이 없습니다. </td>
                 	</tr>
                 	
-                    <tr th:if="${stock_pd_total != 0}" th:each="stpdlst, idx : ${stock_pd_list}" style="cursor: pointer;">
-<!--                         <td onclick="event.stopPropagation()"> -->
-<!--                         	<input type="checkbox" data-type="product"> -->
-<!--                         </td> -->
+                    <tr th:if="${stock_pd_total != 0}" th:each="stpdlst, idx : ${stock_pd_list}" 
+                    	class="stock_pd_row" style="cursor: default;">
                         <td > </td>
                         <td class="p-0">
                         
@@ -78,7 +76,7 @@
                         <td >[[${stpdlst.product_name}]]</td>
                         <td>[[${stpdlst.product_class1}]]</td>
                         <td>[[${stpdlst.product_class2}]]</td>
-                         <td></td>
+                         <td>[[${ind_pd_stock[stpdlst.product_code]}]]</td>
                          <td >
                          	<button type="button" class="btn btn-warning me-2">입고내역</button>
                          	<button type="button" class="btn btn-success">출고내역</button>

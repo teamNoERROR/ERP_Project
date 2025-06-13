@@ -1,0 +1,54 @@
+<div class="modal fade"  id="out_pd_modal"  tabindex="-1" aria-labelledby="out_pd_modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">출고 요청</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body row justify-content-center d-flex gap-3">
+
+		<h5 class="mt-4">부자재 목록</h5>
+		
+		<div class="mb-3">
+		<table class="table table-bordered align-middle text-center">
+			<thead class="table-light">
+				<tr >
+					<th >번호</th>
+					<th >품목코드</th>
+					<th >품목명</th>
+					<th >전체재고</th>
+					<th >출고수량</th>
+				</tr>
+			</thead>
+			<tbody id="out_pds">
+			</tbody>
+		</table>
+		</div>
+		
+		
+		 <div class="row mb-3 d-flex align-items-md-center justify-content-end">  
+          <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
+              <div class="col-md-2 mb-1 ">
+                  <label class="form-label fw-semibold">작성자</label>
+                  <input type="text" class="form-control"  value="이명헌" readonly>
+              </div>
+              <div class="col-md-2 mb-1 ">
+                  <label class="form-label fw-semibold">사원코드</label>
+                  <input type="text" class="form-control" id="employee_code" value="EMP-00001" readonly>
+              </div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+       <!-- Action Buttons -->
+        <div class="d-flex gap-2"> 
+            <div class="ms-auto">
+                <button type="button"  class="btn btn-success" onclick="goOutList()">
+                	<i class="bi bi-arrow-right-square"></i>&nbsp; 출고</button>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

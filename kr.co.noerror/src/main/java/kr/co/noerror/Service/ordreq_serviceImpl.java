@@ -45,6 +45,8 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
         params.put("statuses", search_cond.getStatuses());
         params.put("start", paging_info.getStart());
         params.put("end", paging_info.getEnd());
+        
+        System.out.println("params : " + params);
         return this.ordreq_dao.paged_list(params);
 	}
 	

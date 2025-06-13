@@ -161,7 +161,7 @@ SELECT
     prd.product_name,
     prd.product_spec,
     prd.product_unit, 
-    ord.product_qty, 
+    pld.product_qty, 
     orh.due_date, 
     prd.product_cost,
     prd.product_class1,

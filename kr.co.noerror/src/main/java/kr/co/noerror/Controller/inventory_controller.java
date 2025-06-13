@@ -3,6 +3,7 @@ package kr.co.noerror.Controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
@@ -30,17 +33,35 @@ public class inventory_controller {
 	M_paging m_pg;
 	
 	
+	//입고창고 + 부자재창고 아이템별 재고수
+	@GetMapping("/item_stock.do")
+	public String item_stock(HttpServletResponse res
+							, @RequestParam("") String item_code 
+							) throws IOException {
+		this.pw = res.getWriter();
+		try {
+			int result = this.inv_svc.ind_item_stock(item_code);
+			this.pw.print(result);
+			
+		} catch (Exception e) {
+			this.pw.print("error");
+			
+		} finally {
+			this.pw.close();
+		}
+		return null;
+	}
+	
 	
 	//재고관리 페이지 이동 + 완제품 재고리스트  
 	@GetMapping("/inventory.do")
 	public String inventory_list(Model m
-								,@RequestParam(value = "pd_code", required = false) String pd_code
 								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
-		
 		List<IOSF_DTO> pd_stock_list = this.inv_svc.pd_stock_list();  //제품 재고 리스트
-//		int ind_pd_stock = this.inv_svc.ind_pd_stock(pd_code);
+		Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock();
+		
 		//페이징 관련 
 //		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, gd_stock_list_sch.size());
 //		int bno = this.m_pg.serial_no(gd_stock_list_sch.size(), pageno, post_ea); 
@@ -63,6 +84,7 @@ public class inventory_controller {
 //		m.addAttribute("bno", bno);
 		m.addAttribute("stock_pd_total", pd_stock_list.size());
 		m.addAttribute("stock_pd_list", pd_stock_list);
+		m.addAttribute("ind_pd_stock", ind_pd_stock);
 		
 //		m.addAttribute("pageinfo", pageinfo);
 		
@@ -71,24 +93,7 @@ public class inventory_controller {
 	
 	
 	
-	//입고창고 + 부자재창고 아이템별 재고수
-	@GetMapping("/item_stock.do")
-	public String item_stock(HttpServletResponse res
-							, @RequestParam("") String item_code 
-							) throws IOException {
-		this.pw = res.getWriter();
-		try {
-			int result = this.inv_svc.ind_item_stock(item_code);
-			this.pw.print(result);
-			
-		} catch (Exception e) {
-			this.pw.print("error");
-			
-		} finally {
-			this.pw.close();
-		}
-		return null;
-	}
+	
 	
 
 }

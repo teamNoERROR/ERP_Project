@@ -71,7 +71,7 @@ public class ordreq_controller {
 	//주문 리스토 출력
 	@GetMapping("/order.do")
 	public String ordreq_list(@ModelAttribute search_condition_DTO search_cond, Model model) {
-		
+		System.out.println("search_cond : " + search_cond);
 	    int search_count = this.ordreq_list_service.search_count(search_cond);
 	    
 	    paging_info_DTO paging_info = this.m_pg2.calculate(
@@ -97,7 +97,7 @@ public class ordreq_controller {
 	
 	
 	
-	//생산계획 작성시 주문코드에 해당하는 제품목록 제공
+	//생산계획 작성시 주문제품목록 제공
 	@ResponseBody
 	@GetMapping("/ordreq_products.do")
 	public List<ordreq_res_DTO> ordreq_products(@RequestParam(name="code") String order_code) {

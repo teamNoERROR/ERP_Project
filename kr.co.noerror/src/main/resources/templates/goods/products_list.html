@@ -120,7 +120,7 @@
                         <td>[[${pdlist.PRODUCT_UNIT}]]</td>
                         <td class="text-end">[[${#numbers.formatInteger(pdlist.PRODUCT_COST,0,'COMMA')}]] </td>
                         <td class="text-end">[[${#numbers.formatInteger(pdlist.PRODUCT_PRICE,0,'COMMA')}]] </td>
-                        <td>재고합계</td>
+                        <td th:text="${ind_pd_stock[pdlist.PRODUCT_CODE] == null ? 0 : ind_pd_stock[pdlist.PRODUCT_CODE]} ">[[${ind_pd_stock[pdlist.PRODUCT_CODE]}]]</td>
                         <td>[[${pdlist.PD_USE_FLAG}]]</td>
                     </tr>
                 </tbody>

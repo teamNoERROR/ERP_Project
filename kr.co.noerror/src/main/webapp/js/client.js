@@ -145,11 +145,7 @@ function insert_client(){
 		mng_phone.focus();
 				
 	}
-	else if(mng_fax.value==""){
-		alert("담당자의 팩스번호를 입력하세요");
-		mng_fax.focus();
-				
-	}else if(clt_file){   //파일첨부 함경우 
+	else if(clt_file){   //파일첨부 함경우 
 		var imgSize = clt_file.size; // 파일 크기
 		var maxSize = 2 * 1024 * 1024; // 2MB제한
 			

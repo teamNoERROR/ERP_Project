@@ -385,6 +385,14 @@ function inbnd_modal_pg (page){
 ----------------------------------------------------------- */
 function ordListOpen(parentType){
 	const statuses = ["주문확인"];
+	/*const statuses = new URLSearchParams();
+	statuses.append("statuses", "주문확인");
+	
+	const planStatus = ["생산계획수립", "생산계획확정", "생산중", "생산완료", "생산지연"];
+	planStatus.forEach(plstatus => {
+	  statuses.append("plan_status", plstatus);
+	});*/
+
 	fetch("./ord_list_modal.do?statuses="+statuses+"&parent="+parentType, {
 		method: "GET",
 
@@ -538,4 +546,126 @@ function emp_modal_pg (page){
 		
 		console.log("통신오류발생" + error);
 	});
+}
+
+/*--------------------------------------------------------------
+	출고요청 품목 모달  
+----------------------------------------------------------- */
+function pdOutReq(){
+	var out_list = document.querySelectorAll("input[name='checkCodes']:checked");
+	var out_req = new Array();
+	
+	if (out_list.length == 0) {
+		alert("출고시킬 항목을 선택해주세요.");
+	}
+	else{
+		out_list.forEach(chkOut => {
+			var out_pidx = chkOut.getAttribute("data-pdidx");		
+			var out_pd_code = chkOut.getAttribute("data-product_code");
+			
+			out_req.push({ 
+				idx: out_pidx, 
+				code: out_pd_code
+			})
+		});
+		
+		fetch("./outPd_listMd.do", {
+			method: "POST",
+			headers: {"content-type": "application/json"},
+			body: JSON.stringify(out_req)
+	
+		})
+		.then(function(data) {
+			return data.text();
+		})
+		.then(function(result) {
+			document.getElementById("modalContainer").innerHTML = result;
+			
+			fetch("./outPd_listMd2.do", {
+				method: "POST",
+				headers: {"content-type": "application/json"},
+				body: JSON.stringify(out_req)
+			})
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(jsonList) {
+				
+				var outModal = document.getElementById("out_pd_modal");
+				var outpd_tbody = outModal.querySelector('#out_pds');
+				
+				outpd_tbody.innerHTML = ''; // 기존 행 제거
+				appendOutPdsRow(outpd_tbody, jsonList); // 새 행 추가
+				
+				var modal= new bootstrap.Modal(outModal);
+				modal.show();
+			})
+			.catch(function(error) {
+				console.log("데이터로드실패" + error);
+			});
+		}).catch(function(error) {
+			console.log("통신오류발생" + error);
+		});
+	}
+}
+
+//모달에 출고상품 테이블 뭍여넣기 
+function appendOutPdsRow(tbody, dataList){
+	dataList.forEach((outList,i) => {
+		var outTr = document.createElement('tr');
+		outTr.className = "outPd_row";
+		outTr.setAttribute("data-whcd", outList.product_code);
+		outTr.setAttribute("data-plncd", outList.product_name);
+		outTr.setAttribute("data-empcd", outList.pd_qty);
+		  
+		outTr.innerHTML = `
+		    <td style="width:10%;">`+(i+1)+`</td>
+		    <td style="width:20%;" class="pdCd">`+outList.product_code+`</td>
+		    <td style="width:50%;">`+outList.product_name+`</td>
+		    <td style="width:10%;" >`+outList.pd_qty+`</td>
+		    <td style="width:10%;"><input type="number" name="out_qty" class="form-control out_qty" ></td>
+		  `;
+		  tbody.append(outTr);
+	});	
+}
+
+//상품 출고
+function goOutList(){
+	var outPdTrList = document.querySelectorAll("tr.outPd_row");
+	var qty = [];
+	qty.push({
+		
+	});
+	
+	
+	outPdTrList.forEach(inputData => {
+		var outPdCd = inputData.querySelector(".pdCd").textContent;
+		var outPdNm = inputData.querySelector(".pdNm").textContent;
+		var outPdQty = inputData.querySelector("input[name='out_qty']").value;
+		
+		qty.push({
+			code :  outPdCd,
+			name :  outPdNm,
+			pd_qty : outPdQty
+		}); 
+	});
+	
+	fetch("./outProduct.do", {
+		method: "POST",
+		headers: {"content-type": "application/json"},
+		body: JSON.stringify(qty)
+	})
+	.then(function(data) {
+		return data.text();
+	})
+	.then(function(result) {
+
+	
+	
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	})
+	
+	
+	
 }

@@ -86,7 +86,7 @@ public class proplan_controller {
 		return  "/modals/bom_items_modal.html";
 	}
 	
-	
+	//생산계획 리스트 
 	@GetMapping("/production.do")
 	public String production(Model m, @ModelAttribute search_condition_DTO search_cond) {
 		

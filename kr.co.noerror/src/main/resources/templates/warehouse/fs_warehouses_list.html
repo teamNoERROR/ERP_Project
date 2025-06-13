@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>완제품 창고</title>
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -22,7 +23,7 @@
 		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  id="wh_type" value="mt"  style="background: #82CCDD; color: #fff;">완제품</button>
 	</div>
 
-<!-- 			<label class="form-label d-block  mb-2">*선택하신 출고 창고로 선택된 품목들이 이동 됩니다.</label> -->
+			<label class="form-label d-block  mb-2">*선택하신 창고로 선택된 품목들이 이동 됩니다.</label>
 			<!-- 같은 줄 안에 배치 (d-flex로 정렬), 기능은 각각 따로 -->
 			<div class="d-flex justify-content-between align-items-center gap-3 mb-3">
 			
@@ -36,16 +37,15 @@
 <!-- 			    <i class="bi bi-search"></i> -->
 <!-- 			</button> -->
 			<div class="input-group">
-<!-- 	            <input type="text"  id="wh_code" class="form-control" style="width: 200px;" placeholder="출고 창고가 선택됩니다" readonly> -->
-<!-- 	            <button type="button" class="btn btn-primary modal-trigger"  -->
-<!-- 	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}" -->
-<!-- 	            		data-modal-id="wh_type_list" style="cursor: pointer;"> -->
-<!-- 	                <i class="bi bi-search"></i> -->
-<!-- 	            </button> -->
+	            <input type="text"  id="wh_code" class="form-control" style="width: 200px;" placeholder="완제품 창고가 선택됩니다" readonly>
+	            <button type="button" class="btn btn-primary modal-trigger" 
+	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}"
+	            		data-modal-id="wh_type_list" style="cursor: pointer;">
+	                <i class="bi bi-search"></i>
+	            </button>
 	        </div>
 			
-			  <form class="d-flex align-items-center gap-2 mb-0" >
-<!-- 			    <input type="text" id="wh_code" class="form-control" style="width: 200px;" placeholder="출고 창고가 선택됩니다."/> -->
+				<form class="d-flex align-items-center gap-2 mb-0" >
 			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" />
 			    <input type="hidden" name="item_code" id="item_code" class="form-control" />
 			    <input type="hidden" id="client_code" class="form-control" />
@@ -54,11 +54,12 @@
 			    <input type="hidden" id="item_count" class="form-control" />
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
 			            style="white-space: nowrap; min-width: 70px;" onclick="whMove()">
-			      <i class="bi bi-rocket-takeoff me-1"></i> 출고요청
+			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
 			    </button>
 			  </form>
 			</div>
 			
+		
 			<!-- 검색바: 위 margin 줄이기 (my-4 → my-2) -->
 			<form class="row g-2 my-2 justify-content-end"
 			      th:action="@{/warehouses_mt_list.do}" method="get">
@@ -75,7 +76,7 @@
 			  </div>
 			</form>
 			</div>
-			<!-- 부자재 창고 List Table ( 부자재 창고)-->
+			<!-- 완제품 창고 List Table ( 완제품 창고)-->
 <!-- 			<div class="table-responsive rounded mt-2" th:if="${wh_check == 'yesdata'}"> -->
 			<div class="table-responsive rounded mt-2"  style="width: 100%; overflow-x: auto;">
 				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${wh_check != 'nodata'} ? 'table-hover' : ''">
@@ -104,13 +105,14 @@
 				        th:data-modal-url="@{'/fs_warehouse_modal.do?finish_code=' + ${fs_wh.finish_code}}"
 				       	data-modal-id="wh_fs_list"
 				        style="cursor:pointer;">
-				      <td>
-				      	<input type="checkbox" name="deleteCodes"
+				      <td onclick="event.stopPropagation();">
+				      	<input type="checkbox" name="checkCodes"
 				   			   	class="move-checkbox"
 				      	 	   th:value="${fs_wh.wfs_idx}" 
 						       th:data-wfs_code="${fs_wh.wfs_code}" 
 						       th:data-plan_code="${fs_wh.plan_code}" 
 						       th:data-pd_qty="${fs_wh.pd_qty}" 
+						       th:data-pdidx="${fs_wh.pidx}" 
 						       th:data-product_code="${fs_wh.product_code}" 
 						       th:data-wh_code="${fs_wh.wh_code}"
 						       data-wh_type="out"
@@ -185,9 +187,14 @@
 				
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
+				<button type="button" class="btn btn-info d-flex align-items-center px-2"
+			            		style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()">
+			      			<i class="bi bi-box-seam"></i> &nbsp;출고요청
+			    		</button>
 					<div class="ms-auto">
+						
 						<button type="button" class="btn btn-success" onclick="location.href='/warehouse_fs_savePage.do'">
-               				 <i class="bi bi-plus-lg"></i> 수기 등록
+               				 <i class="bi bi-plus-lg"></i> 수기등록
 						</button>
 					</div>
 				</div>

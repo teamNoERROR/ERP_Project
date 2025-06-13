@@ -1,22 +1,19 @@
 package kr.co.noerror.Service;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
-import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.Model.M_File_Rename;
-import java.util.Random;
 
 @Service
 @Repository("IOSF_Warehouse_Service")
@@ -172,7 +169,21 @@ public class IOSF_Warehouse_Service {
     	
     	return wh_delete_result;
     }
+
+    //완제품 출고 
+	/*public int out_product(String outData) {
+		JSONArray ja = new JSONArray(outData);
+		int data_ea = ja.length();
+		for (int w = 0; w < data_ea; w++) {
+		    JSONObject jo = ja.getJSONObject(w);
+		    
+		    IOSF_DTO dto = new IOSF_DTO();
+		    dto.setProduct_code(jo.getString("code"));
+		    
+			
+		return 0;
+		}
     
- 
+	}*/
     
 }

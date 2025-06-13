@@ -181,6 +181,8 @@
 
 </update>
 
+
+<!-- 창고별 제품 리스트 -->
 <select id="IOSF_select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
   <choose>
     <when test="wh_type == 'in'">
@@ -308,6 +310,7 @@ WHERE RNUM > #{startIndex}
   ]]>
   </when>
   
+  <!-- 완제품 창고  -->
   <when test="wh_type == 'fs'">
   <![CDATA[
 SELECT *
@@ -324,6 +327,7 @@ FROM (
       fs.EMPLOYEE_CODE AS emp_code,
       fs.FS_INSERT_DATE AS fs_insert,
       w.WH_NAME AS wh_name,
+      pld.pd_idx AS pidx,
       pld.product_code,
       pld.product_name,
       pld.ename AS emp_name,
@@ -881,5 +885,11 @@ WHERE out.WOUT_CODE = #{code}
     )
  </insert>
   -->
+
+
+
+
+
+
 
 </mapper>

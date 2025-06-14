@@ -2,6 +2,8 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>거래처 등록하기</title>
+
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
@@ -22,7 +24,7 @@
 <div class="form-section">
       <div class="row">
         <!-- 이미지 업로드 -->
-	<div class="col-md-3 d-flex flex-column align-items-end mt-4">
+	<div class="col-md-3 d-flex flex-column align-items-end mt-5">
 			<!-- 미리보기 네모칸 -->
 		  <div class="image-box mb-2" >
 		    <img id="previewImage" src="./img/no-image.svg" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
@@ -123,15 +125,15 @@
               <label class="form-label">담당자명*</label>
               <input type="text" class="form-control"  id="mng_name">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <label class="form-label">부서*</label>
               <input type="text" class="form-control" id="mng_part">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <label class="form-label">직급*</label>
               <input type="text" class="form-control"  id="mng_position">
             </div>
-             <div class="col-md-3">
+             <div class="col-md-5">
               <label class="form-label">이메일*</label>
               <input type="text" class="form-control"  id="mng_email">
             </div>
@@ -141,15 +143,15 @@
             
             <div class="col-md-3">
               <label class="form-label">직통번호*</label>
-              <input type="text" class="form-control" id="mng_tel">
+              <input type="text" class="form-control" id="mng_tel" maxlength="12">
             </div>
             <div class="col-md-3">
               <label class="form-label">휴대폰번호*</label>
-              <input type="text" class="form-control" id="mng_phone">
+              <input type="text" class="form-control" id="mng_phone" maxlength="13">
             </div>
             <div class="col-md-3">
               <label class="form-label">팩스번호</label>
-              <input type="text" class="form-control"  id="mng_fax">
+              <input type="text" class="form-control"  id="mng_fax" maxlength="13">
             </div>
           </div>
            <div class="row mb-3">

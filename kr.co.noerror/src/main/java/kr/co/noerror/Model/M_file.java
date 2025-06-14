@@ -23,6 +23,8 @@ import com.jcraft.jsch.Session;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import kr.co.noerror.DAO.client_DAO;
+import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.Service.goods_serviceImpl;
 
@@ -32,9 +34,15 @@ public class M_file {
 //	
 //	@Autowired
 //	goods_serviceImpl g_svc;
-//	
+
+	@Resource(name="client_DAO")
+	client_DAO clt_dao;
+	
 	@Resource(name="file_DTO") 
 	file_DTO f_dto;
+	
+	@Resource(name="del_DTO") 
+	del_DTO del_dto;
 	
 	String file_rnm = null;
 	
@@ -138,42 +146,38 @@ public class M_file {
 		} catch (Exception e) {
 			 System.out.println("SFTP 연결 실패");
 			 e.printStackTrace();
+			 
 		} finally {
+			
 			if (channelSftp != null && channelSftp.isConnected()) {
 				channelSftp.disconnect();
 			}
 			if (session != null && session.isConnected()) {
 				session.disconnect();
 			}
-			
 		}
 		return imageBytes;
 	}
 	
 	//cdn서버에 있는 해당 파일을 삭제하는 메소드 
-	public boolean cdn_ftpdel(String fileyes, String idx) throws Exception {
+	public boolean cdn_ftpdel(String fileYes) throws Exception {
 		this.fc = new FTPClient();
 		this.fcc = new FTPClientConfig();
 		this.fc.configure(fcc);  
 		this.fc.connect(this.host,this.port);  //연결 실행 
 		this.fc.enterLocalPassiveMode();  //PassiveMode(전송모드)로 세팅(FTP접속환경)
 	
-//		if(this.fc.login(this.user, this.pass)) {
-//			String filesize = this.fc.getSize("/imgfile/"+fileyes);
-//			if(filesize != null) {  //ftp에 파일이 있을 때 
-//				this.result = this.fc.deleteFile("/imgfile/"+fileyes);  //FTP에 있는 해당 파일명의 파일 삭제 
-				//this.fc.removeDirectory("/imgfile/");   //FTP에 있는 해당 디렉토리 통째로 삭제 
-				//this.fc.makeDirectory("/imgfile/");  //FTP에 디렉토리 생성 
-
-//				if(this.result==true) {  //ftp서버에서 삭제가 완료 된 후 DB에서도 삭제 
-//					this.g_svc.del_data(idx);  //고유값으로 db에서 삭제 실행 
-//				}
+		if(this.fc.login(this.user, this.pass)) {
+			String filesize = this.fc.getSize("/imgfile/"+fileYes);
+			if(filesize != null) {  //ftp에 파일이 있을 때 
 				
-//			}else {  //ftp에 파일이 없을 때 
-//				this.g_svc.del_data(idx);  //그냥 DB에서만 삭제 
-//				this.result = true;
-//			}
-//		}
+				this.result = this.fc.deleteFile("/imgfile/"+fileYes);  //FTP에 있는 해당 파일명의 파일 삭제 
+				//파일 삭제 성공시 result == true
+				
+			}else {  //ftp에 파일이 없을 때 
+				this.result = true; //그래도 db에서 삭제 진행 
+			}
+		}
 		return this.result;
 		
 	}

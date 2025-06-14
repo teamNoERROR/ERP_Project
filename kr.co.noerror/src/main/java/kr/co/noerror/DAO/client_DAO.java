@@ -56,6 +56,12 @@ public class client_DAO {
 		return result;
 	}
 
+	//거래처 정보 수정 
+	public int clt_modifyok(client_DTO cdto) {
+		int result = this.st.update("clt_modify",cdto);
+		return result;
+	}
+
 
 
 }

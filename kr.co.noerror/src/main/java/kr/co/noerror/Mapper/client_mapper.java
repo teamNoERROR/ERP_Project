@@ -16,4 +16,6 @@ public interface client_mapper {
 	List<client_DTO> client_list(Map<String, Object> map);
 	
 	client_DTO client_detail(Map<String, String> map);
+	
+	int clt_modify(client_DTO cdto);
 }

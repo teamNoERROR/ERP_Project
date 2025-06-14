@@ -20,4 +20,7 @@ public interface client_service {
 	//거래처 등록 
 	int clt_insert(client_DTO cdto, MultipartFile clientImage);
 
+	//거래처 정보수정
+	int clt_modifyok(client_DTO cdto, MultipartFile clientImage);
+
 }

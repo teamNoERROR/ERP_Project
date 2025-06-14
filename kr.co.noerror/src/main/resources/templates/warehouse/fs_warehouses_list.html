@@ -162,7 +162,7 @@
 			   <!-- 첫페이지로 -->
 			    <li class="page-item prev" th:classappend="${1>= pageSize} ? '' : 'disabled'">
 			      <a class="page-link"
-			         th:href="@{/warehouses_fs_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize})}">&laquo;</a>
+			         th:href="@{/warehouses_fs_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, fs_wh_list=${fs_wh_name})}">&laquo;</a>
 			    </li>
 			
 					
@@ -171,7 +171,7 @@
 			        th:each="i : ${#numbers.sequence(startPage, endPage)}"
 			        th:classappend="${i == currentPage} ? 'active'">
 			      <a class="page-link" 
-			         th:href="@{/warehouses_fs_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize})}" 
+			         th:href="@{/warehouses_fs_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize}, fs_wh_list=${fs_wh_name})}" 
 			         th:text="${i}">1</a>
 			    </li>
 			    
@@ -179,7 +179,7 @@
 			
 			    <!-- 끝페이지로 -->
 			    <li class="page-item next" th:classappend="${currentPage >= totalPages} ? '' : 'disabled'">
-			      <a class="page-link" th:href="@{/warehouses_fs_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize})}">&raquo;</a>
+			      <a class="page-link" th:href="@{/warehouses_fs_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, fs_wh_list=${fs_wh_name})}">&raquo;</a>
 			    </li>
 			
 			  </ul>
@@ -191,10 +191,10 @@
 				  <select id="pageSizeSelect" class="form-select" style="width: auto; display: inline-block;">
 				    <option th:value="5" th:selected="${pageSize == 5}">5개씩 보기</option>
 				    <option th:value="10" th:selected="${pageSize == 10}">10개씩 보기</option>
-				    <option th:value="10" th:selected="${pageSize == 15}">15개씩 보기</option>
-				    <option th:value="10" th:selected="${pageSize == 20}">20개씩 보기</option>
-				    <option th:value="10" th:selected="${pageSize == 25}">25개씩 보기</option>
-				    <option th:value="20" th:selected="${pageSize == 30}">30개씩 보기</option>
+				    <option th:value="15" th:selected="${pageSize == 15}">15개씩 보기</option>
+				    <option th:value="20" th:selected="${pageSize == 20}">20개씩 보기</option>
+				    <option th:value="25" th:selected="${pageSize == 25}">25개씩 보기</option>
+				    <option th:value="30" th:selected="${pageSize == 30}">30개씩 보기</option>
 				  </select>
 				</div>
 				</div>

@@ -2,6 +2,8 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>거래처 리스트</title>
+
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -73,7 +75,7 @@
 						<tr th:if="${client_total != 0}"
 							th:each="cltlist, idx : ${client_list}"
 							th:attr="data-idx=${cltlist.CIDX}, data-mngcode=${cltlist.MANAGER_CODE},
-									data-mngphn=${cltlist.MNG_PHONE},
+									data-mngphn=${cltlist.MNG_PHONE}, data-code=${cltlist.COMPANY_CODE},
 									data-type='client'"
 							th:onclick="openCltDetail(this)" style="cursor: pointer;">
 							<td onclick="event.stopPropagation()">

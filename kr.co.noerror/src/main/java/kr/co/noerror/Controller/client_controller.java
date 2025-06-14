@@ -91,7 +91,7 @@ public class client_controller {
 	
 	//거래처 상세보기 모달 
 	@PostMapping("/client_detail.do")
-	public String goods_detail(Model m, @RequestParam("cidx") String cidx
+	public String client_detail(Model m, @RequestParam("cidx") String cidx
 								, @RequestParam("code") String code
 								, @RequestParam("type") String type) {
 		
@@ -106,7 +106,6 @@ public class client_controller {
 		}else {
 			m.addAttribute("client_one", client_one);
 			this.url = "/modals/client_detail_modal.html";
-			
 		}
 		return this.url;
 	}
@@ -115,7 +114,7 @@ public class client_controller {
 	
 	//거래처 등록하기 화면이동 
 	@GetMapping("/client_insert.do")
-	public String products_insert(Model m) throws IOException {
+	public String client_insert(Model m) throws IOException {
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","거래처 관리");
 		m.addAttribute("mmenu","거래처 등록");
@@ -130,7 +129,6 @@ public class client_controller {
 	public String client_insertok(@ModelAttribute client_DTO cdto,
 									@RequestParam(value = "clientImage", required = false) MultipartFile clientImage,
 									HttpServletResponse res) {
-		System.out.println("cdto : " + cdto);
 		try {
 			this.pw = res.getWriter();
 			
@@ -156,7 +154,48 @@ public class client_controller {
 	}
 	
 	
+	//거래처 수정하기 화면이동 
+	@GetMapping("/client_modify.do")
+	public String client_modify(Model m, @RequestParam("code1") String cidx
+								, @RequestParam("code2") String code
+								) {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","거래처 관리");
+		m.addAttribute("mmenu","거래처 수정");
+		
+		client_DTO client_one = this.clt_svc.clt_one_detail(code, cidx);  //특정게시물 내용 가져오기
+		System.out.println(client_one);
+		m.addAttribute("client_one", client_one);
+		return "/client/client_modify.html";
+	}
 	
 	
+	//거래처 정보 수정 
+	@PostMapping("/client_modifyok.do")
+	public String client_modifyok(@ModelAttribute client_DTO cdto
+									,@RequestParam(value = "clientImage", required = false) MultipartFile clientImage
+									,HttpServletResponse res) {
+		try {
+			this.pw = res.getWriter();
+			int result = this.clt_svc.clt_modifyok(cdto, clientImage);  
+			
+			if(result > 0) {  
+				this.pw.write("ok");  //거래처 수정 완료 
+			}
+			else {
+				this.pw.write("fail"); //거래처 수정실패
+			}
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println("error : " + e);
+			e.printStackTrace();
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
 	
 }

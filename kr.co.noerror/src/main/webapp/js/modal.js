@@ -611,18 +611,18 @@ function pdOutReq(){
 
 //모달에 출고상품 테이블 뭍여넣기 
 function appendOutPdsRow(tbody, dataList){
+	
 	dataList.forEach((outList,i) => {
+		
 		var outTr = document.createElement('tr');
 		outTr.className = "outPd_row";
-		outTr.setAttribute("data-whcd", outList.product_code);
-		outTr.setAttribute("data-plncd", outList.product_name);
-		outTr.setAttribute("data-empcd", outList.pd_qty);
-		  
+		outTr.setAttribute("data-whcd", outList.wh_code);
+		
 		outTr.innerHTML = `
 		    <td style="width:10%;">`+(i+1)+`</td>
 		    <td style="width:20%;" class="pdCd">`+outList.product_code+`</td>
-		    <td style="width:50%;">`+outList.product_name+`</td>
-		    <td style="width:10%;" >`+outList.pd_qty+`</td>
+		    <td style="width:50%;" class="pdNm">`+outList.product_name+`</td>
+		    <td style="width:10%;" >`+outList.stock_qty+`</td>
 		    <td style="width:10%;"><input type="number" name="out_qty" class="form-control out_qty" ></td>
 		  `;
 		  tbody.append(outTr);
@@ -632,28 +632,32 @@ function appendOutPdsRow(tbody, dataList){
 //상품 출고
 function goOutList(){
 	var outPdTrList = document.querySelectorAll("tr.outPd_row");
+	var empCd = document.querySelector("#employee_code");
 	var qty = [];
-	qty.push({
-		
-	});
-	
 	
 	outPdTrList.forEach(inputData => {
 		var outPdCd = inputData.querySelector(".pdCd").textContent;
-		var outPdNm = inputData.querySelector(".pdNm").textContent;
 		var outPdQty = inputData.querySelector("input[name='out_qty']").value;
+		var outwh = inputData.getAttribute("data-whcd");
+		var outPdnm = inputData.querySelector(".pdNm").textContent;
 		
 		qty.push({
-			code :  outPdCd,
-			name :  outPdNm,
-			pd_qty : outPdQty
+			pdcode : outPdCd,
+			outqty : outPdQty,
+			outwh : outwh,
+			outnm : outPdnm
 		}); 
 	});
+	var alldata = {
+	  empcode: empCd.value,
+	  outList: qty  
+	};
 	
+	console.log(JSON.stringify(alldata))
 	fetch("./outProduct.do", {
 		method: "POST",
 		headers: {"content-type": "application/json"},
-		body: JSON.stringify(qty)
+		body: JSON.stringify(alldata)
 	})
 	.then(function(data) {
 		return data.text();

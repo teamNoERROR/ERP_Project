@@ -41,6 +41,7 @@ import kr.co.noerror.Service.common_service;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inbound_service;
+import kr.co.noerror.Service.inventory_service;
 import kr.co.noerror.Service.member_service;
 import kr.co.noerror.Service.ordreq_service;
 
@@ -69,6 +70,9 @@ public class common_controller {
 	
 	@Autowired
 	private member_service mb_svc;  //사원 서비스 
+	
+	@Autowired
+	inventory_service inv_svc; //재고 서비스
 	
 	@Autowired
 	bom_service b_svc;  //bom 서비스 
@@ -441,17 +445,20 @@ public class common_controller {
 	}
 		
 
+	//출고상품 모달 오픈 
 	 @PostMapping("/outPd_listMd.do")
 	 public String out_pd_list(){
 		 return "/modals/out_pd_modal.html"; 
 	 }
 	 
+	 //모달에 출고상품 데이터 붙이기 
 	 @PostMapping("/outPd_listMd2.do")
 //	 @ResponseBody
 	 public String out_pd_list_Modal(HttpServletResponse res, @RequestBody String out_pd_data) throws IOException {
 		 this.pw = res.getWriter();
 		 
-		 String out_pd_list = this.common_svc.out_pd_list(out_pd_data);  
+		 String out_pd_list = this.common_svc.out_pd_list(out_pd_data); 
+		 System.out.println(out_pd_list);
 		 this.pw.print(out_pd_list);
 		 
 		 return null; 

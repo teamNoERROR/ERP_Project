@@ -31,7 +31,6 @@ public class inventory_serviceImpl implements inventory_service {
 		for (IOSF_DTO dto : ind_pd_stock) {
 			stock_qty.put(dto.getProduct_code(), dto.getInd_pd_stock());
 		}
-		System.out.println("stock_qty : " + stock_qty );
 		return stock_qty;
 	}
 	

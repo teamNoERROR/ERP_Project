@@ -171,19 +171,42 @@ public class IOSF_Warehouse_Service {
     }
 
     //완제품 출고 
-	/*public int out_product(String outData) {
-		JSONArray ja = new JSONArray(outData);
+	public int out_product(String outData) {
+		Map<String, Object> insertData = new HashMap<>();
+		
+		JSONObject jo = new JSONObject(outData);
+		insertData.put("employee_code", jo.getString("empcode"));
+		int out_product = 0;
+		int count = 0;
+		
+		JSONArray ja = jo.getJSONArray("outList");
 		int data_ea = ja.length();
+		
 		for (int w = 0; w < data_ea; w++) {
-		    JSONObject jo = ja.getJSONObject(w);
+		    JSONObject jo2 = ja.getJSONObject(w);
 		    
-		    IOSF_DTO dto = new IOSF_DTO();
-		    dto.setProduct_code(jo.getString("code"));
+		    String planCode = jo2.getString("outnm").replaceAll(" ", "");
 		    
-			
-		return 0;
+		    insertData.put("wh_type", "fs");
+		    insertData.put("wh_code", jo2.getString("outwh"));
+		    insertData.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
+		    insertData.put("product_code", jo2.getString("pdcode"));
+		    insertData.put("pd_qty", jo2.getString("outqty"));
+		    
+		    out_product = this.iosf_dao.out_productList(insertData);
+		    
+		    if(out_product > 0) {
+		    	count++;
+		    }
 		}
-    
-	}*/
+		System.out.println(count);
+		if(count == data_ea) {
+			return out_product;
+		}else {
+			return count;
+		}
+		
+		
+	}
     
 }

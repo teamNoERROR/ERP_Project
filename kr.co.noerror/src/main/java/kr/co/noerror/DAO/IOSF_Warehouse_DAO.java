@@ -202,5 +202,12 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		int wh_delete_result = this.iosf_ware_st.delete("IOSF_delete_warehouses",this.params);
 		return wh_delete_result;
 	}
+
+	
+	//완제품 출고처리 
+	public int out_productList(Map<String, Object> insertData) {
+		int out_productList = this.iosf_ware_st.insert("IOSF_save_warehouse",insertData);
+		return out_productList;
+	}
 	
 }

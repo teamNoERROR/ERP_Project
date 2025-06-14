@@ -60,7 +60,7 @@ public class inventory_controller {
 								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
 		List<IOSF_DTO> pd_stock_list = this.inv_svc.pd_stock_list();  //제품 재고 리스트
-		Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock();
+		Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock();  //개별 완제품 재고수 
 		
 		//페이징 관련 
 //		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, gd_stock_list_sch.size());

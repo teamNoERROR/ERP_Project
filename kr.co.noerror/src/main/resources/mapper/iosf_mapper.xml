@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.iosf_mapper">
 
+
+<!-- 창고 인서트 -->
 <insert id="IOSF_warehouse_move" parameterType="map">
    <if test="wh_type == 'mt'">
     INSERT INTO WAREHOUSE_MATERIAL (
@@ -41,13 +43,15 @@
         
     ) VALUES (
    	    FS_WAREHOUSE_NO.NEXTVAL,
-        #{inbound_code},
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
         #{wh_code},
-        #{wh_uq, jdbcType=VARCHAR},
-        #{item_code},
-        #{item_count},
-        #{in_status},
-        SYSTIMESTAMP
+        #{plan_code},
+        #{product_code},
+        #{pd_qty},
+       	'출고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
     )
    </if>
    
@@ -76,6 +80,7 @@
    
 </insert>
 
+<!-- 창고 인서트 -->
 <insert id="IOSF_save_warehouse" parameterType="map">
 
 <if test="wh_type == 'in'">
@@ -131,25 +136,27 @@
    <if test="wh_type == 'fs'">
   INSERT INTO WAREHOUSE_FINISH (
         WFS_IDX,
-        INBOUND_CODE,
-        WH_CODE,
         WFS_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
+        WH_CODE,
+        PLAN_CODE,
+        PRODUCT_CODE,
+        PD_QTY,
         CHANGE_TYPE,
         EMPLOYEE_CODE,
-        FS_INSERT_DATE
+        FS_INSERT_DATE,
+        FS_MODIFY_DATE
         
     ) VALUES (
    	    FS_WAREHOUSE_NO.NEXTVAL,
-        #{iosf_dto.inbound_code},
-        #{iosf_dto.wh_code},
-        #{iosf_dto.finish_code},
-        #{iosf_dto.item_code},
-        #{iosf_dto.item_count},
-        #{iosf_dto.in_status},
-        #{iosf_dto.employee_code},  
-        SYSTIMESTAMP
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+        #{wh_code},
+        #{plan_code},
+        #{product_code},
+        #{pd_qty},
+       	'출고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
     )
    </if>
 </insert>
@@ -324,23 +331,18 @@ FROM (
       fs.PLAN_CODE AS plan_code,
       fs.PD_QTY AS pd_qty,
       fs.CHANGE_TYPE AS change_type,
-      fs.EMPLOYEE_CODE AS emp_code,
+      fs.EMPLOYEE_CODE AS employee_code,
       fs.FS_INSERT_DATE AS fs_insert,
       w.WH_NAME AS wh_name,
-      pld.pd_idx AS pidx,
-      pld.product_code,
-      pld.product_name,
-      pld.ename AS emp_name,
-      pld.ecode AS employee_code
+      pd.pidx,
+      pd.product_code,
+      pd.product_name,
+      emp.ename AS emp_name
     FROM
       WAREHOUSE_FINISH fs
     LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN PLAN_DETAIL_VIEW pld 
-    	ON ((fs.PLAN_CODE IS NOT NULL 
-    		AND fs.PLAN_CODE = pld.PLAN_CODE 
-    		AND fs.PRODUCT_CODE = pld.PRODUCT_CODE)
-    		OR
-    		(fs.PLAN_CODE IS NULL AND fs.PRODUCT_CODE = pld.PRODUCT_CODE))
+    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
+    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
     ORDER BY fs.FS_INSERT_DATE DESC
   ) A
   WHERE ROWNUM <= #{startIndex} + #{pageSize}

@@ -46,4 +46,7 @@ public interface IOSF_Warehouse_Mapper {
 	    public int IOSF_warehouse_move(
 	    		String wh_code, String inbound_code, String item_code, 
 	    		String wh_type , String in_status,  String item_count);
+	    
+	    //완제품 창고에서 출고 
+	    int out_productList(Map<String, Object> insertData);
 }

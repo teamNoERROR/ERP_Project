@@ -560,13 +560,18 @@ public class IOSF_Warehouse_Controller {
       }
 
       
+      
+      //완제품 출고 
       @PostMapping("/outProduct.do")
       public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
-  		this.pw = res.getWriter();
+  		System.out.println("outData : " + outData);
+    	  
+    	  this.pw = res.getWriter();
   		
   		try {
   			
-//  			int out_product = iosf_service.out_product(outData);
+  			int out_product = iosf_service.out_product(outData);
+  			System.out.println("result : " + out_product);
   			
   		} catch (Exception e) {
   			this.log.error(e.toString());

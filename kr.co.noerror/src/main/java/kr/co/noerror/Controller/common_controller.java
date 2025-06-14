@@ -120,7 +120,7 @@ public class common_controller {
 	//유형별 창고리스트 모달 띄우기
 	@GetMapping("/wh_type_list.do")
 	public String wh_type_list(Model m, @RequestParam("wh_type") String wh_type) {
-		
+		System.out.println(wh_type);
 		List<WareHouse_DTO> all_data = this.common_svc.warehouse_list(wh_type);  //DB로드
 		
 		m.addAttribute("no_wh", "등록된 창고가 없습니다" );
@@ -138,7 +138,6 @@ public class common_controller {
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea 
 							,@RequestParam(value="mode", required = false) String mode) {
-		System.out.println(parent);
 		int client_total = this.clt_svc.client_total("client"); //제품 총개수
 		List<client_DTO> client_list = this.clt_svc.client_list("client", pageno, post_ea);  //제품 리스트
 	

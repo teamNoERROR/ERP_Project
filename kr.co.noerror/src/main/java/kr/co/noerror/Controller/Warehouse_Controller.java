@@ -39,7 +39,8 @@ public class Warehouse_Controller {
     //창고 저장, 수정 구분하기 위한 변수
     String check_insertOrModify;
    
-    
+    //창고 삭제 방지 
+    String [] no_del_wh = {"WHS-80967","WHS-30257"};
 
     
     
@@ -194,7 +195,8 @@ public class Warehouse_Controller {
 		Map<Object, Object>	wh_list_map = this.map;
 		
 		wh_list_map = ws_service.warehouse_list(page, wh_search, pageSize);
-		System.out.println(wh_list_map);
+
+		
 		
 		m.addAttribute("wh_list", wh_list_map.get("wh_list")); // 리스트
 	    m.addAttribute("search_check", wh_list_map.get("search_check")); // 검색 여부
@@ -206,8 +208,8 @@ public class Warehouse_Controller {
 	    m.addAttribute("wh_search", wh_list_map.get("wh_search")); // 검색어 유지
 	    m.addAttribute("startPage", wh_list_map.get("startPage")); // 검색어 유지
 	    m.addAttribute("endPage", wh_list_map.get("endPage")); // 검색어 유지
-
-		
+	    m.addAttribute("no_del_wh", no_del_wh); // 삭제 못하는 창고 
+	    
 		return "/warehouse/warehouses_list.html";
 	}
 	
@@ -218,13 +220,15 @@ public class Warehouse_Controller {
 	@GetMapping("/warehouse_modal.do")
 	public String warehouse_detail(
 			Model m,
-			@RequestParam(value = "wh_code", required = true) String wh_code
-			){
+			@RequestParam(value = "wh_code", required = true) String wh_code ){
 	
 		
 	 	List<WareHouse_DTO>wh_list_details = ws_service.wh_SelectWithWhCode(wh_code);
-
+	 	//삭제 방지 
+//	 	String [] no_del_wh = {"WHS-80967","WHS-30257"};
+	 	
 	 	m.addAttribute("wh_dtails" , wh_list_details);
+	 	m.addAttribute("no_del_wh", no_del_wh); // 삭제 못하는 창고 
 		
 		return "/modals/warehouse_modal.html";
 	}

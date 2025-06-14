@@ -9,7 +9,7 @@
 </select>
 
 <!-- 창고 리스트 전체출력 -->
-<select id="warehouse_list" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+<select id="warehouse_list" resultType="kr.co.noerror.DTO.WareHouse_DTO" parameterType="String">
 	SELECT * FROM WAREHOUSE 
 	<if test="wh_tp == 'in_wh'">
 		<where>
@@ -37,7 +37,7 @@
 
 <!-- 출고상품 리스트 출력  -->
 <select id="pd_out_list" resultType="kr.co.noerror.DTO.IOSF_DTO" >
-	SELECT DISTINCT
+	SELECT
 		PD.PIDX,
 		PD.PRODUCT_CODE,
 		PD.PRODUCT_NAME,

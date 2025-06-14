@@ -114,8 +114,8 @@
 				</form>
                 <button type="button" class="btn " data-bs-dismiss="modal"
       				  th:data-modal-url="@{'/warehouse_delete_page.do?wh_code=' + ${#strings.trim(wh_dtails[0].wh_code)}}"
-       			  	  th:disabled="${#strings.trim(wh_dtails[0].wh_code) == 'WHS-80967'}" 
-       			  	  th:classappend="${#strings.trim(wh_dtails[0].wh_code) == 'WHS-80967'} ? ' btn-secondary' : 'btn-danger'" 
+       			  	  th:disabled="${#arrays.contains(no_del_wh, #strings.trim(wh_dtails[0].wh_code))}" 
+       			  	  th:classappend="${#arrays.contains(no_del_wh, #strings.trim(wh_dtails[0].wh_code))} ? ' btn-secondary' : 'btn-danger'" 
        			  	  onclick="deleteWarehouse(this)">
   					  <i class="bi bi-trash"></i> 삭제
 				</button>

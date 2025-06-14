@@ -27,7 +27,7 @@ public class common_DAO  {
 	}
 
 	public List<WareHouse_DTO> warehouse_list(String wh_tp) {
-		List<WareHouse_DTO> warehouse_list = this.st.selectList("warehouse_list");
+		List<WareHouse_DTO> warehouse_list = this.st.selectList("warehouse_list",wh_tp);
 		return warehouse_list;
 	}
 

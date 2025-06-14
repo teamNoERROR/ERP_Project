@@ -19,9 +19,9 @@
 
 <div class="row align-items-center justify-content-between my-3">
 	<!-- 토글 버튼 영역 -->
-	<div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 450px;">
+	<div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
 		<button type="button" class="toggle_btns" id="wh_type" value="all" onclick="toggleWh('all')"  style="background: #82CCDD; color: #fff;">전체</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('in')" style="background: transparent; color: #000;">입고</button>
+<!-- 		<button type="button" class="toggle_btns" onclick="toggleWh('in')" style="background: transparent; color: #000;">입고</button> -->
 <!-- 		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button> -->
 		<button type="button" class="toggle_btns" onclick="toggleWh('mt')"  style="background: transparent; color: #000;">부자재</button>
 		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  style="background: transparent; color: #000;">완제품</button>
@@ -81,7 +81,7 @@
     				 data-modal-id="wh_list"
     				 style="cursor:pointer;">
                     <td onclick="event.stopPropagation();" >
-                    	<input type="checkbox" name="deleteCodes" th:disabled="${#strings.trim(wh.wh_code) == 'WHS-80967'}"
+                    	<input type="checkbox" name="deleteCodes" th:disabled="${#arrays.contains(no_del_wh, #strings.trim(wh.wh_code))}"
                     			th:value="${wh.wh_code}" />
                     </td>
                     <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>

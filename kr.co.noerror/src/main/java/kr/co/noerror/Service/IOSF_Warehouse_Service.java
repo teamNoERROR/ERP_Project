@@ -1,5 +1,6 @@
 package kr.co.noerror.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,21 +91,23 @@ public class IOSF_Warehouse_Service {
     	return iosf_result;
     }
     
-    public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize) { 
-        
+    //타입별 창고리스트 
+    public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String fs_wh_name) { 
         Map<Object, Object> wh_map = new HashMap<>();
-        
+		System.out.println("fs_wh_name : " + fs_wh_name);
+		System.out.println("wh_search : " + wh_search);
+
         try {
             int startIndex = (page - 1) * pageSize;
             int totalCount;
 
             List<IOSF_DTO> wh_list_result;
             
-            boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty());
+            boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty() || fs_wh_name!=null );
             
             if(isSearch) {    // 검색한 경우 (검색된 리스트)
-                wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type);
-                totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type);
+                wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type, fs_wh_name);
+                totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type, fs_wh_name);
             } else {    // 검색 안한 경우 (전체 리스트)
                 wh_list_result = this.iosf_dao.IOSF_select_wh_list(startIndex, pageSize, wh_type);  // endIndex 제거
                 totalCount = this.iosf_dao.IOSF_getTotalCount(wh_type);
@@ -129,9 +132,6 @@ public class IOSF_Warehouse_Service {
                 endPage = totalPages;
                 startPage = Math.max(1, endPage - blockSize + 1);
             }
-            
-            System.out.println("iosf : "+totalCount);
-            System.out.println("wh_list_result size: " + wh_list_result.size());         
             
             wh_map.put("wh_list", wh_list_result);
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");
@@ -212,6 +212,20 @@ public class IOSF_Warehouse_Service {
 		}
 		
 		
+	}
+	//창고별 리스트 출력용
+	public JSONArray wh_type_list(String wh_type) {
+		List<String> schlist = new ArrayList<>();
+		Map<String, String> schMap = new HashMap<>();
+		System.out.println("wh_type : " + wh_type);
+		if("fs_wh".equals(wh_type) ) {
+			schMap.put("wh_type", wh_type);
+		}
+		System.out.println("schMap66 : " + schMap);
+		schlist = this.iosf_dao.wh_nm_list(schMap);
+		JSONArray jsonlist = new JSONArray(schlist);
+		
+		return jsonlist;
 	}
     
 }

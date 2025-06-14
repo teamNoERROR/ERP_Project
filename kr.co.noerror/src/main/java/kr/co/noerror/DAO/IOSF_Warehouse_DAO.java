@@ -146,26 +146,28 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	
 	//검색된 결과 창고 리스트
 	@Override
-	public List<IOSF_DTO> IOSF_search_whpaged(String wh_search, Integer startIndex, Integer pageSize, String wh_type) {
+	public List<IOSF_DTO> IOSF_search_whpaged(String wh_search, Integer startIndex, Integer pageSize, String wh_type, String fs_wh_name) {
 		
-		Map<Object, Object> params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("m_search", wh_search);
 		params.put("startIndex", startIndex);	
 		params.put("pageSize", pageSize);	
 		params.put("wh_type", wh_type);	
+		params.put("fs_wh_name", fs_wh_name);	
 		
 		List<IOSF_DTO> select_wh_list = this.iosf_ware_st.selectList("IOSF_search_whpaged",params);
-		
+		System.out.println("ekdh : " + select_wh_list);
 		return select_wh_list;
 	}
 	
 	//총 결과 창 리스트
 	@Override
-	public int IOSF_searchTotal(String wh_search, String wh_type) {
+	public int IOSF_searchTotal(String wh_search, String wh_type, String fs_wh_name) {
 	
 		Map<Object, Object> params = new HashMap<>();
 		params.put("m_search", wh_search);
 		params.put("wh_type", wh_type);	
+		params.put("fs_wh_name", fs_wh_name);	
 		
 		int totalCount = this.iosf_ware_st.selectOne("IOSF_searchTotal",params);
 		return totalCount;
@@ -229,6 +231,13 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	public int out_productList(Map<String, Object> insertData) {
 		int out_productList = this.iosf_ware_st.insert("fs_warehouse_out",insertData);
 		return out_productList;
+	}
+
+	//창고별 리스트 출력용
+	public List<String> wh_nm_list(Map<String, String> schMap) {
+		System.out.println("schMap : "+ schMap);
+		List<String> wh_type_list = this.iosf_ware_st.selectList("wh_nm_list", schMap);
+		return wh_type_list;
 	}
 	
 }

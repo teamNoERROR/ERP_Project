@@ -28,10 +28,10 @@ public interface IOSF_Warehouse_Mapper {
 		public int IOSF_modify_warehouse(Map<Object, Object> wh_map);
 		
 		//검색된 게시물 페이지
-	    public List<IOSF_DTO> IOSF_search_whpaged(String m_search, Integer startIndex, Integer pageSize, String wh_type); 
+	    public List<IOSF_DTO> IOSF_search_whpaged(String m_search, Integer startIndex, Integer pageSize, String wh_type, String fs_wh_name); 
 		
 		//검색 게시물 총 갯수
-	    public int IOSF_searchTotal(String m_search, String wh_type);
+	    public int IOSF_searchTotal(String m_search, String wh_type, String fs_wh_name);
 	    
 	    // 전체 게시물 개수 조회
 	    public int IOSF_getTotalCount(String wh_type);
@@ -54,4 +54,6 @@ public interface IOSF_Warehouse_Mapper {
 	    
 	    //완제품 창고에서 출고 
 	    int out_productList(Map<String, Object> insertData);
+	    //창고별 리스트 검색용
+	    List<String> wh_nm_list(Map<String, String> schMap);
 }

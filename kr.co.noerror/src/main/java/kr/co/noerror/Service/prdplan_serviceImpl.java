@@ -29,6 +29,9 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	@Autowired
 	private M_unique_code_generator unique_code_generator;
 	
+	@Autowired
+	inventory_service inv_svc; //재고 서비스 
+	
 	@Override
 	public List<prdplan_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
 		Map<String, Object> params = new HashMap<>();

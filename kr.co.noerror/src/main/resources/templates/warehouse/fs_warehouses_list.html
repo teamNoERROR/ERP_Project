@@ -65,18 +65,19 @@
 		
 			<!-- 검색바: 위 margin 줄이기 (my-4 → my-2) -->
 			<form class="row g-2 my-2 justify-content-end"
-			      th:action="@{/warehouses_mt_list.do}" method="get">
+			      th:action="@{/warehouses_fs_list.do}" method="get" id="frm">
 			 
 			  <div class="col-auto d-flex gap-2">
-			   <select  class="form-select" style="width: auto; display: inline-block;">
-				    <option value="">특정창고만 보기</option>
+			   <select  class="form-select" style="width: auto; display: inline-block;" name="fs_wh_list" onchange="fsWhCh()">
+					<option value="">특정창고만 보기</option>
+				   	<option th:each="fsWh_list : ${whNameList}" th:value="${fsWh_list}" th:text="${fsWh_list}" th:selected="${fsWh_list} == ${fs_wh_name}"></option>
 				  </select>
 			    <div class="input-group input-group-sm" style="width:250px;">
 <!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
 <!-- 			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option> -->
 <!-- 			      </select>  -->
 			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/창고명으로 검색" th:value="${wh_search}">
-			      <button class="btn btn-primary" >
+			      <button class="btn btn-primary" onclick="searchWH()">
 			        <i class="bi bi-search"></i> 
 			      </button>
 			    </div>

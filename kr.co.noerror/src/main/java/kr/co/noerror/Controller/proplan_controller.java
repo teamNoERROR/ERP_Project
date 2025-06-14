@@ -73,7 +73,6 @@ public class proplan_controller {
 	@PostMapping("/prdplan_save.do")
 	@ResponseBody
     public Map<String, Object> prdplan_save(@RequestBody prdplan_req_DTO plandto) {
-		System.out.println("plandto2 : " + plandto);
 		return this.prdplan_service.prdplan_save(plandto);
     }
 	

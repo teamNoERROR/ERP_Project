@@ -139,7 +139,7 @@ function addToCart() {
         <td>${item.purchase_qty}</td>
         <td>${item.item_cost}</td>
         <td>${item.purchase_qty * item.item_cost}</td>
-        <td><button class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button></td>
+        <td><button class="btn btn-sm btn-danger" onclick="removeItemRow(this)">삭제</button></td>
       `;
       basket.appendChild(tr);
     });

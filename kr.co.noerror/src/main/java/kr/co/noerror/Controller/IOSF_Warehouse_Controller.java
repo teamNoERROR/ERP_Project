@@ -2,6 +2,7 @@ package kr.co.noerror.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class IOSF_Warehouse_Controller {
        return result;
    }
  
-  
+  /*
    //출고 창고 리스트
    @GetMapping("/warehouses_out_list.do")
    public String warehouses_out_list(Model m,
@@ -171,24 +172,46 @@ public class IOSF_Warehouse_Controller {
 	   
 	   return "/warehouse/out_warehouses_list.html";
    }
-   
+   */
  //완제품 창고 리스트
    @GetMapping("/warehouses_fs_list.do")
    public String warehouses_fs_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
-	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
-  
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+			  @RequestParam(value = "fs_wh_list", required = false) String fs_wh_list
+		   		) {
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
 		m.addAttribute("mmenu","완제품 창고");
-	   
+		System.out.println("fs_wh_list : " + fs_wh_list);
+		System.out.println("wh_search : " + wh_search);
+		//창고별 리스트 출력용
+		List<String> schlist = new ArrayList<>();
+ 		JSONArray fswhList = this.iosf_service.wh_type_list("fs_wh");  //대분류목록
+ 		for (int i = 0; i < fswhList.length(); i++) {
+ 			schlist.add(fswhList.getString(i));
+ 		}
+ 		
+		m.addAttribute("whNameList",schlist); 
+		m.addAttribute("fs_wh_name",fs_wh_list); 	
+		
+		if("".equals(fs_wh_list)) {
+			fs_wh_list = null;
+		}
+		
+		//검색했을경우 
+		if((fs_wh_list != null && !fs_wh_list.equals("")) || 
+			(wh_search != null && !wh_search.trim().equals(""))) {
+			m.addAttribute("mmmenu","검색결과");
+		}
+		
 	   	this.map = new HashMap<>();
-	      Map<Object, Object>   iosf_list_map = this.map;
+	    Map<Object, Object>   iosf_list_map = this.map;
 	   
 	      this.wh_type = "fs";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
 	      
 	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -209,7 +232,9 @@ public class IOSF_Warehouse_Controller {
    public String warehouses_mt_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
-	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+	          @RequestParam(value = "mt_wh_name", required = false) String mt_wh_name,
+	          @RequestParam(value = "wh_type", required = false) String wh_type) {
   
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
@@ -220,7 +245,7 @@ public class IOSF_Warehouse_Controller {
 	   
 	      this.wh_type = "mt";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize, mt_wh_name);
 	      
 	       m.addAttribute("mt_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -237,7 +262,7 @@ public class IOSF_Warehouse_Controller {
    }
     
    
-   
+   /*
    @GetMapping("/warehouses_in_list.do")
    public String warehouse_in_list(Model m,
           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -268,7 +293,7 @@ public class IOSF_Warehouse_Controller {
 
        return "/warehouse/in_warehouses_list.html";
    }
-   
+   */
    //창고이동
    @PostMapping("/IOSF_warehouse_move.do")
    @ResponseBody
@@ -598,7 +623,6 @@ public class IOSF_Warehouse_Controller {
   		
   		return null;
   	}
-      
       
       
       

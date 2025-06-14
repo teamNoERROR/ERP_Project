@@ -571,13 +571,13 @@ function ordDtlLoad(order_code){
 			  <td>${resultProduct.product_name}</td>
 			  <td>${resultProduct.product_spec}</td>
 			  <td>${resultProduct.product_unit}</td>
-			  <td>${resultProduct.product_unit}</td>
+			  <td>${resultProduct.ind_pd_all_stock}</td>
 			  <td>
 			    <input type="number" class="form-control plan_qty" value="${resultProduct.product_qty}">
 			  </td>
 			  <td class="bom_code">${resultProduct.bom_code}</td>
 			  <td>
-			    <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
+			    <button type="button" class="btn btn-sm btn-danger" onclick="removeItemRow(this)">
 			      삭제
 			    </button>
 			  </td>

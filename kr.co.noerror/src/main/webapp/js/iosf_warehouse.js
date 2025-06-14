@@ -37,7 +37,7 @@ function validateInboundForm() {
   form.submit();
 }
 
-
+/*
 // 출고창고에서 출고처리
 function completeOutbound() {
   // 체크된 체크박스 선택
@@ -79,4 +79,4 @@ function completeOutbound() {
     alert('서버 요청 중 오류가 발생했습니다.');
   });
 }
-
+*/

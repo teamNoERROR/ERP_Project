@@ -23,8 +23,14 @@
 	SELECT 
 	  product_code, product_name,
 	  SUM(CASE WHEN change_type = '입고' THEN pd_qty ELSE 0 END) -
-	  SUM(CASE WHEN change_type = '출고' THEN pd_qty ELSE 0 END) AS ind_pd_stock
+	  SUM(CASE WHEN change_type = '출고' THEN pd_qty ELSE 0 END) - 
+	  SUM(CASE WHEN change_type = '출고완료' THEN pd_qty ELSE 0 END ) AS ind_pd_stock
 	FROM PD_STOCK_VIEW
+	<where>
+		<if test="wh_code != null">
+		TRIM(WH_CODE) = #{wh_code}
+		</if>
+	</where>
 	GROUP BY product_code, product_name
 	ORDER BY product_code
 </select>

@@ -107,8 +107,8 @@
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
 					<h5 class="">주문 제품 내역</h5>
-					<table class="table table-hover align-middle table-bordered">
-						<thead class="table-light text-center">
+					<table class="table table-hover align-middle table-bordered text-center">
+						<thead class="table-light">
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
@@ -117,6 +117,7 @@
 								<th scope="col">소분류</th>
 								<th scope="col">규격</th>
 								<th scope="col">주문수량</th>
+								<th scope="col">현재재고</th>
 								<th scope="col">단위</th>
 								<th scope="col">제품단가(원)</th>
 								<th scope="col">구매금액(원)</th>
@@ -131,8 +132,11 @@
 								<td>[[${d.product_class1}]]</td>
 								<td>[[${d.product_class2}]]</td>
 								<td>[[${d.product_spec}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.product_qty, 0,
+								<td>[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
+								<td>[[${ind_pd_all_stock[d.product_code] == null ? 0 : ind_pd_all_stock[d.product_code]}]] 
+									<span th:classappend="${(d.product_qty - ind_pd_all_stock[d.product_code]) < 0} ? 'text_red' : 'text_blue'">( [[${(d.product_qty - ind_pd_all_stock[d.product_code])}]] )</span>
+								</td>
 								<td>[[${d.product_unit}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_cost,
 									0, 'COMMA', 0, 'POINT')}]]</td>
@@ -143,7 +147,7 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<td class="info-label" colspan="9">합계</td>
+								<td class="info-label" colspan="10">합계</td>
 <!-- 								<td></td> -->
 <!-- 								<td></td> -->
 <!-- 								<td></td> -->

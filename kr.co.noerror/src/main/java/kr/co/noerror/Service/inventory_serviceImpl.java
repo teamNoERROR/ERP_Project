@@ -23,14 +23,27 @@ public class inventory_serviceImpl implements inventory_service {
 		return ind_item_stock;
 	}
 
-	//완제품별 재고합
+	//개별 완제품 재고수
 	@Override
-	public Map<String, Integer> ind_pd_stock() {
-		List<IOSF_DTO> ind_pd_stock = this.inv_dao.ind_pd_stock(); 
+	public Map<String, Integer> ind_pd_all_stock() {
+		List<IOSF_DTO> ind_pd_all_stock = this.inv_dao.ind_pd_all_stock(); 
+		Map<String, Integer> all_stock_qty = new HashMap<>();
+		for (IOSF_DTO dto : ind_pd_all_stock) {
+			all_stock_qty.put(dto.getProduct_code(), dto.getInd_pd_stock());
+		}
+		return all_stock_qty;
+	}
+	
+	//창고별+완제품 재고수
+	@Override
+	public Map<String, Integer> ind_pd_stock(String wh_code) {
+		List<IOSF_DTO> ind_pd_stock = this.inv_dao.ind_pd_stock(wh_code);
+		
 		Map<String, Integer> stock_qty = new HashMap<>();
 		for (IOSF_DTO dto : ind_pd_stock) {
 			stock_qty.put(dto.getProduct_code(), dto.getInd_pd_stock());
 		}
+		System.out.println("stock_qty : " + stock_qty);
 		return stock_qty;
 	}
 	
@@ -40,6 +53,7 @@ public class inventory_serviceImpl implements inventory_service {
 		List<IOSF_DTO> pd_stock_list = this.inv_dao.pd_stock_list(); 
 		return pd_stock_list;
 	}
+
 	
 
 }

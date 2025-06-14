@@ -58,10 +58,11 @@ public class inventory_controller {
 	public String inventory_list(Model m
 								,@RequestParam(value = "keyword", required = false) String keyword
 								,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
+								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea 
+								,@RequestParam(value="wh_code", defaultValue="5", required=false) String wh_code ) {
 		List<IOSF_DTO> pd_stock_list = this.inv_svc.pd_stock_list();  //제품 재고 리스트
-		Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock();  //개별 완제품 재고수 
-		
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
+		System.out.println("ind_pd_all_stock : " + ind_pd_all_stock);
 		//페이징 관련 
 //		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, gd_stock_list_sch.size());
 //		int bno = this.m_pg.serial_no(gd_stock_list_sch.size(), pageno, post_ea); 
@@ -84,7 +85,7 @@ public class inventory_controller {
 //		m.addAttribute("bno", bno);
 		m.addAttribute("stock_pd_total", pd_stock_list.size());
 		m.addAttribute("stock_pd_list", pd_stock_list);
-		m.addAttribute("ind_pd_stock", ind_pd_stock);
+		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 		
 //		m.addAttribute("pageinfo", pageinfo);
 		

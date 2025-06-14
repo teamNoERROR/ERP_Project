@@ -50,4 +50,8 @@ public class ordreq_res_DTO {
     
     //BOM code
     private String bom_code = "-";
+    
+    //상품별 재고수 
+    int ind_pd_all_stock;
+    
 }

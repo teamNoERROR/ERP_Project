@@ -571,6 +571,7 @@ function ordDtlLoad(order_code){
 			  <td>${resultProduct.product_name}</td>
 			  <td>${resultProduct.product_spec}</td>
 			  <td>${resultProduct.product_unit}</td>
+			  <td>${resultProduct.product_unit}</td>
 			  <td>
 			    <input type="number" class="form-control plan_qty" value="${resultProduct.product_qty}">
 			  </td>

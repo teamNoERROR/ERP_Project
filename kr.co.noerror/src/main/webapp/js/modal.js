@@ -551,6 +551,7 @@ function emp_modal_pg (page){
 /*--------------------------------------------------------------
 	출고요청 품목 모달  
 ----------------------------------------------------------- */
+//출고요청 버튼 클릭 
 function pdOutReq(){
 	var out_list = document.querySelectorAll("input[name='checkCodes']:checked");
 	var out_req = new Array();
@@ -562,10 +563,12 @@ function pdOutReq(){
 		out_list.forEach(chkOut => {
 			var out_pidx = chkOut.getAttribute("data-pdidx");		
 			var out_pd_code = chkOut.getAttribute("data-product_code");
+			var out_wh_code = chkOut.getAttribute("data-wh_code");
 			
 			out_req.push({ 
 				idx: out_pidx, 
-				code: out_pd_code
+				code: out_pd_code,
+				wh_code : out_wh_code
 			})
 		});
 		
@@ -589,13 +592,13 @@ function pdOutReq(){
 			.then(function(response) {
 				return response.json();
 			})
-			.then(function(jsonList) {
+			.then(function(out_pd_list) {
 				
 				var outModal = document.getElementById("out_pd_modal");
 				var outpd_tbody = outModal.querySelector('#out_pds');
 				
 				outpd_tbody.innerHTML = ''; // 기존 행 제거
-				appendOutPdsRow(outpd_tbody, jsonList); // 새 행 추가
+				appendOutPdsRow(outpd_tbody, out_pd_list); // 새 행 추가
 				
 				var modal= new bootstrap.Modal(outModal);
 				modal.show();
@@ -619,10 +622,13 @@ function appendOutPdsRow(tbody, dataList){
 		outTr.setAttribute("data-whcd", outList.wh_code);
 		
 		outTr.innerHTML = `
-		    <td style="width:10%;">`+(i+1)+`</td>
-		    <td style="width:20%;" class="pdCd">`+outList.product_code+`</td>
-		    <td style="width:50%;" class="pdNm">`+outList.product_name+`</td>
-		    <td style="width:10%;" >`+outList.stock_qty+`</td>
+		    <td style="width:5%;">`+(i+1)+`</td>
+			<td style="width:10%;" class="whCd">`+outList.wh_code+`</td>
+			<td style="width:20%;" class="whNm">`+outList.wh_name+`</td>
+		    <td style="width:10%;" class="pdCd">`+outList.product_code+`</td>
+		    <td style="width:25%;" class="pdNm">`+outList.product_name+`</td>
+		    <td style="width:10%;" >`+outList.stock_qty+`</td>	
+			<td style="width:10%;" class="wh_pd_qty">`+outList.pd_qty+`</td>
 		    <td style="width:10%;"><input type="number" name="out_qty" class="form-control out_qty" ></td>
 		  `;
 		  tbody.append(outTr);
@@ -663,7 +669,13 @@ function goOutList(){
 		return data.text();
 	})
 	.then(function(result) {
-
+		if(result=="out_success"){
+		 	alert("출고요청이 완료되었습니다.");
+			location.reload();
+			
+		}else{
+			alert("result : " + result);
+		}
 	
 	
 	}).catch(function(error) {

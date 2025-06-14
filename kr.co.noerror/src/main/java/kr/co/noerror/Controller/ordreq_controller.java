@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Model.M_unique_code_generator;
 import kr.co.noerror.Service.generic_list_service;
 import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.inventory_service;
 import kr.co.noerror.Service.ordreq_service;
 import lombok.RequiredArgsConstructor;
 
@@ -49,6 +51,9 @@ public class ordreq_controller {
 	
 	@Autowired
 	ordreq_DAO odao;
+	
+	@Autowired
+	inventory_service inv_svc; 
 	
 	@Autowired
 	private M_unique_code_generator unique_code_generator;
@@ -102,6 +107,13 @@ public class ordreq_controller {
 	@GetMapping("/ordreq_products.do")
 	public List<ordreq_res_DTO> ordreq_products(@RequestParam(name="code") String order_code) {
 		List<ordreq_res_DTO> ordreq_products = this.odao.ordreq_products(order_code);
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
+		for (ordreq_res_DTO dto : ordreq_products) {
+		    String code = dto.getProduct_code();
+		    int stockQty = ind_pd_all_stock.getOrDefault(code, 0);  // 없으면 0
+		    dto.setInd_pd_all_stock(stockQty);  // 재고 주입
+		}
+		System.out.println("ordreq_products : " + ordreq_products);
 		return ordreq_products;
 	}
 	
@@ -128,9 +140,12 @@ public class ordreq_controller {
 	//주문건 상세보기 
 	@GetMapping("/ordreq_detail.do")
 	public String ordreq_detail(@RequestParam(name="code") String order_code, Model m) {
-		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);
-		System.out.println("details : " + details);
+		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);  //주문상세
+		
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수 
+		
 		m.addAttribute("details",details);
+		m.addAttribute("ind_pd_all_stock",ind_pd_all_stock);
 		return "/modals/order_detail_modal.html";
 	}
 	

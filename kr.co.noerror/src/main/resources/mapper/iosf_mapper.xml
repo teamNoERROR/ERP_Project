@@ -3,7 +3,7 @@
 <mapper namespace="mapper.iosf_mapper">
 
 
-<!-- 창고 인서트 -->
+<!-- 창고 이동 -->
 <insert id="IOSF_warehouse_move" parameterType="map">
    <if test="wh_type == 'mt'">
     INSERT INTO WAREHOUSE_MATERIAL (
@@ -78,6 +78,59 @@
     )
    </if>
    
+</insert>
+
+
+<insert id="IOSF_warehouse_move_in" parameterType="map">
+   <if test="wh_type == 'mt'">
+    INSERT INTO WAREHOUSE_MATERIAL (
+        WMT_IDX,
+        INBOUND_CODE,
+        WH_CODE,
+        WMT_CODE,
+        ITEM_CODE,
+        ITEM_QTY,
+        CHANGE_TYPE,
+        MT_INSERT_DATE
+        
+    ) VALUES (
+   	    MT_WAREHOUSE_NO.NEXTVAL,
+        #{inbound_code},
+        #{wh_code},
+        #{wh_uq, jdbcType=VARCHAR},
+        #{item_code},
+        #{item_count},
+        #{in_status},
+        SYSTIMESTAMP
+    )
+   </if>
+   
+   <if test="wh_type == 'fs'">
+  INSERT INTO WAREHOUSE_FINISH (
+        WFS_IDX,
+        WFS_CODE,
+        WH_CODE,
+        PLAN_CODE,
+        PRODUCT_CODE,
+        PD_QTY,
+        CHANGE_TYPE,
+        EMPLOYEE_CODE,
+        FS_INSERT_DATE,
+        FS_MODIFY_DATE
+        
+    ) VALUES (
+   	    FS_WAREHOUSE_NO.NEXTVAL,
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+        #{mv_wh_code},
+        #{plan_code},
+        #{product_code},
+        #{pd_qty},
+       	'입고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
+    )
+   </if>
 </insert>
 
 <!-- 창고 인서트 -->
@@ -160,6 +213,37 @@
     )
    </if>
 </insert>
+
+
+<!-- 완제품 출고처리 -->
+<insert id="fs_warehouse_out" parameterType="map">
+	INSERT INTO WAREHOUSE_FINISH (
+	    WFS_IDX,
+	    WFS_CODE,
+	    WH_CODE,
+	    PLAN_CODE,
+	    PRODUCT_CODE,
+	    PD_QTY,
+	    CHANGE_TYPE,
+	    EMPLOYEE_CODE,
+	    FS_INSERT_DATE,
+	    FS_MODIFY_DATE
+	    
+	) VALUES (
+	    FS_WAREHOUSE_NO.NEXTVAL,
+	    'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+	    #{wh_code},
+	    #{plan_code},
+	    #{product_code},
+	    #{pd_qty},
+	   	'출고완료',
+	    #{employee_code},
+	    SYSTIMESTAMP,
+	    NULL
+	)
+</insert>
+
+
 
 <update id="IOSF_modify_warehouse" parameterType="map">
 <if test="wh_type == 'in'">

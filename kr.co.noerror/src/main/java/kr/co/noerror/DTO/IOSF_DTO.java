@@ -83,4 +83,7 @@ public class IOSF_DTO {
     String pd_insert_date;
     int ind_pd_stock;
     
+    String mv_wh_code;  //이동창고 코드 
+    
+    
 }

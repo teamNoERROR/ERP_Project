@@ -25,16 +25,24 @@ public class inventory_DAO {
 	}
 
 	//개별 완제품 재고수
-	public List<IOSF_DTO> ind_pd_stock() {
+	public List<IOSF_DTO> ind_pd_all_stock() {
 		List<IOSF_DTO> result = this.st.selectList("ind_pd_stock");
 		return result;
 	};
 
+	//창고별+완제품 재고수
+	public List<IOSF_DTO> ind_pd_stock(String wh_code) {
+		List<IOSF_DTO> result = this.st.selectList("ind_pd_stock", wh_code);
+		return result;
+	}
+	
 	//완제품 재고 리스트
 	public List<IOSF_DTO> pd_stock_list() {
 		List<IOSF_DTO> pd_stock_list = this.st.selectList("pd_stock_list");
 		return pd_stock_list;
 	}
+
+	
 
 
 	

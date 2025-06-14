@@ -37,26 +37,29 @@
 <!-- 			    <i class="bi bi-search"></i> -->
 <!-- 			</button> -->
 			<div class="input-group">
-	            <input type="text"  id="wh_code" class="form-control" style="width: 220px;" placeholder="완제품 창고가 선택됩니다" readonly>
-	            <button type="button" class="btn btn-primary modal-trigger" 
-	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}"
-	            		data-modal-id="wh_type_list" style="cursor: pointer;">
+	            <input type="text"  id="wh_name" class="form-control" style="width: 220px;" placeholder="완제품 창고가 선택됩니다" readonly>
+				<input type="hidden" id="wh_code" class="form-control" />
+<!-- 	            <button type="button" class="btn btn-primary modal-trigger"  -->
+<!-- 	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}" -->
+<!-- 	            		data-modal-id="wh_type_list" style="cursor: pointer;"> -->
+           		<button type="button" class="btn btn-primary" 
+	            		onclick="whSelect('fs_wh','wh_name','wh_code')" style="cursor: pointer;">
 	                <i class="bi bi-search"></i>
 	            </button>
 	        </div>
 			
-				<form class="d-flex align-items-center gap-2 mb-0" >
-			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" />
-			    <input type="hidden" name="item_code" id="item_code" class="form-control" />
-			    <input type="hidden" id="client_code" class="form-control" />
-			    <input type="hidden" id="wh_type" class="form-control" />
-			    <input type="hidden" id="in_status" class="form-control" />
-			    <input type="hidden" id="item_count" class="form-control" />
+<!-- 				<form class="d-flex align-items-center gap-2 mb-0" > -->
+<!-- 			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" name="item_code" id="item_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="client_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="wh_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="in_status" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="item_count" class="form-control" /> -->
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
 			            style="white-space: nowrap; min-width: 70px;" onclick="whMove()">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
 			    </button>
-			  </form>
+<!-- 			  </form> -->
 			</div>
 			
 		
@@ -65,8 +68,8 @@
 			      th:action="@{/warehouses_mt_list.do}" method="get">
 			 
 			  <div class="col-auto d-flex gap-2">
-			   <select id="pageSizeSelect" class="form-select" style="width: auto; display: inline-block;">
-				    <option th:value="5" th:selected="${pageSize == 5}">창고명 [창고코드]</option>
+			   <select  class="form-select" style="width: auto; display: inline-block;">
+				    <option value="">특정창고만 보기</option>
 				  </select>
 			    <div class="input-group input-group-sm" style="width:250px;">
 <!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
@@ -116,15 +119,17 @@
 				      <td onclick="event.stopPropagation();">
 				      	<input type="checkbox" name="checkCodes"
 				   			   	class="move-checkbox"
-				      	 	   th:value="${fs_wh.wfs_idx}" 
-						       th:data-wfs_code="${fs_wh.wfs_code}" 
-						       th:data-plan_code="${fs_wh.plan_code}" 
-						       th:data-pd_qty="${fs_wh.pd_qty}" 
-						       th:data-pdidx="${fs_wh.pidx}" 
-						       th:data-product_code="${fs_wh.product_code}" 
 						       th:data-wh_code="${fs_wh.wh_code}"
-						       data-wh_type="out"
-						       onclick="selectRow(event,this);" />
+						       data-wh_type="fs"
+						       th:data-product_code="${fs_wh.product_code}" 
+						       th:data-pd_qty="${fs_wh.pd_qty}" 
+						       th:data-emp_code="${fs_wh.employee_code}" 
+						       th:data-pdidx="${fs_wh.pidx}" 
+				      	 	   th:value="${fs_wh.wfs_idx}" 
+						       th:data-plan_code="${fs_wh.plan_code}"
+						       th:data-pd_name="${fs_wh.product_name}"  
+						       onclick="selectRow(event,this);" 
+						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
 				      <td th:text="${fs_wh.wfs_code}"></td>

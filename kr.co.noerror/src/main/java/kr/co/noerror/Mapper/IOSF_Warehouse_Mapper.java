@@ -43,9 +43,14 @@ public interface IOSF_Warehouse_Mapper {
 	    public int IOSF_delete_warehouses(String in_code, String wh_type);
 	    
 	    //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동
+	    //창고 이동 
 	    public int IOSF_warehouse_move(
-	    		String wh_code, String inbound_code, String item_code, 
-	    		String wh_type , String in_status,  String item_count);
+	    		String wh_code, String wh_type, String product_code, 
+	    		String pd_qty , String emp_code,  String planCode, String mv_wh_code);
+	    
+	    public int IOSF_warehouse_move_in(
+	    		String wh_code, String wh_type, String product_code, 
+	    		String pd_qty , String emp_code,  String planCode, String mv_wh_code);
 	    
 	    //완제품 창고에서 출고 
 	    int out_productList(Map<String, Object> insertData);

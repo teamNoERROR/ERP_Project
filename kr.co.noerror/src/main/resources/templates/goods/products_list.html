@@ -77,7 +77,6 @@
                         <th scope="col">단위</th>
                         <th scope="col">단가 (원)</th>
                         <th scope="col">판매가 (원)</th>
-                        <th scope="col">재고합계</th>
                         <th scope="col">사용</th>
                     </tr>
                 </thead>
@@ -120,7 +119,6 @@
                         <td>[[${pdlist.PRODUCT_UNIT}]]</td>
                         <td class="text-end">[[${#numbers.formatInteger(pdlist.PRODUCT_COST,0,'COMMA')}]] </td>
                         <td class="text-end">[[${#numbers.formatInteger(pdlist.PRODUCT_PRICE,0,'COMMA')}]] </td>
-                        <td th:text="${ind_pd_stock[pdlist.PRODUCT_CODE] == null ? 0 : ind_pd_stock[pdlist.PRODUCT_CODE]} ">[[${ind_pd_stock[pdlist.PRODUCT_CODE]}]]</td>
                         <td>[[${pdlist.PD_USE_FLAG}]]</td>
                     </tr>
                 </tbody>

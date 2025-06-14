@@ -83,8 +83,6 @@ public class goods_controller {
 		int goods_total_sch = this.g_svc.gd_all_ea_sch(type, sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list_sch = this.g_svc.gd_all_list_sch(type, sclass, keyword, pageno, post_ea);  //제품 리스트
 		
-		Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock();  //pd재고수
-		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, goods_total_sch);
 		int bno = this.m_pg.serial_no(goods_total_sch, pageno, post_ea); 
@@ -136,7 +134,6 @@ public class goods_controller {
 		m.addAttribute("bno", bno);
 		m.addAttribute("goods_total", goods_total_sch);
 		m.addAttribute("goods_all_list", goods_all_list_sch);
-		m.addAttribute("ind_pd_stock", ind_pd_stock); //재고수 
 		
 		m.addAttribute("pageinfo", pageinfo);
 		
@@ -282,9 +279,9 @@ public class goods_controller {
 			
 		}else {
 			if("product".equals(type)) { 
-				Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock(); // pd재고수 
+				Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
 				m.addAttribute("goods_one", goods_one);
-				m.addAttribute("ind_pd_stock", ind_pd_stock);
+				m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 				
 				if(!resultlist.isEmpty()) {    //bom이 등록된 경우 
 					m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());

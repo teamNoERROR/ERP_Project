@@ -456,8 +456,7 @@ public class common_controller {
 	 public String out_pd_list_Modal(HttpServletResponse res, @RequestBody String out_pd_data) throws IOException {
 		 this.pw = res.getWriter();
 		 
-		 String out_pd_list = this.common_svc.out_pd_list(out_pd_data); 
-		 System.out.println(out_pd_list);
+		 String out_pd_list = this.common_svc.out_pd_list(out_pd_data);
 		 this.pw.print(out_pd_list);
 		 
 		 return null; 

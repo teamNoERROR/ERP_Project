@@ -269,36 +269,44 @@ public class IOSF_Warehouse_Controller {
        return "/warehouse/in_warehouses_list.html";
    }
    
-   //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동(insert)
+   //창고이동
    @PostMapping("/IOSF_warehouse_move.do")
    @ResponseBody
    public Map<String, Object> IOSF_warehouse_move(@RequestBody List<Map<String, Object>> paramList) {
-
        int successCount = 0;
+       int successCount2 = 0;
 
        for (Map<String, Object> param : paramList) {
            String wh_code = (String) param.get("wh_code");
-           String inbound_code = (String) param.get("inbound_code");
-           String item_code = (String) param.get("item_code");
            String wh_type = (String) param.get("wh_type");
-           String in_status = (String) param.get("in_status");
-           String item_count = (String) param.get("item_count");
+           String product_code = (String) param.get("product_code");
+           String pd_qty = (String) param.get("pd_qty");
+           String emp_code = (String) param.get("emp_code");
+           String planCode = (String) param.get("pd_name");
+           String mv_wh_code = (String) param.get("mv_wh_code");
+//           String in_status = (String) param.get("in_status");
+//           String item_count = (String) param.get("item_count");
 
-           System.out.println("asdasd "+in_status+ "  " + item_count);
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, inbound_code, item_code, wh_type, in_status, item_count);
+           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code);
            successCount += updatedCount;
+           
+           int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code);
+           successCount2 += updatedCount2;
        }
 
        
        
        Map<String, Object> result = new HashMap<>();
-       if (successCount > 0) {
-           result.put("success", true);
-           result.put("message", successCount + "건 이동 완료");
-       } else {
-           result.put("success", false);
-           result.put("message", "이동 처리 실패");
-       }
+      if(successCount == successCount2) {
+    	  if (successCount > 0) {
+    		  result.put("success", true);
+    		  result.put("message", successCount + "건 이동 완료");
+    	  } else {
+    		  result.put("success", false);
+    		  result.put("message", "이동 처리 실패");
+    	  }
+      }
+       
 
        return result;
    }
@@ -570,12 +578,22 @@ public class IOSF_Warehouse_Controller {
   		
   		try {
   			
-  			int out_product = iosf_service.out_product(outData);
-  			System.out.println("result : " + out_product);
+  			String out_product = this.iosf_service.out_product(outData);
+  			if(out_product == "out_complete") {
+  				this.pw.print("out_success");
+  				
+  			}else {
+  				this.pw.print("out_fail");
+  			}
+  			
+//  			String go_outlist = this.iosf_dao.go_outlist();
   			
   		} catch (Exception e) {
   			this.log.error(e.toString());
   			e.printStackTrace();
+  			
+  		} finally {
+  			this.pw.close();
   		}
   		
   		return null;

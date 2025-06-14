@@ -37,22 +37,51 @@
 
 <!-- 출고상품 리스트 출력  -->
 <select id="pd_out_list" resultType="kr.co.noerror.DTO.IOSF_DTO" >
-	SELECT
-		PD.PIDX,
-		PD.PRODUCT_CODE,
-		PD.PRODUCT_NAME,
-		WFS.PD_QTY,
-		WFS.WH_CODE
-	FROM WAREHOUSE_FINISH WFS 
-	JOIN PRODUCTS PD ON WFS.PRODUCT_CODE = PD.PRODUCT_CODE
-<!-- 	WHERE PIDX = #{PIDX} AND PRODUCT_CODE = #{PRODUCT_CODE}; -->
-	<where>
-		<foreach collection="list" item="dto" separator="OR">
-			(PD.PIDX = #{dto.pidx} AND PD.PRODUCT_CODE = #{dto.product_code})
-		</foreach>
-	</where>
+<!-- 	SELECT DISTINCT -->
+<!-- 		PD.PIDX, -->
+<!-- 		PD.PRODUCT_CODE, -->
+<!-- 		PD.PRODUCT_NAME, -->
+<!-- 		WFS.PD_QTY, -->
+<!-- 		WFS.WH_CODE, -->
+<!-- 		WH.WH_NAME -->
+<!-- 	FROM WAREHOUSE_FINISH WFS  -->
+<!-- 	JOIN PRODUCTS PD ON WFS.PRODUCT_CODE = PD.PRODUCT_CODE -->
+<!-- 	JOIN WAREHOUSE WH ON WFS.WH_CODE = WH.WH_CODE -->
+<!-- 	<where> -->
+<!-- 		<foreach collection="list" item="dto" separator="OR"> -->
+<!-- 			(PD.PIDX = #{dto.pidx} AND PD.PRODUCT_CODE = #{dto.product_code} AND WFS.WH_CODE = #{dto.wh_code}) -->
+<!-- 		</foreach> -->
+<!-- 	</where> -->
+SELECT 
+	PD.PIDX,
+	PD.PRODUCT_CODE,
+	PD.PRODUCT_NAME,
+	SUM(
+        CASE 
+            WHEN WFS.CHANGE_TYPE = '입고' THEN WFS.PD_QTY
+            WHEN WFS.CHANGE_TYPE = '출고' THEN -WFS.PD_QTY
+            ELSE 0
+        END
+    ) AS PD_QTY,      
+	WFS.WH_CODE,
+	WH.WH_NAME
+FROM WAREHOUSE_FINISH WFS 
+JOIN PRODUCTS PD ON WFS.PRODUCT_CODE = PD.PRODUCT_CODE
+JOIN WAREHOUSE WH ON WFS.WH_CODE = WH.WH_CODE
+<where>
+	<foreach collection="list" item="dto" separator=" OR ">
+		(PD.PIDX = #{dto.pidx} AND PD.PRODUCT_CODE = #{dto.product_code} AND WFS.WH_CODE = #{dto.wh_code})
+	</foreach>
+</where>
+GROUP BY 
+	PD.PIDX,
+	PD.PRODUCT_CODE,
+	PD.PRODUCT_NAME,
+	WFS.WH_CODE,
+	WH.WH_NAME
+ORDER BY 
+	PD.PRODUCT_CODE
 </select>
-
 
 
 </mapper>

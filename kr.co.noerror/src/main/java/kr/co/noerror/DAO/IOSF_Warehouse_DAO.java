@@ -59,22 +59,21 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		return out_result;
 	}
 	
+	//창고 이동
 	@Override
-	public int IOSF_warehouse_move(
-			String wh_code, String inbound_code,
-			String item_code,
-			String wh_type,
-			String in_status, 
-			String item_count) {
+	public int IOSF_warehouse_move(String wh_code, 
+									String wh_type,
+									String product_code,
+									String pd_qty,
+									String emp_code,
+									String planCode, 
+									String mv_wh_code) {
 		
-		if (in_status == null || in_status.trim().isEmpty()) {
-		    in_status = "입고완료";
-		}
+//		if (in_status == null || in_status.trim().isEmpty()) {
+//		    in_status = "입고완료";
+//		}
 		
-		System.out.println("asdasd "+in_status+ "  " + item_count);
-	
-		
-		
+		/*
         if("mt".equals(wh_type)) {                	
         	this.randomNumber = 10000 + this.random.nextInt(90000);
         	 this.wh_uq = "WMT-" + randomNumber;
@@ -87,21 +86,43 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
         	this.randomNumber = 10000 + this.random.nextInt(90000);
         	 this.wh_uq = "WOUT-" + randomNumber;
         }
-        
+        */
 		Map<Object, Object> params = new HashMap<>();
 		params.put("wh_code", wh_code);
-		params.put("wh_uq", this.wh_uq);
-		params.put("inbound_code", inbound_code);	
-		params.put("item_code", item_code);	
 		params.put("wh_type", wh_type);	
-		params.put("item_count", item_count);	
-		params.put("in_status", in_status);	
-		
-		
+		params.put("product_code", product_code);	
+		params.put("pd_qty", pd_qty);	
+		params.put("employee_code", emp_code);
+		params.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
+		params.put("mv_wh_code", mv_wh_code);
+//		params.put("wh_uq", this.wh_uq);
 		
 		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move", params); 
 		
 		return wh_save_result;
+	}
+	
+	//이동된 창고 입고처리 
+	@Override
+	public int IOSF_warehouse_move_in(String wh_code, 
+									String wh_type,
+									String product_code,
+									String pd_qty,
+									String emp_code,
+									String planCode, 
+									String mv_wh_code) {
+		
+		Map<Object, Object> params = new HashMap<>();
+		params.put("wh_type", wh_type);	
+		params.put("product_code", product_code);	
+		params.put("pd_qty", pd_qty);	
+		params.put("employee_code", emp_code);
+		params.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
+		params.put("mv_wh_code", mv_wh_code);
+		
+		int wh_save_result2 = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
+		
+		return wh_save_result2;
 	}
 	
 	
@@ -206,7 +227,7 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	
 	//완제품 출고처리 
 	public int out_productList(Map<String, Object> insertData) {
-		int out_productList = this.iosf_ware_st.insert("IOSF_save_warehouse",insertData);
+		int out_productList = this.iosf_ware_st.insert("fs_warehouse_out",insertData);
 		return out_productList;
 	}
 	

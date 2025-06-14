@@ -43,11 +43,12 @@ public class common_serviceImpl implements common_service {
 	//출고제품 리스트 모달 안에 들어갈 내용
 	@Override
 	public String out_pd_list(String out_pd_data) {
+		
 		JSONArray ja = new JSONArray(out_pd_data);
 		int data_ea = ja.length();
 		
-		Map<String, Integer> ind_pd_stock = this.inv_svc.ind_pd_stock();
-		
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //제품별 총 재고 
+		 
 		List<IOSF_DTO> outReqList = new ArrayList<>();
 		
 		for (int w = 0; w < data_ea; w++) {
@@ -57,26 +58,30 @@ public class common_serviceImpl implements common_service {
 		    
 		    wfs_dto.setPidx(jo.getString("idx"));
 		    wfs_dto.setProduct_code(jo.getString("code"));
+		    wfs_dto.setWh_code(jo.getString("wh_code"));
 		    outReqList.add(wfs_dto);
 		}
-		
 		List<IOSF_DTO> out_list = this.cmn_dao.out_pd_list(outReqList);
 		
+		//FE로 돌려보낼 데이터 
 		JSONArray dataArr = new JSONArray();
 
 	    for (IOSF_DTO dto : out_list) {
 	        JSONObject jo = new JSONObject();
 	        
-	        int stockQty = ind_pd_stock.get(dto.getProduct_code());
+	        int allStockQty = ind_pd_all_stock.get(dto.getProduct_code());
 	        
 	        jo.put("product_code", dto.getProduct_code());
 	        jo.put("product_name", dto.getProduct_name());
-	        jo.put("pd_qty", dto.getPd_qty());
-	        jo.put("wh_code", dto.getWh_code());
-	        jo.put("stock_qty", stockQty);
-	        jo.put("is_short", stockQty < dto.getPd_qty());
+	        jo.put("pd_qty", dto.getPd_qty());  //
+	        jo.put("wh_code", dto.getWh_code());	
+	        jo.put("wh_name", dto.getWh_name().trim());
+	        jo.put("stock_qty", allStockQty);	//제품별 총 재고 
+	        jo.put("is_short", allStockQty < dto.getPd_qty());
+	     
 	        dataArr.put(jo);
 	    }
+	    System.out.println("dataArr : " + dataArr.toString());
 		
 		return dataArr.toString();
 	}

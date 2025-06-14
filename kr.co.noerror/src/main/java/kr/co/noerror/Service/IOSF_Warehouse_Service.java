@@ -170,13 +170,18 @@ public class IOSF_Warehouse_Service {
     	return wh_delete_result;
     }
 
+    
+    
+    
+    
     //완제품 출고 
-	public int out_product(String outData) {
+	public String out_product(String outData) {
 		Map<String, Object> insertData = new HashMap<>();
 		
 		JSONObject jo = new JSONObject(outData);
 		insertData.put("employee_code", jo.getString("empcode"));
 		int out_product = 0;
+		int go_outlist = 0;
 		int count = 0;
 		
 		JSONArray ja = jo.getJSONArray("outList");
@@ -201,9 +206,9 @@ public class IOSF_Warehouse_Service {
 		}
 		System.out.println(count);
 		if(count == data_ea) {
-			return out_product;
+			return "out_complete";
 		}else {
-			return count;
+			return ""+count+"";
 		}
 		
 		

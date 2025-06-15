@@ -67,7 +67,9 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 									String pd_qty,
 									String emp_code,
 									String planCode, 
-									String mv_wh_code) {
+									String mv_wh_code,
+									String ind_pch_cd,
+									String inbound_code) {
 		
 //		if (in_status == null || in_status.trim().isEmpty()) {
 //		    in_status = "입고완료";
@@ -110,7 +112,9 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 									String pd_qty,
 									String emp_code,
 									String planCode, 
-									String mv_wh_code) {
+									String mv_wh_code,
+									String ind_pch_cd,
+									String inbound_code) {
 		
 		Map<Object, Object> params = new HashMap<>();
 		params.put("wh_type", wh_type);	
@@ -119,6 +123,8 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		params.put("employee_code", emp_code);
 		params.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
 		params.put("mv_wh_code", mv_wh_code);
+		params.put("ind_pch_cd", ind_pch_cd);
+		params.put("inbound_code", inbound_code);
 		
 		int wh_save_result2 = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
 		

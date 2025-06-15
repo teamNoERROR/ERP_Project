@@ -118,8 +118,8 @@ public class IOSF_Warehouse_Service {
             int blockSize = 3; // 한 번에 보여줄 페이지 수 (홀수 권장)
             int halfBlock = blockSize / 2;
 
-            int startPage = page - halfBlock;
-            int endPage = page + halfBlock;
+            Integer startPage = page - halfBlock;
+            Integer endPage = page + halfBlock;
 
             // startPage가 1보다 작으면 1로 맞추고 endPage도 조정
             if (startPage < 1) {
@@ -132,6 +132,9 @@ public class IOSF_Warehouse_Service {
                 endPage = totalPages;
                 startPage = Math.max(1, endPage - blockSize + 1);
             }
+            
+            if (startPage == null || startPage < 1) startPage = 1;
+            if (endPage == null || endPage < startPage) endPage = startPage;
             
             wh_map.put("wh_list", wh_list_result);
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");

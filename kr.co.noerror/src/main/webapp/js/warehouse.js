@@ -263,6 +263,9 @@ function whMove(){
    			const emp_code = box.getAttribute('data-emp_code');
    			const pd_name = box.getAttribute('data-pd_name');
 			
+			const inbound_code = box.getAttribute('data-inbound_code');
+			const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
+			
 			const mv_wh_code = document.querySelector("#wh_code").value;
    
    			if (wh_code && wh_type && product_code && pd_qty && emp_code && pd_name && mv_wh_code) {
@@ -273,7 +276,10 @@ function whMove(){
 					pd_qty, 
 					emp_code, 
 					pd_name, 
-					mv_wh_code});
+					mv_wh_code,
+					inbound_code,
+					ind_pch_cd
+				});
    			}
  		});
 		if (moveData.length === 0) {

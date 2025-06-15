@@ -241,8 +241,6 @@ public class IOSF_Warehouse_Controller {
 		m.addAttribute("smenu","창고 관리");
 		m.addAttribute("mmenu","부자재 창고");
 		
-		System.out.println("mt_wh_list : " + mt_wh_list);
-		System.out.println("wh_search : " + wh_search);
 		//창고별 리스트 출력용
 		List<String> schlist = new ArrayList<>();
  		JSONArray mtwhList = this.iosf_service.wh_type_list("mt_wh");  
@@ -322,7 +320,6 @@ public class IOSF_Warehouse_Controller {
    public Map<String, Object> IOSF_warehouse_move(@RequestBody List<Map<String, Object>> paramList) {
        int successCount = 0;
        int successCount2 = 0;
-
        for (Map<String, Object> param : paramList) {
            String wh_code = (String) param.get("wh_code");
            String wh_type = (String) param.get("wh_type");
@@ -331,14 +328,16 @@ public class IOSF_Warehouse_Controller {
            String emp_code = (String) param.get("emp_code");
            String planCode = (String) param.get("pd_name");
            String mv_wh_code = (String) param.get("mv_wh_code");
+           String inbound_code = (String) param.get("inbound_code");
+           String ind_pch_cd = (String) param.get("ind_pch_cd");
 //           String in_status = (String) param.get("in_status");
 //           String item_count = (String) param.get("item_count");
 
            
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code);
+           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
            successCount += updatedCount;
            
-           int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code);
+           int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
            successCount2 += updatedCount2;
        }
 

@@ -20,6 +20,10 @@ function cltListOpen(parentType){
 	});
 }
 
+
+
+
+
 //거래처리스트 모달 페이징
 function cl_modal_pg (page){
 	var parent = page.getAttribute('data-parent');
@@ -144,16 +148,32 @@ function openItemList(parentType){
 
 //부자재리스트 모달 페이징
 function itm_modal_pg (page){
-	console.log(page)
-	//var parent = page.getAttribute('data-parent');
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+	var parent = "item";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'item';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'item';
+		pageno = 1;
+	}
 	
 	var params = {  
 			parent: parent,  
-		    type: page.getAttribute('data-type'),
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
+		    type: type,
+		    pageno: pageno,
+		    post_ea: post_ea,
 		};
 		
 		if (keyword) {  //키워드가 있으면
@@ -176,6 +196,8 @@ function itm_modal_pg (page){
 		console.log("통신오류발생" + error);
 	});
 }
+
+
 
 /*--------------------------------------------------------------
 	완제품 리스트 모달 오픈 
@@ -202,21 +224,38 @@ function pdListOpen(prt){
 
 //완제품 모달 페이징
 function pd_modal_pg (page){
-	var parent = page.getAttribute('data-parent');
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+	var parent = "product";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'product';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'product';
+		pageno = 1;
+	}
 	
 	var params = {  
-			parent: parent, 
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
+			parent: parent,  
+		    type: type,
+		    pageno: pageno,
+		    post_ea: post_ea,
 		};
 		
 		if (keyword) {  //키워드가 있으면
 		    params["keyword"] = keyword;
 		}
 		var pString = new URLSearchParams(params).toString();
-		
 		
 	fetch("./product_md_list.do?"+pString+"&mode=modal2", {
 		method: "GET",
@@ -239,12 +278,32 @@ function pd_modal_pg (page){
 
 //완제품 모달 페이징(product_list_body_modal2)
 function pd_modal_pg2 (page){
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+	var parent = "product2";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'product2';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'product2';
+		pageno = 1;
+	}
 	
 	var params = {  
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
+			//parent: parent,  
+		    type: type,
+		    pageno: pageno,
+		    post_ea: post_ea,
 		};
 		
 		if (keyword) {  //키워드가 있으면
@@ -293,14 +352,32 @@ function bomListOpen(parent){
 
 //bom완제품 모달 페이징
 function bom_modal_pg (page){
-	var parent = page.getAttribute('data-parent');
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+	var parent = "bom";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'bom';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'bom';
+		pageno = 1;
+	}
 	
 	var params = {  
-			parent: parent, 
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
+			parent: parent,  
+		    type: type,
+		    pageno: pageno,
+		    post_ea: post_ea,
 		};
 		
 		if (keyword) {  //키워드가 있으면
@@ -688,3 +765,24 @@ function goOutList(){
 		console.log("통신오류발생" + error);
 	})
 }
+
+//검색
+function MdSearch(event, type) {
+    if (event.key === 'Enter') {
+      MdSearchBtn(type);
+    }
+}
+
+
+function MdSearchBtn(type) {
+	console.log(type)
+	if(type=="itmMd"){
+		itm_modal_pg();
+	}
+	else if(type=="bomMd"){
+		bom_modal_pg();
+	}
+	
+	
+ }
+

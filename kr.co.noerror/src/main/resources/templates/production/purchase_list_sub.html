@@ -19,20 +19,19 @@
 				action="/pchreq_list.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<input type="checkbox" name="statuses" value="발주요청">&nbsp;발주요청&nbsp;
-						<input type="checkbox" name="statuses" value="발주취소">&nbsp;발주취소&nbsp;
-						<input type="checkbox" name="statuses" value="발주완료">&nbsp;발주완료&nbsp;
-						<input type="checkbox" name="statuses" value="진행중">&nbsp;진행중&nbsp;
-						<input type="checkbox" name="statuses" value="지연중">&nbsp;지연중&nbsp;
-						<input type="checkbox" name="statuses" value="가입고">&nbsp;가입고&nbsp;
-						<input type="checkbox" name="statuses" value="입고완료">&nbsp;입고완료&nbsp;
-						<input type="checkbox" name="statuses" value="반품">
-						&nbsp;반품&nbsp;
+						<label><input type="checkbox" name="statuses" value="발주요청">&nbsp; 발주요청&nbsp;</label>&nbsp;
+						<label><input type="checkbox" name="statuses" value="발주취소">&nbsp; 발주취소&nbsp;</label>&nbsp;
+						<label><input type="checkbox" name="statuses" value="발주완료">&nbsp; 발주완료&nbsp;</label>&nbsp;
+<!-- 						<label><input type="checkbox" name="statuses" value="진행중">&nbsp; 진행중&nbsp;</label>&nbsp; -->
+<!-- 						<label><input type="checkbox" name="statuses" value="지연중">&nbsp; 지연중&nbsp;</label>&nbsp; -->
+						<label><input type="checkbox" name="statuses" value="가입고">&nbsp; 가입고&nbsp;</label>&nbsp;
+<!-- 						<label><input type="checkbox" name="statuses" value="입고완료">&nbsp; 입고완료&nbsp;</label>&nbsp; -->
+<!-- 						<label><input type="checkbox" name="statuses" value="반품">&nbsp;반품&nbsp;</label> -->
 					</div>
 				</div>
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<input type="text" class="form-control" name="search_word" placeholder="검색">
+						<input type="text" class="form-control" name="search_word" placeholder="제품명/제품코드로 검색">
 						<button class="btn btn-primary">
 							<i class="bi bi-search"></i>
 						</button>
@@ -48,7 +47,7 @@
 						<thead class="table-light text-center">
 							<tr>
 								<th scope="col">
-									<input type="checkbox" disabled>
+									<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled>
 								</th>
 								<th scope="col">#</th>
 								<th scope="col">발주번호</th>
@@ -64,11 +63,13 @@
 							<tr th:if="${pch_list.size() == 0}" >
 		                		<td class="text-center no_list_tb" colspan="9" > 등록된 발주건이 없습니다. </td>
 		                	</tr>
-							<tr th:each="p : ${pch_list}" class="modal-trigger"
-								th:data-modal-url="@{/pchreq_detail.do(code=${p.pch_code})}"
-								data-modal-id="pch_modal" style="cursor: pointer;">
+							<tr th:each="p : ${pch_list}" 
+								th:attr="data-idx=${p.pidx}, data-pcode=${p.pch_code},
+                    					data-com_code=${(mode == 'modal') ? p.company_code : ''}, 
+             							"
+								style="cursor: pointer;">
 								<td onclick="event.stopPropagation();">
-									<input type="checkbox"></td>
+									<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" th:name="${mode == 'modal'} ? 'choice_pch' : 'select_pch'" ></td>
 								<td>[[${p.pidx}]]</td>
 								<td>[[${p.pch_code}]]</td>
 								<td>[[${p.request_date.substring(0, 10)}]]</td>

@@ -202,7 +202,8 @@ public class common_controller {
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 								,@RequestParam(value="mode", required = false) String mode
 								)  {
-		
+		System.out.println("zldnjem : " + keyword);
+		System.out.println("parent : " + parent);
 		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
 		
@@ -401,6 +402,16 @@ public class common_controller {
           return "/modals/purchase_list_modal.html"; 
       }
   }
+  
+  	//발주건 리스트 로드 
+  	@ResponseBody
+	@GetMapping("/purchase_detail_modal.do")
+	public List<pchreq_res_DTO> purchase_detail_modal(@RequestParam(name="code") String pch_code) {
+			
+		List<pchreq_res_DTO> pch_details = this.pdao.pchreq_detail(pch_code);
+		System.out.println("pch_details : "  + pch_details);
+		return pch_details;
+	}
   
   //사원 리스트 모달 띄우기 
   @GetMapping("/emp_list_modal.do")

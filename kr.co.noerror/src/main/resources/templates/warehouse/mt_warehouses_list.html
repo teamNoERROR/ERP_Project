@@ -88,11 +88,11 @@
 			<!-- 부자재 창고 List Table ( 부자재 창고)-->
 <!-- 			<div class="table-responsive rounded mt-2" th:if="${wh_check == 'yesdata'}"> -->
 			<div class="table-responsive rounded mt-2" style="width: 100%; overflow-x: auto;">
-				<table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
-				  <thead class="table-light text-center">
+				<table class="table table-hover align-middle table-bordered text-center" style="white-space: nowrap;">
+				  <thead class="table-light ">
 				    <tr>
-				   	  <th scope="col">#</th>
-				      <th>번호</th>
+				   	  <th scope="col"><input type="checkbox" disabled></th>
+				      <th>#</th>
 				      <th>창고코드</th>
 				      <th>창고명</th>
 				      <th>품목코드</th>
@@ -106,7 +106,7 @@
 				  </thead>
 				  <tbody>
 				  	<tr th:if="${wh_check == 'nodata'}" >
-                		<td class="text-center no_list_tb" colspan="13" > 부자재 창고에 보관된 제품이 없습니다. </td>
+                		<td class="text-center no_list_tb" colspan="11" > 부자재 창고에 보관된 제품이 없습니다. </td>
                 	</tr>
 				    <tr class="modal-trigger"
 				        th:each="mt_wh, iterStat : ${mt_wh_list}"
@@ -116,28 +116,28 @@
 				      <td>
 				      	<input type="checkbox" name="deleteCodes"
 				   			   	class="move-checkbox"
-				      	 	   th:value="${mt_wh.wh_code}" 
-						       th:data-widx="${mt_wh.material_code}" 
-						       th:data-inbound_code="${mt_wh.inbound_code}" 
-						       th:data-item_code="${mt_wh.item_code}" 
-						       th:data-wh_code="${mt_wh.wh_code}"
-						       data-wh_type="fs"
-						       th:data-in_status="${mt_wh.in_status}"
-						       th:data-item_count="${mt_wh.item_count}"
+				      	 	   th:value="${mt_wh.win_idx}" 
+						       th:data-wh_code="${mt_wh.material_code}" 
+						       data-wh_type="mt"
+						       th:data-product_code="${mt_wh.item_code}" 
+						       th:data-pd_qty="${mt_wh.item_qty}"
+						       th:data-emp_code="${mt_wh.employee_code}" 
+						       th:data-inbound_code="${mt_wh.inbound_code}"
+						       th:data-ind_pch_cd="${mt_wh.ind_pch_cd}"
+						       th:data-pd_name="${mt_wh.item_name}"
 						        onclick="selectRow(event,this);" 
 						       th:disabled="${mt_wh.change_type == '출고' OR mt_wh.change_type == '출고완료'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
-				      <td th:text="${mt_wh.wfs_code}"></td>
 				      <td th:text="${mt_wh.wh_code}"></td>
 				      <td th:text="${mt_wh.wh_name}"></td>
-				      <td th:text="${mt_wh.product_code}"></td>
-				      <td th:text="${mt_wh.product_name}"></td>
-				      <td th:text="${mt_wh.pd_qty}"></td>
+				      <td th:text="${mt_wh.item_code}"></td>
+				      <td th:text="${mt_wh.item_name}"></td>
+				      <td th:text="${mt_wh.item_qty}"></td>
 				      <td th:text="${mt_wh.change_type}"></td>
 				      <td th:text="${mt_wh.emp_name}"></td>
 				      <td th:text="${mt_wh.employee_code}"></td>
-					  <td th:text="${mt_wh.fs_insert.substring(0,16)}"></td>
+					  <td>[[${mt_wh.material_date.substring(0,16)}]]</td>
 				    </tr>
 				  </tbody>
 				</table>
@@ -152,9 +152,9 @@
 					  <ul class="pagination">
 					
 					     <!-- 첫페이지로 -->
-					    <li class="page-item prev" th:classappend="${startPage > 1} ? '' : 'disabled'">
+					    <li class="page-item prev" th:classappend="${1>= pageSize} ? '' : 'disabled'">
 					      <a class="page-link"
-					         th:href="@{/warehouses_mt_list.do(page=${startPage - 1}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&laquo;</a>
+					        th:href="@{/warehouses_mt_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&laquo;</a>
 					    </li>
 				
 					    <!-- 페이지 번호 -->
@@ -167,11 +167,10 @@
 					    </li>
 					
 					       <!-- 끝페이지로 -->
-					    <li class="page-item" th:classappend="${endPage < totalPages} ? '' : 'disabled'">
+					    <li class="page-item next" th:classappend="${currentPage >= totalPages} ? '' : 'disabled'">
 					      <a class="page-link"
-					         th:href="@{/warehouses_mt_list.do(page=${endPage + 1}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&raquo;</a>
+					         th:href="@{/warehouses_mt_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&raquo;</a>
 					    </li>
-			
 						  </ul>
 						</nav>
 						

@@ -1,4 +1,5 @@
 var pch_code = document.querySelector("#pch_code");
+var comp_code = document.querySelector("#comp_code");
 var wh_name = document.querySelector("#in_wh_name");
 var wh_code = document.querySelector("#in_wh_code");
 var inbound_date = document.querySelector("#inbound_date");

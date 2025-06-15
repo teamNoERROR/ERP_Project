@@ -13,6 +13,7 @@ function saveSelectedProducts() {
     pd_name: cb.dataset.pd_name
   }));
 }
+console.log(selectedMoveData)
 
 //타입별창고리스트 모달 열기
 function whSelect(wh_type, name_id, code_id){
@@ -679,7 +680,7 @@ function choicePch() {
 		var tdList = tr.querySelectorAll('td');
 		var pchcode =  tdList[2].innerText.trim();
 		var cmp_name = tdList[4].innerText.trim();
-		var cmp_code = tr.getAttribute("data-etccode");
+		var cmp_code = tr.getAttribute("data-com_code");
 		
 		//inbnd_insert.html에 붙는 부분
 		var pch_code = document.querySelector('#pch_code');
@@ -747,7 +748,10 @@ function pchDtlLoad(pch_code){
 				</td>
 			  `;
 		  	tbody.append(tr);
-			document.querySelector(".item_qty").valueAsDate = new Date();	
+			
+			// tr 안에서 item_exp를 찾아서 오늘 날짜 설정
+			/*let expInput = tr.querySelector(".item_exp");
+			expInput.valueAsDate = new Date(); // 오늘 날짜로 세팅*/
 		});  
 		  
 	}).catch(function(error) {

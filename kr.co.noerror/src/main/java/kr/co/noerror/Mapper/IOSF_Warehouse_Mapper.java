@@ -46,11 +46,15 @@ public interface IOSF_Warehouse_Mapper {
 	    //창고 이동 
 	    public int IOSF_warehouse_move(
 	    		String wh_code, String wh_type, String product_code, 
-	    		String pd_qty , String emp_code,  String planCode, String mv_wh_code);
+	    		String pd_qty , String emp_code,  String planCode, String mv_wh_code,
+	    		String ind_pch_cd,
+				String inbound_code);
 	    
 	    public int IOSF_warehouse_move_in(
 	    		String wh_code, String wh_type, String product_code, 
-	    		String pd_qty , String emp_code,  String planCode, String mv_wh_code);
+	    		String pd_qty , String emp_code,  String planCode, String mv_wh_code,
+	    		String ind_pch_cd,
+				String inbound_code);
 	    
 	    //완제품 창고에서 출고 
 	    int out_productList(Map<String, Object> insertData);

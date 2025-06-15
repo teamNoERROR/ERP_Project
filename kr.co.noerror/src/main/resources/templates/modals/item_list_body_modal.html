@@ -3,8 +3,8 @@
 		  <div class="d-flex justify-content-end mb-2">
 		      <div class="col-auto">
 		        <div class="input-group input-group-sm">
-		          <input type="text" class="form-control" placeholder="검색어를 입력하세요">
-		          <button class="btn btn-primary">
+		          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="제품명/제품코드로 검색" onkeyup="MdSearch(event, 'itmMd')">
+		          <button class="btn btn-primary" type="button" onclick="MdSearchBtn('itmMd')">
 		            <i class="bi bi-search"></i>
 		          </button>
 		        </div>
@@ -17,12 +17,4 @@
 		<!-- 페이징 -->
 		<div th:replace="~{/goods/items_list.html :: itemPgList(${parentType}, 'itmPageing')}" ></div>
       </div>
-<!--       <div class="modal-footer"> -->
-       <!-- Action Buttons -->
-<!--         <div class="d-flex gap-2">  -->
-<!--             <div class="ms-auto"> -->
-<!--                 <button type="button" class="btn btn-success" onclick=""><i class="bi bi-pencil-square"></i> 선택</button> -->
-               
-<!--             </div> -->
-<!--         </div> -->
-<!-- </div> -->
+

@@ -10,7 +10,6 @@
         WMT_IDX,
         WMT_CODE,
         WH_CODE,
-        INBOUND_CODE,
         ITEM_CODE,
         ITEM_QTY,
         CHANGE_TYPE,
@@ -21,9 +20,8 @@
    	    MT_WAREHOUSE_NO.NEXTVAL,
    	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
         #{wh_code},
-        #{inbound_code},
-        #{item_code},
-        #{item_qty},
+        #{product_code},
+        #{pd_qty},
         '출고',
         #{employee_code},
         SYSTIMESTAMP,
@@ -65,7 +63,6 @@
         WMT_IDX,
         WMT_CODE,
         WH_CODE,
-        INBOUND_CODE,
         ITEM_CODE,
         ITEM_QTY,
         CHANGE_TYPE,
@@ -75,10 +72,9 @@
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
    	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
-        #{wh_code},
-        #{inbound_code},
-        #{item_code},
-        #{item_qty},
+        #{mv_wh_code},
+        #{product_code},
+        #{pd_qty},
         '입고',
         #{employee_code},
         SYSTIMESTAMP,
@@ -181,24 +177,27 @@ FROM (
   SELECT A.*, ROWNUM RNUM
   FROM (
     SELECT
-      mt.WMT_IDX             AS win_idx,
-      mt.WMT_CODE             AS material_code,
-      mt.WH_CODE             AS wh_code,
-      mt.INBOUND_CODE            AS inbound_code,
-      mt.ITEM_CODE         AS item_code,
-      mt.ITEM_QTY        AS item_qty,
+      mt.WMT_IDX               AS win_idx,
+      mt.WMT_CODE              AS material_code,
+      mt.WH_CODE               AS wh_code,
+      mt.INBOUND_CODE          AS inbound_code,
+      mt.ITEM_CODE             AS item_code,
+      mt.ITEM_QTY              AS item_qty,
       mt.CHANGE_TYPE           AS change_type,
+      mt.MT_INSERT_DATE        AS material_date,
       
-      w.WH_NAME               AS wh_name,
+      w.WH_NAME                AS wh_name,
 
-      i.ITEM_NAME             AS item_name,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
+      i.ITEM_NAME              AS item_name,
+      i.COMPANY_CODE           AS client_code,
+      i.COMPANY_NAME           AS client_name,
+      i.ITEM_CLASS1            AS category_main,
+      i.ITEM_CLASS2            AS category_sub,
 
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
+      ib.IN_STATUS             AS in_status,
 
-      ib.IN_STATUS            AS in_status,
+      emp.ECODE                AS employee_code,
+      emp.ENAME                AS emp_name,
 
       TO_CHAR(
         CASE 
@@ -206,25 +205,22 @@ FROM (
           WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
           ELSE NULL
         END, 'YYYY-MM-DD'
-      ) AS inbound_date2,
-
-      TO_CHAR(mt.MT_INSERT_DATE, 'YYYY-MM-DD') AS material_date
+      ) AS inbound_date2
 
     FROM WAREHOUSE_MATERIAL mt
 
-    LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
+    LEFT JOIN WAREHOUSE w 
+      ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
 
-    LEFT JOIN (
-      SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE, ITEM_CODE
-      FROM INBOUND
-    ) ib ON mt.INBOUND_CODE = ib.INBOUND_CODE AND ib.ITEM_CODE = mt.ITEM_CODE
+    LEFT JOIN INBOUND ib 
+      ON mt.INBOUND_CODE = ib.INBOUND_CODE 
+      AND mt.ITEM_CODE = ib.ITEM_CODE
 
-    LEFT JOIN (
-      SELECT
-        ITEM_CODE, ITEM_NAME, ITEM_CLASS1, ITEM_CLASS2,
-        COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
-      FROM ITM_COMP_VIEW
-    ) i ON mt.ITEM_CODE = i.ITEM_CODE
+    LEFT JOIN ITM_COMP_VIEW i 
+      ON mt.ITEM_CODE = i.ITEM_CODE
+
+    LEFT JOIN EMPLOYEE2 emp 
+      ON mt.EMPLOYEE_CODE = emp.ECODE
 
     ORDER BY mt.WMT_IDX DESC
   ) A
@@ -292,22 +288,24 @@ FROM (
       mt.WMT_CODE             AS material_code,
       mt.WH_CODE             AS wh_code,
       mt.INBOUND_CODE            AS inbound_code,
-      mt.ITEM_CODE         AS material_change,
-      mt.ITEM_QTY        AS inbound_code,
-      mt.CHANGE_TYPE           AS item_code,
+      mt.ITEM_CODE         AS item_code,
+      mt.ITEM_QTY        AS item_qty,
+      mt.CHANGE_TYPE           AS change_type,
+      mt.MT_INSERT_DATE     AS material_date,
       
       w.WH_NAME               AS wh_name,
 
       i.ITEM_NAME             AS item_name,
       i.COMPANY_CODE          AS client_code,
       i.COMPANY_NAME          AS client_name,
-      i.COM_USE_FLAG          AS use_yn,
 
       i.ITEM_CLASS1           AS category_main,
       i.ITEM_CLASS2           AS category_sub,
-      
 
       ib.IN_STATUS            AS in_status,
+	
+	  emp.ECODE AS employee_code,
+	  emp.ENAME AS emp_name,
 
       TO_CHAR(
         CASE 
@@ -315,9 +313,7 @@ FROM (
           WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
           ELSE NULL
         END, 'YYYY-MM-DD'
-      ) AS inbound_date2,
-
-      TO_CHAR(mt.MT_INSERT_DATE, 'YYYY-MM-DD') AS material_date
+      ) AS inbound_date2
 
     FROM WAREHOUSE_MATERIAL mt
 
@@ -334,6 +330,8 @@ FROM (
         COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
       FROM ITM_COMP_VIEW
     ) i ON mt.ITEM_CODE = i.ITEM_CODE
+    
+    LEFT JOIN EMPLOYEE2 emp ON mt.EMPLOYEE_CODE = emp.ECODE
 
   <where>
     <if test="wh_name != null">
@@ -342,8 +340,8 @@ FROM (
 	      AND (
 	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      TRIM(i.item_code)  LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
 	      )
      	</if>
     </if>
@@ -351,8 +349,8 @@ FROM (
      	(
 	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
 	      )
     </if>
 	</where>
@@ -442,7 +440,7 @@ WHERE RNUM &gt; #{startIndex}
   <if test="wh_type == 'in'">
   SELECT 
   inb.WH_CODE AS wh_code,
-  inb.ITEM_QTY AS item_count,
+  inb.ITEM_QTY AS item_qty,
   w.WH_NAME AS wh_name,
   w.WH_ADDR1 AS wh_addr1,
   w.WH_ADDR2 AS wh_addr2,
@@ -476,7 +474,7 @@ WHERE inb.INBOUND_CODE = #{code}
   <if test="wh_type == 'mt'">
     SELECT 
   mt.WH_CODE AS wh_code,
-  mt.ITEM_QTY AS item_count,
+  mt.ITEM_QTY AS item_qty,
   w.WH_NAME AS wh_name,
   w.WH_ADDR1 AS wh_addr1,
   w.WH_ADDR2 AS wh_addr2,
@@ -503,7 +501,7 @@ WHERE inb.INBOUND_CODE = #{code}
 
 FROM WAREHOUSE_MATERIAL mt
 LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
-LEFT JOIN INBOUND ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
+JOIN INBOUND ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
 LEFT JOIN ITM_COMP_VIEW i ON mt.ITEM_CODE = i.ITEM_CODE
 WHERE mt.WMT_CODE = #{code}
   </if>
@@ -511,7 +509,7 @@ WHERE mt.WMT_CODE = #{code}
   <if test="wh_type == 'fs'">
     SELECT 
   fs.WH_CODE AS wh_code,
-  fs.ITEM_QTY AS item_count,
+  fs.ITEM_QTY AS item_qty,
   w.WH_NAME AS wh_name,
   w.WH_ADDR1 AS wh_addr1,
   w.WH_ADDR2 AS wh_addr2,
@@ -581,8 +579,8 @@ WHERE fs.WFS_CODE = #{code}
 		      	AND (
 		      	TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
 	      	  	TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
-	      		TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
-	      		TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      		TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
+	      		TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
 		      ) 
 	     	</if>
 	    </if>
@@ -590,8 +588,8 @@ WHERE fs.WFS_CODE = #{code}
 	    	(
 	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
 	      )
 	    	
 	    </if>

@@ -27,17 +27,6 @@ public class rest_controller {
 	@Autowired
 	pchreq_DAO pdao;
 	
-	//
-	@ResponseBody
-	@GetMapping("/purchase_detail_modal.do")
-	public List<pchreq_res_DTO> purchase_detail_modal(@RequestParam(name="code") String pch_code) {
-			
-		List<pchreq_res_DTO> pch_details = this.pdao.pchreq_detail(pch_code);
-		System.out.println(pch_details);
-		
-		return pch_details;
-	}
-	
 	
 	//이미지 전송 
 	@ResponseBody

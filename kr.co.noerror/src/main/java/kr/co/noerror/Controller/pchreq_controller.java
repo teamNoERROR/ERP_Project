@@ -2,7 +2,6 @@ package kr.co.noerror.Controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,11 @@ public class pchreq_controller {
 	
 	@Autowired
 	M_paging2 m_pg2;
+	
+	//버튼 누름 방지
+//    String [] no_chng_pchBtn = {"주문확인","주문취소","생산계획수립","생산계획확정"};
 
+	//발주저장 
 	@GetMapping("/pchreq_insert.do")
 	public String pchreq_insert(Model m) {
 		m.addAttribute("lmenu","구매영업관리");
@@ -69,6 +72,7 @@ public class pchreq_controller {
 		return "/production/purchase_insert.html";
 	}
 	
+	//
 	@GetMapping("/mrp_result_select.do")
 	public String mrp_result_select(@RequestParam(name="mrp_code") String mrp_code,
 			Model m) {
@@ -85,6 +89,7 @@ public class pchreq_controller {
 		return "/production/purchase_insert.html";
 	}
 	
+	//
 	@PostMapping("/pchreq_save.do")
 	@ResponseBody
 	public Map<String, Object> pchreq_save(@RequestBody Map<String, pchreq_req_DTO> requestMap) {
@@ -92,6 +97,7 @@ public class pchreq_controller {
 		return pchreq_service.pchreq_save(requestMap);
 	}
 	
+	//발주 리스트 
 	@GetMapping("/pchreq_list.do")
 	public String pchreq_list(@ModelAttribute search_condition_DTO search_cond, Model model) {
 		
@@ -104,8 +110,12 @@ public class pchreq_controller {
 	    		page_block
 	    );
 
-	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info, null);
 
+	    model.addAttribute("lmenu","구매영업관리");
+	    model.addAttribute("smenu","발주 관리");
+		model.addAttribute("mmenu","발주 리스트");
+		
 	    model.addAttribute("pch_list", pch_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
@@ -115,11 +125,10 @@ public class pchreq_controller {
 	
 	//발주리스트 모달연계용 서브페이지 
 	@GetMapping("/pchreq_list_sub.do")
-	public String pchreq_list_sub (@ModelAttribute search_condition_DTO search_cond, Model model
-								,@RequestParam(value="mode", required = false) String mode) {
+	public String pchreq_list_sub (@ModelAttribute search_condition_DTO search_cond, Model model) {
 		
 		int search_count = this.pchreq_list_service.search_count(search_cond);
-	    
+		    
 	    paging_info_DTO paging_info = this.m_pg2.calculate(
 	    		search_count, 
 	    		search_cond.getPage_no(), 
@@ -127,18 +136,17 @@ public class pchreq_controller {
 	    		page_block
 	    );
 
-	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info,null);
 
+	    model.addAttribute("lmenu","구매영업관리");
+	    model.addAttribute("smenu","발주 관리");
+		model.addAttribute("mmenu","발주 리스트");
+		
 	    model.addAttribute("pch_list", pch_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
 	    
-//	    return "/production/purchase_list_sub.html";
-	    if ("modal2".equals(mode)) {
-	        return "/modals/purchase_list_body_modal.html :: pchMdList";
-	    } else {
-	        return "/modals/purchase_list_modal.html"; // 일반 뷰 전체
-	    }
+	    return "/production/purchase_list_sub.html";
 	}
 	
 	/*
@@ -190,12 +198,27 @@ public class pchreq_controller {
 	}
 	*/
 	
+	
+	//발주내역 상세보기 
 	@GetMapping("/pchreq_detail.do")
 	public String pchreq_detail(@RequestParam(name="code") String pch_code, Model m) {
 		
 		List<pchreq_res_DTO> details = this.pdao.pchreq_detail(pch_code);
-		System.out.println(details);
+		
+//		List<String> allStatuses = Arrays.asList("발주완료", "발주취소", "진행중", "지연중", "가입고", "입고완료", "반품");
+//		m.addAttribute("allStatuses", allStatuses);
+
+//		Map<String, List<String>> statusMap = new HashMap<>();
+//		statusMap.put("발주완료", Arrays.asList("진행중", "지연중", "가입고", "입고완료"));
+//		statusMap.put("진행중", Arrays.asList("지연중", "가입고", "입고완료"));
+//		statusMap.put("지연중", Arrays.asList("가입고", "입고완료"));
+//		statusMap.put("가입고", Arrays.asList("입고완료"));
+//		statusMap.put("입고완료", Arrays.asList("반품"));
+//
+//		m.addAttribute("nextStatusMap", statusMap);
+		
 		m.addAttribute("details",details);
+		
 		return "/modals/purchase_detail_modal.html";
 		
 	}

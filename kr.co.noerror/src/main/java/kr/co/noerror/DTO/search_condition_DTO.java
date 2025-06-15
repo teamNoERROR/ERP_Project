@@ -13,4 +13,6 @@ public class search_condition_DTO {
 	    private List<String> statuses;
 	    private int page_no = 1;
 	    private int page_size = 5;
+	    
+	
 }

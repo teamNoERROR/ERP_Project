@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>출고 요청 페이지</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
@@ -42,18 +43,18 @@
                                 <label class="form-label fw-semibold">거래처처코드</label>
                                 <input type="text" class="form-control" placeholder="거래처코드" id="comp_code" readonly>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">출고창고</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="출고되는 창고" id="out_wh_name" readonly>
-                                    <button type="button" class="btn btn-primary" 
-                                    		onclick="whSelect('out_wh','out_wh_name','out_wh_code')" 
-                                    		style="cursor: pointer;">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                                <input type="hidden" id="out_wh_code">
-                            </div>
+<!--                             <div class="col-md-3"> -->
+<!--                                 <label class="form-label fw-semibold">출고창고</label> -->
+<!--                                 <div class="input-group"> -->
+<!--                                     <input type="text" class="form-control" placeholder="출고되는 창고" id="out_wh_name" readonly> -->
+<!--                                     <button type="button" class="btn btn-primary"  -->
+<!--                                     		onclick="whSelect('fs_wh','out_wh_name','out_wh_code')"  -->
+<!--                                     		style="cursor: pointer;"> -->
+<!--                                         <i class="bi bi-search"></i> -->
+<!--                                     </button> -->
+<!--                                 </div> -->
+<!--                                 <input type="hidden" id="out_wh_code"> -->
+<!--                             </div> -->
                         </div>
 
                         <div class="row mb-3">
@@ -74,7 +75,7 @@
 							<th scope="col" style="width: 5%;">대분류</th>
 							<th scope="col" style="width: 5%;">소분류</th>
 							<th scope="col" style="width: 5%;">출고수량</th>
-							<th scope="col" style="width: 10%;">출고여부</th>
+							<th scope="col" style="width: 10%;">출고창고</th>
 						</tr>
 					</thead>
 					<tbody id="outbnd_pds">
@@ -123,7 +124,7 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">출고상태</label>
                                 <select class="form-select" id="out_status">
-								<option value="출고대기" >출고대기</option>
+								<option value="출고요청" >출고요청</option>
 								<option value="출고완료">출고완료</option>
  							</select> 
                             </div>

@@ -1,15 +1,21 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -134,7 +140,7 @@ public class IOSF_Warehouse_Controller {
        return result;
    }
  
-  
+  /*
    //출고 창고 리스트
    @GetMapping("/warehouses_out_list.do")
    public String warehouses_out_list(Model m,
@@ -166,24 +172,46 @@ public class IOSF_Warehouse_Controller {
 	   
 	   return "/warehouse/out_warehouses_list.html";
    }
-   
- //부자재 창고 리스트
+   */
+ //완제품 창고 리스트
    @GetMapping("/warehouses_fs_list.do")
    public String warehouses_fs_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
-	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
-  
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+			  @RequestParam(value = "name_wh_list", required = false) String fs_wh_list
+		   		) {
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
-		m.addAttribute("mmenu","완제품 창고 관리");
-	   
+		m.addAttribute("mmenu","완제품 창고");
+		System.out.println("fs_wh_list : " + fs_wh_list);
+		System.out.println("wh_search : " + wh_search);
+		//창고별 리스트 출력용
+		List<String> schlist = new ArrayList<>();
+ 		JSONArray fswhList = this.iosf_service.wh_type_list("fs_wh");  //창고명목록
+ 		for (int i = 0; i < fswhList.length(); i++) {
+ 			schlist.add(fswhList.getString(i));
+ 		}
+ 		
+		m.addAttribute("whNameList",schlist); 
+		m.addAttribute("fs_wh_name",fs_wh_list); 	
+		
+		if("".equals(fs_wh_list)) {
+			fs_wh_list = null;
+		}
+		
+		//검색했을경우 
+		if((fs_wh_list != null && !fs_wh_list.equals("")) || 
+			(wh_search != null && !wh_search.trim().equals(""))) {
+			m.addAttribute("mmmenu","검색결과");
+		}
+		
 	   	this.map = new HashMap<>();
-	      Map<Object, Object>   iosf_list_map = this.map;
+	    Map<Object, Object>   iosf_list_map = this.map;
 	   
 	      this.wh_type = "fs";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
 	      
 	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -204,18 +232,40 @@ public class IOSF_Warehouse_Controller {
    public String warehouses_mt_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
-	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize) {
+	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+//	          @RequestParam(value = "mt_wh_name", required = false) String mt_wh_name,
+	          @RequestParam(value = "wh_type", required = false) String wh_type,
+	          @RequestParam(value = "name_wh_list", required = false) String mt_wh_list) {
   
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
-		m.addAttribute("mmenu","부자재 창고 관리");
-	   
+		m.addAttribute("mmenu","부자재 창고");
+		
+		//창고별 리스트 출력용
+		List<String> schlist = new ArrayList<>();
+ 		JSONArray mtwhList = this.iosf_service.wh_type_list("mt_wh");  
+ 		for (int i = 0; i < mtwhList.length(); i++) {
+ 			schlist.add(mtwhList.getString(i));
+ 		}
+ 		m.addAttribute("whNameList",schlist); 
+		m.addAttribute("mt_wh_name",mt_wh_list); 	
+		
+		if("".equals(mt_wh_list)) {
+			mt_wh_list = null;
+		}
+		
+		//검색했을경우 
+		if((mt_wh_list != null && !mt_wh_list.equals("")) || 
+			(wh_search != null && !wh_search.trim().equals(""))) {
+			m.addAttribute("mmmenu","검색결과");
+		}
+		
 	   	this.map = new HashMap<>();
 	      Map<Object, Object>   iosf_list_map = this.map;
 	   
 	      this.wh_type = "mt";
 	      
-	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search, this.wh_type, pageSize);
+	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, mt_wh_list);
 	      
 	       m.addAttribute("mt_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
@@ -232,7 +282,7 @@ public class IOSF_Warehouse_Controller {
    }
     
    
-   
+   /*
    @GetMapping("/warehouses_in_list.do")
    public String warehouse_in_list(Model m,
           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -263,37 +313,47 @@ public class IOSF_Warehouse_Controller {
 
        return "/warehouse/in_warehouses_list.html";
    }
-   
-   //입고창고 리스트에서 입고 정보 -> 부자재 창고로 이동(insert)
+   */
+   //창고이동
    @PostMapping("/IOSF_warehouse_move.do")
    @ResponseBody
    public Map<String, Object> IOSF_warehouse_move(@RequestBody List<Map<String, Object>> paramList) {
-
        int successCount = 0;
-
+       int successCount2 = 0;
        for (Map<String, Object> param : paramList) {
            String wh_code = (String) param.get("wh_code");
-           String inbound_code = (String) param.get("inbound_code");
-           String item_code = (String) param.get("item_code");
            String wh_type = (String) param.get("wh_type");
-           String in_status = (String) param.get("in_status");
-           String item_count = (String) param.get("item_count");
+           String product_code = (String) param.get("product_code");
+           String pd_qty = (String) param.get("pd_qty");
+           String emp_code = (String) param.get("emp_code");
+           String planCode = (String) param.get("pd_name");
+           String mv_wh_code = (String) param.get("mv_wh_code");
+           String inbound_code = (String) param.get("inbound_code");
+           String ind_pch_cd = (String) param.get("ind_pch_cd");
+//           String in_status = (String) param.get("in_status");
+//           String item_count = (String) param.get("item_count");
 
-           System.out.println("asdasd "+in_status+ "  " + item_count);
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, inbound_code, item_code, wh_type, in_status, item_count);
+           
+           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
            successCount += updatedCount;
+           
+           int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
+           successCount2 += updatedCount2;
        }
 
        
        
        Map<String, Object> result = new HashMap<>();
-       if (successCount > 0) {
-           result.put("success", true);
-           result.put("message", successCount + "건 이동 완료");
-       } else {
-           result.put("success", false);
-           result.put("message", "이동 처리 실패");
-       }
+      if(successCount == successCount2) {
+    	  if (successCount > 0) {
+    		  result.put("success", true);
+    		  result.put("message", successCount + "건 이동 완료");
+    	  } else {
+    		  result.put("success", false);
+    		  result.put("message", "이동 처리 실패");
+    	  }
+      }
+       
 
        return result;
    }
@@ -554,4 +614,39 @@ public class IOSF_Warehouse_Controller {
          return result;
       }
 
+      
+      
+      //완제품 출고 
+      @PostMapping("/outProduct.do")
+      public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
+  		System.out.println("outData : " + outData);
+    	  
+    	  this.pw = res.getWriter();
+  		
+  		try {
+  			
+  			String out_product = this.iosf_service.out_product(outData);
+  			if(out_product == "out_complete") {
+  				this.pw.print("out_success");
+  				
+  			}else {
+  				this.pw.print("out_fail");
+  			}
+  			
+//  			String go_outlist = this.iosf_dao.go_outlist();
+  			
+  		} catch (Exception e) {
+  			this.log.error(e.toString());
+  			e.printStackTrace();
+  			
+  		} finally {
+  			this.pw.close();
+  		}
+  		
+  		return null;
+  	}
+      
+      
+      
+      
 }

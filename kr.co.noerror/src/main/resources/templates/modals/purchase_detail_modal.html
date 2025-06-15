@@ -1,3 +1,4 @@
+<html xmlns:th="http://www.thymeleaf.org">
 <div class="modal fade" id="pch_modal" tabindex="-1" aria-labelledby="pd_detail_label" aria-hidden="true" th:fragment="pchDetail" >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable 	modal-xl">
 		<div class="modal-content">
@@ -12,23 +13,37 @@
 					<h2 class="mb-1">발주번호 : [[${details[0].pch_code}]]</h2>
 					<div class="d-flex align-items-center gap-2">
 						<!-- 발주코드를 data 속성에 저장 -->
-						<select class="form-select" id="modal-status-select"
-							style="max-width: 150px;"
-							th:attr="data-pch-code=${details[0].pch_code}">
+						<select class="form-select" id="modal-status-select" style="max-width: 150px;"
+								th:attr="data-pch-code=${details[0].pch_code}"
+								th:disabled="${details[0].pch_status == '발주취소'}" >
 							<option selected value="발주상태 선택">발주상태 선택</option>
-							<option value="발주요청">발주요청</option>
-							<option value="발주취소">발주취소</option>
-							<option value="발주완료">발주완료</option>
-							<option value="진행중">진행중</option>
-							<option value="지연중">지연중</option>
-							<option value="가입고">가입고</option>
-							<option value="입고완료">입고완료</option>
-							<option value="반품">반품</option>
+							<option value="발주완료" th:selected="${details[0].pch_status == '발주완료'}">발주완료</option>
+							<option value="발주취소" th:if="${details[0].pch_status != '발주완료'}" th:selected="${details[0].pch_status == '발주취소'}">발주취소</option>
+<!-- 							<option value="진행중" th:if="${details[0].pch_status == '발주완료'}" th:selected="${details[0].pch_status == '진행중'}">진행중</option> -->
+<!-- 							<option value="지연중" th:if="${details[0].pch_status == '발주완료' or details[0].pch_status == '진행중' }" th:selected="${details[0].pch_status == '지연중'}">지연중</option> -->
+							<option value="가입고" th:if="${details[0].pch_status == '발주완료' or details[0].pch_status == '진행중' or details[0].pch_status == '지연중'}" th:selected="${details[0].pch_status == '가입고'}">가입고</option>
+<!-- 							<option value="입고완료" th:if="${details[0].pch_status == '발주완료' or details[0].pch_status == '진행중' or details[0].pch_status == '지연중' or details[0].pch_status == '가입고'}" th:selected="${details[0].pch_status == '입고완료'}">입고완료</option> -->
+<!-- 							<option value="반품"  th:if="${details[0].pch_status == '입고완료'}" th:selected="${details[0].pch_status == '반품'}">반품</option> -->
+<!-- <th:block th:with="currentStatus=${details[0].pch_status},  -->
+<!--                    nextStatuses=${nextStatusMap[currentStatus]}"> -->
+<!--     <option th:each="status : ${#lists.concat({currentStatus}, nextStatuses)}" -->
+<!--             th:value="${status}" -->
+<!--             th:selected="${status == currentStatus}" -->
+<!--             th:text="${status}"> -->
+<!--     </option> -->
+<!-- </th:block> -->
+							
 						</select>
 
-						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="pch_status_update()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
+<!-- 						<button type="button" class="btn btn-success" -->
+<!-- 							style="white-space: nowrap;" onclick="pch_status_update()"> -->
+<!-- 							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp; -->
+<!-- 						</button> -->
+						<button  type="button" class="btn"
+								style="white-space: nowrap;" onclick="pch_status_update()"
+								th:disabled="${details[0].pch_status == '발주취소'}" 
+       			  	  			th:classappend="${details[0].pch_status == '발주취소'} ? ' btn-secondary' : 'btn-info'"  >
+							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
 					</div>
 				</div>
@@ -162,8 +177,7 @@
 					<div class="mt-4 d-flex gap-2">
 						<div class="ms-auto">
 							<th:block th:if="${details[0].pch_status == '발주요청'}">
-								<a
-									th:href="@{/pchreq_update.do(code=${details[0].pch_code})}"
+								<a th:href="@{/pchreq_update.do(code=${details[0].pch_code})}"
 									class="btn btn-success"> <i class="bi bi-pencil-square"></i>
 									수정
 								</a>

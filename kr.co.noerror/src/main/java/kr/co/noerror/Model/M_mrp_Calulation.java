@@ -12,13 +12,23 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
+import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
+import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.inventory_service;
 
 @Repository("mrp_Calulation")
-public class mrp_Calulation {
+public class M_mrp_Calulation {
 
 	@Autowired
 	mrp_DAO mdao;
+	
+	@Autowired
+	private goods_service g_svc;
+	
+	@Autowired
+	inventory_service inv_svc; 
+	
 	
 	public List<mrp_result_DTO> mrp_calc(List<mrp_input_DTO> mrp_inputs) {
 		Map<String, mrp_result_DTO> aggregated = new HashMap<>();
@@ -26,13 +36,19 @@ public class mrp_Calulation {
 		for (mrp_input_DTO input : mrp_inputs) {
 			System.out.println(input.getBom_code());
 			List<bom_DTO> boms = this.mdao.boms_for_mrp(input.getBom_code());
-			System.out.println("테스트"+boms);
+			
+			Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
+			products_DTO goods_one = this.g_svc.pd_one_detail(input.getItem_code(), "item");  //제품 특정게시물 내용 가져오기
+			
+			System.out.println(ind_pd_all_stock);
+			System.out.println(goods_one.getITM_SAFE_STOCK());
+			
 			for (bom_DTO bom : boms) {
 				String item_code = bom.getITEM_CODE();
 				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();
-				int total_stock = 200;
-				int safety_stock = 50;
-				int reserved_stock = 30;
+				int total_stock = 0;
+				int safety_stock = 0;
+				int reserved_stock = 0;
 				int available_stock = total_stock - safety_stock - reserved_stock;
 				int shortage_stock = Math.min(available_stock - required_qty, 0);
 				aggregated.merge(item_code,

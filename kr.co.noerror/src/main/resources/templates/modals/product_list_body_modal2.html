@@ -1,0 +1,107 @@
+<div class="modal-body row justify-content-center d-flex gap-3" th:fragment="pdMdList2( pd_total, pd_list, mode)">
+					 <!-- 검색창 영역 -->
+		  <div class="d-flex justify-content-end mb-2">
+		      <div class="col-auto">
+		        <div class="input-group input-group-sm">
+		          <input type="text" class="form-control" placeholder="제품명/제품코드로 검색">
+		          <button class="btn btn-primary"  type="button">
+		            <i class="bi bi-search"></i>
+		          </button>
+		        </div>
+		      </div>
+		  </div>
+				
+				  <!-- 테이블 영역 -->
+				<!-- Client List Table -->
+				<div class="table-responsive  rounded">
+					<table class="table table-hover align-middle table-bordered">
+						<thead class="table-light">
+							<tr>
+								<th scope="col"><input type="checkbox"></th>
+								<th scope="col">#</th>
+								<th scope="col">제품코드</th>
+								<th scope="col">제품명</th>
+								<th scope="col">대분류</th>
+								<th scope="col">소분류</th>
+								<th scope="col">규격</th>
+								<th scope="col">단위</th>
+								<th scope="col">제품원가(원)</th>
+								<th scope="col">판매가(원)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="p , no : ${products}"
+							    th:attr="data-code=${p.PRODUCT_CODE},
+							             data-name=${p.PRODUCT_NAME},
+							             data-class1=${p.PRODUCT_CLASS1},
+							             data-class2=${p.PRODUCT_CLASS2},
+							             data-spec=${p.PRODUCT_SPEC},
+							             data-unit=${p.PRODUCT_UNIT},
+							             data-cost=${p.PRODUCT_COST},
+							             data-price=${p.PRODUCT_PRICE}"
+							    style="cursor: pointer;">
+								<td><input type="checkbox" name="product_check"></td>
+								<td>[[${bno - no.index}]]</td>
+								<td>[[${p.PRODUCT_CODE}]]</td>
+								<td>[[${p.PRODUCT_NAME}]]</td>
+								<td>[[${p.PRODUCT_CLASS1}]]</td>
+								<td>[[${p.PRODUCT_CLASS2}]]</td>
+								<td>[[${p.PRODUCT_SPEC}]]</td>
+								<td>[[${p.PRODUCT_UNIT}]]</td>
+								<td>[[${p.PRODUCT_COST}]]</td>
+								<td>[[${p.PRODUCT_PRICE}]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+		<!-- 페이징 -->
+		 <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item page-link prev"  
+                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)" >
+					<i class="bi bi-chevron-double-left"></i> </li>
+					
+				<li class="page-item page-link " 
+					th:if="${pageinfo.start_pg > 1}"  
+                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">
+					<i class="bi bi-chevron-left"></i> </li>
+					
+                
+                <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
+                <li class="page-item page-link pgnum" th:classappend ="${pageinfo.pageno == pgn} ? 'curpg' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product', data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">[[${pgn}]]</li>
+                </th:block>
+                
+                <li class="page-item page-link " 
+                	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
+                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 2}, data-type='product',data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">
+					<i class="bi bi-chevron-right"></i> </li>
+					
+                <li class="page-item page-link next" 
+                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total}, data-type='product',data-pea=${pageinfo.post_ea}" 
+                	onclick="pd_modal_pg2(this)">
+					<i class="bi bi-chevron-double-right"></i> </li>
+            </ul>
+        </div>
+	</div>
+			
+		
+		
+      <div class="modal-footer">
+       <!-- Action Buttons -->
+        <div class="d-flex gap-2"> 
+            <div class="ms-auto">
+                <button type="button" class="btn btn-success" onclick=""><i class="bi bi-pencil-square"></i> 선택</button>
+               
+            </div>
+        </div>
+</div>

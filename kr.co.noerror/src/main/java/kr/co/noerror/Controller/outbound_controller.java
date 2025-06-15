@@ -49,7 +49,7 @@ public class outbound_controller {
 	
 		//리스트 첫접속시 체크박스 상태값
 		if (out_status_lst == null) {
-			out_status_lst = new String[] {"출고대기", "출고완료", "부분출고", "출고취소"};
+			out_status_lst = new String[] {"출고요청", "출고완료", "출고취소"};
 		}
 		List<outbound_DTO> outbound_all_list = this.out_svc.outbound_all_list(keyword, pageno, post_ea, out_status_lst);  //입고리스트 제품 리스트
 		

@@ -61,7 +61,7 @@ public class Warehouse_Service {
                 
                 //저장일 경우에만 wh_code 생성
                 if(check_insertOrModify == "save") {                	
-                	String wh_code = "WHS-" + randomNumber;
+                	String wh_code = "WMT-" + randomNumber;
                 	wh_dto.setWh_code(wh_code);
                 }
 

@@ -1,0 +1,19 @@
+<div class="modal-body row  d-flex align-items-center gap-3 " th:fragment="bomMdList(parentType, bom_total, bom_list, mode)">
+		 <!-- 검색창 영역 -->
+		  <div class="d-flex justify-content-end mb-2">
+		      <div class="col-auto">
+		        <div class="input-group input-group-sm">
+		          <input type="text" class="form-control" placeholder="제품명/제품코드로 검색"  id="keyword" name="keyword" th:value="${keyword}" onkeyup="MdSearch(event,'bomMd')">
+		          <button class="btn btn-primary"  type="button" onclick="MdSearchBtn('bomMd')">
+		            <i class="bi bi-search"></i>
+		          </button>
+		        </div>
+		      </div>
+		  </div>
+		  
+		  <!-- 테이블 영역 -->
+		<div th:replace="~{/goods/bom_list.html :: bomList(${parentType}, ${bom_total}, ${bom_all_list},'modal')}"></div>
+		
+		<!-- 페이징 -->
+		<div th:replace="~{/goods/bom_list.html :: bomPgList(${parentType}, 'bomPageing')}" ></div>
+      </div>

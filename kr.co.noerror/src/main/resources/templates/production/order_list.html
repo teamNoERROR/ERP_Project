@@ -3,6 +3,7 @@
 
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>주문 리스트</title>
 
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
@@ -21,22 +22,22 @@
 				action="/order.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<input type="checkbox" name="statuses" value="주문요청">&nbsp;주문요청&nbsp; 
-						<input type="checkbox" name="statuses" value="주문취소">&nbsp;주문취소&nbsp; 
-						<input type="checkbox" name="statuses" value="주문확인">&nbsp;주문확인&nbsp; 
-						<input type="checkbox" name="statuses" value="생산계획수립">&nbsp;생산계획수립&nbsp; 
-						<input type="checkbox" name="statuses" value="생산계획수립">&nbsp;생산계획확정&nbsp; 
-						<input type="checkbox" name="statuses" value="생산중">&nbsp;생산중&nbsp; 
-						<input type="checkbox" name="statuses" value="생산완료">&nbsp;생산완료&nbsp; 
-						<input type="checkbox" name="statuses" value="지연중">&nbsp;생산지연&nbsp; 
-						<input type="checkbox" name="statuses" value="출고완료">&nbsp;출고완료&nbsp; 
-						<input type="checkbox" name="statuses" value="반품">&nbsp;반품&nbsp;
+						<label><input type="checkbox" name="statuses" value="주문요청">&nbsp;주문요청&nbsp;</label> 
+						<label><input type="checkbox" name="statuses" value="주문취소">&nbsp;주문취소&nbsp;</label>  
+						<label><input type="checkbox" name="statuses" value="주문확인">&nbsp;주문확인&nbsp; </label> 
+						<label><input type="checkbox" name="statuses" value="생산계획수립">&nbsp;생산계획수립&nbsp;</label> 
+						<label><input type="checkbox" name="statuses" value="생산계획수립">&nbsp;생산계획확정&nbsp; </label> 
+<!-- 						<label><input type="checkbox" name="statuses" value="생산중">&nbsp;생산중&nbsp; </label>  -->
+<!-- 						<label><input type="checkbox" name="statuses" value="생산완료">&nbsp;생산완료&nbsp;</label>   -->
+<!-- 						<label><input type="checkbox" name="statuses" value="지연중">&nbsp;생산지연&nbsp; </label>  -->
+<!-- 						<label><input type="checkbox" name="statuses" value="출고완료">&nbsp;출고완료&nbsp; </label>  -->
+<!-- 						<label><input type="checkbox" name="statuses" value="반품">&nbsp;반품&nbsp;</label>  -->
 					</div>
 				</div>
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
 						<input type="text" class="form-control" name="search_word"
-							placeholder="검색">
+							placeholder="제품명/제품코드로 검색">
 						<button class="btn btn-primary" type="submit">
 							<i class="bi bi-search"></i>
 						</button>
@@ -47,20 +48,20 @@
 			<!-- Client List Table -->
 			<div class="table-responsive  rounded" th:fragment="ordModalList(parentType,ord_list, mode)" 
 					style="width: 100%; overflow-x: auto;">
-				<table class="table  align-middle table-bordered" th:classappend="${all.size() != 0} ? 'table-hover' : ''"
+				<table class="table  align-middle table-bordered text-center" th:classappend="${all.size() != 0} ? 'table-hover' : ''"
 					th:fragment="tables"  style="white-space: nowrap;" >
-					<thead class="table-light text-center">
+					<thead class="table-light ">
 						<tr>
 							<th scope="col"><input type="checkbox" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">주문번호</th>
-							<th scope="col">주문일자</th>
 							<th scope="col">거래처코드</th>
 							<th scope="col">거래처명</th>
 							<th scope="col">담당자명</th>
 							<th scope="col">거래금액</th>
 							<th scope="col">납품예정일</th>
 							<th scope="col">주문진행상황</th>
+							<th scope="col">등록일</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -75,14 +76,15 @@
 									<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" name="choice_ord"></td>
 							<td>[[${o.oidx}]]</td>
 							<td>[[${o.order_code}]]</td>
-							<td>[[${o.request_date.substring(0, 10)}]]</td>
 							<td>[[${o.company_code}]]</td>
 							<td>[[${o.company_name}]]</td>
 							<td>[[${o.manager_name}]]</td>
 							<td align="right">[[${#numbers.formatDecimal(o.pay_amount,
-								0, 'COMMA', 0, 'POINT')}]]</td>
+								0, 'COMMA', 0, 'POINT')}]] 원</td>
 							<td>[[${o.due_date.substring(0, 10)}]]</td>
-							<td>[[${o.order_status}]]</td>
+							<td th:if="${mode != 'modal'}">[[${o.order_status}]]</td>
+							<td th:if="${mode == 'modal'}" th:text="${o.order_status=='생산계획확정' or o.order_status == '생산계획수립'} ? '생산완료' : ${o.order_status}">[[${o.order_status}]]</td>
+							<td>[[${o.request_date.substring(0,10)}]]</td>
 						</tr>
 					</tbody>
 				</table>

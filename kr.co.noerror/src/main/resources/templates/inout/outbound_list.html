@@ -31,13 +31,9 @@
 				
 				<div class="d-flex">
 					<div id ="check_group" class="input-group input-group-sm d-flex gap-3 align-items-center flex-wrap">
-						<label class="d-flex align-items-center gap-1">
-							<input type="checkbox" name="out_status_lst" value="출고대기" onchange="outStatusCk(this)"
-									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고대기' )}"> 출고대기
-						</label>
 						<label class="d-flex align-items-center gap-1"> 
 							<input type="checkbox" name="out_status_lst" value="부분출고" onchange="outStatusCk(this)"
-									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '부분출고' )}"> 부분출고
+									th:checked="${out_statusList == null or #arrays.contains(out_statusList, '출고요청' )}"> 출고요청
 						</label>
 						 <label class="d-flex align-items-center gap-1"> 
 							<input type="checkbox" name="out_status_lst" value="출고완료" onchange="outStatusCk(this)"
@@ -55,7 +51,7 @@
 			    		<input type="hidden" name="out_status_lst" th:value="${o_status}" />
 					</th:block>
 					<div class="input-group input-group-sm" style="width:250px;">
-						<input type="text" class="form-control"name="keyword" th:value="${keyword != null ? keyword : ''}"  placeholder="전체 검색">
+						<input type="text" class="form-control"name="keyword" th:value="${keyword != null ? keyword : ''}"  placeholder="제품명/제품코드로 검색">
 						<button class="btn btn-primary">
 							<i class="bi bi-search"></i>
 						</button>

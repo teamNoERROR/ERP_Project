@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}"></head>
+<title>발주 등록 페이지</title>
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -47,7 +48,7 @@
 									<div class="input-group">
 										<input type="text" class="form-control" name="mrp_code"
 											placeholder="MRP 코드" th:value="${mrp_code}">
-										<button class="btn btn-outline-primary" type="submit">
+										<button class="btn btn-outline-primary">
 											<i class="bi bi-search"></i>
 										</button>
 									</div>
@@ -184,20 +185,28 @@
 			<div class="row mb-3 empinfo">
 				<div class="col-md-4">
 					<label class="form-label">발주담당자</label>
-					<div>
-						<input type="hidden" class="form-control" name="ecode" id="ecode"
-							th:value="${session.ecode}" readonly>
-					</div>
-					<div class="input-group">
-						<input type="text" class="form-control" name="ename" id="ename"
-							th:value="${session.ename}" readonly>
-						<button type="button"
-							class="btn btn-outline-secondary modal-trigger"
-							th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal"
-							style="cursor: pointer;">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
+<!-- 					<div> -->
+<!-- 						<input type="hidden" class="form-control" name="ecode" id="ecode" -->
+<!-- 							th:value="${session.ecode}" readonly> -->
+<!-- 					</div> -->
+<!-- 					<div class="input-group"> -->
+<!-- 						<input type="text" class="form-control" name="ename" id="ename" -->
+<!-- 							th:value="${session.ename}" readonly> -->
+<!-- 						<button type="button" -->
+<!-- 							class="btn btn-outline-secondary modal-trigger" -->
+<!-- 							th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" -->
+<!-- 							style="cursor: pointer;"> -->
+<!-- 							<i class="bi bi-search"></i> -->
+<!-- 						</button> -->
+<!-- 					</div> -->
+					<div class="d-flex gap-2">
+						<div class="col-md-5 mb-3 mb-md-0">
+                            <input type="text" class="form-control"  name="ename" id="ename" value="이명헌" readonly>
+                        </div>
+                        <div class="col-md-5 mb-3 mb-md-0">
+                            <input type="text" class="form-control" name="ecode" id="ecode"  value="EMP-00001" readonly>
+                        </div>
+                   </div>
 				</div>
 			</div>
 

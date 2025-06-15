@@ -33,9 +33,9 @@ public class WareHouse_DTO {
 	int EIDX;
 	
 	//    관리자이름  관리자 코드	 관리자 부서   관리자 직급	  	관리자 전화번호							
-	String ENAME,  ECODE,    EPART,    EPOSITION,   EPHONE,       
+	String ENAME,  ECODE,    EMP_PART,    EMP_POSITION,   EMP_PHONE,       
 	//     관리자 번호	 관리자 이메일   관리자 팩스	관리자 메모		관리자 생성 시간		
-		   ETEL, 	 EEMAIL, 	 EFAX, 		MEMO, 		INSERT_DATE;
+			EMP_TEL, 	 EMP_EMAIL, 	 EMP_FAX, 		EMP_MEMO, 		EMP_INSERT_DATE;
 
 	
 	

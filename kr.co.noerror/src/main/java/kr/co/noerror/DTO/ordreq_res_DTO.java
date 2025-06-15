@@ -26,15 +26,15 @@ public class ordreq_res_DTO {
     private Long pay_amount;      // 결제금액   
     
     // 거래처(주문처) 정보
-    private String company_code = "저장정보 없음";     // 거래처 고유코드
-    private String company_name = "저장정보 없음";     // 거래처 이름
-    private String biz_num = "저장정보 없음";
-    private String ceo_name = "저장정보 없음";
-    private String com_addr1 = "저장정보 없음";
-    private String com_addr2 = "저장정보 없음";
-    private String manager_code = "저장정보 없음";     // 거래처 담당자 고유코드
-    private String manager_name = "저장정보 없음";     // 거래처 담당자 이름
-    private String mng_phone = "저장정보 없음";
+    private String company_code;     // 거래처 고유코드
+    private String company_name;     // 거래처 이름
+    private String biz_num;
+    private String ceo_name;
+    private String com_addr1;
+    private String com_addr2;
+    private String manager_code;     // 거래처 담당자 고유코드
+    private String manager_name;     // 거래처 담당자 이름
+    private String mng_phone;
     
     // 제품 주문 정보
     private String product_code;        // 제품코드
@@ -50,4 +50,8 @@ public class ordreq_res_DTO {
     
     //BOM code
     private String bom_code = "-";
+    
+    //상품별 재고수 
+    int ind_pd_all_stock;
+    
 }

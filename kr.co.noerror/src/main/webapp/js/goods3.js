@@ -49,11 +49,13 @@ function insertItm(){
 		alert("제품단위를 입력하세요");
 		item_unit.focus();		
 				
-	}else if(itm_safe_stock.value ==""){ 
+	}
+	/*else if(itm_safe_stock.value ==""){ 
 		alert("안전재고수를 입력하세요");
 		itm_safe_stock.focus();	
 				
-	}else if(!reg_num.test(itm_safe_stock.value)){  //숫자만 입력 유효성 검사 
+	}*/
+	else if(!reg_num.test(itm_safe_stock.value)){  //숫자만 입력 유효성 검사 
 		alert("안전재고수는 숫자만 입력이 가능합니다.");
 		itm_safe_stock.focus();	
 		

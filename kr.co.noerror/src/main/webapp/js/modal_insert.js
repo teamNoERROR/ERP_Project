@@ -4,10 +4,24 @@
 let targetWhNameId = null;
 let targetWhCodeId = null;
 
+let selectedMoveData = [];  // 체크된 항목들 저장
+
+function saveSelectedProducts() {
+  const checked = document.querySelectorAll('.move-checkbox:checked');
+  selectedMoveData = Array.from(checked).map(cb => ({
+    wh_code: cb.dataset.wh_code,
+    pd_name: cb.dataset.pd_name
+  }));
+}
+console.log(selectedMoveData)
+
 //타입별창고리스트 모달 열기
 function whSelect(wh_type, name_id, code_id){
 	targetWhNameId = name_id;
 	targetWhCodeId = code_id;
+	
+	// 체크된 항목 저장
+	saveSelectedProducts();
 	
 	fetch("./wh_type_list.do?wh_type="+wh_type, {
 			method: "GET",
@@ -40,9 +54,9 @@ function choiceWh() {
 	}
 	
 	if (!selected_radio) {
-	alert("창고를 선택해 주세요.");
-
-	 }else{
+		alert("창고를 선택해 주세요.");
+	 }
+	 else{
 		const whCode = selected_radio.value;
 		const whName = selected_radio.getAttribute('data-wh_name');
 		const whZipcode = selected_radio.getAttribute('data-wh_zipcode');
@@ -54,6 +68,13 @@ function choiceWh() {
 		const whCodeInput = document.getElementById(targetWhCodeId);
 		const whAddrInput = document.getElementById('wh_location');
 		const whTypeInput = document.getElementById('wh_type');
+		
+		//선택된 창고가 이미 체크한 제품의 현재 창고인지 확인
+		const duplicated = selectedMoveData.find(item => item.wh_code === whCode);
+		if (duplicated) {
+		  alert(`선택한 창고는 이미 ${duplicated.pd_name} 제품의 현재 창고입니다.\n다른 창고를 선택해주세요.`);
+		  return;
+		}
 		
 		if (whNameInput && whCodeInput) {
 			whNameInput.value = whName;
@@ -67,7 +88,7 @@ function choiceWh() {
 		}
 		
 		// 예시: 타입별 처리 (원하면 타입별로 다르게 로직 분기 가능)
-	   if (whType === '부자재창고') {
+	   /*if (whType === '부자재창고') {
 		   document.getElementById('wh_code').value = whCode;
 	   		alert("창고를 선택하셨습니다.");
 	  
@@ -77,7 +98,7 @@ function choiceWh() {
 	   } else {
 	     console.log('기타 창고 타입');
 	   }
-		
+		*/
 	   
 		// 선택 후 모달 닫기
 	 	var modalElement = document.getElementById("wh_type_list");
@@ -129,7 +150,7 @@ function select_items (btn) {
 			appendItemsRow(tbody, item);
 			
 			document.querySelector("#bom_tr").innerHTML+=`
-				<li> ${item.name} </li>
+				<li class="bomlow"> ${item.name} </li>
 			`;
 		  });
 		
@@ -286,7 +307,7 @@ function removeItemRow(btn) {
 /*--------------------------------------------------------------
 부자재 리스트 모달에서 선택한 항목들 등록화면의 리스트에 붙여넣기 
 --------------------------------------------------------------*/
-//모달에서 선택한 리스트 등록화면(bom_insert)의 리스트에 붙여넣기 
+//모달에서 선택한 부자재 리스트 등록화면(bom_insert)의 리스트에 붙여넣기 
 function appendItemsRow(tbody, item) {
   const tr = document.createElement('tr');
   tr.className = "item_added"
@@ -334,6 +355,83 @@ function appendItemsRow2(tbody, item) {
 
 
 /*--------------------------------------------------------------
+완제품 리스트 모달에서 선택한 제품 등록화면의 리스트에 붙여넣기 
+--------------------------------------------------------------*/
+//BOM 등록화면에서 
+function pdChoice(parentType) {
+	console.log(parentType.getAttribute("data-parenttype"))
+	var radios = document.querySelectorAll('input[name="selectpd"]');
+	var selected_radio = null;
+	var ptype = parentType.getAttribute("data-parenttype");
+	
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	if (!selected_radio) {
+		alert("BOM을 등록할 제품을 선택해 주세요.");
+		return;
+	 }
+	 if(ptype == "bomPdOpen"){
+		
+		var tr = selected_radio.closest('tr');
+		var tdList = tr.querySelectorAll('td');
+		
+		var pd_cd = tr.getAttribute("data-code");
+		var pd_nm = tr.getAttribute("data-name");
+		var pd_tp = tdList[5].innerText.trim();
+		var pd_cl1 = tr.getAttribute("data-class1");
+		var pd_cl2 = tr.getAttribute("data-class2");
+		var pd_sp = tr.getAttribute("data-spec");
+		var pd_un = tr.getAttribute("data-unit");
+		var pd_cst = tr.getAttribute("data-cost");
+		var pd_prc = tr.getAttribute("data-price");
+		var pd_mm = tr.getAttribute("data-memo");
+		
+		var product_code = document.querySelector('#product_code');
+		var product_name = document.querySelector('#product_name');
+		var product_type = document.querySelector('#product_type');
+		var product_cls1 = document.querySelector('#product_cls1');
+		var product_cls2 = document.querySelector('#product_cls2');
+		var product_spec = document.querySelector('#product_spec');
+		var product_unit = document.querySelector('#product_unit');
+		var product_cst = document.querySelector('#product_cst');
+		var product_prc = document.querySelector('#product_prc');
+		var product_memo = document.querySelector('#product_memo');
+		
+		var fmt_cost = Number(pd_cst).toLocaleString();
+		var fmt_cost2 = Number(pd_prc).toLocaleString();
+		
+		product_code.value= pd_cd;
+		product_name.value= pd_nm;
+		product_type.value= pd_tp;
+		product_cls1.value= pd_cl1;
+		product_cls2.value= pd_cl2;
+		product_spec.value= pd_sp;
+		product_unit.value= pd_un;
+		product_cst.value = fmt_cost;
+		product_prc.value = fmt_cost2;
+		product_memo.value= pd_mm;
+		
+		var top_pd = product_name;
+		document.querySelector("#bom_top_pd").innerHTML=`<i class="bi bi-caret-right-fill"></i>`+top_pd.value;
+	}
+	
+	// 선택 후 모달 닫기
+ 	var modalElement = document.getElementById("product_list");
+	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
+	}
+}
+
+
+
+/*--------------------------------------------------------------
 거래처 리스트 모달에서 선택한 거래처 등록화면의 리스트에 붙여넣기 
 --------------------------------------------------------------*/
 function choiceClt(parentType) {
@@ -359,7 +457,7 @@ function choiceClt(parentType) {
 		var com_name = tdList[3].innerText.trim();
 		var bnum = tdList[6].innerText.trim();
 		var mng_code = tr.getAttribute("data-mngcode").trim();
-		var mng_name = tdList[4].innerText.trim();
+		var mng_name = tdList[7].innerText.trim();
 		var phnum = tr.getAttribute("data-mngphn").trim();
 		
 		var company_code = document.querySelector('#company_code');
@@ -412,10 +510,10 @@ function choiceOrd(parentType) {
 		var tdList = tr.querySelectorAll('td');
 		
 		var orderCode =  tdList[2].innerText.trim();
-		var companyCode =  tdList[4].innerText.trim();
-		var companyName =  tdList[5].innerText.trim();
-		var managerName =  tdList[6].innerText.trim();
-		var dueDate =  tdList[8].innerText.trim();
+		var companyCode =  tdList[3].innerText.trim();
+		var companyName =  tdList[4].innerText.trim();
+		var managerName =  tdList[5].innerText.trim();
+		var dueDate =  tdList[7].innerText.trim();
 		
 		//production_plan_insert.html에 붙는 부분
 		var order_code = document.querySelector('#order_code');
@@ -494,12 +592,13 @@ function ordDtlLoad(order_code){
 			  <td>${resultProduct.product_name}</td>
 			  <td>${resultProduct.product_spec}</td>
 			  <td>${resultProduct.product_unit}</td>
+			  <td>${resultProduct.ind_pd_all_stock}</td>
 			  <td>
 			    <input type="number" class="form-control plan_qty" value="${resultProduct.product_qty}">
 			  </td>
 			  <td class="bom_code">${resultProduct.bom_code}</td>
 			  <td>
-			    <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">
+			    <button type="button" class="btn btn-sm btn-danger" onclick="removeItemRow(this)">
 			      삭제
 			    </button>
 			  </td>
@@ -544,11 +643,8 @@ function ordDtlLoad2(order_code){
 				<td>`+resultProduct.product_class2+`</td>
 				<td><input type="number" class="form-control out_pd_qty"></td>
 				<td>
-					<select class="form-select ind_out_status" >
-						<option value="" >선택</option>
-						<option value="출고완료" >출고완료</option>
-						<option value="부분출고">부분출고</option>
-					</select>
+                   	<input type="text" class="form-control readonly_text" value="" id="out_wh_name" readonly>
+               		<input type="hidden" id="out_wh_code">
 				</td>
 			  `;
 		  	tbody.append(tr);
@@ -584,7 +680,7 @@ function choicePch() {
 		var tdList = tr.querySelectorAll('td');
 		var pchcode =  tdList[2].innerText.trim();
 		var cmp_name = tdList[4].innerText.trim();
-		var cmp_code = tr.getAttribute("data-etccode");
+		var cmp_code = tr.getAttribute("data-com_code");
 		
 		//inbnd_insert.html에 붙는 부분
 		var pch_code = document.querySelector('#pch_code');
@@ -627,7 +723,7 @@ function pchDtlLoad(pch_code){
 		
 		//결과값 붙이기 
 		result.forEach((resultItem, index) => {
-				
+			
 			var tr = document.createElement('tr');
 		  	tr.className = "item_row " 
 		  	tr.innerHTML = `
@@ -652,10 +748,75 @@ function pchDtlLoad(pch_code){
 				</td>
 			  `;
 		  	tbody.append(tr);
+			
+			// tr 안에서 item_exp를 찾아서 오늘 날짜 설정
+			/*let expInput = tr.querySelector(".item_exp");
+			expInput.valueAsDate = new Date(); // 오늘 날짜로 세팅*/
 		});  
 		  
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	});
-	
 }
+
+/*--------------------------------------------------------------
+	사원 리스트모달 
+--------------------------------------------------------------*/
+//발주리스트모달에서 선택후 인풋란에 붙여넣기 
+function choiceEmp(parent) {
+	console.log(parent.getAttribute("data-parenttype"));
+	var prt = parent.getAttribute("data-parenttype");
+	var radios = document.querySelectorAll('input[name="selectMem"]');
+	var selected_radio = null;
+		
+	for (var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked) {
+	    selected_radio = radios[i];
+	  }
+	}
+	
+	if (!selected_radio) {
+		alert("직원을 선택해 주세요.");
+		return;
+	}
+	 
+	var tr = selected_radio.closest('tr');
+	var tdList = tr.querySelectorAll('td');
+	
+	var emp_code =  tdList[2].innerText.trim();
+	var emp_name = tdList[3].innerText.trim();
+	var emp_part = tdList[4].innerText.trim();
+	var emp_position = tdList[5].innerText.trim();
+	var emp_tel = tdList[6].innerText.trim();
+	
+	//창고등록시 직원 선택
+	if(prt == "wh_emp"){
+		var wh_mg_cd = document.querySelector('#wh_mg_cd');
+		var wh_mg_name = document.querySelector('#wh_mg_name');
+		var wh_mg_mp = document.querySelector('#wh_mg_mp');
+		var wh_mg_ph = document.querySelector('#wh_mg_ph');
+		  
+		wh_mg_cd.value= emp_code;
+		wh_mg_name.value= emp_name;
+		wh_mg_mp.value= emp_part + "/" + emp_position;
+		wh_mg_ph.value= emp_tel;
+	}
+	//생산계획(재고)등록시 직원 선택 
+	else if(prt == "stk_pln_emp"){
+		var pln_mg_cd = document.querySelector('#pln_mg_cd');
+		var pln_mg_name = document.querySelector('#pln_mg_name');
+		
+		pln_mg_cd.value= emp_code;
+		pln_mg_name.value= emp_name;
+	}
+	
+	// 선택 후 모달 닫기
+ 	var modalElement = document.getElementById("member_list_modal");
+	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
+	}
+};

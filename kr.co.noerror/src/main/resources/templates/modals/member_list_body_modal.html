@@ -1,0 +1,19 @@
+<div class="modal-body row  d-flex align-items-center gap-3 " th:fragment="membMdList(parentType, member_total, member_list, mode)">
+		 <!-- 검색창 영역 -->
+		  <div class="d-flex justify-content-end mb-2">
+		      <div class="col-auto">
+		        <div class="input-group input-group-sm">
+		          <input type="text" class="form-control" placeholder="사원명/사원코드로 검색">
+		          <button class="btn btn-primary"  type="button">
+		            <i class="bi bi-search"></i>
+		          </button>
+		        </div>
+		      </div>
+		  </div>
+		  
+		  <!-- 테이블 영역 -->
+		<div th:replace="~{/member/member_list.html :: membList(${parentType}, ${member_all_total}, ${member_all_list},'modal')}"></div>
+		
+		<!-- 페이징 -->
+		<div th:replace="~{/member/member_list.html :: membPgList(${parentType}, 'membPageing')}" ></div>
+</div>

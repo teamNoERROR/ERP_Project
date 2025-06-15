@@ -9,7 +9,7 @@
 
 		  
 		  <!-- 테이블 영역 -->
- 		<div th:replace="~{/modals/product_list_body_modal.html :: pdMdList(${pd_total}, ${pd_list}, 'modal2')}"></div>
+ 		<div th:replace="~{/modals/product_list_body_modal.html :: pdMdList(${parentType}, ${pd_total}, ${pd_list}, 'modal2')}"></div>
 		
 		
       </div>
@@ -17,7 +17,8 @@
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 
             <div class="ms-auto">
-                <button type="button" class="btn btn-success" onclick="pdChoice()"><i class="bi bi-pencil-square"></i> 선택</button>
+                <button type="button" class="btn btn-success" 
+                		th:attr="data-parenttype=${parentType}" onclick="pdChoice(this)"><i class="bi bi-pencil-square"></i> 선택</button>
             </div>
         </div>
 

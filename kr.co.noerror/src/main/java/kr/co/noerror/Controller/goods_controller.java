@@ -34,6 +34,7 @@ import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.inventory_service;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -46,6 +47,9 @@ public class goods_controller {
 	
 	@Autowired
 	private bom_service b_svc; 
+	
+	@Autowired
+	inventory_service inv_svc; 
 	
 	@Resource(name="M_file")   //파일첨부관련모델 
 	M_file m_file;
@@ -275,7 +279,11 @@ public class goods_controller {
 			
 		}else {
 			if("product".equals(type)) { 
+				
+				Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
+				
 				m.addAttribute("goods_one", goods_one);
+				m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 				
 				if(!resultlist.isEmpty()) {    //bom이 등록된 경우 
 					m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
@@ -283,6 +291,7 @@ public class goods_controller {
 					m.addAttribute("bom_result", resultlist);
 					m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
 				}
+				
 				this.url = "/modals/product_detail_modal.html";
 				
 			}else if("item".equals(type)) {
@@ -300,7 +309,6 @@ public class goods_controller {
 	public String goods_delete(@PathVariable(name="key") String key,
 								@RequestBody String data,
 								HttpServletRequest req, HttpServletResponse res) throws IOException {
-		System.out.println(data);
 		this.pw = res.getWriter();
 		
 		try {

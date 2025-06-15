@@ -14,18 +14,20 @@
 						<!-- 생산계획코드를 data 속성에 저장 -->
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
-							th:attr="data-plan-code=${details[0].plan_code}">
+							th:attr="data-plan-code=${details[0].plan_code}" th:disabled="${details[0].plan_status == '생산완료'}">
 							<option selected value="발주상태 선택">생산상태 선택</option>
-							<option value="생산계획수립">생산계획수립</option>
+<!-- 							<option value="생산계획수립">생산계획수립</option> -->
 							<option value="생산계획확정">생산계획확정</option>
 							<option value="생산중">생산중</option>
-							<option value="생산완료">생산완료</option>
+							<option value="생산완료" th:selected="${details[0].plan_status == '생산완료'}">생산완료</option>
 							<option value="생산지연">생산지연</option>
 						</select>
-
-						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="plan_status_update()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
+						
+						<button type="button" class="btn"  
+									th:classappend="${details[0].plan_status == '생산완료'} ? ' btn-secondary' : ' btn-info'"
+    								th:disabled="${details[0].plan_status == '생산완료'}"
+									style="white-space: nowrap;" onclick="plan_status_update()">
+							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
 					</div>
 				</div>
@@ -38,26 +40,27 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td class="info-label">주문코드</td>
-								<td class="value-cell">[[${details[0].order_code}]]</td>
-								<td class="info-label">회사명</td>
-								<td class="value-cell" colspan="2">[[${details[0].company_name}]]</td>
+								<td class="info-label" style="width:25%;">주문코드</td>
+								<td class="value-cell" style="width:25%;" th:text="${details[0].order_code != null} ? ${details[0].order_code} : '재고생산건'">[[${details[0].order_code}]]</td>
+								<td class="info-label" style="width:25%;">회사명</td>
+								<td class="value-cell"  style="width:25%;" colspan="2" th:text="${details[0].company_name != null} ? ${details[0].company_name} : '-'">>[[${details[0].company_name}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">사업자번호</td>
-								<td class="value-cell">[[${details[0].biz_num}]]</td>
+								<td class="value-cell"th:text="${details[0].biz_num != null} ? ${details[0].biz_num} : '-'" >[[${details[0].biz_num}]]</td>
 								<td class="info-label">대표자</td>
-								<td class="value-cell" colspan="2">[[${details[0].ceo_name}]]</td>
+								<td class="value-cell" colspan="2" th:text="${details[0].ceo_name != null} ? ${details[0].ceo_name} : '-'">[[${details[0].ceo_name}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">담당자</td>
-								<td class="value-cell">[[${details[0].manager_name}]]</td>
+								<td class="value-cell" th:text="${details[0].manager_name != null} ? ${details[0].manager_name} : '-'">[[${details[0].manager_name}]]</td>
 								<td class="info-label">연락처</td>
-								<td class="value-cell" colspan="2">[[${details[0].mng_phone}]]</td>
+								<td class="value-cell" colspan="2" th:text="${details[0].mng_phone != null} ? ${details[0].mng_phone} : '-'">[[${details[0].mng_phone}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">주소</td>
-								<td class="value-cell" colspan="5">[[${details[0].com_addr1 +
+								<td class="value-cell" colspan="5" th:text="${details[0].company_name != null} ? ${details[0].com_addr1 +
+									details[0].com_addr2} : '-'">[[${details[0].com_addr1 +
 									details[0].com_addr2}]]</td>
 							</tr>
 						</tbody>
@@ -76,7 +79,7 @@
 						</tr>
 						<tr>
 							<td class="info-label">주문납기일</td>
-							<td class="value-cell">[[${details[0].due_date.substring(0,10)}]]</td>
+							<td class="value-cell" th:text="${details[0].due_date != null} ? ${details[0].due_date.substring(0,10)} : '-'">[[${details[0].due_date.substring(0,10)}]]</td>
 							<td class="info-label">우선순위</td>
 							<td class="value-cell">[[${details[0].priority}]]</td>
 						</tr>
@@ -104,8 +107,8 @@
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
 					<h5 class="">생산 제품 내역</h5>
-					<table class="table table-hover align-middle table-bordered">
-						<thead class="table-light text-center">
+					<table class="table table-hover align-middle table-bordered text-center">
+						<thead class="table-light ">
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
@@ -113,7 +116,7 @@
 								<th scope="col">제품규격</th>
 								<th scope="col">제품단위</th>
 								<th scope="col">생산수량</th>
-								<th scope="col">BOM코드</th>
+<!-- 								<th scope="col">BOM코드</th> -->
 
 							</tr>
 						</thead>
@@ -124,9 +127,9 @@
 								<td>[[${d.product_name}]]</td>
 								<td>[[${d.product_spec}]]</td>
 								<td>[[${d.product_unit}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.product_qty, 0,
+								<td >[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.bom_code}]]</td>
+<!-- 								<td>[[${d.bom_code}]]</td> -->
 							</tr>
 
 						</tbody>

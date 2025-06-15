@@ -271,9 +271,9 @@ function pd_modal_pg2 (page){
 /*--------------------------------------------------------------
 	bom등록된 제품 리스트 모달 오픈 
 ----------------------------------------------------------- */
-function bomListOpen(){
+function bomListOpen(parent){
 	
-	fetch("./bom_md_list.do", {
+	fetch("./bom_md_list.do?parent="+parent, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -498,8 +498,8 @@ function pch_modal_pg (page){
 /*--------------------------------------------------------------
 	사원 리스트 모달 오픈
 ----------------------------------------------------------- */
-function empListOpen(){
-	fetch("./emp_list_modal.do", {
+function empListOpen(parentType){
+	fetch("./emp_list_modal.do?parent="+parentType, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -517,7 +517,7 @@ function empListOpen(){
 	});
 }
 
-//발주리스트 모달 페이징
+//사원리스트 모달 페이징
 function emp_modal_pg (page){
 	var search_word = page.getAttribute('data-keyword');
 	var pageno = page.getAttribute('data-pageno');
@@ -554,10 +554,14 @@ function emp_modal_pg (page){
 //출고요청 버튼 클릭 
 function pdOutReq(){
 	var out_list = document.querySelectorAll("input[name='checkCodes']:checked");
+	var out_wh = document.querySelector("#wh_code");
 	var out_req = new Array();
 	
 	if (out_list.length == 0) {
 		alert("출고시킬 항목을 선택해주세요.");
+	}
+	else if (out_wh.value == ""){
+		alert("출고시킬 창고를 선택해주세요.");
 	}
 	else{
 		out_list.forEach(chkOut => {
@@ -624,9 +628,11 @@ function appendOutPdsRow(tbody, dataList){
 		outTr.innerHTML = `
 		    <td style="width:5%;">`+(i+1)+`</td>
 			<td style="width:10%;" class="whCd">`+outList.wh_code+`</td>
-			<td style="width:20%;" class="whNm">`+outList.wh_name+`</td>
+			<td style="width:15%;" class="whNm">`+outList.wh_name+`</td>
+			<td style="width:5%;">`+" → "+`</td>
+			<td style="width:15%;" class="whNm2">`+outList.wh_name+`</td>
 		    <td style="width:10%;" class="pdCd">`+outList.product_code+`</td>
-		    <td style="width:25%;" class="pdNm">`+outList.product_name+`</td>
+		    <td style="width:20%;" class="pdNm">`+outList.product_name+`</td>
 		    <td style="width:10%;" >`+outList.stock_qty+`</td>	
 			<td style="width:10%;" class="wh_pd_qty">`+outList.pd_qty+`</td>
 		    <td style="width:10%;"><input type="number" name="out_qty" class="form-control out_qty" ></td>
@@ -681,7 +687,4 @@ function goOutList(){
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	})
-	
-	
-	
 }

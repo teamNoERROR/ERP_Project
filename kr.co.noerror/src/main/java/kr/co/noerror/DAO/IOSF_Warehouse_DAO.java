@@ -146,14 +146,14 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	
 	//검색된 결과 창고 리스트
 	@Override
-	public List<IOSF_DTO> IOSF_search_whpaged(String wh_search, Integer startIndex, Integer pageSize, String wh_type, String fs_wh_name) {
+	public List<IOSF_DTO> IOSF_search_whpaged(String wh_search, Integer startIndex, Integer pageSize, String wh_type, String wh_name) {
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("m_search", wh_search);
 		params.put("startIndex", startIndex);	
 		params.put("pageSize", pageSize);	
 		params.put("wh_type", wh_type);	
-		params.put("fs_wh_name", fs_wh_name);	
+		params.put("wh_name", wh_name);	
 		
 		List<IOSF_DTO> select_wh_list = this.iosf_ware_st.selectList("IOSF_search_whpaged",params);
 		System.out.println("ekdh : " + select_wh_list);

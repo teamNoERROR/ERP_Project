@@ -63,7 +63,7 @@ function deleteWarehouse(button) {
 
  
  //*******************************부자재 모달 리스트 선택 후 반환 **************************************** */
- function select_iosf_wh() {
+ /*function select_iosf_wh() {
    const selectedRadio = document.querySelector('input[name="iosfSelect"]:checked');
 
    if (!selectedRadio) {
@@ -122,6 +122,7 @@ function deleteWarehouse(button) {
    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
    modal.hide();
  }
+ */
 
 //******************************창고 페이징************************* */ 
 document.addEventListener('DOMContentLoaded', function () {

@@ -82,12 +82,12 @@ function completeOutbound() {
 */
 
 //특정창고정보만 보기 select태그선택
-function fsWhCh(){
+function nameWhCh(){
 	searchWH();
 	
 }
 function searchWH(){
-	var form = document.querySelector("#frm");
+	var form = document.querySelector("#whfrm");
 	form.submit();
 	
 }

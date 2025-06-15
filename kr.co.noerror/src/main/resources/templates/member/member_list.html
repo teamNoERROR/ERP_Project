@@ -48,7 +48,7 @@
 			
 			<!-- employee List Table -->
 			<div id="contents_container">
-			<div id="table-container" class="table-responsive  rounded" th:fragment="membList(member_all_total, member_all_list, mode)" style="width: 100%; overflow-x: auto;">
+			<div id="table-container" class="table-responsive  rounded" th:fragment="membList(parentType, member_all_total, member_all_list, mode)" style="width: 100%; overflow-x: auto;">
 				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${member_all_total != 0} ? 'table-hover' : ''">
 					<thead class="table-light">
 						<tr>
@@ -97,7 +97,7 @@
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				 <div class="d-flex">
 				<!-- Pagination -->
-				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="membPgList(membMode)">
+				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="membPgList(parentType, membMode)">
 					<ul class="pagination">
 						<li class="page-item page-link prev">
 						<i class="bi bi-chevron-double-left"></i> </li>

@@ -62,7 +62,6 @@ public class inventory_controller {
 								,@RequestParam(value="wh_code", defaultValue="5", required=false) String wh_code ) {
 		List<IOSF_DTO> pd_stock_list = this.inv_svc.pd_stock_list();  //제품 재고 리스트
 		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
-		System.out.println("ind_pd_all_stock : " + ind_pd_all_stock);
 		//페이징 관련 
 //		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, gd_stock_list_sch.size());
 //		int bno = this.m_pg.serial_no(gd_stock_list_sch.size(), pageno, post_ea); 

@@ -14,24 +14,29 @@
 						<!-- 주문코드를 data 속성에 저장 -->
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
+							th:if="${details[0].order_status == '주문요청' or details[0].order_status == '주문확인' or details[0].order_status == '주문취소'}" 
 							th:attr="data-order-code=${details[0].order_code}"
-							th:disabled="${details[0].order_status == '주문확인'}">
+							th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}" >
 							<option selected value="주문상태 선택">주문상태 선택</option>
 <!-- 							<option value="주문요청">주문요청</option> -->
 							<option value="주문확인" th:selected="${details[0].order_status == '주문확인'}">주문확인</option>
-							<option value="주문취소">주문취소</option>
-<!-- 							<option value="주문확인">생산계획수립</option> -->
-<!-- 							<option value="주문확인">생산계획확정</option> -->
+							<option value="주문취소" th:selected="${details[0].order_status == '주문취소'}">주문취소</option>
+<!-- 							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option> -->
+<!-- 							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option> -->
 <!-- 							<option value="지연중">생산지연</option> -->
 <!-- 							<option value="생산중">생산중</option> -->
 <!-- 							<option value="생산완료">생산완료</option> -->
 <!-- 							<option value="출고완료">출고완료</option> -->
 <!-- 							<option value="반품">반품</option> -->
 						</select>
+						<select class="form-select" th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}"  th:if="${details[0].order_status == '생산계획수립' or details[0].order_status == '생산계획확정'}">
+							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option>
+							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option>
+						</select>
 
 						<button type="button" class="btn " style="white-space: nowrap;" 
-								th:classappend="${details[0].order_status == '주문확인'} ? ' btn-secondary' : ' btn-info'"
-    							th:disabled="${details[0].order_status == '주문확인'}"
+    							th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}" 
+       			  	  			th:classappend="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))} ? ' btn-secondary' : 'btn-info'" 
     							onclick="ord_status_update()">
 							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
@@ -139,7 +144,7 @@
 								<td>[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
 								<td>[[${ind_pd_all_stock[d.product_code] == null ? 0 : ind_pd_all_stock[d.product_code]}]] 
-									<span th:classappend="${(d.product_qty - ind_pd_all_stock[d.product_code]) < 0} ? 'text_red' : 'text_blue'">&nbsp;( [[${(d.product_qty - ind_pd_all_stock[d.product_code])}]] )</span>
+									<span th:classappend="${((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty ) < 0} ? 'text_red' : 'text_blue'">&nbsp;( [[${((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty)}]] )</span>
 								</td>
 								<td>[[${d.product_unit}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_cost,

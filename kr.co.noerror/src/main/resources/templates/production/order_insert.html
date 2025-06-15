@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>주문 등록 페이지</title>
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -106,7 +107,7 @@
 				</table>
 				</div>
 <!-- 				<button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/products_modal.do}" data-modal-id="products_modal_for_order" style="cursor: pointer;"> -->
-				<button class="btn btn-primary" type="button" onclick="bomListOpen()" style="cursor: pointer;">
+				<button class="btn btn-primary" type="button" onclick="bomListOpen('ordPg_pd')" style="cursor: pointer;">
     				주문종목 찾기
 				</button>
 				

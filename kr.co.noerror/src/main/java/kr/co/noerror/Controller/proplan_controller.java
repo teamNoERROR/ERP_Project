@@ -60,14 +60,22 @@ public class proplan_controller {
 	}
 	*/
 	
-	//생산계획 리스트
+	//생산계획 등록(주문)
 	@GetMapping("/production_in.do")
 	public String production2(Model m) {
 		m.addAttribute("lmenu","생산 관리");
 		m.addAttribute("smenu","생산 계획");
-		m.addAttribute("mmenu","생산계획 등록");
+		m.addAttribute("mmenu","주문 생산계획 등록");
 		return "/production/production_plan_insert.html";
 	}
+	//생산계획 등록(주문)
+//	@GetMapping("/production_in_stock.do")
+//	public String production_in_stock(Model m) {
+//		m.addAttribute("lmenu","생산 관리");
+//		m.addAttribute("smenu","생산 계획");
+//		m.addAttribute("mmenu","재고 생산계획 등록");
+//		return "/production/production_plan_stock_insert.html";
+//	}
 
 	//생상계획 저장
 	@PostMapping("/prdplan_save.do")
@@ -98,7 +106,7 @@ public class proplan_controller {
 				page_block
 				);
 		
-		List<prdplan_res_DTO> prd_plans = this.prdplan_list_service.paged_list(search_cond, paging_info);
+		List<prdplan_res_DTO> prd_plans = this.prdplan_list_service.paged_list(search_cond, paging_info, null);
 		System.out.println(prd_plans);
 		
 		m.addAttribute("lmenu","생산 관리");
@@ -117,10 +125,11 @@ public class proplan_controller {
 	public String prdplan_detail(@RequestParam(name="code") String plan_code, Model m) {
 		
 		List<prdplan_res_DTO> details = this.pdao.prdplan_detail(plan_code);
-		
+		System.out.println("details : " + details);
 		m.addAttribute("details",details);
 		return "/modals/production_plan_detail_modal.html";
 	}
+	
 	
 	@GetMapping("/prdplan_update.do")
 	public String prdplan_update(@RequestParam(name="code") String plan_code, Model m) {

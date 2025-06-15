@@ -92,9 +92,9 @@ public class IOSF_Warehouse_Service {
     }
     
     //타입별 창고리스트 
-    public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String fs_wh_name) { 
+    public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String wh_name) { 
         Map<Object, Object> wh_map = new HashMap<>();
-		System.out.println("fs_wh_name : " + fs_wh_name);
+		System.out.println("fs_wh_name : " + wh_name);
 		System.out.println("wh_search : " + wh_search);
 
         try {
@@ -103,11 +103,11 @@ public class IOSF_Warehouse_Service {
 
             List<IOSF_DTO> wh_list_result;
             
-            boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty() || fs_wh_name!=null );
+            boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty() || wh_name!=null );
             
             if(isSearch) {    // 검색한 경우 (검색된 리스트)
-                wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type, fs_wh_name);
-                totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type, fs_wh_name);
+                wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type, wh_name);
+                totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type, wh_name);
             } else {    // 검색 안한 경우 (전체 리스트)
                 wh_list_result = this.iosf_dao.IOSF_select_wh_list(startIndex, pageSize, wh_type);  // endIndex 제거
                 totalCount = this.iosf_dao.IOSF_getTotalCount(wh_type);
@@ -219,6 +219,8 @@ public class IOSF_Warehouse_Service {
 		Map<String, String> schMap = new HashMap<>();
 		System.out.println("wh_type : " + wh_type);
 		if("fs_wh".equals(wh_type) ) {
+			schMap.put("wh_type", wh_type);
+		}else if("mt_wh".equals(wh_type) ) {
 			schMap.put("wh_type", wh_type);
 		}
 		System.out.println("schMap66 : " + schMap);

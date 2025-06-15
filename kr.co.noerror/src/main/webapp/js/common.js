@@ -1,6 +1,7 @@
 function settingToday(){
 	document.querySelector("#plan_start_date").value = new Date().toISOString().split('T')[0];
 	document.querySelector("#dueDate").value = new Date().toISOString().split('T')[0];
+	document.querySelector("#stock_start_date").value = new Date().toISOString().split('T')[0];
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -120,7 +120,7 @@ public class common_controller {
 	//유형별 창고리스트 모달 띄우기
 	@GetMapping("/wh_type_list.do")
 	public String wh_type_list(Model m, @RequestParam("wh_type") String wh_type) {
-		System.out.println(wh_type);
+		
 		List<WareHouse_DTO> all_data = this.common_svc.warehouse_list(wh_type);  //DB로드
 		
 		m.addAttribute("no_wh", "등록된 창고가 없습니다" );
@@ -294,6 +294,7 @@ public class common_controller {
 	//bom등록된 제품 리스트 모달 띄우기
 	@GetMapping("/bom_md_list.do")
 	public String bom_md_list(Model m
+									,@RequestParam(value = "parent", required = false) String parent
 									,@RequestParam(value = "keyword", required = false) String keyword
 									,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 									,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
@@ -305,6 +306,14 @@ public class common_controller {
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, bom_all_list_sch.size());
 		int bno = this.m_pg.serial_no(bom_all_list_sch.size(), pageno, post_ea); 
 		
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
+		for (bom_DTO dto : bom_all_list_sch) {
+		    String code = dto.getPRODUCT_CODE();
+		    int stockQty = ind_pd_all_stock.getOrDefault(code, 0);  // 없으면 0
+		    dto.setInd_pd_stock(stockQty);  // 재고 주입
+		}
+		System.out.println("bom_all_list_sch : "+ bom_all_list_sch);
+		
 		//페이지로 보낼 것들 
 		m.addAttribute("keyword",keyword);
 		
@@ -315,8 +324,9 @@ public class common_controller {
 		m.addAttribute("pageinfo", pageinfo);
 		m.addAttribute("pageno", pageno);
 		
+		m.addAttribute("parentType",parent);
+		
 		if ("modal2".equals(mode)) {
-			
 	        return "/modals/bom_list_body_modal.html :: bomMdList";
 	        
 	    } else {
@@ -375,7 +385,7 @@ public class common_controller {
 				page_block
 		);
 
-	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info, null);
 
 	    model.addAttribute("lmenu","구매영업관리");
 	    model.addAttribute("smenu","발주 관리");
@@ -394,14 +404,16 @@ public class common_controller {
   
   //사원 리스트 모달 띄우기 
   @GetMapping("/emp_list_modal.do")
-  public String emp_list_modal(Model m, @RequestParam(value="mode", required = false) String mode) {
+  public String emp_list_modal(Model m
+		  						,@RequestParam(value = "parent", required = true) String parent
+		  						, @RequestParam(value="mode", required = false) String mode) {
 
 	  String role;
 	  List<member_DTO> member_all_list = this.mb_svc.member_all_list();  //사원 리스트
 	    
 	  m.addAttribute("member_all_list",member_all_list);
 	  m.addAttribute("member_all_total",member_all_list.size());
-
+	  m.addAttribute("parentType",parent);
 	   
       if ("modal2".equals(mode)) {
           return "/modals/member_list_body_modal.html :: membMdList";
@@ -414,8 +426,8 @@ public class common_controller {
 
   	//주문건리스트 모달 띄우기
 	@GetMapping("/ord_list_modal.do")
-	public String orders_modal(@ModelAttribute search_condition_DTO search_cond
-								, Model model
+	public String orders_modal( Model model 
+								, @ModelAttribute search_condition_DTO search_cond
 								, @RequestParam(value="mode", required = false) String mode
 								, @RequestParam(value = "parent", required = true) String parent) {
 		
@@ -428,7 +440,7 @@ public class common_controller {
 	    		page_block
 	    );
 	    
-	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info);
+	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info, parent);
 
 	   
 	    model.addAttribute("all", ord_list);

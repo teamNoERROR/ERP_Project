@@ -4,10 +4,23 @@
 let targetWhNameId = null;
 let targetWhCodeId = null;
 
+let selectedMoveData = [];  // 체크된 항목들 저장
+
+function saveSelectedProducts() {
+  const checked = document.querySelectorAll('.move-checkbox:checked');
+  selectedMoveData = Array.from(checked).map(cb => ({
+    wh_code: cb.dataset.wh_code,
+    pd_name: cb.dataset.pd_name
+  }));
+}
+
 //타입별창고리스트 모달 열기
 function whSelect(wh_type, name_id, code_id){
 	targetWhNameId = name_id;
 	targetWhCodeId = code_id;
+	
+	// 체크된 항목 저장
+	saveSelectedProducts();
 	
 	fetch("./wh_type_list.do?wh_type="+wh_type, {
 			method: "GET",
@@ -40,9 +53,9 @@ function choiceWh() {
 	}
 	
 	if (!selected_radio) {
-	alert("창고를 선택해 주세요.");
-
-	 }else{
+		alert("창고를 선택해 주세요.");
+	 }
+	 else{
 		const whCode = selected_radio.value;
 		const whName = selected_radio.getAttribute('data-wh_name');
 		const whZipcode = selected_radio.getAttribute('data-wh_zipcode');
@@ -54,6 +67,13 @@ function choiceWh() {
 		const whCodeInput = document.getElementById(targetWhCodeId);
 		const whAddrInput = document.getElementById('wh_location');
 		const whTypeInput = document.getElementById('wh_type');
+		
+		//선택된 창고가 이미 체크한 제품의 현재 창고인지 확인
+		const duplicated = selectedMoveData.find(item => item.wh_code === whCode);
+		if (duplicated) {
+		  alert(`선택한 창고는 이미 ${duplicated.pd_name} 제품의 현재 창고입니다.\n다른 창고를 선택해주세요.`);
+		  return;
+		}
 		
 		if (whNameInput && whCodeInput) {
 			whNameInput.value = whName;
@@ -67,7 +87,7 @@ function choiceWh() {
 		}
 		
 		// 예시: 타입별 처리 (원하면 타입별로 다르게 로직 분기 가능)
-	   if (whType === '부자재창고') {
+	   /*if (whType === '부자재창고') {
 		   document.getElementById('wh_code').value = whCode;
 	   		alert("창고를 선택하셨습니다.");
 	  
@@ -77,7 +97,7 @@ function choiceWh() {
 	   } else {
 	     console.log('기타 창고 타입');
 	   }
-		
+		*/
 	   
 		// 선택 후 모달 닫기
 	 	var modalElement = document.getElementById("wh_type_list");
@@ -622,11 +642,8 @@ function ordDtlLoad2(order_code){
 				<td>`+resultProduct.product_class2+`</td>
 				<td><input type="number" class="form-control out_pd_qty"></td>
 				<td>
-					<select class="form-select ind_out_status" >
-						<option value="" >선택</option>
-						<option value="출고완료" >출고완료</option>
-						<option value="부분출고">부분출고</option>
-					</select>
+                   	<input type="text" class="form-control readonly_text" value="" id="out_wh_name" readonly>
+               		<input type="hidden" id="out_wh_code">
 				</td>
 			  `;
 		  	tbody.append(tr);
@@ -742,7 +759,9 @@ function pchDtlLoad(pch_code){
 	사원 리스트모달 
 --------------------------------------------------------------*/
 //발주리스트모달에서 선택후 인풋란에 붙여넣기 
-function choiceEmp() {
+function choiceEmp(parent) {
+	console.log(parent.getAttribute("data-parenttype"));
+	var prt = parent.getAttribute("data-parenttype");
 	var radios = document.querySelectorAll('input[name="selectMem"]');
 	var selected_radio = null;
 		
@@ -751,19 +770,23 @@ function choiceEmp() {
 	    selected_radio = radios[i];
 	  }
 	}
+	
 	if (!selected_radio) {
 		alert("직원을 선택해 주세요.");
-
-	 }else{
-		var tr = selected_radio.closest('tr');
-		var tdList = tr.querySelectorAll('td');
-		
-		var emp_code =  tdList[2].innerText.trim();
-		var emp_name = tdList[3].innerText.trim();
-		var emp_part = tdList[4].innerText.trim();
-		var emp_position = tdList[5].innerText.trim();
-		var emp_tel = tdList[6].innerText.trim();
-		
+		return;
+	}
+	 
+	var tr = selected_radio.closest('tr');
+	var tdList = tr.querySelectorAll('td');
+	
+	var emp_code =  tdList[2].innerText.trim();
+	var emp_name = tdList[3].innerText.trim();
+	var emp_part = tdList[4].innerText.trim();
+	var emp_position = tdList[5].innerText.trim();
+	var emp_tel = tdList[6].innerText.trim();
+	
+	//창고등록시 직원 선택
+	if(prt == "wh_emp"){
 		var wh_mg_cd = document.querySelector('#wh_mg_cd');
 		var wh_mg_name = document.querySelector('#wh_mg_name');
 		var wh_mg_mp = document.querySelector('#wh_mg_mp');
@@ -773,16 +796,23 @@ function choiceEmp() {
 		wh_mg_name.value= emp_name;
 		wh_mg_mp.value= emp_part + "/" + emp_position;
 		wh_mg_ph.value= emp_tel;
-	
+	}
+	//생산계획(재고)등록시 직원 선택 
+	else if(prt == "stk_pln_emp"){
+		var pln_mg_cd = document.querySelector('#pln_mg_cd');
+		var pln_mg_name = document.querySelector('#pln_mg_name');
 		
-		// 선택 후 모달 닫기
-	 	var modalElement = document.getElementById("member_list_modal");
-		var modal = bootstrap.Modal.getInstance(modalElement);
-		if (modal) {
-		    modal.hide();
-			setTimeout(() => {
-				document.querySelector("body").focus(); // body에 포커스 주기
-			}, 300);
-		}
+		pln_mg_cd.value= emp_code;
+		pln_mg_name.value= emp_name;
+	}
+	
+	// 선택 후 모달 닫기
+ 	var modalElement = document.getElementById("member_list_modal");
+	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
 	}
 };

@@ -10,6 +10,7 @@ SELECT * FROM (
         SELECT ord.*, cmp.company_name, cmp.manager_name
         FROM order_request ord
         JOIN client_comp cmp ON ord.company_code = cmp.company_code
+        LEFT JOIN production_plan pln ON ord.order_code = pln.order_code
         WHERE 1=1
 		<if test="search_word != null and search_word != ''">
 		  AND (
@@ -21,12 +22,18 @@ SELECT * FROM (
 		      ord.due_date LIKE '%' || #{search_word} || '%' OR
 		      ord.order_status LIKE '%' || #{search_word} || '%' 
 		  )
+		  
 		</if>
 	    <if test="statuses != null and statuses.size() > 0">
-	        AND ord.order_status IN
-	        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
-	            #{status}
-	        </foreach>
+	    	<if test="parent != 'outbndPage'">
+		    	AND ord.order_status IN
+		        <foreach item="status" index="index" collection="statuses" open="(" separator="," close=")">
+		            #{status}
+		        </foreach>
+		     </if>
+		     <if test="parent == 'outbndPage'">
+		        AND (ord.order_status = '주문확인' OR pln.plan_status = '생산완료')
+		     </if>
 	    </if>
         ORDER BY ord.oidx DESC
     ) inner_result

@@ -1,3 +1,57 @@
+/*function toggleButton9(num){
+	const orderBtn = document.getElementById('order-list');
+	  const productBtn = document.getElementById('product-list');
+	  const orderForm = document.getElementById('order-production-form');
+	  const stockForm = document.getElementById('stock-production-form');
+
+	  if (type === 1) {
+	    orderBtn.style.background = '#82CCDD';
+	    orderBtn.style.color = '#fff';
+	    productBtn.style.background = 'transparent';
+	    productBtn.style.color = '#000';
+	    orderForm.style.display = 'block';
+	    stockForm.style.display = 'none';
+	  } else {
+	    orderBtn.style.background = 'transparent';
+	    orderBtn.style.color = '#000';
+	    productBtn.style.background = '#82CCDD';
+	    productBtn.style.color = '#fff';
+	    orderForm.style.display = 'none';
+	    stockForm.style.display = 'block';
+	  }
+	}
+
+	function resetOrderForm() {
+	  const form = document.getElementById('order-production-form');
+	  form.querySelectorAll('input, select, textarea').forEach(el => {
+	    if (el.tagName === 'SELECT') {
+	      el.selectedIndex = 1;
+	    } else {
+	      el.value = '';
+	    }
+	  });
+	}
+
+	function resetStockForm() {
+	  const form = document.getElementById('stock-production-form');
+	  form.querySelectorAll('input, select, textarea').forEach(el => {
+	    if (el.tagName === 'SELECT') {
+	      el.selectedIndex = 0;
+	    } else {
+	      el.value = '';
+	    }
+	  });
+}*/
+/*
+function toggleButton9(type) {
+	if(type == "order"){
+	 	location.href = "/production_in.do"; //페이지 이동
+	}else if(type == "stock"){
+		location.href = "/production_in_stock.do";
+	}
+}
+*/
+
 function close_bom_items() {
 	// 모달 닫기
 	const modalEl = document.getElementById('bom_items');
@@ -77,7 +131,7 @@ function submitOrderPlan() {
 
     // 유효성 검사
     if (!order_code || !due_date || !start_date || !end_date || !ecode) {
-        alert("필수 항목을 모두 입력해 주세요.");
+        alert("필수 w항목을 모두 입력해 주세요.");
         return;
     }
 
@@ -148,6 +202,89 @@ function submitOrderPlan() {
         alert("서버 통신 오류 발생");
     });
 }
+
+
+//재고 생산계획 정보 저장
+function submitStockPlan() {
+    // 필수 필드 가져오기
+    const priority = document.querySelector('#stock_priority').value;
+    const start_date = document.querySelector('#stock_start_date').value;
+    const end_date = document.querySelector('#stock_end_date').value;
+    const ecode = document.querySelector('#stock_emp_code').value;
+    const memo = document.querySelector('#stock_note').value;
+
+    // 유효성 검사
+    if (!priority || !start_date || !end_date || !ecode) {
+        alert("필수 항목을 모두 입력해 주세요.");
+        return;
+    }
+
+    // 상세 데이터 수집
+    const productRows = document.querySelectorAll('#plan_detail_products_stock tr.product_row_stock');
+    if (productRows.length === 0) {
+        alert("생산계획 상세 항목이 없습니다.");
+        return;
+    }
+
+    const details = [];
+    let invalidQty = false;
+
+    productRows.forEach(row => {
+        const product_code = row.querySelector('.product_code').innerText.trim();
+        const bom_code = row.querySelector('.bom_code').innerText.trim();
+        const product_qty = parseInt(row.querySelector('.stk_plan_qty').value);
+		
+        if (isNaN(product_qty) || product_qty <= 0) {
+            invalidQty = true;
+        }
+
+        details.push({
+            product_code: product_code,
+            bom_code: bom_code,
+            product_qty: product_qty
+        });
+    });
+
+    if (invalidQty) {
+        alert("생산 수량은 0보다 커야 합니다.");
+        return;
+    }
+
+    // Header + Detail 결합
+    const planData = {
+        priority,
+        start_date,
+        end_date,
+        ecode,
+        memo,
+        products: details
+    };
+
+    // 서버 전송
+    fetch('/prdplan_save.do', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(planData)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("저장 성공!");
+            window.location.href = "/production.do";
+        } else {
+            alert("저장 실패: " + (result.message || "알 수 없는 오류"));
+        }
+    })
+    .catch(error => {
+        console.error("저장 중 오류 발생:", error);
+        alert("서버 통신 오류 발생");
+    });
+}
+
+
+
 
 function plan_status_update() {
     const selectEl = document.getElementById("modal-status-select");

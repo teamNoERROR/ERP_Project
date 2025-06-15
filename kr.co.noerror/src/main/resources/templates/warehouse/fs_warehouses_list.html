@@ -55,20 +55,27 @@
 <!-- 			    <input type="hidden" id="wh_code" class="form-control" /> -->
 <!-- 			    <input type="hidden" id="in_status" class="form-control" /> -->
 <!-- 			    <input type="hidden" id="item_count" class="form-control" /> -->
+				
+				<!-- 창고이동버튼 -->
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
 			            style="white-space: nowrap; min-width: 70px;" onclick="whMove()">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
-			    </button>
+			    </button>  
+			    
+<!-- 			    <button type="button" class="btn btn-info d-flex align-items-center px-2" -->
+<!-- 			            style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()"> -->
+<!-- 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동 -->
+<!-- 			    </button> -->
 <!-- 			  </form> -->
 			</div>
 			
 		
 			<!-- 검색바: 위 margin 줄이기 (my-4 → my-2) -->
 			<form class="row g-2 my-2 justify-content-end"
-			      th:action="@{/warehouses_fs_list.do}" method="get" id="frm">
+			      th:action="@{/warehouses_fs_list.do}" method="get" id="whfrm">
 			 
 			  <div class="col-auto d-flex gap-2">
-			   <select  class="form-select" style="width: auto; display: inline-block;" name="fs_wh_list" onchange="fsWhCh()">
+			   <select  class="form-select" style="width: auto; display: inline-block;" name="name_wh_list" onchange="nameWhCh()">
 					<option value="">특정창고만 보기</option>
 				   	<option th:each="fsWh_list : ${whNameList}" th:value="${fsWh_list}" th:text="${fsWh_list}" th:selected="${fsWh_list} == ${fs_wh_name}"></option>
 				  </select>
@@ -201,10 +208,13 @@
 				
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
-				<button type="button" class="btn btn-info d-flex align-items-center px-2"
-			            		style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()">
-			      			<i class="bi bi-box-seam"></i> &nbsp;출고요청
-			    		</button>
+<!-- 					<button type="button" class="btn btn-info d-flex align-items-center px-2" -->
+<!-- 		            		style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()"> -->
+<!-- 		      			<i class="bi bi-box-seam"></i> &nbsp;출고요청 -->
+<!-- 		    		</button> -->
+		    		<button type="button" class="btn btn-info d-flex align-items-center px-2" onclick="addOutbound()">
+						<i class="bi bi-box-seam"></i> &nbsp;출고요청
+					</button>
 					<div class="ms-auto">
 						
 						<button type="button" class="btn btn-success" onclick="location.href='/warehouse_fs_savePage.do'">

@@ -31,7 +31,7 @@ public class IOSF_DTO {
     String category_sub;   // 제품 소분류
     String use_yn;         // 제품 사용 여부
     String in_status; 	   // 입고 상태
-    String item_count;	   // 제품 갯수
+    String item_qty;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
     
     
@@ -81,7 +81,7 @@ public class IOSF_DTO {
     String pd_file_renm;
     String pd_api_fnm;
     String pd_insert_date;
-    int ind_pd_stock;
+    Integer ind_pd_stock;
     
     String mv_wh_code;  //이동창고 코드 
     

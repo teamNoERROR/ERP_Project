@@ -26,11 +26,11 @@
 						style="background: transparent; color: #000;">재고생산</button>
 				</div>
 			</div>
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
-			<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+				<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
 			</div>
 
-			<!-- 주문생산 폼 -->
+<!-- **************************주문생산 폼************************************* -->
 			<div class="form-section" id="order-production-form" style="display: block;">
 				<div class="text-end mb-3">* : 필수입력</div>
 				<div class="row justify-content-center">
@@ -121,7 +121,7 @@
 					<!-- Detail Table -->
 					<div class="table-responsive rounded mb-3"
 						style="width: 100%; overflow-x: auto;">
-						<h5>주문 제품 목록*</h5>
+						<h5 class="mb-3">주문 제품 목록*</h5>
 						<table
 							class="table align-middle table-hover table-bordered text-center"
 							style="white-space: nowrap;">
@@ -160,58 +160,97 @@
 				</div>
 			</div>
 
-			<!-- 재고생산 폼 -->
-			<div class="form-section" id="stock-production-form"
-				style="display: none;">
+<!-- ******************************재고생산 폼************************************************* -->
+			<div class="form-section" id="stock-production-form" style="display: none;">
+			<div class="text-end mb-3">* : 필수입력</div>
 				<div class="row justify-content-center">
 					<div class="row mb-3">
 						<div class="col-md-3">
-							<label class="form-label fw-semibold">제품코드</label>
-							<div class="input-group">
-								<input type="text" class="form-control" id="stock_product_code"
-									readonly>
-								<button class="btn btn-primary" onclick="openProductModal()">검색</button>
-							</div>
+							<label class="form-label fw-semibold">생산시작일*</label> 
+							<input type="date" class="form-control" id="stock_start_date">
+							<input type="hidden" id="dueDate">
 						</div>
 						<div class="col-md-3">
-							<label class="form-label fw-semibold">제품명</label> <input
-								type="text" class="form-control" id="stock_product_name"
-								readonly>
+							<label class="form-label fw-semibold">생산완료일*</label> 
+							<input type="date" class="form-control" id="stock_end_date">
 						</div>
-						<div class="col-md-3">
-							<label class="form-label fw-semibold">생산수량</label> <input
-								type="number" class="form-control" id="stock_quantity">
-						</div>
+<!-- 						<div class="col-md-3"> -->
+<!-- 						<label class="form-label fw-semibold">생산계획담당자*</label> -->
+<!-- 							<div class="input-group"> -->
+<!-- 								<input type="text" class="form-control readonly_text" name="ename" id="pln_mg_name" readonly> -->
+<!-- 								<button type="button" class="btn btn-primary" onclick="empListOpen('stk_pln_emp')" style="cursor: pointer;"> -->
+<!-- 									<i class="bi bi-search"></i> -->
+<!-- 								</button> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 						<div class="col-md-3"> -->
+<!-- 							<label class="form-label fw-semibold">사원코드*</label>  -->
+<!-- 							<input type="text" class="form-control readonly_text" name="ecode" id="pln_mg_cd" readonly> -->
+<!-- 						</div> -->
 					</div>
-
-					<div class="row mb-3">
-						<div class="col-md-3">
-							<label class="form-label fw-semibold">생산시작일</label> <input
-								type="date" class="form-control" id="stock_start_date">
-						</div>
-						<div class="col-md-3">
-							<label class="form-label fw-semibold">생산완료일</label> <input
-								type="date" class="form-control" id="stock_end_date">
-						</div>
-						<div class="col-md-3">
-							<label class="form-label fw-semibold">사원코드</label>
-							<div class="input-group">
-								<input type="text" class="form-control" id="stock_emp_code" readonly>
-								<button class="btn btn-primary" onclick="openEmpModal()">검색</button>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<label class="form-label fw-semibold">사원명</label> 
-							<input type="text" class="form-control" id="stock_emp_name" readonly>
-
-						</div>
-					</div>
-
-					<div class="row mb-3">
+					
+					
+					<div class="row mb-3 empinfo">
 						<div class="col-md-6">
-							<label class="form-label fw-semibold">비고</label>
-							<textarea class="form-control" id="stock_note" rows="2"></textarea>
+							<div class="d-flex gap-2">
+								<div class="col-md-6 mb-3 mb-md-0">
+									<label class="form-label fw-semibold">생산계획등록자*</label>
+	                                <input type="text" class="form-control" name="emp_name" id="stock_emp_name" value="이명헌" readonly>
+	                            </div>
+	                            <div class="col-md-6 mb-3 mb-md-0">
+	                            	<label class="form-label fw-semibold">사원코드*</label>
+	                                <input type="text" class="form-control" name="emp_code" id="stock_emp_code"  value="EMP-00001" readonly>
+	                            </div>
+                            </div>
 						</div>
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">우선순위*</label> 
+							<select class="form-select" id="stock_priority">
+								<option value="긴급" >긴급</option>
+								<option value="높음" >높음</option>
+								<option value="보통" selected>보통</option>
+							</select>
+						</div>
+					</div>
+					<div class="row mb-3 empinfo">
+						<div class="col-md-12">
+							<label class="form-label fw-semibold">비고</label>
+							<textarea class="form-control" rows="2" id="stock_note"></textarea>
+						</div>
+					</div>
+
+					<!-- Detail Table -->
+					<div class="table-responsive rounded mb-3" style="width: 100%; overflow-x: auto;">
+						<div>
+						<h5 class="mb-3">주문 제품 목록*</h5>
+						<table class="table align-middle table-hover table-bordered text-center" style="white-space: nowrap;">
+							<thead class="table-light">
+								<tr>
+									<th style="width: 3%;">#</th>
+									<th style="width: 10%;">제품코드</th>
+									<th style="width: 15%;">제품명</th>
+									<th style="width: 10%;">제품규격</th>
+									<th style="width: 7%;">제품단위</th>
+									<th style="width: 10%;">재고수량</th>
+									<th style="width: 10%;">생산수량</th>
+									<th style="width: 10%;">BOM코드</th>
+									<th style="width: 5%;">삭제</th>
+								</tr>
+							</thead>
+							<tbody id="plan_detail_products_stock">
+								<tr class="product_row_stbisic no_list_tb">
+									<td colspan="9" class="text-center">생산 계획 제품 내역이 없습니다.</td>
+								</tr>
+								<!-- JS로 항목 삽입 -->
+							</tbody>
+						</table>
+						</div>
+					
+					<div>
+					<button class="btn btn-primary" type="button" onclick="bomListOpen('stkPlnPg_pd')" style="cursor: pointer;">
+	    				생산 제품 선택
+					</button>
+					</div>
 					</div>
 				</div>
 
@@ -220,8 +259,8 @@
 						onclick="submitStockPlan()">
 						<i class="bi bi-check2-square"></i> 저장
 					</button>
-					<button type="button" class="btn btn-outline-secondary"
-						onclick="resetStockForm()">
+					<button type="reset" class="btn btn-outline-secondary"
+						onclick="resetBtn()">
 						<i class="bi bi-x-circle"></i> 초기화
 					</button>
 				</div>

@@ -68,7 +68,7 @@
                 	
                     <tr th:if="${stock_pd_total != 0}" th:each="stpdlst, idx : ${stock_pd_list}" 
                     	class="stock_pd_row" style="cursor: default;">
-                        <td > </td>
+                        <td >[[${idx.count}]] </td>
                         <td class="p-0">
                         
                         </td>

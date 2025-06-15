@@ -32,13 +32,15 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	@Autowired
 	inventory_service inv_svc; //재고 서비스 
 	
+	//생산계획 리스트 
 	@Override
-	public List<prdplan_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
+	public List<prdplan_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info, String parent) {
 		Map<String, Object> params = new HashMap<>();
         params.put("search_word", search_cond.getSearch_word());
         params.put("statuses", search_cond.getStatuses());
         params.put("start", paging_info.getStart());
         params.put("end", paging_info.getEnd());
+        
         return this.prdplan_dao.prdplan_paged_list(params);
 	}
 	
@@ -148,4 +150,5 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	
 	    return response;
 	}
+
 }

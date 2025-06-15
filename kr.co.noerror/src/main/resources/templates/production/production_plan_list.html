@@ -66,12 +66,12 @@
 							<td onclick="event.stopPropagation();"><input type="checkbox" disabled></td>
 							<td>[[${p.pidx}]]</td>
 							<td>[[${p.plan_code}]]</td>
-							<td>[[${p.order_code}]]</td>
-							<td>[[${p.due_date.substring(0, 10)}]]</td>
+							<td th:text="${p.order_code != null} ? ${p.order_code} : '-'"></td>
+							<td th:text="${p.due_date != null} ? ${p.due_date.substring(0, 10)} : '-'"></td>							
 							<td>[[${p.priority}]]</td>
 							<td>[[${p.start_date.substring(0, 10)}]]</td>
 							<td>[[${p.end_date.substring(0, 10)}]]</td>
-							<td>[[${p.company_name}]]</td>
+							<td th:text="${p.company_name != null} ? ${p.company_name} : '-'"></td>
 							<td>[[${p.plan_status}]]</td>
 							<td>[[${p.plan_date.substring(0, 10)}]]</td>
 						</tr>

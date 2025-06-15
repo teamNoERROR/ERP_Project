@@ -119,47 +119,87 @@ function client_select_for_order() {
 
 
 //주문 품목 목록 선택 및 작성
-function product_select_for_order() {
-  // 모든 체크된 체크박스를 찾음
+function choiceProduct(prt) {
+	var prtType = prt.getAttribute("data-parenttype");
+  
+	// 모든 체크된 체크박스를 찾음
   const checkboxes = document.querySelectorAll('input[name="bomSelected"]:checked');
-
   if (checkboxes.length === 0) {
     alert('제품을 선택해 주세요.');
     return;
   }
 
-  // 부모 테이블 tbody
-  const tbody = document.getElementById('products');
-
-  //부모 화면 전체 삭제
-  document.querySelectorAll('tr.total-delete').forEach(tr => tr.remove());
+  //주문등록 페이지에서 주문상품 리스트 붙이기 
+  if(prtType == "ordPg_pd"){
 	
-  checkboxes.forEach(checkbox => {
+	  // 부모 테이블 tbody
+	  const tbody = document.getElementById('products');
 	
-    const row = checkbox.closest('tr');
+	  //부모 화면 전체 삭제
+	  document.querySelectorAll('tr.total-delete').forEach(tr => tr.remove());
+		
+	  checkboxes.forEach(checkbox => {
+		
+	    const row = checkbox.closest('tr');
+	
+	    const ord_product = {
+	      code: row.getAttribute("data-pdcode"),
+	      name: row.dataset.name,
+	      class1: row.dataset.class1,
+	      class2: row.dataset.class2,
+	      spec: row.dataset.spec,
+		  unit: row.dataset.unit,
+	      cost: row.dataset.cost,
+	      price: row.dataset.price
+		  
+	    };
+		 	
+	    // 부모 화면에 반영
+		appendProductRow(tbody, ord_product);
+	  });
+	
+  }
+  //생산등록(재고) 페이지에서 상품리스트 붙이기 
+  else if(prtType == "stkPlnPg_pd"){
+		// 부모 테이블 tbody
+	  const tbody = document.getElementById('plan_detail_products_stock');
 
-    const product = {
-      code: row.getAttribute("data-pdcode"),
-      name: row.dataset.name,
-      class1: row.dataset.class1,
-      class2: row.dataset.class2,
-      spec: row.dataset.spec,
-	  unit: row.dataset.unit,
-      cost: row.dataset.cost,
-      price: row.dataset.price
-	  
-    };
-	 	
-    // 부모 화면에 반영
-	appendProductRow(tbody, product);
-  });
+	  //부모 화면 전체 삭제
+	  document.querySelectorAll('tr.product_row_stbisic').forEach(tr => tr.remove());
+		
+	  checkboxes.forEach((checkbox, index) => {
+		
+	    const row = checkbox.closest('tr');
 
-  // 모달 닫기
-  const modalEl = document.getElementById('bom_list_modal');
-  const modalInstance = bootstrap.Modal.getInstance(modalEl);
-  modalInstance.hide();
+	    const stkpln_product = {
+		  idx : index+1,
+	      code: row.getAttribute("data-pdcode"),
+	      name: row.dataset.name,
+	      spec: row.dataset.spec,
+		  unit: row.dataset.unit,
+		  ind_pd_stock: row.dataset.pd_all_stock,
+		  bom_code: row.dataset.bom_code,
+		  
+	    };
+		 	
+	    // 부모 화면에 반영
+		appendProductRow2(tbody, stkpln_product);
+	  });
+	
+  }
+
+  	// 선택 후 모달 닫기
+	var modalElement = document.getElementById("bom_list_modal");
+	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	    modal.hide();
+		setTimeout(() => {
+			document.querySelector("body").focus(); // body에 포커스 주기
+		}, 300);
+	}
 }
 
+//주문등록 페이지에서 주문상품 리스트 붙이기
 function appendProductRow(tbody, product) {
   const tr = document.createElement('tr');
   tr.className = "total-delete"
@@ -191,6 +231,29 @@ function appendProductRow(tbody, product) {
       amountCell.value = amount.toLocaleString(); // 천단위 콤마 추가
     });
 }
+
+//생산등록(재고) 페이지에서 상품리스트 붙이기 
+function appendProductRow2(tbody, product) {
+	
+  const tr = document.createElement('tr');
+  tr.className = "product_row_stock"
+  tr.innerHTML = `
+    <td >`+product.idx+`</td>
+    <td class="product_code">`+product.code+`</td>
+    <td>`+product.name+`</td>
+    <td>`+product.spec+`</td>
+    <td>`+product.unit+`</td>
+	<td>`+product.ind_pd_stock+`</td>
+	<td><input type="number" class="form-control stk_plan_qty" min="1"> </td>
+	<td class="bom_code">`+product.bom_code+`</td>
+    <td class="text-center">
+      <button type="button" class="btn btn-danger btn-sm" onclick="removeProductRow(this)">삭제</button>
+    </td>
+  `;
+  tbody.appendChild(tr);
+ 
+}
+
 
 //주문 정보 저장
 function order_save() {

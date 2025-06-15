@@ -27,8 +27,12 @@ public class inventory_serviceImpl implements inventory_service {
 	@Override
 	public Map<String, Integer> ind_pd_all_stock() {
 		List<IOSF_DTO> ind_pd_all_stock = this.inv_dao.ind_pd_all_stock(); 
+		
 		Map<String, Integer> all_stock_qty = new HashMap<>();
 		for (IOSF_DTO dto : ind_pd_all_stock) {
+			if (dto.getInd_pd_stock() == null) {
+			    dto.setInd_pd_stock(0);
+			}
 			all_stock_qty.put(dto.getProduct_code(), dto.getInd_pd_stock());
 		}
 		return all_stock_qty;

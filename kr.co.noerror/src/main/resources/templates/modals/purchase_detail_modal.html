@@ -12,13 +12,12 @@
 					<h2 class="mb-1">발주번호 : [[${details[0].pch_code}]]</h2>
 					<div class="d-flex align-items-center gap-2">
 						<!-- 발주코드를 data 속성에 저장 -->
-						<select class="form-select" id="modal-status-select"
-							style="max-width: 150px;"
-							th:attr="data-pch-code=${details[0].pch_code}">
+						<select class="form-select" id="modal-status-select" style="max-width: 150px;"
+								th:attr="data-pch-code=${details[0].pch_code}">
 							<option selected value="발주상태 선택">발주상태 선택</option>
-							<option value="발주요청">발주요청</option>
-							<option value="발주취소">발주취소</option>
-							<option value="발주완료">발주완료</option>
+<!-- 							<option value="발주요청">발주요청</option> -->
+							<option value="발주완료" th:selected="${details[0].pch_status == '발주완료'}">발주완료</option>
+							<option value="발주취소" th:selected="${details[0].pch_status == '발주취소'}">발주취소</option>
 							<option value="진행중">진행중</option>
 							<option value="지연중">지연중</option>
 							<option value="가입고">가입고</option>
@@ -26,9 +25,13 @@
 							<option value="반품">반품</option>
 						</select>
 
-						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="pch_status_update()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
+<!-- 						<button type="button" class="btn btn-success" -->
+<!-- 							style="white-space: nowrap;" onclick="pch_status_update()"> -->
+<!-- 							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp; -->
+<!-- 						</button> -->
+						<button  type="button" class="btn btn-info"
+								style="white-space: nowrap;" onclick="pch_status_update()">
+							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
 					</div>
 				</div>

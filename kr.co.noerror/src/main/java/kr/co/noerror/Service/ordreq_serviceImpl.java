@@ -38,13 +38,15 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 		return this.ordreq_dao.search_count(search_cond);
 	}
 	
+	//주문리스트 
 	@Override
-	public List<ordreq_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
+	public List<ordreq_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info, String parent) {
 		Map<String, Object> params = new HashMap<>();
         params.put("search_word", search_cond.getSearch_word());
         params.put("statuses", search_cond.getStatuses());
         params.put("start", paging_info.getStart());
         params.put("end", paging_info.getEnd());
+        params.put("parent", parent);
         
         System.out.println("params : " + params);
         return this.ordreq_dao.paged_list(params);

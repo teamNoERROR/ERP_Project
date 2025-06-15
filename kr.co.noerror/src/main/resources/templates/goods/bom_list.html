@@ -50,7 +50,7 @@
 
         <!-- bom List Table -->
      	<div id="contents_container">
-        <div id="table-container" class="table-responsive  rounded" th:fragment="bomList(bom_total, bom_all_list, mode)" style="width: 100%; overflow-x: auto;">
+        <div id="table-container" class="table-responsive  rounded" th:fragment="bomList(parentType, bom_total, bom_all_list, mode)" style="width: 100%; overflow-x: auto;">
             <table class="table align-middle table-bordered text-center" style="white-space: nowrap;"th:classappend="${bom_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
@@ -85,7 +85,10 @@
 							     data-spec=${bomlist.PRODUCT_SPEC},
 							     data-unit=${bomlist.PRODUCT_UNIT},
 							     data-cost=${bomlist.PRODUCT_COST},
-							     data-price=${bomlist.PRODUCT_PRICE}"
+							     data-price=${bomlist.PRODUCT_PRICE},
+							     data-pd_all_stock=${bomlist.ind_pd_stock},
+							     data-bom_code=${bomlist.BOM_CODE}
+							     "
                     	onclick="bomDetailOpen(this)"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()">
                         	<input type="checkbox"  th:name="${mode == 'modal'} ? 'bomSelected' : 'bom_select'" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
@@ -120,7 +123,7 @@
     <!-- Pagination -->
 
     <input type="hidden" name="t">
-        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="bomPgList(bomMode)">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="bomPgList(parentType, bomMode)">
             <ul class="pagination">
                 <li class="page-item page-link prev"  
                 	th:classappend="${1 >= pageno} ? 'disabled' : ''"

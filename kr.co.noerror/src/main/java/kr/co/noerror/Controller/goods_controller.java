@@ -279,7 +279,9 @@ public class goods_controller {
 			
 		}else {
 			if("product".equals(type)) { 
+				
 				Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
+				
 				m.addAttribute("goods_one", goods_one);
 				m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 				
@@ -289,6 +291,7 @@ public class goods_controller {
 					m.addAttribute("bom_result", resultlist);
 					m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
 				}
+				
 				this.url = "/modals/product_detail_modal.html";
 				
 			}else if("item".equals(type)) {

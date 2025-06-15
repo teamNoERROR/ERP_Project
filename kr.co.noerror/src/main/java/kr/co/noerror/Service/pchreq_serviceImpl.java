@@ -34,8 +34,10 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
 		return this.pchreq_dao.search_count(search_cond);
 	}
 	
+	
+	//발주 리스트 
 	@Override
-	public List<pchreq_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
+	public List<pchreq_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info ,String parent) {
 		Map<String, Object> params = new HashMap<>();
         params.put("search_word", search_cond.getSearch_word());
         params.put("statuses", search_cond.getStatuses());

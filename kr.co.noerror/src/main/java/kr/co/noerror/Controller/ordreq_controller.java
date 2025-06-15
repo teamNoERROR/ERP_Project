@@ -66,6 +66,9 @@ public class ordreq_controller {
 	
 	@Autowired
 	private goods_service g_svc;  //품목 서비스
+	
+	 //버튼 누름 방지
+    String [] no_chng_ordBtn = {"주문확인","주문취소","생산계획수립","생산계획확정"};
 		
 	@PostMapping("/order_save.do")
 	@ResponseBody
@@ -76,7 +79,7 @@ public class ordreq_controller {
 	//주문 리스토 출력
 	@GetMapping("/order.do")
 	public String ordreq_list(@ModelAttribute search_condition_DTO search_cond, Model model) {
-		System.out.println("search_cond : " + search_cond);
+		
 	    int search_count = this.ordreq_list_service.search_count(search_cond);
 	    
 	    paging_info_DTO paging_info = this.m_pg2.calculate(
@@ -87,7 +90,7 @@ public class ordreq_controller {
 	    );
 	    System.out.println(paging_info);
 	    
-	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info);
+	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info, null);
 
 	    model.addAttribute("lmenu","구매영업관리");
 	    model.addAttribute("smenu","주문 관리");
@@ -113,7 +116,7 @@ public class ordreq_controller {
 		    int stockQty = ind_pd_all_stock.getOrDefault(code, 0);  // 없으면 0
 		    dto.setInd_pd_all_stock(stockQty);  // 재고 주입
 		}
-		System.out.println("ordreq_products : " + ordreq_products);
+		
 		return ordreq_products;
 	}
 	
@@ -140,12 +143,15 @@ public class ordreq_controller {
 	//주문건 상세보기 
 	@GetMapping("/ordreq_detail.do")
 	public String ordreq_detail(@RequestParam(name="code") String order_code, Model m) {
+		
+		
 		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);  //주문상세
 		
 		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수 
 		
 		m.addAttribute("details",details);
 		m.addAttribute("ind_pd_all_stock",ind_pd_all_stock);
+		 m.addAttribute("no_chng_ordBtn", no_chng_ordBtn); // 상태 변경 불가
 		return "/modals/order_detail_modal.html";
 	}
 	

@@ -92,6 +92,7 @@ public class pchreq_controller {
 		return pchreq_service.pchreq_save(requestMap);
 	}
 	
+	//발주 리스트 
 	@GetMapping("/pchreq_list.do")
 	public String pchreq_list(@ModelAttribute search_condition_DTO search_cond, Model model) {
 		
@@ -104,7 +105,7 @@ public class pchreq_controller {
 	    		page_block
 	    );
 
-	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info, null);
 
 	    model.addAttribute("lmenu","구매영업관리");
 	    model.addAttribute("smenu","발주 관리");
@@ -130,7 +131,7 @@ public class pchreq_controller {
 	    		page_block
 	    );
 
-	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info);
+	    List<pchreq_res_DTO> pch_list = this.pchreq_list_service.paged_list(search_cond, paging_info,null);
 
 	    model.addAttribute("lmenu","구매영업관리");
 	    model.addAttribute("smenu","발주 관리");

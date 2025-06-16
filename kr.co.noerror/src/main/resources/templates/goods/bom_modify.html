@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<title>BOM 등록</title>
+<body>
+	<header th:replace="~{/common/header.html :: header}"></header>
+
+	<main class="main">
+		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+
+		 <!-- Title -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        	<h2 class="mb-1">BOM 등록</h2>
+        </div>
+        
+        <!-- 우상단 x 마크  -->     
+		<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+		<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
+		</div>
+			
+			<div class="form-section">
+			<div class="row">
+			<!-- 완제품 정보 -->
+			<div class="col-md-10 ">
+				<div class="row mb-2 d-flex">
+					<div class="col-md-3 mb-2 ">
+						<label class="form-label">제품코드</label> 
+						<div class="input-group">
+				            <input type="text" class="form-control" id="product_code" 
+									th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CODE} : ''" 
+									readonly/>
+				            <button type="button" 
+				            		th:class="${bom_pd != null} ? 'btn btn-secondary' : 'btn btn-primary'"
+									th:disabled="${bom_pd != null}"
+									onclick="pdListOpen('bomPdOpen')">
+				                <i class="bi bi-search"></i>
+				            </button>
+	        			</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label">제품명</label> 
+						<input type="text" class="form-control" id="product_name" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_NAME} : ''" 
+								readonly/>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">제품유형</label> 
+						<input type="text" class="form-control" id="product_type" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_TYPE} : ''" 
+								readonly/>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">대분류</label> 
+						<input type="text" class="form-control" id="product_cls1" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CLASS1} : ''" 
+								readonly/>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">소분류</label> 
+						<input type="text" class="form-control" id="product_cls2" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_CLASS2} : ''" 
+								readonly/>
+					</div>
+				</div>
+				
+				<div class="row mb-2">
+					<div class="col-md-2">
+						<label class="form-label">제품규격</label> 
+						<input type="text" class="form-control" id="product_spec" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_SPEC} : ''" 
+								readonly/>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label">제품단위</label> 
+						<input type="text" class="form-control" id="product_unit" 
+								th:value="${bom_pd != null} ? ${bom_pd.PRODUCT_UNIT} : ''" 
+								readonly/>
+					</div>
+					<div class="col-md-2">
+						<label  class="form-label">제품단가</label> 
+						<input type="text" class="form-control text-end"  id="product_cst"  
+								th:value="${bom_pd != null} ? |${#numbers.formatInteger(bom_pd.PRODUCT_COST, 0, 'COMMA')}원| : ''" 
+								readonly/>
+					</div>
+					<div class="col-md-2 ">
+						<label class="form-label">판매가</label> 
+						<input type="text" class="form-control text-end" id="product_prc" 
+								th:value="${bom_pd != null} ? ${#numbers.formatInteger(bom_pd.PRODUCT_PRICE,0,'COMMA')+'원'} : ''" 
+								readonly/> 
+					</div>
+					<div class="col-md-2" >
+						<label class="form-label">비고</label> 
+						<input type="text" class="form-control" id="product_memo"   style="width: 180%;"
+								th:value="${bom_pd != null} ? ${bom_pd.PD_MEMO} : ''" 
+								readonly/>  
+					</div>
+				</div>
+				
+				
+				<hr class="my-4">
+				<!-- 부자재 데이터 등록 -->
+				<h5 class="mt-4">부자재 목록</h5>
+				<table class="table table-bordered align-middle">
+					<thead class="table-light">
+						<tr class="text-center">
+							<th style="width: 10%;">자재 코드</th>
+							<th style="width: 10%;">자재명</th>
+							<th style="width: 10%;">대분류</th>
+							<th style="width: 10%;">소분류</th>
+							<th style="width: 10%;">규격</th>
+							<th style="width: 10%;">단가</th>
+							<th style="width: 10%;">구매처</th>
+							<th style="width: 10%;">소요수량</th>
+							<th style="width: 10%;">단위</th>
+							<th style="width: 5%;">삭제</th>
+						</tr>
+					</thead>
+					<tbody id="bom_items">
+						<tr class="item_add_row">
+							<td class="text-center no_list_tb" colspan="10"> 선택된 부자재가 없습니다. </td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="d-flex flex-column flex-md-row align-items-center  justify-content-between  mb-3">
+				<div class="d-flex align-items-center" >
+					<button type="button" class="btn btn-secondary"
+							onclick="open_itm_list()" >자재 추가</button>
+				</div>
+				
+				
+				</div>
+				
+				</div>
+				
+			
+				
+				
+			<div class="col-md-2 bom_prev card-body tree">
+			<ul class="bomtop">
+              <li class="bomTree">
+                  <strong id="bom_top_pd"></strong>
+                  <ul id="bom_tr">
+                     
+                  </ul>
+              </li>
+          	</ul>
+				
+			</div>
+			
+			</div>
+			<hr class="my-4">
+			<div class="d-flex justify-content-end  gap-2 mt-4">
+				<button type="button" class="btn btn-primary" onclick="bomSave()"><i class="bi bi-plus-lg"></i>저장</button>
+				<button type="button" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
+			</div>
+		</div>
+		</section>
+	</main>
+	<div id="modalContainer"></div>
+</body>
+</html>

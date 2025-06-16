@@ -154,22 +154,22 @@ public class bom_controller {
 	
 	
 	
-	//BOM 상세보기 화면이동 
-//	@GetMapping("/bom_detail.do")
-//	public String bom_detail(Model m, @RequestParam("pd_code") String pd_code) {
-//		m.addAttribute("lmenu","기준정보관리");
-//		m.addAttribute("smenu","품목 관리");
-//		m.addAttribute("mmenu","완제품 상세보기");
-//		m.addAttribute("mmmenu","bom 상세보기");
-//	
-//		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
-//		if(resultlist != null) {
-//			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
-//			m.addAttribute("bom_detail", resultlist);
-//		}
-//		System.out.println(resultlist);
-//		return "/goods/bom_detail.html";
-//	}
+	//BOM 수정하기 화면이동 
+	@GetMapping("/bom_modify.do")
+	public String bom_modify(Model m, @RequestParam("pd_code") String pd_code) {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","품목 관리");
+		m.addAttribute("mmenu","bom 수정");
+	
+		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
+		
+		if(resultlist != null) {
+			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+			m.addAttribute("bom_detail", resultlist);
+		}
+		
+		return "/goods/bom_modify.html";
+	}
 	
 	
 	//BOM 상세보기 모달ver
@@ -178,9 +178,9 @@ public class bom_controller {
 		
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, "product");
-		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
+//		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
 		
-		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
+//		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 		m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
 		m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
 		m.addAttribute("bom_result", resultlist);

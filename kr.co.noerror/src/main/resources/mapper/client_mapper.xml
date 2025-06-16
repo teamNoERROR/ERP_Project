@@ -88,4 +88,11 @@ SELECT COUNT(*) FROM CLIENT_COMP
 </update>
 
 
+<!-- 거래처 삭제 -->
+<delete id="clt_delete"  parameterType="Map">
+	DELETE FROM CLIENT_COMP 
+	WHERE CIDX = #{CIDX} AND COMPANY_CODE = #{COMPANY_CODE}
+</delete>
+
+
 </mapper>

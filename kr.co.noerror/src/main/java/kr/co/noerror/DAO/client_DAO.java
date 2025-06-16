@@ -62,6 +62,11 @@ public class client_DAO {
 		return result;
 	}
 
+	public int clt_delete(Map<String, Object> c) {
+		int result = this.st.delete("clt_delete", c);
+		return result;
+	}
+
 
 
 }

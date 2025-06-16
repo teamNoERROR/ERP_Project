@@ -100,7 +100,7 @@
             <div class="ms-auto">
                 <button type="button"  class="btn btn-success" 
                 		th:attr="data-cltcode=${client_one.COMPANY_CODE}, data-cidx=${client_one.CIDX}" onclick="cltModify(this)"><i class="bi bi-pencil-square"></i> 수정</button>
-                <button class="btn btn-danger"><i class="bi bi-trash"></i> 삭제</button>
+                <button class="btn btn-danger" th:data-code="${client_one.COMPANY_CODE}" th:data-idx="${client_one.CIDX}" data-type="client"  onclick="deleteCltBtn(this)"><i class="bi bi-trash"></i> 삭제</button>
             </div>
         </div>
 

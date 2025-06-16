@@ -18,4 +18,6 @@ public interface client_mapper {
 	client_DTO client_detail(Map<String, String> map);
 	
 	int clt_modify(client_DTO cdto);
+	int clt_delete(Map<String, Object> c);
+	
 }

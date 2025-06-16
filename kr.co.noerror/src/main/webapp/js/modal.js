@@ -637,9 +637,9 @@ function pdOutReq(){
 	if (out_list.length == 0) {
 		alert("출고시킬 항목을 선택해주세요.");
 	}
-	else if (out_wh.value == ""){
+	/*else if (out_wh.value == ""){
 		alert("출고시킬 창고를 선택해주세요.");
-	}
+	}*/
 	else{
 		out_list.forEach(chkOut => {
 			var out_pidx = chkOut.getAttribute("data-pdidx");		
@@ -706,8 +706,6 @@ function appendOutPdsRow(tbody, dataList){
 		    <td style="width:5%;">`+(i+1)+`</td>
 			<td style="width:10%;" class="whCd">`+outList.wh_code+`</td>
 			<td style="width:15%;" class="whNm">`+outList.wh_name+`</td>
-			<td style="width:5%;">`+" → "+`</td>
-			<td style="width:15%;" class="whNm2">`+outList.wh_name+`</td>
 		    <td style="width:10%;" class="pdCd">`+outList.product_code+`</td>
 		    <td style="width:20%;" class="pdNm">`+outList.product_name+`</td>
 		    <td style="width:10%;" >`+outList.stock_qty+`</td>	

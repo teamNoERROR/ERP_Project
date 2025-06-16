@@ -27,7 +27,9 @@ public interface inventory_service {
 	Integer stockByWhnPd (String whCode, String pdCode);
 	
 	// 상품별 전체 재고
-	Integer stockPdTotal (String pdCode);  
+	Integer stockPdTotal (String pdCode);
+
+	int wh_pd_sp();  
 	
 	
 	

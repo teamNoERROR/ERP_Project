@@ -113,6 +113,17 @@ public class inventory_controller {
 	}
 	
 	
+	@GetMapping("/wh_pd_sp.do")
+	public String wh_pd_sp(Model m) {
+		
+		int result = this.inv_svc.wh_pd_sp();
+		System.out.println("result : "+ result);
+		return "";
+		
+		
+	}
+
+	
 	
 	
 

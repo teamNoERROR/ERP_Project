@@ -66,6 +66,7 @@ public class common_serviceImpl implements common_service {
 		
 		List<IOSF_DTO> out_list = this.cmn_dao.out_pd_list(outReqList);
 		System.out.println("out_list : " + out_list);
+		
 		//FE로 돌려보낼 데이터 
 		JSONArray dataArr = new JSONArray();
 

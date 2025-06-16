@@ -29,10 +29,10 @@
 <!-- 							<option value="출고완료">출고완료</option> -->
 <!-- 							<option value="반품">반품</option> -->
 						</select>
-<!-- 						<select class="form-select" th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}"  th:if="${details[0].order_status == '생산계획수립' or details[0].order_status == '생산계획확정'}"> -->
-<!-- 							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option> -->
-<!-- 							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option> -->
-<!-- 						</select> -->
+						<select class="form-select" th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}"  th:if="${details[0].order_status == '생산계획수립' or details[0].order_status == '생산계획확정'}">
+							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option>
+							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option>
+						</select>
 
 						<button type="button" class="btn " style="white-space: nowrap;" 
     							th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}" 
@@ -176,8 +176,7 @@
 					<div class="mt-4 d-flex gap-2">
 						<div class="ms-auto">
 							<th:block th:if="${details[0].order_status == '주문요청'}">
-								<a
-									th:href="@{/ordreq_update.do(code=${details[0].order_code})}"
+								<a th:href="@{/ordreq_update.do(code=${details[0].order_code})}"
 									class="btn btn-success"> <i class="bi bi-pencil-square"></i>
 									수정
 								</a>

@@ -34,7 +34,21 @@
 	ORDER BY WIDX DESC
 </select>
 
-
+<select id="pd_out_list" resultType="kr.co.noerror.DTO.IOSF_DTO" >
+	SELECT
+		PD.PIDX,
+		PD.PRODUCT_CODE,
+		PD.PRODUCT_NAME,
+		WFS.PD_QTY
+	FROM WAREHOUSE_FINISH WFS 
+	JOIN PRODUCTS PD ON WFS.PRODUCT_CODE = PD.PRODUCT_CODE
+<!-- 	WHERE PIDX = #{PIDX} AND PRODUCT_CODE = #{PRODUCT_CODE}; -->
+	<where>
+		<foreach collection="list" item="dto" separator="OR">
+			(PD.PIDX = #{dto.pidx} AND PD.PRODUCT_CODE = #{dto.product_code})
+		</foreach>
+	</where>
+</select>
 
 
 

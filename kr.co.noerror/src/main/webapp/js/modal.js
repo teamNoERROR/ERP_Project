@@ -523,7 +523,8 @@ function ord_modal_pg (page){
 	발주건 리스트 모달 오픈
 ----------------------------------------------------------- */
 function pchListOpen(){
-	fetch("./pch_list_modal.do", {
+	const statuses = ["발주완료"];
+	fetch("./pch_list_modal.do?statuses="+statuses, {
 		method: "GET",
 
 	}).then(function(data) {
@@ -773,14 +774,11 @@ function MdSearch(event, type) {
 
 
 function MdSearchBtn(type) {
-	console.log(type)
 	if(type=="itmMd"){
 		itm_modal_pg();
 	}
 	else if(type=="bomMd"){
 		bom_modal_pg();
 	}
-	
-	
  }
 

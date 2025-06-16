@@ -108,6 +108,33 @@ ORDER BY PRODUCT_CODE, WH_CODE
 </select>
 
 
+<select id="wh_pd_sp" resultType="int">
+SELECT COUNT(*) AS ITEM_TYPE_COUNT
+FROM (
+    SELECT PRODUCT_CODE, SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
+            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -PD_QTY
+            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
+            ELSE 0
+        END
+    ) AS CURRENT_QTY
+    FROM WAREHOUSE_FINISH
+    <if test="wh_code!=null">
+    WHERE WH_CODE = #{wh_code}  
+    </if>
+    GROUP BY PRODUCT_CODE
+    HAVING SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
+            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -PD_QTY
+            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
+            ELSE 0
+        END
+    ) > 0
+) T
+</select>
+
 
 
 </mapper>

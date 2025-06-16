@@ -88,6 +88,13 @@ public class inventory_serviceImpl implements inventory_service {
 	public Integer stockPdTotal (String pdCode) {
 		Integer stockPdTotal = this.inv_dao.stockPdTotal(pdCode);
 		return stockPdTotal;
+	}
+
+
+	@Override
+	public int wh_pd_sp() {
+		int wh_pd_sp = this.inv_dao.wh_pd_sp();
+		return wh_pd_sp;
 	};
 	
 

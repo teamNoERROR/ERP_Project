@@ -63,6 +63,11 @@ public class inventory_DAO {
 	public Integer stockPdTotal (String pdCode) {
 		Integer stockPdTotal = this.st.selectOne("pd_wh_list", pdCode);
 		return stockPdTotal;
+	}
+
+	public int wh_pd_sp() {
+		int wh_pd_sp = this.st.selectOne("wh_pd_sp");
+		return wh_pd_sp;
 	};
 
 	

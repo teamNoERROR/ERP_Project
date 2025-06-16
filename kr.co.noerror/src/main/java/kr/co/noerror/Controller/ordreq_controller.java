@@ -68,7 +68,7 @@ public class ordreq_controller {
 	private goods_service g_svc;  //품목 서비스
 	
 	 //버튼 누름 방지
-    String [] no_chng_ordBtn = {"주문확인","주문취소","생산계획수립"};
+    String [] no_chng_ordBtn = {"주문확인","주문취소","생산계획수립","생산계획확정"};
 		
 	@PostMapping("/order_save.do")
 	@ResponseBody

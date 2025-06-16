@@ -372,7 +372,9 @@ public class common_controller {
 	
 	//발주 리스트 모달 띄우기 
   @GetMapping("/pch_list_modal.do")
-  public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model, @RequestParam(value="mode", required = false) String mode) {
+  public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, 
+		  						Model model, 
+		  						@RequestParam(value="mode", required = false) String mode) {
 
 	  	int search_count = this.pchreq_list_service.search_count(search_cond);
 	    

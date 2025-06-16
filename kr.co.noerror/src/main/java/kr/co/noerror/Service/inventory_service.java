@@ -7,8 +7,6 @@ import kr.co.noerror.DTO.IOSF_DTO;
 
 public interface inventory_service {
 
-	//입고창고 + 부자재창고 아이템별 재고수
-	int ind_item_stock(String item_code);
 
 	//개별 완제품 재고수
 	Map<String, Integer> ind_pd_all_stock();
@@ -18,4 +16,12 @@ public interface inventory_service {
 
 	//완제품 재고리스트
 	List<IOSF_DTO> pd_stock_list();
+	
+	
+	//개별 부자재 재고수
+	Map<String, Integer> ind_item_all_stock();
+	
+	//부자재 재고리스트
+	List<IOSF_DTO> itm_stock_list();
+		
 }

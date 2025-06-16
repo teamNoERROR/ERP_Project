@@ -18,11 +18,6 @@ public class inventory_DAO {
 	private SqlSessionTemplate st;
 	
 	
-	//입고창고 + 부자재창고 아이템별 재고수
-	public int ind_item_stock(String item_code) {
-		int result = this.st.selectOne("ind_item_stock",item_code);
-		return result;
-	}
 
 	//개별 완제품 재고수
 	public List<IOSF_DTO> ind_pd_all_stock() {
@@ -43,6 +38,17 @@ public class inventory_DAO {
 	}
 
 	
+	//개별 부자재 재고수
+	public List<IOSF_DTO> ind_item_all_stock() {
+		List<IOSF_DTO> result = this.st.selectList("ind_itm_stock");
+		return result;
+	}
+
+	//부자재 재고 리스트
+	public List<IOSF_DTO> itm_stock_list() {
+		List<IOSF_DTO> itm_stock_list = this.st.selectList("itm_stock_list");
+		return itm_stock_list;
+	};
 
 
 	

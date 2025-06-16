@@ -25,6 +25,7 @@ public class IOSF_DTO {
     String inbound_date2;
     
     // 제품 정보
+    int iidx;
     String item_code;      // 제품 코드
     String item_name;      // 제품 이름
     String category_main;  // 제품 대분류
@@ -33,7 +34,8 @@ public class IOSF_DTO {
     String in_status; 	   // 입고 상태
     String item_qty;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
-    
+    String itm_file_renm;
+    String itm_api_fnm;
     
     
     //입고 창고
@@ -86,5 +88,8 @@ public class IOSF_DTO {
     
     String mv_wh_code;  //이동창고 코드 
     
-    
+    String wmt_idx;
+    String wmt_code; 
+    String mt_insert_date;
+    Integer ind_itm_stock;
 }

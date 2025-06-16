@@ -60,4 +60,43 @@
 </select>
 
 
+<select id="ind_itm_stock" resultType="kr.co.noerror.DTO.IOSF_DTO">
+	SELECT 
+		mt.ITEM_CODE, ic.ITEM_NAME,
+		SUM(CASE WHEN mt.change_type = '입고' THEN mt.ITEM_QTY ELSE 0 END) -
+		SUM(CASE WHEN mt.change_type = '출고' THEN mt.ITEM_QTY ELSE 0 END) -
+		SUM(CASE WHEN mt.change_type = '출고완료' THEN mt.ITEM_QTY ELSE 0 END ) AS ind_itm_stock
+	FROM WAREHOUSE_MATERIAL mt
+	LEFT JOIN ITM_COMP_VIEW ic ON mt.item_code = ic.ITEM_CODE
+	GROUP BY mt.ITEM_CODE, ic.ITEM_NAME
+	ORDER BY mt.ITEM_CODE
+</select>
+
+
+<!--  완제품 재고 리스트  -->
+<select id="itm_stock_list" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="Map">
+	SELECT
+		mt.item_code,
+	  	MAX(mt.WMT_IDX) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS wmt_idx,
+	  	MAX(mt.WMT_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS wmt_code,
+	  	MAX(mt.WH_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS wh_code,
+	  	MAX(mt.ITEM_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS item_code,
+	  	MAX(mt.ITEM_QTY) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS item_qty,
+	  	MAX(mt.CHANGE_TYPE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS change_type,
+	  	MAX(mt.EMPLOYEE_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS employee_code,
+	  	MAX(mt.MT_INSERT_DATE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS mt_insert_date,
+	  	MAX(ic.IIDX) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS iidx,
+	  	MAX(ic.ITEM_NAME) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS item_name,
+	  	MAX(ic.ITEM_CLASS1) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS category_main,
+	  	MAX(ic.ITEM_CLASS2) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS category_sub,
+	  	MAX(ic.ITM_FILE_RENM) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS itm_file_renm,
+	  	MAX(ic.ITM_API_FNM) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS itm_api_fnm,
+	  	MAX(ic.ITM_INSERT_DATE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS itm_insert_date
+	FROM WAREHOUSE_MATERIAL mt
+	LEFT JOIN ITM_COMP_VIEW ic ON mt.item_code = ic.ITEM_CODE
+	GROUP BY mt.item_code
+	ORDER BY item_name
+<!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
+</select>
+
 </mapper>

@@ -69,9 +69,9 @@ public class mrp_controller {
 	@PostMapping("/mrp_calc.do")
 	@ResponseBody
 	public List<mrp_result_DTO> calculateMrp(@RequestBody List<mrp_input_DTO> mrp_inputs) {
-		System.out.println(mrp_inputs);
+		System.out.println("mrp_inputs : " + mrp_inputs);
 	    List<mrp_result_DTO> mrp_results = this.mrp_calc.mrp_calc(mrp_inputs);
-	    System.out.println(mrp_results);
+	    System.out.println("mrp_results : " + mrp_results);
 	    return mrp_results;  // JSON 응답
 	}
 	

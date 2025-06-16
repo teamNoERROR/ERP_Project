@@ -1,26 +1,22 @@
 package kr.co.noerror.Service;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.Random;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.Warehouse_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.Model.M_File_Rename;
 import kr.co.noerror.Model.M_file;
-
-import java.util.Random;
 
 @Service
 @Repository("Warehouse_Service")
@@ -76,6 +72,7 @@ public class Warehouse_Service {
 					wh_dto.setWh_api_fnm(this.f_dto.getApinm());
 					
 				}
+				System.out.println("fileattach : " + fileattach);
             	
             	
             	
@@ -84,7 +81,7 @@ public class Warehouse_Service {
                 
                 //저장일 경우에만 wh_code 생성
                 if(check_insertOrModify == "save") {                	
-                	String wh_code = "WH-" + randomNumber;
+                	String wh_code = "WHS-" + randomNumber;
                 	wh_dto.setWh_code(wh_code);
                 }
 

@@ -87,6 +87,11 @@ public class goods_DAO {
 		return result;
 	}
 
+	public String imgs_attach(String filenm) {
+		String result = this.st.selectOne("imgs_attach", filenm);
+		return result;
+	}
+
 
 
 	

@@ -1,5 +1,6 @@
 package kr.co.noerror;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
+import kr.co.noerror.Service.goods_service;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -27,38 +29,47 @@ public class rest_controller {
 	@Autowired
 	pchreq_DAO pdao;
 	
+	@Autowired
+	private goods_service g_svc;
 	
 	//이미지 전송 
 	@ResponseBody
-	@GetMapping("/img_attach/{filenm}")
-	public byte[] cdn_listapi(@PathVariable String filenm) {
+	@GetMapping("/imgfile/{filenm}")
+	public byte[] cdn_listapi(@PathVariable(name="filenm") String filenm) {
 	
 		byte[] img = null; //FE에게 CDN경로 이미지명을 전송 
 		String img_url = null; 
 		
-		if("imgfile".equals(filenm)) {  
 		//파라미터값에 맞는 DB에 정보를 확인 후 해당 정보가 있을 경우 DB에 저장된 경로를 변수에 저장 
+		//img_url = "http://210.178.108.186:8080/noerror/imgfile/"+filenm;
 			
-			//img_url = "http://210.178.108.186:8080/noerror/imgfile/"+filenm;
-			
+		if(!filenm.equals(null) || !filenm.equals("")) {
+			img_url = "http://210.178.108.186:8080/noerror/imgfile/";
+			String cdn_imgs = this.g_svc.imgs_attach(filenm); //cdn 이미지 url 가져오기
 			try {
-				URL url = new URL(img_url);
+				URL url = new URL(img_url+cdn_imgs);
 				
-				HttpURLConnection httpcon = (HttpURLConnection)url.openConnection();
+				HttpURLConnection hc = (HttpURLConnection)url.openConnection();
 				
-				InputStream is = httpcon.getInputStream();  //해당 이미지를 바이트로 가져옴 
-				img = IOUtils.toByteArray(is);  //byte변수에 가져온 이미지 전체를 저장 
+				InputStream is = hc.getInputStream();  
+				img = IOUtils.toByteArray(is);  
 				
 				is.close();
-				httpcon.disconnect();
-						
+				hc.disconnect();
+				
 			} catch (Exception e) {
-				// TODO: handle exception
+				this.log.error("error : "+e);
 			}
 			
 		}else {
 			this.log.info("해당경로에 대한 사항이 없습니다.");
 		}
+			
 		return img;   
 	}
+	
+	
+	
+	
+	
 }

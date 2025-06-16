@@ -33,9 +33,9 @@ public class common_DAO  {
 
 	public List<IOSF_DTO> out_pd_list(List<IOSF_DTO> outReqList) {
 		List<IOSF_DTO> out_pd_list = this.st.selectList("pd_out_list", outReqList);
-		System.out.println("out_pd_list : " + out_pd_list);
 		return out_pd_list;
 	}
+
 
 	
 	

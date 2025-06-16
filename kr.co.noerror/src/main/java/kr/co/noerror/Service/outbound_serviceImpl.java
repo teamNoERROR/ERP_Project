@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.outbound_DAO;
+import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.outbound_DTO;
 import kr.co.noerror.Mapper.outbound_mapper;
@@ -133,5 +134,20 @@ public class outbound_serviceImpl implements outbound_service{
 //		    ind_pchcd += sum.getIND_PCH_CD();
 //		}
 		return outbound_detail;
+	}
+
+	//완제품창고리스트이동(출고처리)
+	@Override
+	public List<IOSF_DTO> fswh_all_list(String keyword, Integer pageno, int post_ea) {
+		int start = (pageno - 1) * post_ea;
+		int count = post_ea; 
+		
+		Map<String, Object> mapp = new HashMap<>();
+		mapp.put("keyword", keyword);
+		mapp.put("start", start);
+		mapp.put("count", count);
+		
+		List<IOSF_DTO> fswh_all_list = this.out_dao.fswh_all_list(mapp);
+		return fswh_all_list;
 	}
 }

@@ -6,7 +6,7 @@
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
-	<main class="main" style="width: 100%; overflow-x: auto;">
+	<main class="main" >
 		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 		<section class="container ">
 			<!-- Title -->
@@ -110,6 +110,8 @@
 				      <th>품목명</th>
 				      <th>변경수량</th>
 				      <th>변경내역</th>
+				      <th>전체재고</th>
+				      <th>창고별재고</th>
 				      <th>처리자</th>
 				      <th>사원코드</th>
 				      <th>등록일</th>
@@ -146,6 +148,8 @@
 				      <td th:text="${fs_wh.product_code}"></td>
 				      <td th:text="${fs_wh.product_name}"></td>
 				      <td th:text="${fs_wh.pd_qty}"></td>
+				      <td th:text="${fs_wh.change_type}"></td>
+				      <td th:text="${fs_wh.change_type}"></td>
 				      <td th:text="${fs_wh.change_type}"></td>
 				      <td th:text="${fs_wh.emp_name}"></td>
 				      <td th:text="${fs_wh.employee_code}"></td>

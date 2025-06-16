@@ -20,7 +20,7 @@ public class inventory_serviceImpl implements inventory_service {
 	//개별 완제품 재고수
 	@Override
 	public Map<String, Integer> ind_pd_all_stock() {
-		List<IOSF_DTO> ind_pd_all_stock = this.inv_dao.ind_pd_all_stock(); 
+		List<IOSF_DTO> ind_pd_all_stock = this.inv_dao.ind_pd_stock(); 
 		
 		Map<String, Integer> all_stock_qty = new HashMap<>();
 		for (IOSF_DTO dto : ind_pd_all_stock) {
@@ -32,19 +32,7 @@ public class inventory_serviceImpl implements inventory_service {
 		return all_stock_qty;
 	}
 	
-	//창고별+완제품 재고수
-	@Override
-	public Map<String, Integer> ind_pd_stock(String wh_code) {
-		List<IOSF_DTO> ind_pd_stock = this.inv_dao.ind_pd_stock(wh_code);
 		
-		Map<String, Integer> stock_qty = new HashMap<>();
-		for (IOSF_DTO dto : ind_pd_stock) {
-			stock_qty.put(dto.getProduct_code(), dto.getInd_pd_stock());
-		}
-		System.out.println("stock_qty : " + stock_qty);
-		return stock_qty;
-	}
-	
 	//완제품 재고 리스트
 	@Override
 	public List<IOSF_DTO> pd_stock_list() {
@@ -78,6 +66,29 @@ public class inventory_serviceImpl implements inventory_service {
 		return itm_stock_list;
 	}
 
+	//창고별 보유중인 제품 각각의 재고수
+	@Override
+	public List<IOSF_DTO> pd_by_whlist() {
+		List<IOSF_DTO> pd_stock_bywh_list = this.inv_dao.pd_stock_bywh_list(); 
+		return pd_stock_bywh_list;
+	}
+
+	// 상품 + 창고별 재고
+	@Override
+	public Integer stockByWhnPd (String whCode, String pdCode) {
+		Map<String, String> mapp = new HashMap<>();
+		mapp.put("whCode", whCode);
+		mapp.put("pdCode", pdCode);
+		Integer stockByWhnPd = this.inv_dao.stockByWhnPd(mapp);
+		return stockByWhnPd;
+	};
+	
+	// 상품별 전체 재고
+	@Override
+	public Integer stockPdTotal (String pdCode) {
+		Integer stockPdTotal = this.inv_dao.stockPdTotal(pdCode);
+		return stockPdTotal;
+	};
 	
 
 }

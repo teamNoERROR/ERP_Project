@@ -34,6 +34,7 @@ public class common_serviceImpl implements common_service {
 		return all_data;
 	}
 	
+	//창고타입별 창고 리스트 
 	@Override
 	public List<WareHouse_DTO> warehouse_list(String wh_tp) {
 		List<WareHouse_DTO> warehouse_list = this.cmn_dao.warehouse_list(wh_tp);
@@ -87,5 +88,6 @@ public class common_serviceImpl implements common_service {
 		
 		return dataArr.toString();
 	}
+
 
 }

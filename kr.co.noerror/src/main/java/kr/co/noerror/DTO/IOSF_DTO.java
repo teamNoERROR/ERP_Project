@@ -92,4 +92,6 @@ public class IOSF_DTO {
     String wmt_code; 
     String mt_insert_date;
     Integer ind_itm_stock;
+    Integer current_qty;
+    
 }

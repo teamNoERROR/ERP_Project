@@ -100,6 +100,8 @@
 				      <th>품목명</th>
 				      <th>변경수량</th>
 				      <th>변경내역</th>
+				      <th>전체재고</th>
+				      <th>창고별재고</th>
 				      <th>처리자</th>
 				      <th>사원코드</th>
 				      <th>등록일</th>
@@ -107,7 +109,7 @@
 				  </thead>
 				  <tbody>
 				  	<tr th:if="${wh_check == 'nodata'}" >
-                		<td class="text-center no_list_tb" colspan="11" > 부자재 창고에 보관된 제품이 없습니다. </td>
+                		<td class="text-center no_list_tb" colspan="14" > 부자재 창고에 보관된 제품이 없습니다. </td>
                 	</tr>
 				    <tr class="modal-trigger"
 				        th:each="mt_wh, iterStat : ${mt_wh_list}"
@@ -136,6 +138,8 @@
 				      <td th:text="${mt_wh.item_code}"></td>
 				      <td th:text="${mt_wh.item_name}"></td>
 				      <td th:text="${mt_wh.item_qty}"></td>
+				      <td th:text="${mt_wh.change_type}"></td>
+				      <td th:text="${mt_wh.change_type}"></td>
 				      <td th:text="${mt_wh.change_type}"></td>
 				      <td th:text="${mt_wh.emp_name}"></td>
 				      <td th:text="${mt_wh.employee_code}"></td>

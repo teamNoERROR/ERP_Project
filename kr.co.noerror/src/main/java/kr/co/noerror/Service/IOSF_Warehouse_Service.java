@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
@@ -91,7 +92,11 @@ public class IOSF_Warehouse_Service {
     	return iosf_result;
     }
     
-    //타입별 창고리스트 
+    
+ 
+
+
+	//타입별 창고리스트 
     public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String wh_name) { 
         Map<Object, Object> wh_map = new HashMap<>();
 		System.out.println("fs_wh_name : " + wh_name);

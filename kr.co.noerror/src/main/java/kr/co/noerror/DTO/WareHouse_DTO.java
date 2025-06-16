@@ -18,8 +18,8 @@ public class WareHouse_DTO {
 	//    	관리자 사원번호  
 	String  wh_mg_id;
 	
-	//  원본 파일명		 변경된 파일명 		파열 경로	  	
-	String wh_file_ori, wh_file_new, wh_file_url, wh_file_NoExt;
+	//  원본 파일명		 변경된 파일명 		          파열 경로	  	
+	String wh_file_ori, wh_file_new, wh_api_fnm, wh_file_url, wh_file_NoExt;
 	
 	// 				파일
 	MultipartFile wh_file;

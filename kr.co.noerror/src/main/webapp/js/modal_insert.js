@@ -435,7 +435,7 @@ function pdChoice(parentType) {
 거래처 리스트 모달에서 선택한 거래처 등록화면의 리스트에 붙여넣기 
 --------------------------------------------------------------*/
 function choiceClt(parentType) {
-	var radios = document.querySelectorAll('input[name="sel_clt"]');
+	var radios = document.querySelectorAll('input[name="selected_clt"]');
 	var selected_radio = null;
 	var ptype = parentType.getAttribute("data-parenttype");
 	

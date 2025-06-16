@@ -98,7 +98,7 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		params.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
 		params.put("mv_wh_code", mv_wh_code);
 //		params.put("wh_uq", this.wh_uq);
-		
+		params.put("inbound_code", inbound_code);
 		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move", params); 
 		
 		return wh_save_result;

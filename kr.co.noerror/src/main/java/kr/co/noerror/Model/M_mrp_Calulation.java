@@ -34,14 +34,7 @@ public class M_mrp_Calulation {
 		Map<String, mrp_result_DTO> aggregated = new HashMap<>();
 		
 		for (mrp_input_DTO input : mrp_inputs) {
-			System.out.println(input.getBom_code());
 			List<bom_DTO> boms = this.mdao.boms_for_mrp(input.getBom_code());
-			
-			Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
-			products_DTO goods_one = this.g_svc.pd_one_detail(input.getItem_code(), "item");  //제품 특정게시물 내용 가져오기
-			
-			System.out.println(ind_pd_all_stock);
-			System.out.println(goods_one.getITM_SAFE_STOCK());
 			
 			for (bom_DTO bom : boms) {
 				String item_code = bom.getITEM_CODE();

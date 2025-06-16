@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.noerror.DTO.client_DTO;
+import kr.co.noerror.DTO.del_DTO;
 
 public interface client_service {
 
@@ -22,5 +23,7 @@ public interface client_service {
 
 	//거래처 정보수정
 	int clt_modifyok(client_DTO cdto, MultipartFile clientImage);
+
+	int clt_delete(del_DTO d_dto);
 
 }

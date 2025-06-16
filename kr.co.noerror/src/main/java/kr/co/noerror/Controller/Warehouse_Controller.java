@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.Application;
 import kr.co.noerror.DAO.Warehouse_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
+import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Service.Warehouse_Service;
 
 @Controller
@@ -35,6 +36,8 @@ public class Warehouse_Controller {
     
     @Resource(name="Warehouse_Service")
     Warehouse_Service ws_service;	
+    
+
 
     //창고 저장, 수정 구분하기 위한 변수
     String check_insertOrModify;

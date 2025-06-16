@@ -318,6 +318,9 @@ public class IOSF_Warehouse_Controller {
    @PostMapping("/IOSF_warehouse_move.do")
    @ResponseBody
    public Map<String, Object> IOSF_warehouse_move(@RequestBody List<Map<String, Object>> paramList) {
+	   
+	   System.out.println("paramList + " + paramList);
+	   
        int successCount = 0;
        int successCount2 = 0;
        for (Map<String, Object> param : paramList) {
@@ -332,7 +335,9 @@ public class IOSF_Warehouse_Controller {
            String ind_pch_cd = (String) param.get("ind_pch_cd");
 //           String in_status = (String) param.get("in_status");
 //           String item_count = (String) param.get("item_count");
-
+           
+           System.out.println(" inbound_code : " + inbound_code);
+           System.out.println(" ind_pch_cd : " + ind_pch_cd);
            
            int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
            successCount += updatedCount;

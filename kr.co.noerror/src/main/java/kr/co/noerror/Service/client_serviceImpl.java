@@ -182,6 +182,19 @@ public class client_serviceImpl implements client_service {
 		
 		return result;
 	}
+
+
+	@Override
+	public int clt_delete(del_DTO d_dto) {
+		Map<String, Object> c = new HashMap<>();
+		
+//			c.put("type", d_dto.getType());
+			c.put("CIDX", d_dto.getIdx());
+			c.put("COMPANY_CODE", d_dto.getCode());
+		
+		int client_del = this.clt_dao.clt_delete(c);
+		return client_del;
+	}
 	
 	
 	

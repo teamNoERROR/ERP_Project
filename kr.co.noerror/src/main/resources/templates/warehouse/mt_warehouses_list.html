@@ -93,6 +93,7 @@
 				    <tr>
 				   	  <th scope="col"><input type="checkbox" disabled></th>
 				      <th>#</th>
+				      <th>번호</th>
 				      <th>창고코드</th>
 				      <th>창고명</th>
 				      <th>품목코드</th>
@@ -117,7 +118,7 @@
 				      	<input type="checkbox" name="deleteCodes"
 				   			   	class="move-checkbox"
 				      	 	   th:value="${mt_wh.win_idx}" 
-						       th:data-wh_code="${mt_wh.material_code}" 
+						       th:data-wh_code="${mt_wh.wh_code}" 
 						       data-wh_type="mt"
 						       th:data-product_code="${mt_wh.item_code}" 
 						       th:data-pd_qty="${mt_wh.item_qty}"
@@ -129,6 +130,7 @@
 						       th:disabled="${mt_wh.change_type == '출고' OR mt_wh.change_type == '출고완료'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
+				      <td th:text="${mt_wh.material_code}"></td>
 				      <td th:text="${mt_wh.wh_code}"></td>
 				      <td th:text="${mt_wh.wh_name}"></td>
 				      <td th:text="${mt_wh.item_code}"></td>

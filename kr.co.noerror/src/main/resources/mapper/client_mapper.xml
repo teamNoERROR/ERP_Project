@@ -70,4 +70,29 @@ SELECT COUNT(*) FROM CLIENT_COMP
 	#{MNG_PHONE}, #{MNG_FAX},#{MNG_PART}, #{MNG_POSITION},
 	#{MNG_MEMO, jdbcType=CLOB}, #{COM_USE_FLAG}, SYSTIMESTAMP, NULL)
 </insert>
+
+
+
+<!-- 거래처 정보수정 -->
+<update id="clt_modify" parameterType="kr.co.noerror.DTO.client_DTO">
+	UPDATE CLIENT_COMP SET COMPANY_NAME = #{COMPANY_NAME}, CEO_NAME = #{CEO_NAME}, BIZ_NUM = #{BIZ_NUM},
+	BIZ_TYPE = #{BIZ_TYPE}, BIZ_ITEM = #{BIZ_ITEM}, COM_ZIP=#{COM_ZIP}, COM_ADDR1 = #{COM_ADDR1}, COM_ADDR2 = #{COM_ADDR2, jdbcType=VARCHAR},
+	<if test="COM_FILE_NM != null and COM_FILE_RENM != null and COM_API_FNM != null">
+	COM_FILE_NM = #{COM_FILE_NM, jdbcType=VARCHAR}, COM_FILE_RENM = #{COM_FILE_RENM, jdbcType=VARCHAR}, COM_API_FNM = #{COM_API_FNM, jdbcType=VARCHAR},
+	</if>
+	COM_MEMO = #{COM_MEMO, jdbcType=CLOB}, MANAGER_NAME = #{MANAGER_NAME}, 
+	MNG_EMAIL = #{MNG_EMAIL}, MNG_TEL = #{MNG_TEL}, MNG_PHONE = #{MNG_PHONE}, MNG_FAX = #{MNG_FAX},
+	MNG_PART = #{MNG_PART}, MNG_POSITION = #{MNG_POSITION}, MNG_MEMO = #{MNG_MEMO, jdbcType=CLOB}, COM_USE_FLAG = #{COM_USE_FLAG},  
+	COM_MODIFY_DATE = SYSTIMESTAMP 
+	WHERE CIDX = #{CIDX} AND COMPANY_CODE = #{COMPANY_CODE}
+</update>
+
+
+<!-- 거래처 삭제 -->
+<delete id="clt_delete"  parameterType="Map">
+	DELETE FROM CLIENT_COMP 
+	WHERE CIDX = #{CIDX} AND COMPANY_CODE = #{COMPANY_CODE}
+</delete>
+
+
 </mapper>

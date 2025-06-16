@@ -29,5 +29,7 @@ public class bom_DTO {
 	
 	int CIDX;
 	String COMPANY_CODE, COMPANY_NAME;
+	
+	Integer ind_pd_stock;
 
 }

@@ -13,7 +13,7 @@ public interface goods_mapper {
 	List<String> gd_class(Map<String, String> map); //제품 품목선택시 대분류 리스트 출력 
 	List<String> sc_class(Map<String, String> map); //소분류 리스트 출력 
 	
-	int code_dupl(products_DTO pdto); //중복검사
+	int code_dupl_gd(products_DTO pdto); //중복검사
 	
 	int pd_insert(products_DTO pdto);  //완제품 등록 
 	int itm_insert(products_DTO pdto);  //부자재 등록 

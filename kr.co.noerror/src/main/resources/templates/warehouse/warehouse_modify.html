@@ -13,7 +13,7 @@
     </div>
      <!-- 우상단 x 마크  -->     
 	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
-	<button type="button" class="btn-close" aria-label="Close" onclick=""></button>
+	<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
 	</div>
     <form id="frm" th:action="@{./warehouse_modify.do}" th:object="${wareInsertDTO}" method="post" enctype="multipart/form-data">
     <div class="form-section">
@@ -44,9 +44,9 @@
                         <select class="form-select" required name="wh_type">
                             <option value="">선택</option>
                             <option th:selected="${wh_modify[0].wh_type == '입고창고'}" value="입고창고">입고창고</option>
-                            <option th:selected="${wh_modify[0].wh_type == '출고창고'}" value="출고창고">출고창고</option>
-                            <option th:selected="${wh_modify[0].wh_type == '완제품창고'}" value="완제품창고">완제품창고</option>
+<!--                             <option th:selected="${wh_modify[0].wh_type == '출고창고'}" value="출고창고">출고창고</option> -->
                             <option th:selected="${wh_modify[0].wh_type == '부자재창고'}" value="부자재창고">부자재창고</option>
+                            <option th:selected="${wh_modify[0].wh_type == '완제품창고'}" value="완제품창고">완제품창고</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">전화번호</label>
-                        <input type="text" class="form-control"  th:value="${wh_modify[0].wh_number}" name="wh_number">
+                        <input type="text" class="form-control"  th:value="${wh_modify[0].wh_number}" name="wh_number" maxlength="12">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">사용 여부</label>
@@ -78,13 +78,13 @@
                         <div class="col">
                             <div class="row gx-2 align-items-center">
                                 <div class="col-md-3 d-flex align-items-center">
-                                    <input type="text" class="form-control" placeholder="우편번호" th:value="${wh_modify[0].wh_zipcode}" name="wh_zipcode">
+                                    <input type="text" class="form-control" placeholder="우편번호" th:value="${wh_modify[0].wh_zipcode}" name="wh_zipcode" readonly>
                                 </div>
                                 <div class="col-md-4 d-flex align-items-center">
-                                    <input type="text" class="form-control" placeholder="도로명주소" th:value="${wh_modify[0].wh_addr1}" name="wh_addr1">
+                                    <input type="text" class="form-control" placeholder="도로명주소" th:value="${wh_modify[0].wh_addr1}" name="wh_addr1" readonly>
                                 </div>
                                 <div class="col-md-5 d-flex align-items-center">
-                                    <input type="text" class="form-control" placeholder="상세주소" th:value="${wh_modify[0].wh_addr2}" name="wh_addr2">
+                                    <input type="text" class="form-control" placeholder="상세주소" th:value="${wh_modify[0].wh_addr2}" name="wh_addr2" >
                                 </div>
                             </div>
                         </div>
@@ -104,8 +104,9 @@
 				            <div class="row gx-2">
 				            <div class="col-md-3">
 			                  <div class="input-group">
-					            <input type="text" class="form-control"  th:value="${wh_modify[0].ENAME}" readonly>
-					            <button type="button" class="btn btn-primary  modal-trigger" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;">
+					            <input type="text" class="form-control" name="wh_mg_name" th:value="${wh_modify[0].ENAME}" readonly>
+<!-- 					            <button type="button" class="btn btn-primary  modal-trigger" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;"> -->
+					             <button type="button" class="btn btn-primary" onclick="empListOpen()"style="cursor: pointer;">    
 					                <i class="bi bi-search"></i>
 					            </button>
 					        </div>
@@ -114,13 +115,13 @@
 <!-- 				                    <input type="text" class="form-control" placeholder="관리자명" th:value="${wh_modify[0].ENAME}"> -->
 <!-- 				                </div> -->
 				                <div class="col-md-3">
-				                    <input type="text" class="form-control" placeholder="사원번호"  th:value="${wh_modify[0].ECODE}" name="ECODE">
+				                    <input type="text" class="form-control" placeholder="사원번호"  th:value="${wh_modify[0].ECODE}" name="wh_mg_id" readonly>
 				                </div>
 				                <div class="col-md-3">
-				                    <input type="text"  class="form-control" placeholder="부서/직급" th:value="${wh_modify[0].EPART} + ' / ' + ${wh_modify[0].EPOSITION}" >
+				                    <input type="text"  class="form-control" placeholder="부서/직급" th:value="${wh_modify[0].EMP_PART} + ' / ' + ${wh_modify[0].EMP_POSITION}" name="wh_mg_mp" readonly>
 				                </div>
 				                <div class="col-md-3">
-				                    <input type="text"  class="form-control" placeholder="연락처"  th:value="${wh_modify[0].EPHONE}" >
+				                    <input type="text"  class="form-control" placeholder="연락처"  th:value="${wh_modify[0].EMP_TEL}" name="wh_mg_ph" readonly>
 				                </div>
 				            </div>
 				        </div>

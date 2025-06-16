@@ -41,8 +41,8 @@
 	    </ul>
 
 	    <!-- 페이지당 항목 수 선택 -->
-	    <div class="ms-3">
-	        <select class="form-select form-select-sm"
+	    <div class="ms-1">
+	        <select class="form-select"
 	                name="post_ea"
 	                style="width: auto;"
 	                th:attr="onchange=${mode == 'modal'} ? 'pchListOpen3(this)' : 'location.href=\'/pchreq_list.do?page_size=\' + this.value'">

@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>발주 리스트</title>
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -19,21 +20,20 @@
 				action="/pchreq_list.do">
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
-						<input type="checkbox" name="statuses" value="발주요청">&nbsp;발주요청&nbsp;
-						<input type="checkbox" name="statuses" value="발주취소">&nbsp;발주취소&nbsp;
-						<input type="checkbox" name="statuses" value="발주완료">&nbsp;발주완료&nbsp;
-						<input type="checkbox" name="statuses" value="진행중">&nbsp;진행중&nbsp;
-						<input type="checkbox" name="statuses" value="지연중">&nbsp;지연중&nbsp;
-						<input type="checkbox" name="statuses" value="가입고">&nbsp;가입고&nbsp;
-						<input type="checkbox" name="statuses" value="입고완료">&nbsp;입고완료&nbsp;
-						<input type="checkbox" name="statuses" value="반품">
-						&nbsp;반품&nbsp;
+						<label><input type="checkbox" name="statuses" value="발주요청">&nbsp; 발주요청&nbsp;</label>&nbsp;
+						<label><input type="checkbox" name="statuses" value="발주취소">&nbsp; 발주취소&nbsp;</label>&nbsp;
+						<label><input type="checkbox" name="statuses" value="발주완료">&nbsp; 발주완료&nbsp;</label>&nbsp;
+<!-- 						<label><input type="checkbox" name="statuses" value="진행중">&nbsp; 진행중&nbsp;</label>&nbsp; -->
+<!-- 						<label><input type="checkbox" name="statuses" value="지연중">&nbsp; 지연중&nbsp;</label>&nbsp; -->
+						<label><input type="checkbox" name="statuses" value="가입고">&nbsp; 가입고&nbsp;</label>&nbsp;
+<!-- 						<label><input type="checkbox" name="statuses" value="입고완료">&nbsp; 입고완료&nbsp;</label>&nbsp; -->
+<!-- 						<label><input type="checkbox" name="statuses" value="반품">&nbsp;반품&nbsp;</label> -->
 					</div>
 				</div>
 				<div class="col-auto">
 					<div class="input-group input-group-sm">
 						<input type="text" class="form-control" name="search_word"
-							placeholder="검색">
+							placeholder="제품명/제품코드로 검색">
 						<button class="btn btn-primary" type="submit">
 							<i class="bi bi-search"></i>
 						</button>
@@ -44,8 +44,8 @@
 			<!-- 발주 List Table -->
 			<div id="list-container">
 
-				<div id="table-container" class="table-responsive  rounded" >
-					<table class="table table-bordered text-center table-hover align-middle table-bpurchaseed">
+				<div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+					<table class="table table-bordered text-center align-middle table-bpurchaseed" th:classappend="${pch_list.size() != 0} ? 'table-hover' : ''" style="white-space: nowrap;" >
 						<thead class="table-light text-center">
 							<tr>
 								<th scope="col">
@@ -62,6 +62,10 @@
 							</tr>
 						</thead>
 						<tbody>
+						
+							<tr th:if="${pch_list.size() == 0}" >
+                				<td class="text-center no_list_tb" colspan="9" > 등록된 발주건이 없습니다. </td>
+                			</tr>
 							<tr th:each="p : ${pch_list}" class="modal-trigger"
 								th:data-modal-url="@{/pchreq_detail.do(code=${p.pch_code})}"
 								data-modal-id="pch_modal" style="cursor: pointer;">

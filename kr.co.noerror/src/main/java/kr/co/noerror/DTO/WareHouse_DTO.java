@@ -18,8 +18,8 @@ public class WareHouse_DTO {
 	//    	관리자 사원번호  
 	String  wh_mg_id;
 	
-	//  원본 파일명		 변경된 파일명 		파열 경로	  	
-	String wh_file_ori, wh_file_new, wh_file_url, wh_file_NoExt;
+	//  원본 파일명		 변경된 파일명 		          파열 경로	  	
+	String wh_file_ori, wh_file_new, wh_api_fnm, wh_file_url, wh_file_NoExt;
 	
 	// 				파일
 	MultipartFile wh_file;
@@ -33,9 +33,9 @@ public class WareHouse_DTO {
 	int EIDX;
 	
 	//    관리자이름  관리자 코드	 관리자 부서   관리자 직급	  	관리자 전화번호							
-	String ENAME,  ECODE,    EPART,    EPOSITION,   EPHONE,       
+	String ENAME,  ECODE,    EMP_PART,    EMP_POSITION,   EMP_PHONE,       
 	//     관리자 번호	 관리자 이메일   관리자 팩스	관리자 메모		관리자 생성 시간		
-		   ETEL, 	 EEMAIL, 	 EFAX, 		MEMO, 		INSERT_DATE;
+			EMP_TEL, 	 EMP_EMAIL, 	 EMP_FAX, 		EMP_MEMO, 		EMP_INSERT_DATE;
 
 	
 	

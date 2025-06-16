@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>거래처 수정하기</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
@@ -10,22 +11,24 @@
 <section class="container ">
         <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">거래처 수정</h2>
+        	<h2 class="mb-1">거래처 정보 수정</h2>
         </div>
         
           <!-- 우상단 x 마크  -->     
-			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
-			<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
-			</div>
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
+</div>
         
         
 <div class="form-section">
       <div class="row">
         <!-- 이미지 업로드 -->
-	<div class="col-md-3 d-flex flex-column align-items-end mt-4">
+        
+	<div class="col-md-3 d-flex flex-column align-items-end mt-5">
 			<!-- 미리보기 네모칸 -->
 		  <div class="image-box mb-2" >
-		    <img id="previewImage" src="./img/no-image.svg" alt="이미지 미리보기" style="max-width: 100%; max-height: 100%;">
+		    <img th:if="${client_one.COM_API_FNM} == null" id="previewImage" src="./img/no-image.svg" alt="회사 로고" style="max-width: 100%; max-height: 100%;">
+		    <img th:if="${client_one.COM_API_FNM} != null" id="previewImage" src="" alt="회사 로고" style="max-width: 100%; max-height: 100%;">
 		  </div>
 		
 		  <!-- 파일 선택 input -->
@@ -37,30 +40,31 @@
         <div class="col-md-9">
         
          <!-- 거래처 정보 -->
+         <div class="text-end mb-3">* : 필수입력</div>
           <div class="row  mb-3 ">
             <div class="col-md-2">
-              <label class="form-label">거래처 유형</label>
-              <select class="form-select" id="client_type">
+              <label class="form-label">거래처 유형*</label>
+              <select class="form-select" id="client_type" disabled>
                 <option value="">선택</option>
-                <option value="판매처">제품 판매처 (거래처) </option>
-                <option value="구매처">자재 구매처 (발주처) </option>
+                <option value="판매처" th:selected="${client_one.CLIENT_TYPE} == '판매처'">제품 판매처 (거래처) </option>
+                <option value="구매처" th:selected="${client_one.CLIENT_TYPE} == '구매처'">자재 구매처 (발주처) </option>
               </select>
             </div>
             <div class="col-md-3">
-              <label class="form-label">회사명</label>
-              <input type="text" class="form-control" id="comp_name" >
+              <label class="form-label">회사명*</label>
+              <input type="text" class="form-control" id="comp_name" th:value="${client_one.COMPANY_NAME}">
             </div>
             <div class="col-md-3">
-              <label class="form-label">사업자번호</label>
-              <input type="text" class="form-control" id="biz_num">
+              <label class="form-label">사업자번호*</label>
+              <input type="text" class="form-control readonly_text" id="biz_num" maxlength="13" th:value="${client_one.BIZ_NUM}" readonly>
             </div>
             <div class="col-md-2">
-              <label class="form-label">업종</label>
-              <input type="text" class="form-control" id="biz_type">
+              <label class="form-label">업종*</label>
+              <input type="text" class="form-control readonly_text" id="biz_type" th:value="${client_one.BIZ_TYPE}" readonly>
             </div>
             <div class="col-md-2">
-              <label class="form-label">종목</label>
-              <input type="text" class="form-control" id="biz_item">
+              <label class="form-label">종목*</label>
+              <input type="text" class="form-control readonly_text" id="biz_item" th:value="${client_one.BIZ_ITEM}" readonly>
             </div>
            </div>
         
@@ -68,8 +72,8 @@
                <!-- 대표자 정보 -->
             <div class="row  mb-3 gap-0">
  			<div class="col-md-3">
-              <label class="form-label">대표자명</label>
-              <input type="text" class="form-control" id="ceo_name">
+              <label class="form-label">대표자명*</label>
+              <input type="text" class="form-control" id="ceo_name" th:value="${client_one.CEO_NAME}">
             </div>
             
         </div>
@@ -78,27 +82,27 @@
         <!--거래처 주소 라인  -->
          <div class="row  mb-3  ">
             <div class="col-md-10">
-              <label class="form-label">주소</label>
+              <label class="form-label">주소*</label>
               <div class="col-auto d-flex   gap-1 align-items-center">
 			    <button type="button" class="btn btn-primary" id="addrBtn" onclick="openAddr()">
 			      <i class="bi bi-search"></i>
 			    </button>
 			     <div class="col-md-2 ">
-              		<input type="text" class="form-control" id="com_zip" placeholder="우편번호" readonly>
+              		<input type="text" class="form-control" id="com_zip" placeholder="우편번호" th:value="${client_one.COM_ZIP}" readonly>
             	</div>
             	 <div class="col-md-5">
-              <input type="text" class="form-control" id="com_addr1" placeholder="도로명주소" readonly>
+              <input type="text" class="form-control" id="com_addr1" placeholder="도로명주소" th:value="${client_one.COM_ADDR1}" readonly>
             </div>
             <div class="col-md-4">
-              <input type="text" class="form-control" id="com_addr2" placeholder="상세주소">
+              <input type="text" class="form-control" id="com_addr2" placeholder="상세주소" th:value="${client_one.COM_ADDR2}">
             </div>
 			  	</div>
             </div>
             <div class="col-md-2">
-			   <label class="form-label">거래중 여부</label>
-			   <div class="radio-group mt-1">
-			     <label class="me-1"><input type="radio" id="cltUseY" name="com_use_flag" value="Y" class="me-1">사용 &nbsp;</label>
-			     <label class="me-1"><input type="radio" id="cltUseN" name="com_use_flag" value="N" class="me-1"> 미사용 </label>
+			   <label class="form-label">거래중 여부*</label>
+			   <div class="radio-group ">
+			     <label class="me-1"><input type="radio" id="cltUseY" name="com_use_flag" value="Y" class="me-1" th:checked="${client_one.COM_USE_FLAG} == 'Y'">사용</label>
+			     <label class="me-1"><input type="radio" id="cltUseN" name="com_use_flag" value="N" class="me-1" th:checked="${client_one.COM_USE_FLAG} == 'N'"> 미사용 </label>
 			   </div>
 			 </div>
         
@@ -109,7 +113,7 @@
             
             <div class="col-md-12">
               <label class="form-label">비고</label>
-              <textarea class="form-control" rows="2" id="com_memo"></textarea>
+              <textarea class="form-control" rows="2" id="com_memo" th:text="${client_one.COM_MEMO}"></textarea>
             </div>
           </div>
           
@@ -119,43 +123,43 @@
           <div class="row my-4">
           
           	<div class="col-md-3">
-              <label class="form-label">담당자명</label>
-              <input type="text" class="form-control"  id="mng_name">
+              <label class="form-label">담당자명*</label>
+              <input type="text" class="form-control"  id="mng_name" th:value="${client_one.MANAGER_NAME}">
             </div>
-            <div class="col-md-3">
-              <label class="form-label">부서</label>
-              <input type="text" class="form-control" id="mng_part">
+            <div class="col-md-2">
+              <label class="form-label">부서*</label>
+              <input type="text" class="form-control" id="mng_part" th:value="${client_one.MNG_PART}">
             </div>
-            <div class="col-md-3">
-              <label class="form-label">직급</label>
-              <input type="text" class="form-control"  id="mng_position">
+            <div class="col-md-2">
+              <label class="form-label">직급*</label>
+              <input type="text" class="form-control"  id="mng_position" th:value="${client_one.MNG_POSITION}">
             </div>
-             <div class="col-md-3">
-              <label class="form-label">이메일</label>
-              <input type="text" class="form-control"  id="mng_email">
+             <div class="col-md-5">
+              <label class="form-label">이메일*</label>
+              <input type="text" class="form-control"  id="mng_email" th:value="${client_one.MNG_EMAIL}">
             </div>
             </div>
 
             <div class="row mb-3">
             
             <div class="col-md-3">
-              <label class="form-label">직통번호</label>
-              <input type="text" class="form-control" id="mng_tel">
+              <label class="form-label">직통번호*</label>
+              <input type="text" class="form-control" id="mng_tel" th:value="${client_one.MNG_TEL}" maxlength="12">
             </div>
             <div class="col-md-3">
-              <label class="form-label">휴대폰번호</label>
-              <input type="text" class="form-control" id="mng_phone">
+              <label class="form-label">휴대폰번호*</label>
+              <input type="text" class="form-control" id="mng_phone" th:value="${client_one.MNG_PHONE}" maxlength="13">
             </div>
             <div class="col-md-3">
               <label class="form-label">팩스번호</label>
-              <input type="text" class="form-control"  id="mng_fax">
+              <input type="text" class="form-control"  id="mng_fax" th:value="${client_one.MNG_FAX}" maxlength="13">
             </div>
           </div>
            <div class="row mb-3">
             
             <div class="col-md-12">
               <label class="form-label">비고</label>
-              <textarea class="form-control" rows="2" id="mng_memo"></textarea>
+              <textarea class="form-control" rows="2" id="mng_memo" th:value="${client_one.MNG_MEMO}"></textarea>
             </div>
           </div>
 </div>
@@ -166,7 +170,7 @@
       
       <!-- Action Buttons -->
 		<div class="d-flex justify-content-end  gap-2 mt-4">
-			<button type="button" class="btn btn-primary" onclick="insert_client()"><i class="bi bi-check2-square"></i> 저장</button>
+			<button type="button" class="btn btn-primary" th:attr="data-idx=${client_one.CIDX}, data-code=${client_one.COMPANY_CODE}," onclick="modify_client(this)"><i class="bi bi-check2-square"></i> 저장</button>
 			<button type="reset" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 		</div>
           </div>

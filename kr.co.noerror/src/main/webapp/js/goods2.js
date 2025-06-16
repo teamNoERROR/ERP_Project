@@ -51,11 +51,13 @@ function insert_pd(){
 		alert("제품단위를 입력하세요");
 		product_unit.focus();		
 				
-	}else if(pd_safe_stock.value ==""){ 
+	}
+	/*else if(pd_safe_stock.value ==""){ 
 		alert("안전재고수를 입력하세요");
 		pd_safe_stock.focus();			
 					
-	}else if(!reg_num.test(pd_safe_stock.value)){
+	}*/
+	else if(!reg_num.test(pd_safe_stock.value)){
 		alert("안전재고수는 숫자만 입력이 가능합니다.");
 		pd_safe_stock.focus();	
 	}

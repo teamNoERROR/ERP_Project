@@ -1,34 +1,6 @@
 //발주처 JS 
 
-/*--------------------------------------------------------------
-발주처 상세보기 모달 오픈 
---------------------------------------------------------------*/
 
-function openCltDetail(event){
-	var cidx = event.getAttribute("data-idx");
-	var clt_code = event.getAttribute("data-code");
-	var clt_type = event.getAttribute("data-type");
-	
-	fetch("./client_detail.do", {
-		method: "POST",
-		headers: {"content-type": "application/x-www-form-urlencoded"},
-		body: "cidx="+cidx+"&code="+clt_code+"&type="+clt_type
-		
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		var modal = new bootstrap.Modal(document.getElementById("client_detail_md"));
-		modal.show();
-		
-	}).catch(function(error) {
-		console.log("통신오류발생" + error);
-	});
-	
-	
-	
-}
 
 
 /*

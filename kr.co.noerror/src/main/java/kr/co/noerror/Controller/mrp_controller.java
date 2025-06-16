@@ -23,7 +23,7 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.prdplan_res_DTO;
-import kr.co.noerror.Model.mrp_Calulation;
+import kr.co.noerror.Model.M_mrp_Calulation;
 import kr.co.noerror.Service.mrp_service;
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +39,7 @@ public class mrp_controller {
 	mrp_DAO mdao;
 	
 	@Resource(name="mrp_Calulation")
-	mrp_Calulation mrp_calc;
+	M_mrp_Calulation mrp_calc;
 	
 	@PostMapping("/go_purchase.do")
 	public String go_purchase(@RequestParam("data") String json_data,
@@ -69,9 +69,9 @@ public class mrp_controller {
 	@PostMapping("/mrp_calc.do")
 	@ResponseBody
 	public List<mrp_result_DTO> calculateMrp(@RequestBody List<mrp_input_DTO> mrp_inputs) {
-		System.out.println(mrp_inputs);
+		System.out.println("mrp_inputs : " + mrp_inputs);
 	    List<mrp_result_DTO> mrp_results = this.mrp_calc.mrp_calc(mrp_inputs);
-	    System.out.println(mrp_results);
+	    System.out.println("mrp_results : " + mrp_results);
 	    return mrp_results;  // JSON 응답
 	}
 	

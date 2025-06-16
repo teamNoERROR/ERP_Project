@@ -3,6 +3,8 @@
 <head th:include="~{/common/config.html :: config}">
 <script th:src="@{/js/warehouse.js}" defer></script>
 </head>
+<title>전체 창고 리스트</title>
+
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -17,12 +19,12 @@
 
 <div class="row align-items-center justify-content-between my-3">
 	<!-- 토글 버튼 영역 -->
-	<div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 500px;">
+	<div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
 		<button type="button" class="toggle_btns" id="wh_type" value="all" onclick="toggleWh('all')"  style="background: #82CCDD; color: #fff;">전체</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('in')" style="background: transparent; color: #000;">입고</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  style="background: transparent; color: #000;">완제품</button>
+<!-- 		<button type="button" class="toggle_btns" onclick="toggleWh('in')" style="background: transparent; color: #000;">입고</button> -->
+<!-- 		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button> -->
 		<button type="button" class="toggle_btns" onclick="toggleWh('mt')"  style="background: transparent; color: #000;">부자재</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  style="background: transparent; color: #000;">완제품</button>
 	</div>
 	<!-- 토글 버튼 영역 -->
 
@@ -33,8 +35,8 @@
 <!-- 			<select class="form-select" name="" style="max-width: 120px;"> -->
 <!-- 		        <option value="" >전체</option> -->
 <!-- 		      </select>  -->
-			<input type="text" name="wh_search" class="form-control" placeholder="전체 검색" th:value="${wh_search}">
-			<button class="btn btn-primary" type="submit">
+			<input type="text" name="wh_search" class="form-control" placeholder="창고명/창고코드로 검색" th:value="${wh_search}">
+			<button class="btn btn-primary">
 				<i class="bi bi-search"></i>
 			</button>
 		</div>
@@ -45,21 +47,23 @@
 
 
         <!-- 게시물 테이블 -->
-        <div class="table-responsive rounded" th:if="${wh_check == 'yesdata'}">
-            <table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
-                <thead class="table-light text-center">
+<!--         <div class="table-responsive rounded" th:if="${wh_check == 'yesdata'}" > -->
+        <div class="table-responsive rounded mt-2" style="width: 100%; overflow-x: auto;">
+            <table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${wh_list.size() != 0} ? 'table-hover' : ''">
+                <thead class="table-light ">
                 <tr>
+                    <th scope="col"><input type="checkbox" disabled></th>
                     <th scope="col">#</th>
-                    <th scope="col">번호</th>
-                    <th scope="col">창고코드</th>
-                    <th scope="col">창고명</th>
-                    <th scope="col">창고구분</th>
-                    <th scope="col">위치</th>
+                    <th scope="col" style="width:100px;">창고코드</th>
+                    <th scope="col" style="width:50%;">창고명</th>
                     <th scope="col">대표관리자</th>
                     <th scope="col">연락처</th>
+                    <th scope="col">창고구분</th>
+                    <th scope="col">위치</th>
                     <th scope="col">사용여부</th>
-                    <th scope="col">비고</th>
-                    <th scope="col">등록일</th>
+                    <th scope="col">저장품목수</th>
+                    <th scope="col">전체재고수</th>
+                    <th scope="col">생성일</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,25 +71,30 @@
                 <!--  
                 <tr class="modal-trigger" th:each="wh, iterStat : ${wh_list}" th:data-modal-url="@{'/warehouse_modal.do?wh_code=' + ${wh.widx}}" 
                 -->
+                <tr th:if="${wh_check == 'nodata'}" >
+           			<td class="text-center no_list_tb" colspan="10" > 등록된 창고가 없습니다. </td>
+           		</tr>
                 
                <tr class="modal-trigger" 
    					 th:each="wh, iterStat : ${wh_list}" 
     				 th:data-modal-url="@{'/warehouse_modal.do?wh_code=' + ${#strings.trim(wh.wh_code)}}" 
     				 data-modal-id="wh_list"
     				 style="cursor:pointer;">
-                    <td><input type="checkbox" name="deleteCodes" 
-                    	th:value="${wh.wh_code}" onclick="event.stopPropagation();" />
+                    <td onclick="event.stopPropagation();" >
+                    	<input type="checkbox" name="deleteCodes" th:disabled="${#arrays.contains(no_del_wh, #strings.trim(wh.wh_code))}"
+                    			th:value="${wh.wh_code}" />
                     </td>
-                    <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
-                    <td th:text="${wh.wh_code}">WH-001</td>
-                    <td th:text="${wh.wh_name}">입고1창고</td>
-                    <td th:text="${wh.wh_type}">입고창고</td>
-                    <td th:text="${wh.wh_addr1 + ' ' + wh.wh_addr2}">서울시 마포구 ...</td>
-                    <td th:text="${wh.ENAME}">서태웅</td>
-                    <td th:text="${wh.EPHONE}">031-123-4567</td>
-                    <td th:text="${wh.wh_use_flag}">Y</td>
-                    <td th:text="${wh.wh_note}">-</td>
-                    <td th:text="${wh.wh_insert_date}">2010-05-18</td>
+                    <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
+                    <td th:text="${wh.wh_code}"></td>
+                    <td th:text="${wh.wh_name}"></td>
+                    <td th:text="${wh.ENAME}"></td>
+                    <td th:text="${wh.EMP_TEL}"></td>
+                    <td th:text="${wh.wh_type}"></td>
+                    <td th:text="${'(' + wh.wh_zipcode +') ' + wh.wh_addr1 + ' ' + wh.wh_addr2}"></td>
+                    <td th:text="${wh.wh_use_flag}"></td>
+                    <td ></td>
+                    <td ></td>
+                    <td th:text="${wh.wh_insert_date.substring(0,10)}"></td>
                 </tr>
                 
                 
@@ -93,10 +102,7 @@
             </table>
         </div>
 
-        <!-- 게시물이 없을 때 -->
-        <div th:if="${wh_check == 'nodata'}" class="text-center my-4">
-            등록된 게시물이 없습니다.
-        </div>
+        
 
 		<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between my-4">
 		<div class="d-flex">
@@ -107,15 +113,9 @@
 					   <!-- 첫페이지로 -->
 					    <li class="page-item" th:classappend="${startPage > 1} ? '' : 'disabled'">
 					      <a class="page-link"
-					         th:href="@{/warehouses_list.do(page=${startPage - 1}, wh_search=${wh_search}, pageSize=${pageSize})}">&laquo;</a>
+					         th:href="@{/warehouses_list.do(page=${startPage-1}, wh_search=${wh_search}, pageSize=${pageSize})}">&laquo;</a>
 					    </li>
 					    
-					     <!-- 이전 블록 이동 버튼 -->
-<!-- 						<li class="page-item"  th:if="${startPage > 1}"  th:classappend="${currentPage > 1} ? '' : 'disabled'"> -->
-<!-- 		                	<a class="page-link" th:href="@{/warehouses_list.do(page=${startPage - 2}, wh_search=${wh_search}, pageSize=${pageSize})}"> -->
-<!-- 					        <i class="bi bi-chevron-left"></i> -->
-<!-- 					        </a> -->
-<!-- 						</li> -->
 					
 					    <!-- 페이지 번호 -->
 					    <li class="page-item" 
@@ -126,12 +126,6 @@
 					         th:text="${i}">1</a>
 					    </li>
 					    
-					    <!-- 다음 블록 이동 버튼 -->
-<!-- 					     <li class="page-item  "  th:if="${endPage < totalPages}" th:classappend="${endPage < totalPages} ? '' : 'disabled'"> -->
-<!-- 							<a class="page-link" th:href="@{/warehouses_list.do(page=${endPage + 2}, wh_search=${wh_search}, pageSize=${pageSize})}"> -->
-<!-- 							<i class="bi bi-chevron-right"></i>  -->
-<!-- 							</a> -->
-<!-- 						</li> -->
 					
 					       <!-- 끝페이지로 -->
 					    <li class="page-item" th:classappend="${endPage < totalPages} ? '' : 'disabled'">

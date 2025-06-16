@@ -15,12 +15,12 @@
     W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
     W.WH_DESC, W.WH_NOTE,
 
-    E.EIDX, E.ENAME, E.ECODE, E.EPART, E.EPOSITION, E.EPHONE, 
-    E.ETEL, E.EEMAIL, E.EFAX, E.MEMO,
-    TO_CHAR(E.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
+    E.EIDX, E.ENAME, E.ECODE, E.EMP_PART, E.EMP_POSITION, E.EMP_PHONE, 
+    E.EMP_TEL, E.EMP_EMAIL, E.EMP_FAX, E.EMP_MEMO,
+    TO_CHAR(E.EMP_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
 
   FROM WAREHOUSE W
-  LEFT JOIN EMPLOYEE E ON W.WH_MG_ID = E.ECODE
+  LEFT JOIN EMPLOYEE2 E ON W.WH_MG_ID = E.ECODE
   WHERE W.WH_CODE = '${wh_code}'
   </select>
 
@@ -40,6 +40,7 @@
       WH_FILE_ORI, 
       WH_FILE_NEW, 
       WH_FILE_URL, 
+      WH_API_FNM,
       WH_MG_ID, 
       WH_DESC, 
       WH_NOTE,
@@ -57,7 +58,7 @@
       #{wh_dto.wh_type}, 
       #{wh_dto.wh_use_flag},
       #{wh_dto.wh_file_ori},
-      #{wh_dto.wh_file_new}, #{wh_dto.wh_file_url},
+      #{wh_dto.wh_file_new}, #{wh_dto.wh_file_url, jdbcType=VARCHAR},#{wh_dto.wh_api_fnm},
       #{wh_dto.wh_mg_id},
       #{wh_dto.wh_desc}, #{wh_dto.wh_note},
       SYSDATE, NULL
@@ -77,7 +78,8 @@
     WH_USE_FLAG = #{wh_dto.wh_use_flag},
     WH_FILE_ORI = #{wh_dto.wh_file_ori},
     WH_FILE_NEW = #{wh_dto.wh_file_new},
-    WH_FILE_URL = #{wh_dto.wh_file_url},
+    WH_FILE_URL = #{wh_dto.wh_file_url, jdbcType=VARCHAR},
+    WH_API_FNM = #{wh_dto.wh_api_fnm},
     WH_MG_ID = #{wh_dto.wh_mg_id},
     WH_DESC = #{wh_dto.wh_desc},
     WH_NOTE = #{wh_dto.wh_note},
@@ -97,10 +99,10 @@
       FROM WAREHOUSE 
       WHERE WH_NAME LIKE '%' || #{m_search} || '%' 
          OR WH_CODE LIKE '%' || #{m_search} || '%'
-         OR WH_ADDR1 LIKE '%' || #{m_search} || '%'
-         OR WH_ADDR2 LIKE '%' || #{m_search} || '%'
-         OR WH_TYPE LIKE '%' || #{m_search} || '%'
-         OR WH_ZIPCODE LIKE '%' || #{m_search} || '%'
+<!--          OR WH_ADDR1 LIKE '%' || #{m_search} || '%' -->
+<!--          OR WH_ADDR2 LIKE '%' || #{m_search} || '%' -->
+<!--          OR WH_TYPE LIKE '%' || #{m_search} || '%' -->
+<!--          OR WH_ZIPCODE LIKE '%' || #{m_search} || '%' -->
   </select>
  
  <!-- ************************************ 페이징 꿑****************************** --> 
@@ -121,11 +123,11 @@
           W.WH_NUMBER, W.WH_MG_ID,
           W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
           W.WH_DESC, W.WH_NOTE,
-          E.EIDX, E.ENAME, E.ECODE, E.EPART, E.EPOSITION, E.EPHONE, 
-          E.ETEL, E.EEMAIL, E.EFAX, E.MEMO,
-          TO_CHAR(E.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
+          E.EIDX, E.ENAME, E.ECODE, E.EMP_PART, E.EMP_POSITION, E.EMP_PHONE, 
+          E.EMP_TEL, E.EMP_EMAIL, E.EMP_FAX, E.EMP_MEMO,
+          TO_CHAR(E.EMP_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
         FROM WAREHOUSE W
-        LEFT JOIN EMPLOYEE E ON W.WH_MG_ID = E.ECODE
+        LEFT JOIN EMPLOYEE2 E ON W.WH_MG_ID = E.ECODE
         ORDER BY W.WH_INSERT_DATE DESC
       ) A
       WHERE ROWNUM <= #{startIndex} + #{pageSize}
@@ -148,19 +150,19 @@
           W.WH_NUMBER, W.WH_MG_ID,
           W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
           W.WH_DESC, W.WH_NOTE,
-          E.EIDX, E.ENAME, E.ECODE, E.EPART, E.EPOSITION, E.EPHONE, 
-          E.ETEL, E.EEMAIL, E.EFAX, E.MEMO,
-          TO_CHAR(E.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
+          E.EIDX, E.ENAME, E.ECODE, E.EMP_PART, E.EMP_POSITION, E.EMP_PHONE, 
+          E.EMP_TEL, E.EMP_EMAIL, E.EMP_FAX, E.EMP_MEMO,
+          TO_CHAR(E.EMP_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE
         FROM WAREHOUSE W
-        LEFT JOIN EMPLOYEE E ON W.WH_MG_ID = E.ECODE
+        LEFT JOIN EMPLOYEE2 E ON W.WH_MG_ID = E.ECODE
         WHERE 
             W.WH_NAME LIKE '%' || #{m_search} || '%' 
          OR W.WH_CODE LIKE '%' || #{m_search} || '%'
-         OR W.WH_ADDR1 LIKE '%' || #{m_search} || '%'
-         OR W.WH_ADDR2 LIKE '%' || #{m_search} || '%'
-         OR W.WH_TYPE LIKE '%' || #{m_search} || '%'
-         OR W.WH_ZIPCODE LIKE '%' || #{m_search} || '%'
-         OR E.ENAME LIKE '%' || #{m_search} || '%'
+<!--          OR W.WH_ADDR1 LIKE '%' || #{m_search} || '%' -->
+<!--          OR W.WH_ADDR2 LIKE '%' || #{m_search} || '%' -->
+<!--          OR W.WH_TYPE LIKE '%' || #{m_search} || '%' -->
+<!--          OR W.WH_ZIPCODE LIKE '%' || #{m_search} || '%' -->
+<!--          OR E.ENAME LIKE '%' || #{m_search} || '%' -->
         ORDER BY W.WH_INSERT_DATE DESC
       ) A
       WHERE ROWNUM <= #{startIndex} + #{pageSize}

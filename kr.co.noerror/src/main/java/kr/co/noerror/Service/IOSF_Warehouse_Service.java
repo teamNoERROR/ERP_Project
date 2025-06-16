@@ -1,22 +1,20 @@
 package kr.co.noerror.Service;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
-import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.Model.M_File_Rename;
-import java.util.Random;
 
 @Service
 @Repository("IOSF_Warehouse_Service")
@@ -93,21 +91,23 @@ public class IOSF_Warehouse_Service {
     	return iosf_result;
     }
     
-    public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize) { 
-        
+    //타입별 창고리스트 
+    public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String wh_name) { 
         Map<Object, Object> wh_map = new HashMap<>();
-        
+		System.out.println("fs_wh_name : " + wh_name);
+		System.out.println("wh_search : " + wh_search);
+
         try {
             int startIndex = (page - 1) * pageSize;
             int totalCount;
 
             List<IOSF_DTO> wh_list_result;
             
-            boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty());
+            boolean isSearch = (wh_search != null && !wh_search.trim().isEmpty() || wh_name!=null );
             
             if(isSearch) {    // 검색한 경우 (검색된 리스트)
-                wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type);
-                totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type);
+                wh_list_result = this.iosf_dao.IOSF_search_whpaged(wh_search, startIndex, pageSize, wh_type, wh_name);
+                totalCount = this.iosf_dao.IOSF_searchTotal(wh_search, wh_type, wh_name);
             } else {    // 검색 안한 경우 (전체 리스트)
                 wh_list_result = this.iosf_dao.IOSF_select_wh_list(startIndex, pageSize, wh_type);  // endIndex 제거
                 totalCount = this.iosf_dao.IOSF_getTotalCount(wh_type);
@@ -118,8 +118,8 @@ public class IOSF_Warehouse_Service {
             int blockSize = 3; // 한 번에 보여줄 페이지 수 (홀수 권장)
             int halfBlock = blockSize / 2;
 
-            int startPage = page - halfBlock;
-            int endPage = page + halfBlock;
+            Integer startPage = page - halfBlock;
+            Integer endPage = page + halfBlock;
 
             // startPage가 1보다 작으면 1로 맞추고 endPage도 조정
             if (startPage < 1) {
@@ -133,8 +133,8 @@ public class IOSF_Warehouse_Service {
                 startPage = Math.max(1, endPage - blockSize + 1);
             }
             
-            System.out.println("iosf : "+totalCount);
-            System.out.println("wh_list_result size: " + wh_list_result.size());         
+            if (startPage == null || startPage < 1) startPage = 1;
+            if (endPage == null || endPage < startPage) endPage = startPage;
             
             wh_map.put("wh_list", wh_list_result);
             wh_map.put("search_check", isSearch ? "yesdata" : "nodata");
@@ -172,7 +172,65 @@ public class IOSF_Warehouse_Service {
     	
     	return wh_delete_result;
     }
+
     
- 
+    
+    
+    
+    //완제품 출고 
+	public String out_product(String outData) {
+		Map<String, Object> insertData = new HashMap<>();
+		
+		JSONObject jo = new JSONObject(outData);
+		insertData.put("employee_code", jo.getString("empcode"));
+		int out_product = 0;
+		int go_outlist = 0;
+		int count = 0;
+		
+		JSONArray ja = jo.getJSONArray("outList");
+		int data_ea = ja.length();
+		
+		for (int w = 0; w < data_ea; w++) {
+		    JSONObject jo2 = ja.getJSONObject(w);
+		    
+		    String planCode = jo2.getString("outnm").replaceAll(" ", "");
+		    
+		    insertData.put("wh_type", "fs");
+		    insertData.put("wh_code", jo2.getString("outwh"));
+		    insertData.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
+		    insertData.put("product_code", jo2.getString("pdcode"));
+		    insertData.put("pd_qty", jo2.getString("outqty"));
+		    
+		    out_product = this.iosf_dao.out_productList(insertData);
+		    
+		    if(out_product > 0) {
+		    	count++;
+		    }
+		}
+		System.out.println(count);
+		if(count == data_ea) {
+			return "out_complete";
+		}else {
+			return ""+count+"";
+		}
+		
+		
+	}
+	//창고별 리스트 출력용
+	public JSONArray wh_type_list(String wh_type) {
+		List<String> schlist = new ArrayList<>();
+		Map<String, String> schMap = new HashMap<>();
+		System.out.println("wh_type : " + wh_type);
+		if("fs_wh".equals(wh_type) ) {
+			schMap.put("wh_type", wh_type);
+		}else if("mt_wh".equals(wh_type) ) {
+			schMap.put("wh_type", wh_type);
+		}
+		System.out.println("schMap66 : " + schMap);
+		schlist = this.iosf_dao.wh_nm_list(schMap);
+		JSONArray jsonlist = new JSONArray(schlist);
+		
+		return jsonlist;
+	}
     
 }

@@ -58,6 +58,7 @@ public class inbound_DAO {
 	
 	//입고처리 
 	public int inbound_ok(inbound_DTO io_dto) {
+		System.out.println("io_dto : "+ io_dto);
 		int  inbound_ok = this.st.update("inbound_ok", io_dto);
 		return  inbound_ok;
 	}

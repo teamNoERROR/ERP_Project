@@ -14,23 +14,31 @@
 						<!-- 주문코드를 data 속성에 저장 -->
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
-							th:attr="data-order-code=${details[0].order_code}">
+							th:if="${details[0].order_status == '주문요청' or details[0].order_status == '주문확인' or details[0].order_status == '주문취소'}" 
+							th:attr="data-order-code=${details[0].order_code}"
+							th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}" >
 							<option selected value="주문상태 선택">주문상태 선택</option>
-							<option value="주문요청">주문요청</option>
-							<option value="주문취소">주문취소</option>
-							<option value="주문확인">주문확인</option>
-							<option value="주문확인">생산계획수립</option>
-							<option value="주문확인">생산계획확정</option>
-							<option value="지연중">생산지연</option>
-							<option value="생산중">생산중</option>
-							<option value="생산완료">생산완료</option>
-							<option value="출고완료">출고완료</option>
-							<option value="반품">반품</option>
+<!-- 							<option value="주문요청">주문요청</option> -->
+							<option value="주문확인" th:selected="${details[0].order_status == '주문확인'}">주문확인</option>
+							<option value="주문취소" th:selected="${details[0].order_status == '주문취소'}">주문취소</option>
+<!-- 							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option> -->
+<!-- 							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option> -->
+<!-- 							<option value="지연중">생산지연</option> -->
+<!-- 							<option value="생산중">생산중</option> -->
+<!-- 							<option value="생산완료">생산완료</option> -->
+<!-- 							<option value="출고완료">출고완료</option> -->
+<!-- 							<option value="반품">반품</option> -->
+						</select>
+						<select class="form-select" th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}"  th:if="${details[0].order_status == '생산계획수립' or details[0].order_status == '생산계획확정'}">
+							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option>
+							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option>
 						</select>
 
-						<button type="button" class="btn btn-success"
-							style="white-space: nowrap;" onclick="ord_status_update()">
-							<i class="bi bi-pencil-square"></i> 상태변경처리&nbsp;&nbsp;&nbsp;
+						<button type="button" class="btn " style="white-space: nowrap;" 
+    							th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}" 
+       			  	  			th:classappend="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))} ? ' btn-secondary' : 'btn-info'" 
+    							onclick="ord_status_update()">
+							<i class="bi bi-arrow-bar-right"></i> 변경
 						</button>
 					</div>
 				</div>
@@ -108,19 +116,20 @@
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
 					<h5 class="">주문 제품 내역</h5>
-					<table class="table table-hover align-middle table-bordered">
-						<thead class="table-light text-center">
+					<table class="table table-hover align-middle table-bordered text-center">
+						<thead class="table-light">
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
 								<th scope="col">제품명</th>
+								<th scope="col">대분류</th>
+								<th scope="col">소분류</th>
 								<th scope="col">규격</th>
 								<th scope="col">주문수량</th>
+								<th scope="col">현재재고</th>
 								<th scope="col">단위</th>
 								<th scope="col">제품단가(원)</th>
 								<th scope="col">구매금액(원)</th>
-								<th scope="col">대분류</th>
-								<th scope="col">소분류</th>
 
 							</tr>
 						</thead>
@@ -129,31 +138,34 @@
 								<td>[[${no.count}]]</td>
 								<td>[[${d.product_code}]]</td>
 								<td>[[${d.product_name}]]</td>
+								<td>[[${d.product_class1}]]</td>
+								<td>[[${d.product_class2}]]</td>
 								<td>[[${d.product_spec}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.product_qty, 0,
+								<td>[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
+								<td>[[${ind_pd_all_stock[d.product_code] == null ? 0 : ind_pd_all_stock[d.product_code]}]] 
+									<span th:classappend="${((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty ) < 0} ? 'text_red' : 'text_blue'">&nbsp;( [[${((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty)}]] )</span>
+								</td>
 								<td>[[${d.product_unit}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_cost,
 									0, 'COMMA', 0, 'POINT')}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_qty *
 									d.product_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.product_class1}]]</td>
-								<td>[[${d.product_class2}]]</td>
 							</tr>
 
 						</tbody>
 						<tfoot>
 							<tr>
-								<td class="info-label" colspan="2">합계</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td class="info-label" colspan="10">합계</td>
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
+<!-- 								<td></td> -->
 								<td align="right">[[${#numbers.formatDecimal(details[0].pay_amount,
 									0, 'COMMA', 0, 'POINT')}]]</td>
-								<td></td>
-								<td></td>
 							</tr>
 						</tfoot>
 					</table>

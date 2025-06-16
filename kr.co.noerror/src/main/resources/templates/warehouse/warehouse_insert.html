@@ -33,21 +33,21 @@
           <div class="row">
             <div class="col-md-3 mb-3">
               <label class="form-label">창고유형</label>
-              <select class="form-select" th:field="*{wh_type}" required>
+              <select class="form-select" th:field="*{wh_type}" >
                 <option value="">선택</option>
-                <option value="입고창고">입고창고</option>
-                <option value="출고창고">출고창고</option>
-                <option value="완제품창고">완제품창고</option>
+<!--                 <option value="입고창고">입고창고</option> -->
+<!--                 <option value="출고창고">출고창고</option> -->
                 <option value="부자재창고">부자재창고</option>
+                <option value="완제품창고">완제품창고</option>
               </select>
             </div>
             <div class="col-md-4">
               <label class="form-label">창고명</label>
-              <input type="text" class="form-control" th:field="*{wh_name}" required>
+              <input type="text" class="form-control" th:field="*{wh_name}" >
             </div>
             <div class="col-md-3">
               <label class="form-label">전화번호</label>
-              <input type="text" class="form-control" th:field="*{wh_number}" required>
+              <input type="text" class="form-control" th:field="*{wh_number}" maxlength="13">
             </div>
             <div class="col-md-2">
               <label class="form-label">사용 여부</label>
@@ -70,13 +70,13 @@
               <div class="col">
                 <div class="row gx-2 align-items-center">
                   <div class="col-md-3 d-flex align-items-center">
-                    <input type="text" class="form-control" placeholder="우편번호" th:field="*{wh_zipcode}">
+                    <input type="text" class="form-control readonly_text" placeholder="우편번호" th:field="*{wh_zipcode}" readonly>
                   </div>
                   <div class="col-md-4 d-flex align-items-center">
-                    <input type="text" class="form-control" placeholder="도로명주소" th:field="*{wh_addr1}">
+                    <input type="text" class="form-control readonly_text" placeholder="도로명주소" th:field="*{wh_addr1}" readonly>
                   </div>
                   <div class="col-md-5 d-flex align-items-center">
-                    <input type="text" class="form-control" placeholder="상세주소" th:field="*{wh_addr2}">
+                    <input type="text" class="form-control " placeholder="상세주소" th:field="*{wh_addr2}" >
                   </div>
                 </div>
               </div>
@@ -96,20 +96,21 @@
                   <div class="col-md-3">
 <!--               		 <input type="text" class="form-control" name="wh_mg_name" id="wh_mg_name" placeholder="관리자명">    -->
 		       <div class="input-group">
-		            <input type="text" class="form-control" name="wh_mg_name" id="wh_mg_name" placeholder="관리자명" readonly>
-		            <button type="button" class="btn btn-primary modal-trigger" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;">
+		            <input type="text" class="form-control readonly_text" name="wh_mg_name" id="wh_mg_name" placeholder="관리자명" readonly>
+<!-- 		            <button type="button" class="btn btn-primary modal-trigger" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;"> -->
+		                <button type="button" class="btn btn-primary" onclick="empListOpen('wh_emp')"style="cursor: pointer;">
 		                <i class="bi bi-search"></i>
 		            </button>
 		        </div>    
                   </div>
                   <div class="col-md-3">
-            		  <input type="text" class="form-control" placeholder="사원번호" th:field="*{wh_mg_id}">
+            		  <input type="text" class="form-control readonly_text" placeholder="사원번호" id="wh_mg_cd" th:field="*{wh_mg_id}" readonly>
                    </div>
                   <div class="col-md-3">
-                    <input type="text" class="form-control" name="wh_mg_mp" id="wh_mg_mp" placeholder="부서/직급">              
+                    <input type="text" class="form-control readonly_text" name="wh_mg_mp" id="wh_mg_mp" placeholder="부서/직급" readonly>              
                   </div>
-                  <div class="col-md-3">
-             		   <input type="text" class="form-control" name="wh_mg_ph" id="wh_mg_ph" placeholder="연락처">
+                  <div class="col-md-3"> 
+             		   <input type="text" class="form-control readonly_text" name="wh_mg_ph" id="wh_mg_ph" placeholder="연락처" readonly>
                   </div>
                 </div>
               </div>

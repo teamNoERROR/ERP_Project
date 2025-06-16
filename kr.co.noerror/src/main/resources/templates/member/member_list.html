@@ -5,7 +5,7 @@
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
-	<main class="main" style="width: 100%; overflow-x: auto;">
+	<main class="main">
 		<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
 		<section class="container ">
 			<!-- Title -->
@@ -36,7 +36,7 @@
 		    		<input type="hidden" >
 				</th:block>
 					<div class="input-group input-group-sm" style="width:250px;">
-						<input type="text" class="form-control" name="keyword"  placeholder="검색">
+						<input type="text" class="form-control" name="keyword"  placeholder="사원명/사원코드로 검색">
 						<button class="btn btn-primary" >
 							<i class="bi bi-search"></i>
 						</button>
@@ -48,11 +48,11 @@
 			
 			<!-- employee List Table -->
 			<div id="contents_container">
-			<div id="table-container" class="table-responsive  rounded">
+			<div id="table-container" class="table-responsive  rounded" th:fragment="membList(parentType, member_all_total, member_all_list, mode)" style="width: 100%; overflow-x: auto;">
 				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${member_all_total != 0} ? 'table-hover' : ''">
 					<thead class="table-light">
 						<tr>
-							<th scope="col"><input type="checkbox" disabled></th>
+							<th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
 							<th scope="col">#</th>
 							<th scope="col">사원코드</th>
 							<th scope="col">사원명</th>
@@ -71,7 +71,10 @@
                 			<td class="text-center no_list_tb" colspan="12"> 등록된 사원이 없습니다. </td>
                 		</tr>
 						<tr th:if="${member_all_total != 0}" th:each="mblist, idx : ${member_all_list}" style="cursor: pointer;">	
-							<td onclick="event.stopPropagation();"><input type="checkbox"></td>
+							<td onclick="event.stopPropagation();">
+								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" 
+										th:name="${mode == 'modal'} ? 'selectMem' : 'selected_mem'" >
+							</td>
 							<td>5</td>
 							<td>[[${mblist.ECODE}]]</td>
 							<td>[[${mblist.ENAME}]]</td>
@@ -94,7 +97,7 @@
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
 				 <div class="d-flex">
 				<!-- Pagination -->
-				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
+				<div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="membPgList(parentType, membMode)">
 					<ul class="pagination">
 						<li class="page-item page-link prev">
 						<i class="bi bi-chevron-double-left"></i> </li>

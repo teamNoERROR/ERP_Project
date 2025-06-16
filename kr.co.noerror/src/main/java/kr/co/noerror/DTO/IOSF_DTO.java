@@ -31,8 +31,10 @@ public class IOSF_DTO {
     String category_sub;   // 제품 소분류
     String use_yn;         // 제품 사용 여부
     String in_status; 	   // 입고 상태
-    String item_count;	   // 제품 갯수
+    String item_qty;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
+    
+    
     
     //입고 창고
     String in_code;				// 입고 창고 고유 코드
@@ -49,6 +51,10 @@ public class IOSF_DTO {
     String finish_code;				// 완제품창고 고유 코드
     String finish_date;				// 완제품창고 인서트 날짜
     String finish_change;				// 입고 창고 인서트 날짜
+    String wfs_idx;
+    String wfs_code;
+    String fs_insert;
+    String change_type;
     
     //부자재 창고
     String material_code; 				// 부자재창고 고유 코드
@@ -63,6 +69,22 @@ public class IOSF_DTO {
     //등록사원
     String employee_code;
     String emp_name;
+    
+    String plan_code;  //생산계획번호 
+    int pd_qty;	//변화수량 
+    
+    String pidx;
+    String product_code; // 제품 코드
+    String product_name; //제품명  
+    String product_class1;
+    String product_class2;
+    String pd_file_renm;
+    String pd_api_fnm;
+    String pd_insert_date;
+    Integer ind_pd_stock;
+    String ind_pch_cd;
+    
+    String mv_wh_code;  //이동창고 코드 
     
     
 }

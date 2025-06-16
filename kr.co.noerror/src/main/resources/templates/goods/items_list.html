@@ -18,10 +18,10 @@
 <div class="row align-items-center justify-content-between mt-3">
   <!-- 토글 버튼 영역 -->
   <div class="col-auto  mb-3">
-    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
+    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 250px;">
       <button type="button" class="toggle_btns" onclick="toggleButton('product')" style="background: transparent; color: #000;">완제품</button>
       <button type="button" class="toggle_btns" onclick="toggleButton('item')"  id="goods_type" value="item"  style="background: #82CCDD; color: #fff;">부자재</button>
-      <button type="button" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
+<!--       <button type="button" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button> -->
     </div>
   </div>
 	<!-- 토글 버튼 영역 -->
@@ -48,7 +48,7 @@
         
         <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
-           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
+           <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="제품명/제품코드로 검색">
           <button class="btn btn-primary" >
             <i class="bi bi-search"></i>
           </button>
@@ -62,8 +62,8 @@
 
         <!-- 부자재 List Table -->
         <div id="list-container">
-        <div id="table-container" class="table-responsive  rounded" th:fragment="itemList(parentType, goods_total, goods_all_list, mode)">
-            <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''" >
+        <div id="table-container" class="table-responsive  rounded" th:fragment="itemList(parentType, goods_total, goods_all_list, mode)" style="width: 100%; overflow-x: auto;">
+            <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''" style="white-space: nowrap;" >
                 <thead class="table-light">
                     <tr>
                         <th scope="col"><input type="checkbox" disabled></th>

@@ -139,7 +139,7 @@ function addToCart() {
         <td>${item.purchase_qty}</td>
         <td>${item.item_cost}</td>
         <td>${item.purchase_qty * item.item_cost}</td>
-        <td><button class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button></td>
+        <td><button class="btn btn-sm btn-danger" onclick="removeItemRow(this)">삭제</button></td>
       `;
       basket.appendChild(tr);
     });
@@ -425,85 +425,3 @@ function pchreq_update() {
 		alert('수정 중 오류 발생');
 	});
 }
-
-/*
-//부자재리스트 모달 오픈 
-function openItemList2(){
-	fetch("./item_list.do", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("items_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-function select_items2 () {
-  // 모든 체크된 체크박스를 찾음
-  var selected_box = document.querySelectorAll('input[name="select"]:checked');
-
-  if (selected_box.length == 0) {
-	alert("제품을 1개 이상 선택해 주세요.");
-	
-  }else{
-	  // 부모 테이블 tbody
-	  var tbody = document.querySelector('#pch_items');
-	
-	  //부모 테이블의 기존 행 전체 삭제
-	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
-
-	  selected_box.forEach(checkbox => {
-		
-	    var row = checkbox.closest('tr');
-	
-	    var item = {
-	      code: row.dataset.code,
-	      type: '부자재',
-	      name: row.dataset.name,
-	      unit: row.dataset.unit,
-		  cost: row.dataset.cost,
-	      pcomp: row.dataset.company
-	    };
-		
-	    // 부모 화면에 반영
-		appendItemsRow3(tbody, item);
-	  });
-	
-	 // 모달 닫기
-  	var modalElement = document.getElementById("items_list2");
- 	var modal = bootstrap.Modal.getInstance(modalElement);
-	if (modal) {
-	    modal.hide();
-		setTimeout(() => {
-			document.querySelector("body").focus(); // body에 포커스 주기
-		}, 300);
-	}
-  }
-};
-
-//모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
-function appendItemsRow3(tbody, item) {
-  const tr = document.createElement('tr');
-  tr.className = "item_added"
-  tr.innerHTML = `
-    <td><input type="checkbox"></td>
-    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.type}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
-    <td><input type="number" class="form-control" value=""></td>
-    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
-    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
-  `;
-  tbody.append(tr);
-}
-*/

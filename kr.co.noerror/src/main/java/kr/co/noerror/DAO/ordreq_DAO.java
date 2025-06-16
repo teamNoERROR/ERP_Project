@@ -77,7 +77,6 @@ public class ordreq_DAO {
 	//주문정보 조회
 	public List<ordreq_res_DTO> ordreq_detail(String order_code){
 		List<ordreq_res_DTO> details = this.sql.selectList("ordreq_detail", order_code);
-		System.out.println(details);
 		return details;
 	}
 	
@@ -102,6 +101,7 @@ public class ordreq_DAO {
 	//주문코드에 달려있는 제품목록
 	public List<ordreq_res_DTO> ordreq_products(String order_code) {
 		List<ordreq_res_DTO> ordreq_products = this.sql.selectList("ordreq_products", order_code);
+		
 		return ordreq_products;
 	}
 }

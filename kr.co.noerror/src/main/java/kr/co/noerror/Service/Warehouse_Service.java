@@ -1,23 +1,22 @@
 package kr.co.noerror.Service;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.Random;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.Warehouse_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
+import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.Model.M_File_Rename;
-import java.util.Random;
+import kr.co.noerror.Model.M_file;
 
 @Service
 @Repository("Warehouse_Service")
@@ -29,6 +28,13 @@ public class Warehouse_Service {
 
     @Resource(name="Warehouse_DAO")
     Warehouse_DAO ws_dao;
+    
+    
+    @Resource(name="M_file")   //파일첨부관련모델 
+	M_file m_file;
+    
+    @Resource(name="file_DTO")  //파일첨부DTO
+	file_DTO f_dto;
 
     Random random = new Random();
 
@@ -42,9 +48,10 @@ public class Warehouse_Service {
         int wh_result = 0;
 
         MultipartFile wh_file = wh_dto.getWh_file();
-        if(wh_file != null && wh_file.getSize() > 0) {
+        if(wh_file != null && wh_file.getSize() > 0) {  //첨부파일 있는 경우 
 
             try {
+            	/*
                 // 파일명 변경
                 String file_new = this.fname.rename(wh_file.getOriginalFilename());
                 // 실제 저장 경로
@@ -55,7 +62,20 @@ public class Warehouse_Service {
                 wh_dto.setWh_file_url("/wh_images/" + file_new);
                 wh_dto.setWh_file_new(file_new);
                 wh_dto.setWh_file_ori(wh_file.getOriginalFilename());
-
+				*/
+            	boolean fileattach;
+            	fileattach = this.m_file.cdn_filesave(this.f_dto, wh_file);
+				if(fileattach == true) {  //FTP에 파일저장 완료 후 
+					//dto에 파일명 장착
+					wh_dto.setWh_file_ori(this.f_dto.getFilenm());
+					wh_dto.setWh_file_new(this.f_dto.getFileRenm());
+					wh_dto.setWh_api_fnm(this.f_dto.getApinm());
+					
+				}
+				System.out.println("fileattach : " + fileattach);
+            	
+            	
+            	
                 // 창고 코드 랜덤 생성
                 int randomNumber = 10000 + this.random.nextInt(90000);
                 

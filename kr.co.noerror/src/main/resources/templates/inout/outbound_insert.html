@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>출고 요청 페이지</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
@@ -12,12 +13,12 @@
 <section class="container ">
         <!-- Title -->
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-        	<h2 class="mb-1">출고내역 수기등록</h2>
+        	<h2 class="mb-1">출고 등록</h2>
         
         </div>
         
 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
-<button type="button" class="btn-close" aria-label="Close"></button>
+<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
 </div>
 
 <div class="form-section">
@@ -28,120 +29,65 @@
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">주문번호</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="주문코드" readonly>
-                                    <button type="button" class="btn btn-primary">
+                                    <input type="text" class="form-control" placeholder="주문코드" id="ord_code" readonly>
+                                    <button type="button" class="btn btn-primary" onclick="ordListOpen('outbndPage')">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">거래처명</label>
-                                <input type="text" class="form-control" placeholder="거래처명" readonly>
+                                <input type="text" class="form-control" placeholder="거래처명" id="comp_name" readonly>
                             </div>
                               <div class="col-md-3">
                                 <label class="form-label fw-semibold">거래처처코드</label>
-                                <input type="text" class="form-control" placeholder="거래처코드" readonly>
+                                <input type="text" class="form-control" placeholder="거래처코드" id="comp_code" readonly>
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">출고창고</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="출고되는 창고" readonly>
-                                    <button type="button" class="btn btn-primary modal-trigger" data-bs-toggle="modal" data-bs-target="#wh_list"
-                                     th:data-modal-url="@{/modals/wh_list.html}" data-modal-id="wh_list_modal" style="cursor: pointer;"
-                                    >
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                            </div>
+<!--                             <div class="col-md-3"> -->
+<!--                                 <label class="form-label fw-semibold">출고창고</label> -->
+<!--                                 <div class="input-group"> -->
+<!--                                     <input type="text" class="form-control" placeholder="출고되는 창고" id="out_wh_name" readonly> -->
+<!--                                     <button type="button" class="btn btn-primary"  -->
+<!--                                     		onclick="whSelect('fs_wh','out_wh_name','out_wh_code')"  -->
+<!--                                     		style="cursor: pointer;"> -->
+<!--                                         <i class="bi bi-search"></i> -->
+<!--                                     </button> -->
+<!--                                 </div> -->
+<!--                                 <input type="hidden" id="out_wh_code"> -->
+<!--                             </div> -->
                         </div>
 
                         <div class="row mb-3">
                       
                             <!-- 출고항목 List Table -->
-			<div class="table-responsive  rounded">
-				<h5 class="">출고 제품 내역</h5>
-				<table class="table table-hover align-middle table-bordered">
-					<thead class="table-light text-center">
+			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
+				<h5 >출고 제품 내역</h5>
+				<table class="table table-hover align-middle table-bordered text-center" style="white-space: nowrap;">
+					<thead class="table-light ">
 						<tr>
-							<th scope="col">#</th>
-							<th scope="col">제품코드</th>
-							<th scope="col">제품명</th>
-							<th scope="col">규격</th>
-							<th scope="col">단위</th>
-							<th scope="col">주문수량</th>
-							<th scope="col">대분류</th>
-							<th scope="col">소분류</th>
-							<th scope="col">출고수량</th>
-							<th scope="col">유통기한</th>
-<!-- 							<th scope="col">납품여부</th> -->
-							
+							<th scope="col" style="width: 3%;">#</th>
+							<th scope="col" style="width: 8%;">제품코드</th>
+							<th scope="col" style="width: 15%;">제품명</th>
+							<th scope="col" style="width: 5%;">규격</th>
+							<th scope="col" style="width: 5%;">단위</th>
+							<th scope="col" style="width: 5%;">판매가</th>
+							<th scope="col" style="width: 5%;">주문수량</th>
+							<th scope="col" style="width: 5%;">대분류</th>
+							<th scope="col" style="width: 5%;">소분류</th>
+							<th scope="col" style="width: 5%;">출고수량</th>
+							<th scope="col" style="width: 10%;">출고창고</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>3</td>
-							<td>2589-0001</td>
-							<td>오렌지</td>
-							<td>100g</td>
-							<td>ea</td>
-							<td>500</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td><input type="text" class="form-control" style="width:70px;"></td>
-							<td><input type="date" class="form-control" style="width:150px;" required></td>
-<!-- 							<td> -->
-<!-- 							<select class="form-select" aria-label="Default select example"> -->
-<!-- 								<option value="1" selected>납품완료</option> -->
-<!-- 								<option value="1">일부도착</option> -->
-<!-- 								<option value="2">미납</option> -->
-<!-- 							</select> -->
-<!-- 							</td> -->
-							
+					<tbody id="outbnd_pds">
+						<tr  class="pd_row no_list_tb">
+							<td colspan="11" class="text-center ">출고되는 제품이 없습니다.</td>
 						</tr>
-						<tr>
-							<td>2</td>
-							<td>2580-0001</td>
-							<td>사과</td>
-							<td>100g</td>
-							<td>ea</td>
-							<td>500</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td><input type="text" class="form-control" style="width:70px;"></td>
-							<td><input type="date" class="form-control" style="width:150px;" required></td>
-<!-- 							<td> -->
-<!-- 							<select class="form-select" aria-label="Default select example"> -->
-<!-- 								<option value="1" selected>납품완료</option> -->
-<!-- 								<option value="1">일부도착</option> -->
-<!-- 								<option value="2">미납</option> -->
-<!-- 							</select> -->
-<!-- 							</td> -->
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>2581-0001</td>
-							<td>키위</td>
-							<td>50g</td>
-							<td>ea</td>
-							<td>500</td>
-							<td>식품</td>
-							<td>과일</td>
-							<td><input type="text" class="form-control" style="width:70px;"></td>
-							<td><input type="date" class="form-control" style="width:150px;" required></td>
-<!-- 							<td> -->
-<!-- 							<select class="form-select" aria-label="Default select example"> -->
-<!-- 								<option value="1" selected>납품완료</option> -->
-<!-- 								<option value="1">일부도착</option> -->
-<!-- 								<option value="2">미납</option> -->
-<!-- 							</select> -->
-<!-- 							</td> -->
-						</tr>
-
+							<!-- 출고제품 목록 뜨는 곳 -->
 					</tbody>
 <!-- 					<tfoot> -->
 <!-- 					<tr> -->
 <!-- 							<td colspan="2">계</td> -->
-<!-- <!-- 							<td>2581-0001</td> --> -->
+<!-- 							<td>2581-0001</td> -->
 <!-- 							<td>-</td> -->
 <!-- 							<td>-</td> -->
 <!-- 							<td>-</td> -->
@@ -162,26 +108,26 @@
 					
 				</table>
 			</div>
-                            
-                            
-                        </div>
+       </div>
+                        
                         <div class="row mb-3">
                         
                         
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">납품일</label>
-                                <input type="date" class="form-control" required>
+                                <label class="form-label fw-semibold">출고요청일</label>
+                                <input type="date" class="form-control" id="out_req_date" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">출고일</label>
+                                <input type="date" class="form-control" id="out_date">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">출고상태</label>
-                                <select class="form-select" aria-label="Default select example">
-								<option value="1" selected>출고대기</option>
-								<option value="1">출고지시</option>
-								<option value="2">출고완료</option>
-								<option value="1">출고취소</option>
+                                <select class="form-select" id="out_status">
+								<option value="출고요청" >출고요청</option>
+								<option value="출고완료">출고완료</option>
  							</select> 
                             </div>
-                            
                             </div>
                             
 						
@@ -189,35 +135,29 @@
                         <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">작성자</label>
-                                <input type="text" class="form-control" value="홍길동" readonly>
+                                <input type="text" class="form-control" value="이명헌" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">사원코드</label>
-                                <input type="text" class="form-control" value="E123456" readonly>
+                                <input type="text" class="form-control" id="employee_code" value="EMP-00001" readonly>
                             </div>
                         </div>
                            
                            	<!-- 비고 라인 -->
                                  <div class="row">
-            
-            <div class="col-md-12">
-              <label class="form-label">비고</label>
-              <textarea class="form-control" rows="2"></textarea>
-            </div>
-          </div>
+					            <div class="col-md-12">
+					              <label class="form-label">비고</label>
+					              <textarea class="form-control" rows="2" id="ob_memo"></textarea>
+					            </div>
+          						</div>
 
                        <!-- Action Buttons -->
 							<div class="d-flex justify-content-end  gap-2 mt-4">
-							<button type="button" class="btn btn-primary"><i class="bi bi-check2-square"></i> 저장</button>
-							<button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+							<button type="button" class="btn btn-primary" onclick="insert_outBnd()"><i class="bi bi-check2-square"></i> 저장</button>
+							<button type="reset" class="btn btn-outline-secondary ms-2"><i class="bi bi-x-circle"></i> 초기화</button>
 							</div>
                     </form>
             </div>
-
-
-
-
-
 </div>
 
 </section>

@@ -18,10 +18,10 @@
 	<div class="row align-items-center justify-content-between mt-3">
   <!-- 토글 버튼 영역 -->
   <div class="col-auto  mb-3">
-    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
+    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 250px;">
       <button type="button" class="toggle_btns" id="goods_type" value="product" onclick="toggleButton('product')"  style="background: #82CCDD; color: #fff;">완제품</button>
       <button type="button" class="toggle_btns" onclick="toggleButton('item')"  style="background: transparent; color: #000;">부자재</button>
-      <button type="button" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button>
+<!--       <button type="button" class="toggle_btns" onclick="toggleButton('consume')"  style="background: transparent; color: #000;">소모품</button> -->
     </div>
   </div>
 <!-- 토글 버튼 영역 -->
@@ -45,11 +45,9 @@
             </th:block>
           </select>
         </div>
-<!--          </form> -->
-<!--        <form id="frm_word" class="row g-1 align-items-center" onsubmit="return pdSearch()"> -->
        <!-- 키워드로 검색 -->
         <div class="input-group input-group-sm" style="width:250px;">
-          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색">
+          <input type="text" class="form-control" id="keyword" name="keyword" th:value="${keyword}" placeholder="제품명/제품코드로 검색">
           <button class="btn btn-primary"  >
             <i class="bi bi-search"></i>
           </button>
@@ -63,11 +61,11 @@
 
         <!-- 제품 List Table -->
      	<div id="contents_container">
-        <div id="table-container" class="table-responsive  rounded" >
+        <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" th:fragment="productList(parentType, goods_total, goods_all_list, mode)">
             <table class="table align-middle table-bordered text-center" th:classappend="${goods_total != 0} ? 'table-hover' : ''">
                 <thead class="table-light" >
                     <tr>
-                        <th scope="col"><input type="checkbox" disabled></th>
+                        <th scope="col"><input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" disabled></th>
                         <th scope="col">#</th>
                         <th scope="col">IMG</th>
                         <th scope="col">제품코드</th>
@@ -79,7 +77,6 @@
                         <th scope="col">단위</th>
                         <th scope="col">단가 (원)</th>
                         <th scope="col">판매가 (원)</th>
-                        <th scope="col">재고합계</th>
                         <th scope="col">사용</th>
                     </tr>
                 </thead>
@@ -89,10 +86,20 @@
                 		<td class="text-center no_list_tb" colspan="14"> 등록된 상품이 없습니다. </td>
                 	</tr>
                 	
-                    <tr th:if="${goods_total != 0}" th:each="pdlist, idx : ${goods_all_list}" 
-                    	onclick="open_gd_detail(event)"  style="cursor: pointer;">
+                    <tr th:each="pdlist, idx : ${goods_all_list}" 
+                    	th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE},
+                    			data-code=${(mode == 'modal') ? pdlist.PRODUCT_CODE : ''}, 
+             					data-name=${(mode == 'modal') ? pdlist.PRODUCT_NAME : ''}, 
+            					data-class1=${(mode == 'modal') ? pdlist.PRODUCT_CLASS1 : ''}, 
+             					data-class2=${(mode == 'modal') ? pdlist.PRODUCT_CLASS2 : ''}, 
+             					data-spec=${(mode == 'modal') ? pdlist.PRODUCT_SPEC : ''}, 
+             					data-unit=${(mode == 'modal') ? pdlist.PRODUCT_UNIT : ''}, 
+             					data-cost=${(mode == 'modal') ? pdlist.PRODUCT_COST : ''}, 
+             					data-price=${(mode == 'modal') ? pdlist.PRODUCT_PRICE : ''},
+             					data-memo=${(mode == 'modal') ? pdlist.PD_MEMO : ''}"
+                    	th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()">
-                        	<input type="checkbox" name="selected_box" class="sb" 
+                        	<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" th:name="${mode == 'modal'} ? 'selectpd' : 'selected_box'" class="sb" 
                         			th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product">
                         </td>
                         <td > [[${bno - idx.index}]]</td>
@@ -112,7 +119,6 @@
                         <td>[[${pdlist.PRODUCT_UNIT}]]</td>
                         <td class="text-end">[[${#numbers.formatInteger(pdlist.PRODUCT_COST,0,'COMMA')}]] </td>
                         <td class="text-end">[[${#numbers.formatInteger(pdlist.PRODUCT_PRICE,0,'COMMA')}]] </td>
-                        <td>재고합계</td>
                         <td>[[${pdlist.PD_USE_FLAG}]]</td>
                     </tr>
                 </tbody>
@@ -123,35 +129,39 @@
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         <div class="d-flex">
     <!-- Pagination -->
-        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation">
+        <div class="mt-4 d-flex justify-content-center" aria-label="Page navigation" th:fragment="productPgList(parentType, pdMode)">
             <ul class="pagination">
                 <li class="page-item page-link prev"  
-                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)">
+                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=1, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:onclick="${pdMode == 'pd_pageing'} ? 'pd_modal_pg(this)' : 'go_pd_pg(this)'" >
 					<i class="bi bi-chevron-double-left"></i> </li>
 					
 				<li class="page-item page-link " 
 					th:if="${pageinfo.start_pg > 1}"  
-                	th:classappend="${1 >= pageno} ? 'disabled' : ''"
-                	th:attr="data-pageno=${pageinfo.start_pg - 1}, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)">
+                	th:classappend="${1 >= pageinfo.pageno} ? 'disabled' : ''"
+                	th:attr="data-pageno=${pageinfo.start_pg - 2}, data-keyword=${keyword}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:onclick="${pdMode == 'pd_pageing'} ? 'pd_modal_pg(this)' : 'go_pd_pg(this)'" >
 					<i class="bi bi-chevron-left"></i> </li>
 					
                 
                 <th:block th:each="pgn : ${#numbers.sequence(pageinfo.start_pg, pageinfo.end_pg)}"  >
-                <li class="page-item page-link pgnum" th:classappend ="${pageno == pgn} ? 'curpg' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
-                	onclick="go_pd_pg(this)" >[[${pgn}]]</li>
+                <li class="page-item page-link pgnum" th:classappend ="${pageinfo.pageno == pgn} ? 'curpg' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pgn}, data-type='product', data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:onclick="${pdMode == 'pd_pageing'} ? 'pd_modal_pg(this)' : 'go_pd_pg(this)'"  >[[${pgn}]]</li>
                 </th:block>
                 
                 <li class="page-item page-link " 
                 	th:if="${pageinfo.end_pg < pageinfo.page_ea_total}"
-                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 1}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)" >
+                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.end_pg + 2}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:onclick="${pdMode == 'pd_pageing'} ? 'pd_modal_pg(this)' : 'go_pd_pg(this)'"  >
 					<i class="bi bi-chevron-right"></i> </li>
 					
                 <li class="page-item page-link next" 
-                	th:classappend="${pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
-                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" onclick="go_pd_pg(this)" >
+                	th:classappend="${pageinfo.pageno >= pageinfo.page_ea_total} ? 'disabled' : ''" 
+                	th:attr="data-keyword=${keyword}, data-pageno=${pageinfo.page_ea_total}, data-type='product',data-pea=${pageinfo.post_ea}, data-sclass = ${sclass}" 
+                	th:onclick="${pdMode == 'pd_pageing'} ? 'pd_modal_pg(this)' : 'go_pd_pg(this)'"  >
 					<i class="bi bi-chevron-double-right"></i> </li>
             </ul>
         </div>

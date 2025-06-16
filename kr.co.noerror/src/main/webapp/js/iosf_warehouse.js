@@ -37,7 +37,7 @@ function validateInboundForm() {
   form.submit();
 }
 
-
+/*
 // 출고창고에서 출고처리
 function completeOutbound() {
   // 체크된 체크박스 선택
@@ -78,4 +78,16 @@ function completeOutbound() {
     console.error('오류 발생:', error);
     alert('서버 요청 중 오류가 발생했습니다.');
   });
+}
+*/
+
+//특정창고정보만 보기 select태그선택
+function nameWhCh(){
+	searchWH();
+	
+}
+function searchWH(){
+	var form = document.querySelector("#whfrm");
+	form.submit();
+	
 }

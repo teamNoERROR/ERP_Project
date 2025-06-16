@@ -37,7 +37,7 @@ public class goods_DAO {
 
 	//제품코드 중복검사
 	public int code_dupl(products_DTO pdto) {
-		int result = this.st.selectOne("code_dupl",pdto);
+		int result = this.st.selectOne("code_dupl_gd",pdto);
 		return result;
 	};
 

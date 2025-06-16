@@ -13,6 +13,7 @@ public class pchreq_res_DTO {
     private String memo;             // 비고
     private String request_date;     // 발주일자
     private String modify_date;      // 수정일자
+    private String priority;
     
     // 발주담당자 정보
     private String ecode = "-";         // 담당자 사원고드
@@ -31,7 +32,7 @@ public class pchreq_res_DTO {
     private String com_addr2 = "-";
     private String manager_code = "-";     // 거래처 담당자 고유코드
     private String manager_name = "-";     // 거래처 담당자 이름
-    private String mng_phone_num = "-";
+    private String mng_phone = "-";
     
     // 제품 발주 정보
     private String item_code;        // 자재코드
@@ -44,4 +45,5 @@ public class pchreq_res_DTO {
     private String item_class1;      // 대분류
     private String item_class2;      // 소분류
     
+    private String bom_code;
 }

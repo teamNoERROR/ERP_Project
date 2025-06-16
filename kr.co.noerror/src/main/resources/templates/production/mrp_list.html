@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>MRP 계산</title>
 <body>
 <header th:replace="~{/common/header.html :: header}"></header>
 
@@ -81,7 +82,7 @@
 			      class="modal-trigger"
 			      th:data-modal-url="@{'/bom_items.do?code=' + ${p.bom_code}}"
 			      data-modal-id="bom_items">
-			      <u>클릭</u>
+			      <u>상세보기</u>
 			  </td>
 		      <td>[[${p.ename}]]</td>
 		    </tr>

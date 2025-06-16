@@ -118,7 +118,6 @@ public class goods_serviceImpl implements goods_service {
 					pdto.setPD_FILE_NM(this.f_dto.getFilenm());
 					pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
 					pdto.setPD_API_FNM(this.f_dto.getApinm());
-					pdto.setPD_IMG_SRC(this.f_dto.getImgPath());
 					
 				}else { //FTP에 파일저장 실패 
 					result = 0;
@@ -155,12 +154,12 @@ public class goods_serviceImpl implements goods_service {
 					pdto.setITM_FILE_NM(this.f_dto.getFilenm());
 					pdto.setITM_FILE_RENM(this.f_dto.getFileRenm());
 					pdto.setITM_API_FNM(this.f_dto.getApinm());
-					pdto.setITM_IMG_SRC(this.f_dto.getImgPath());
 					
 				}else {  //FTP에 파일저장 실패 
-					result = 0;
+					System.out.println("fileattach : "+ fileattach);
 				}
 			}
+			
 			result = this.g_dao.itm_insert(pdto);
 			
 		} catch (Exception e) {

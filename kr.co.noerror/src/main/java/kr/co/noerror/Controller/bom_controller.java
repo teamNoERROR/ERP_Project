@@ -22,11 +22,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
+import kr.co.noerror.DTO.ordreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.bom_service;
 import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.inventory_service;
 
 @Controller
 public class bom_controller {
@@ -38,6 +40,9 @@ public class bom_controller {
 	
 	@Autowired
 	goods_service g_svc; 
+	
+	@Autowired
+	inventory_service inv_svc; 
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
@@ -67,8 +72,14 @@ public class bom_controller {
 
 		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass , keyword); //bom리스트 제품 총개수
 		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
-		System.out.println("bom_total_sch : " + bom_total_sch);
-		System.out.println("bom_all_list_sch : " + bom_all_list_sch);
+		
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
+		for (bom_DTO dto : bom_all_list_sch) {
+		    String pdcode = dto.getPRODUCT_CODE();
+		    int stockQty = ind_pd_all_stock.getOrDefault(pdcode, 0);  // 없으면 0
+		    dto.setInd_pd_stock(stockQty);  // 재고 주입
+		}
+		System.out.println("bom_all_list_sch : "+ bom_all_list_sch);
 		
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, bom_total_sch);
@@ -164,15 +175,18 @@ public class bom_controller {
 	//BOM 상세보기 모달ver
 	@GetMapping("/bom_detail.do")
 	public String bom_detail(Model m, @RequestParam("pd_code") String pd_code) {
-		System.out.println(pd_code);
+		
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, "product");
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
 		
-			m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
-			m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
-			m.addAttribute("bom_result", resultlist);
-			m.addAttribute("goods_one", goods_one);
-			m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
+		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
+		m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+		m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
+		m.addAttribute("bom_result", resultlist);
+		m.addAttribute("goods_one", goods_one);
+		m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
+		
 		return "/modals/product_detail_modal.html";
 	}
 	

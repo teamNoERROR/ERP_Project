@@ -51,9 +51,11 @@
 							</tr>
 							<tr>
 								<td class="info-label">재고 합계</td>
-								<td class="value-cell"></td>
-								<td class="info-label">안전 재고수</td>
+								<td class="value-cell" th:text="${ind_pd_stock[goods_one.PRODUCT_CODE] == null ? 0 : ind_pd_stock[goods_one.PRODUCT_CODE]} ">[[${ind_pd_stock[pdlist.PRODUCT_CODE]}]]</td>
+								<td class="info-label" >안전 재고수</td>
 								<td class="value-cell">[[${goods_one.PD_SAFE_STOCK}]]</td>
+<!-- 								<td class="info-label" ></td> -->
+<!-- 								<td class="value-cell"></td> -->
 							</tr>
 							<tr>
 								<td class="info-label">사용여부</td>
@@ -112,8 +114,8 @@
                     BOM 트리
                 </div>
                 <div class="card-body tree">
-                    <ul id="bomTree">
-                        <li >
+                    <ul >
+                        <li class="bomTree">
                             <strong >[[${top_pd}]] ([[${top_pd_code}]]) </strong>
                             <ul >
                                 <li  th:each="bom : ${bom_result}"  th:text="${bom.BOM_SEQ_NO + '. ' + bom.ITEM_NAME}"></li>
@@ -159,7 +161,7 @@
 					<td th:text="${itm.ITEM_CLASS2}"></td>		                    	                    							
 					<td th:text="${itm.ITEM_SPEC}"></td>
 					<td th:text="${itm.BOM_QTY}"></td>
-					<td th:text="${itm.UNIT}"></td>
+					<td th:text="${itm.BOM_UNIT}"></td>
 					<td th:text="${itm.ITEM_COST}"></td>
 					<td ></td>
 					<td th:text="${itm.ITM_MEMO ?: '비고없음'}"></td>

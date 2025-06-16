@@ -2,181 +2,146 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.iosf_mapper">
 
+
+<!-- 창고 이동 -->
 <insert id="IOSF_warehouse_move" parameterType="map">
    <if test="wh_type == 'mt'">
     INSERT INTO WAREHOUSE_MATERIAL (
         WMT_IDX,
-        INBOUND_CODE,
-        WH_CODE,
         WMT_CODE,
+        WH_CODE,
+        INBOUND_CODE,
         ITEM_CODE,
         ITEM_QTY,
         CHANGE_TYPE,
-        MT_INSERT_DATE
-        
+        EMPLOYEE_CODE,
+        MT_INSERT_DATE,
+        MT_MODIFY_DATE
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
-        #{inbound_code},
+   	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
         #{wh_code},
-        #{wh_uq, jdbcType=VARCHAR},
-        #{item_code},
-        #{item_count},
-        #{in_status},
-        SYSTIMESTAMP
+        #{inbound_code, jdbcType=VARCHAR},
+        #{product_code},
+        #{pd_qty},
+        '출고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
     )
    </if>
    
    <if test="wh_type == 'fs'">
   INSERT INTO WAREHOUSE_FINISH (
         WFS_IDX,
-        INBOUND_CODE,
-        WH_CODE,
         WFS_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
-        CHANGE_TYPE,
-        FS_INSERT_DATE
-        
-    ) VALUES (
-   	    FS_WAREHOUSE_NO.NEXTVAL,
-        #{inbound_code},
-        #{wh_code},
-        #{wh_uq, jdbcType=VARCHAR},
-        #{item_code},
-        #{item_count},
-        #{in_status},
-        SYSTIMESTAMP
-    )
-   </if>
-   
-   <if test="wh_type == 'out'">
-    INSERT INTO WAREHOUSE_OUT (
-        WOUT_IDX,
-        INBOUND_CODE,
         WH_CODE,
-        WOUT_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
-        CHANGE_TYPE,
-        OUT_INSERT_DATE
-        
-    ) VALUES (
-   	    OUT_WAREHOUSE_NO.NEXTVAL,
-        #{inbound_code},
-        #{wh_code},
-        #{wh_uq, jdbcType=VARCHAR},
-        #{item_code},
-        #{item_count},
-        #{in_status},
-        SYSTIMESTAMP
-    )
-   </if>
-   
-</insert>
-
-<insert id="IOSF_save_warehouse" parameterType="map">
-
-<if test="wh_type == 'in'">
- INSERT INTO WAREHOUSE_INB (
-        WIN_IDX,
-        INBOUND_CODE,
-        WH_CODE,
-        WIN_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
+        PLAN_CODE,
+        PRODUCT_CODE,
+        PD_QTY,
         CHANGE_TYPE,
         EMPLOYEE_CODE,
-        IN_INSERT_DATE
-        
+        FS_INSERT_DATE,
+        FS_MODIFY_DATE
     ) VALUES (
-   	    INB_WAREHOUSE_NO.NEXTVAL,
-        #{iosf_dto.inbound_code},
-        #{iosf_dto.wh_code},
-        #{iosf_dto.in_code},
-        #{iosf_dto.item_code},
-        #{iosf_dto.item_count},
-        #{iosf_dto.in_status},
-        #{iosf_dto.employee_code},        
-        SYSTIMESTAMP
+   	    FS_WAREHOUSE_NO.NEXTVAL,
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+        #{wh_code},
+        #{plan_code},
+        #{product_code},
+        #{pd_qty},
+       	'출고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
     )
    </if>
+</insert>
 
-<if test="wh_type == 'mt'">
- INSERT INTO WAREHOUSE_MATERIAL (
+<!-- 창고이동(입고) -->
+<insert id="IOSF_warehouse_move_in" parameterType="map">
+   <if test="wh_type == 'mt'">
+    INSERT INTO WAREHOUSE_MATERIAL (
         WMT_IDX,
-        INBOUND_CODE,
-        WH_CODE,
         WMT_CODE,
+        WH_CODE,
+        INBOUND_CODE,
         ITEM_CODE,
         ITEM_QTY,
         CHANGE_TYPE,
         EMPLOYEE_CODE,
-        MT_INSERT_DATE
-        
+        MT_INSERT_DATE,
+        MT_MODIFY_DATE
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
-        #{iosf_dto.inbound_code},
-        #{iosf_dto.wh_code},
-        #{iosf_dto.material_code},
-        #{iosf_dto.item_code},
-        #{iosf_dto.item_count},
-        #{iosf_dto.in_status},
-        #{iosf_dto.employee_code},            
-        SYSTIMESTAMP
+   	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
+        #{mv_wh_code},
+        #{inbound_code, jdbcType=VARCHAR},
+        #{product_code},
+        #{pd_qty},
+        '입고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
     )
    </if>
    
    <if test="wh_type == 'fs'">
   INSERT INTO WAREHOUSE_FINISH (
         WFS_IDX,
-        INBOUND_CODE,
-        WH_CODE,
         WFS_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
+        WH_CODE,
+        PLAN_CODE,
+        PRODUCT_CODE,
+        PD_QTY,
         CHANGE_TYPE,
         EMPLOYEE_CODE,
-        FS_INSERT_DATE
+        FS_INSERT_DATE,
+        FS_MODIFY_DATE
         
     ) VALUES (
    	    FS_WAREHOUSE_NO.NEXTVAL,
-        #{iosf_dto.inbound_code},
-        #{iosf_dto.wh_code},
-        #{iosf_dto.finish_code},
-        #{iosf_dto.item_code},
-        #{iosf_dto.item_count},
-        #{iosf_dto.in_status},
-        #{iosf_dto.employee_code},  
-        SYSTIMESTAMP
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+        #{mv_wh_code},
+        #{plan_code},
+        #{product_code},
+        #{pd_qty},
+       	'입고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL
     )
    </if>
-   
-   <if test="wh_type == 'out'">
-    INSERT INTO WAREHOUSE_OUT (
-        WOUT_IDX,
-        INBOUND_CODE,
-        WH_CODE,
-        WOUT_CODE,
-        ITEM_CODE,
-        ITEM_QTY,
-        CHANGE_TYPE,
-        EMPLOYEE_CODE,
-        OUT_INSERT_DATE
-        
-    ) VALUES (
-   	    OUT_WAREHOUSE_NO.NEXTVAL,
-        #{iosf_dto.inbound_code},
-        #{iosf_dto.wh_code},
-        #{iosf_dto.out_code},
-        #{iosf_dto.item_code},
-        #{iosf_dto.item_count},
-        #{iosf_dto.in_status},
-        #{iosf_dto.employee_code},  
-        SYSTIMESTAMP
-    )
-   </if>
-
 </insert>
+
+<!-- 완제품 출고처리 -->
+<insert id="fs_warehouse_out" parameterType="map">
+	INSERT INTO WAREHOUSE_FINISH (
+	    WFS_IDX,
+	    WFS_CODE,
+	    WH_CODE,
+	    PLAN_CODE,
+	    PRODUCT_CODE,
+	    PD_QTY,
+	    CHANGE_TYPE,
+	    EMPLOYEE_CODE,
+	    FS_INSERT_DATE,
+	    FS_MODIFY_DATE
+	    
+	) VALUES (
+	    FS_WAREHOUSE_NO.NEXTVAL,
+	    'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+	    #{wh_code},
+	    #{plan_code},
+	    #{product_code},
+	    #{pd_qty},
+	   	'출고완료',
+	    #{employee_code},
+	    SYSTIMESTAMP,
+	    NULL
+	)
+</insert>
+
 
 <update id="IOSF_modify_warehouse" parameterType="map">
 <if test="wh_type == 'in'">
@@ -205,70 +170,10 @@
 
 </update>
 
+
+<!-- 창고별 제품 리스트 -->
 <select id="IOSF_select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
-  <choose>
-    <when test="wh_type == 'in'">
-      <![CDATA[
- SELECT *
-  FROM (
-    SELECT A.*, ROWNUM RNUM
-    FROM (
-      SELECT
-        inb.WIN_IDX             AS win_idx,
-        inb.WH_CODE             AS wh_code,
-        inb.ITEM_QTY            AS item_count,
-        inb.CHANGE_TYPE         AS in_change,
-        w.WH_NAME               AS wh_name,
-        inb.INBOUND_CODE        AS inbound_code,
-        w.WH_ADDR1              AS wh_location,
-
-        inb.ITEM_CODE           AS item_code,
-        i.ITEM_NAME             AS item_name,
-        i.COMPANY_CODE          AS client_code,
-        i.COMPANY_NAME          AS client_name,
-        i.COM_USE_FLAG          AS use_yn,
-
-        i.ITEM_CLASS1           AS category_main,
-        i.ITEM_CLASS2           AS category_sub,
-
-        ib.IN_STATUS            AS in_status,
-
-        TO_CHAR(
-          CASE 
-            WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-            WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-            ELSE NULL
-          END, 'YYYY-MM-DD'
-        ) AS inbound_date2,
-
-        TO_CHAR(inb.IN_INSERT_DATE, 'YYYY-MM-DD') AS in_date
-
-      FROM
-        WAREHOUSE_INB inb
-
-      LEFT JOIN WAREHOUSE w ON TRIM(inb.WH_CODE) = TRIM(w.WH_CODE)
-
-      LEFT JOIN (
-        SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE
-        FROM INBOUND
-      ) ib ON inb.INBOUND_CODE = ib.INBOUND_CODE
-
-      LEFT JOIN (
-        SELECT
-          ITEM_CODE, ITEM_NAME, ITEM_CLASS1, ITEM_CLASS2,
-          COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
-        FROM ITM_COMP_VIEW
-      ) i ON inb.ITEM_CODE = i.ITEM_CODE
-
-      ORDER BY inb.IN_INSERT_DATE DESC
-    ) A
-    WHERE ROWNUM <= #{startIndex} + #{pageSize}
-  )
-  WHERE RNUM > #{startIndex}
-      ]]>
-    </when>
-    
-
+<choose>
 <when test="wh_type == 'mt'">
   <![CDATA[
 SELECT *
@@ -276,26 +181,27 @@ FROM (
   SELECT A.*, ROWNUM RNUM
   FROM (
     SELECT
-      mt.WMT_IDX             AS win_idx,
-      mt.WH_CODE             AS wh_code,
-      mt.WMT_CODE             AS material_code,
-      mt.ITEM_QTY            AS item_count,
-      mt.CHANGE_TYPE         AS material_change,
-      w.WH_NAME               AS wh_name,
-      mt.INBOUND_CODE        AS inbound_code,
-      w.WH_ADDR1              AS wh_location,
-
-      mt.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      i.COM_USE_FLAG          AS use_yn,
-
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
+      mt.WMT_IDX               AS win_idx,
+      mt.WMT_CODE              AS material_code,
+      mt.WH_CODE               AS wh_code,
+      mt.INBOUND_CODE          AS inbound_code,
+      mt.ITEM_CODE             AS item_code,
+      mt.ITEM_QTY              AS item_qty,
+      mt.CHANGE_TYPE           AS change_type,
+      mt.MT_INSERT_DATE        AS material_date,
       
+      w.WH_NAME                AS wh_name,
 
-      ib.IN_STATUS            AS in_status,
+      i.ITEM_NAME              AS item_name,
+      i.COMPANY_CODE           AS client_code,
+      i.COMPANY_NAME           AS client_name,
+      i.ITEM_CLASS1            AS category_main,
+      i.ITEM_CLASS2            AS category_sub,
+
+      ib.IN_STATUS             AS in_status,
+
+      emp.ECODE                AS employee_code,
+      emp.ENAME                AS emp_name,
 
       TO_CHAR(
         CASE 
@@ -303,19 +209,124 @@ FROM (
           WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
           ELSE NULL
         END, 'YYYY-MM-DD'
-      ) AS inbound_date2,
+      ) AS inbound_date2
 
-      TO_CHAR(mt.MT_INSERT_DATE, 'YYYY-MM-DD') AS material_date
+    FROM WAREHOUSE_MATERIAL mt
 
+    LEFT JOIN WAREHOUSE w 
+      ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
+
+    LEFT JOIN INBOUND ib 
+      ON mt.INBOUND_CODE = ib.INBOUND_CODE 
+      AND mt.ITEM_CODE = ib.ITEM_CODE
+
+    LEFT JOIN ITM_COMP_VIEW i 
+      ON mt.ITEM_CODE = i.ITEM_CODE
+
+    LEFT JOIN EMPLOYEE2 emp 
+      ON mt.EMPLOYEE_CODE = emp.ECODE
+
+    ORDER BY mt.WMT_IDX DESC
+  ) A
+  WHERE ROWNUM <= #{startIndex} + #{pageSize}
+)
+WHERE RNUM > #{startIndex}
+ ]]> 
+  </when>
+  
+  <!-- 완제품 창고  -->
+  <when test="wh_type == 'fs'">
+  <![CDATA[
+SELECT *
+FROM (
+  SELECT A.*, ROWNUM AS RNUM
+  FROM (
+    SELECT
+      fs.WFS_IDX AS wfs_idx,
+      fs.WFS_CODE AS wfs_code,
+      fs.WH_CODE AS wh_code,
+      fs.PLAN_CODE AS plan_code,
+      fs.PD_QTY AS pd_qty,
+      fs.CHANGE_TYPE AS change_type,
+      fs.EMPLOYEE_CODE AS employee_code,
+      fs.FS_INSERT_DATE AS fs_insert,
+      w.WH_NAME AS wh_name,
+      pd.pidx,
+      pd.product_code,
+      pd.product_name,
+      emp.ename AS emp_name
     FROM
-      WAREHOUSE_MATERIAL mt
+      WAREHOUSE_FINISH fs
+    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
+    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
+    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
+    ORDER BY fs.WFS_IDX DESC
+  ) A
+  WHERE ROWNUM <= #{startIndex} + #{pageSize}
+)
+WHERE RNUM > #{startIndex}
+]]>
+  
+</when>
+    <otherwise>
+      SELECT 1 FROM DUAL 
+      <!-- wh_type이 없거나 잘못된 경우 -->
+    </otherwise>
+  </choose>
+</select>
+
+
+
+<!-- 검색 + 페이지네이션 -->
+<select id="IOSF_search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
+  <choose>   
+    <!-- 부자재창고 리스트 검색 -->
+<when test="wh_type == 'mt'">
+<!--   <![CDATA[ -->
+    SELECT *
+FROM (
+  SELECT A.*, ROWNUM RNUM
+  FROM (
+    SELECT
+      mt.WMT_IDX             AS win_idx,
+      mt.WMT_CODE             AS material_code,
+      mt.WH_CODE             AS wh_code,
+      mt.INBOUND_CODE            AS inbound_code,
+      mt.ITEM_CODE         AS item_code,
+      mt.ITEM_QTY        AS item_qty,
+      mt.CHANGE_TYPE           AS change_type,
+      mt.MT_INSERT_DATE     AS material_date,
+      
+      w.WH_NAME               AS wh_name,
+
+      i.ITEM_NAME             AS item_name,
+      i.COMPANY_CODE          AS client_code,
+      i.COMPANY_NAME          AS client_name,
+
+      i.ITEM_CLASS1           AS category_main,
+      i.ITEM_CLASS2           AS category_sub,
+
+      ib.IN_STATUS            AS in_status,
+	
+	  emp.ECODE AS employee_code,
+	  emp.ENAME AS emp_name,
+
+      TO_CHAR(
+        CASE 
+          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
+          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
+          ELSE NULL
+        END, 'YYYY-MM-DD'
+      ) AS inbound_date2
+
+    FROM WAREHOUSE_MATERIAL mt
 
     LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
 
     LEFT JOIN (
-      SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE
+      SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE, ITEM_CODE
       FROM INBOUND
-    ) ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
+    ) ib ON mt.INBOUND_CODE = ib.INBOUND_CODE AND ib.ITEM_CODE = mt.ITEM_CODE
 
     LEFT JOIN (
       SELECT
@@ -323,342 +334,94 @@ FROM (
         COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
       FROM ITM_COMP_VIEW
     ) i ON mt.ITEM_CODE = i.ITEM_CODE
+    
+    LEFT JOIN EMPLOYEE2 emp ON mt.EMPLOYEE_CODE = emp.ECODE
 
-    ORDER BY mt.MT_INSERT_DATE DESC
-  ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
-)
-WHERE RNUM > #{startIndex}
-  ]]>
-  </when>
-  
-  <when test="wh_type == 'fs'">
-  <![CDATA[
-SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT
-      fs.WFS_IDX             AS win_idx,
-      fs.WH_CODE             AS wh_code,
-      fs.WFS_CODE            AS finish_code,
-      fs.ITEM_QTY            AS item_count,
-      fs.CHANGE_TYPE         AS finish_change,
-      w.WH_NAME               AS wh_name,
-      fs.INBOUND_CODE        AS inbound_code,
-      w.WH_ADDR1              AS wh_location,
-
-      fs.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      i.COM_USE_FLAG          AS use_yn,
-
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-      
-
-      ib.IN_STATUS            AS in_status,
-
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD'
-      ) AS inbound_date2,
-
-      TO_CHAR(fs.FS_INSERT_DATE, 'YYYY-MM-DD') AS finish_date
-
-    FROM
-      WAREHOUSE_FINISH fs
-
-    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-
-    LEFT JOIN (
-      SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE
-      FROM INBOUND
-    ) ib ON fs.INBOUND_CODE = ib.INBOUND_CODE
-
-    LEFT JOIN (
-      SELECT
-        ITEM_CODE, ITEM_NAME, ITEM_CLASS1, ITEM_CLASS2,
-        COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
-      FROM ITM_COMP_VIEW
-    ) i ON fs.ITEM_CODE = i.ITEM_CODE
-
-    ORDER BY fs.FS_INSERT_DATE DESC
-  ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
-)
-WHERE RNUM > #{startIndex}
-  ]]>
-  
-</when>
-
-<when test="wh_type == 'out'">
-  <![CDATA[
-SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT
-      out.WOUT_IDX             AS win_idx,
-      out.WH_CODE             AS wh_code,
-      out.WOUT_CODE           AS out_code,
-      out.ITEM_QTY            AS item_count,
-      out.OUT_STATUS          AS out_status,
-      out.CHANGE_TYPE         AS out_change,
-      w.WH_NAME               AS wh_name,
-      out.INBOUND_CODE        AS inbound_code,
-      w.WH_ADDR1              AS wh_location,
-
-      out.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      i.COM_USE_FLAG          AS use_yn,
-
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-      
-      ib.IN_STATUS            AS in_status,
-
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD'
-      ) AS inbound_date2,
-
-      TO_CHAR(out.OUT_INSERT_DATE, 'YYYY-MM-DD') AS out_date
-
-    FROM
-      WAREHOUSE_OUT out
-
-    LEFT JOIN WAREHOUSE w ON TRIM(out.WH_CODE) = TRIM(w.WH_CODE)
-
-    LEFT JOIN (
-      SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE
-      FROM INBOUND
-    ) ib ON out.INBOUND_CODE = ib.INBOUND_CODE
-
-    LEFT JOIN (
-      SELECT
-        ITEM_CODE, ITEM_NAME, ITEM_CLASS1, ITEM_CLASS2,
-        COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
-      FROM ITM_COMP_VIEW
-    ) i ON out.ITEM_CODE = i.ITEM_CODE
-
-    WHERE out.OUT_STATUS = '미출고'
-
-    ORDER BY out.OUT_INSERT_DATE DESC
-  ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
-)
-WHERE RNUM > #{startIndex}
-  ]]>
-  
-</when>
-
-    <otherwise>
-      SELECT 1 FROM DUAL -- wh_type이 없거나 잘못된 경우
-    </otherwise>
-  </choose>
-</select>
-
-<!-- 검색 + 페이지네이션 -->
-<select id="IOSF_search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
-  <choose>
-    <!-- 입고 검색 -->
-    <when test="wh_type == 'in'">
-      <![CDATA[
-SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT 
-      inb.WIN_IDX             AS win_idx,
-      inb.WH_CODE             AS wh_code,
-      w.WH_NAME               AS wh_name,
-      inb.INBOUND_CODE        AS inbound_code,
-      inb.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-      i.COM_USE_FLAG          AS use_yn,
-      w.WH_ADDR1              AS wh_location,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD HH24:MI:SS'
-      ) AS inbound_date
-
-    FROM WAREHOUSE_INB inb
-    LEFT JOIN WAREHOUSE w ON TRIM(inb.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN INBOUND ib ON inb.INBOUND_CODE = ib.INBOUND_CODE
-    LEFT JOIN ITM_COMP_VIEW i ON inb.ITEM_CODE = i.ITEM_CODE
-
-    WHERE 
-      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'
-
-    ORDER BY inb.WIN_IDX DESC
-  ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
-)
-WHERE RNUM > #{startIndex}
-      ]]>
-    </when>
-
-    <!-- 출고 검색 -->
-    <!-- 부자재창고 리스트 검색 -->
-<when test="wh_type == 'mt'">
-  <![CDATA[
-    SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT 
-      mt.WMT_IDX             AS win_idx,
-      mt.WH_CODE             AS wh_code,
-      w.WH_NAME               AS wh_name,
-      mt.INBOUND_CODE        AS inbound_code,
-      mt.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-      i.COM_USE_FLAG          AS use_yn,
-      w.WH_ADDR1              AS wh_location,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD HH24:MI:SS'
-      ) AS inbound_date
-
-    FROM WAREHOUSE_MATERIAL mt
-    LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN INBOUND ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
-    LEFT JOIN ITM_COMP_VIEW i ON mt.ITEM_CODE = i.ITEM_CODE
-
-    WHERE 
-      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'
-
+  <where>
+    <if test="wh_name != null">
+      	TRIM(w.WH_NAME) = TRIM(#{wh_name})
+      	<if test="m_search!= null">
+	      AND (
+	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_code)  LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
+	      )
+     	</if>
+    </if>
+    <if test="wh_name == null and m_search!= null">
+     	(
+	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
+	      )
+    </if>
+	</where>
     ORDER BY mt.WMT_IDX DESC
   ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
+  WHERE ROWNUM &lt;= #{startIndex} + #{pageSize}
 )
-WHERE RNUM > #{startIndex}
-      ]]>
+WHERE RNUM &gt; #{startIndex}
+<!--       ]]> -->
  
 </when>
-
+<!-- 완제품 창고 검색 -->
 <when test="wh_type == 'fs'">
-  <![CDATA[
-        SELECT *
+<!--   <![CDATA[ -->
+SELECT *
 FROM (
   SELECT A.*, ROWNUM RNUM
   FROM (
     SELECT 
-      fs.WMT_IDX             AS win_idx,
-      fs.WH_CODE             AS wh_code,
-      w.WH_NAME               AS wh_name,
-      fs.INBOUND_CODE        AS inbound_code,
-      fs.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-      i.COM_USE_FLAG          AS use_yn,
-      w.WH_ADDR1              AS wh_location,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD HH24:MI:SS'
-      ) AS inbound_date
-
-    FROM WAREHOUSE_FINISG fs
+	    fs.WFS_IDX AS wfs_idx,
+	    fs.WFS_CODE AS wfs_code,
+	    fs.WH_CODE AS wh_code,
+	    fs.PLAN_CODE AS plan_code,
+	    fs.PD_QTY AS pd_qty,
+	    fs.CHANGE_TYPE AS change_type,
+	    fs.EMPLOYEE_CODE AS employee_code,
+	    fs.FS_INSERT_DATE AS fs_insert,
+	    TRIM(w.WH_NAME) AS wh_name,
+	    w.WH_TYPE AS wh_type,
+	    pd.pidx,
+	    pd.product_code,
+	    pd.product_name,
+	    emp.ename AS emp_name
+	FROM
+    WAREHOUSE_FINISH fs
     LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN INBOUND ib ON fs.INBOUND_CODE = ib.INBOUND_CODE
-    LEFT JOIN ITM_COMP_VIEW i ON fs.ITEM_CODE = i.ITEM_CODE
-
-    WHERE 
-      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'
-
+    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
+    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
+    <where>
+    <if test="wh_name != null">
+      	TRIM(w.WH_NAME) = TRIM(#{wh_name})
+      	<if test="m_search!= null">
+	      AND (
+	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      )
+     	</if>
+    </if>
+    <if test="wh_name == null and m_search!= null">
+     	(
+	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      )
+     	
+    </if>
+	</where>
     ORDER BY fs.WFS_IDX DESC
   ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
+  WHERE ROWNUM &lt;= #{startIndex} + #{pageSize}
 )
-WHERE RNUM > #{startIndex}
-  ]]>
+WHERE RNUM &gt; #{startIndex}
+<!--   ]]> -->
   </when>
-  
-  <when test="wh_type == 'out'">
-  <![CDATA[
-        SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT 
-      out.WOUT_IDX             AS win_idx,
-      out.WH_CODE             AS wh_code,
-      w.WH_NAME               AS wh_name,
-      out.INBOUND_CODE        AS inbound_code,
-      out.ITEM_CODE           AS item_code,
-      i.ITEM_NAME             AS item_name,
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-      i.COM_USE_FLAG          AS use_yn,
-      w.WH_ADDR1              AS wh_location,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD HH24:MI:SS'
-      ) AS inbound_date
-
-    FROM WAREHOUSE_OUT out
-    LEFT JOIN WAREHOUSE w ON TRIM(out.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN INBOUND ib ON out.INBOUND_CODE = ib.INBOUND_CODE
-    LEFT JOIN ITM_COMP_VIEW i ON out.ITEM_CODE = i.ITEM_CODE
-
-    WHERE 
-      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'
-
-    ORDER BY out.WOUT_IDX DESC
-  ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
-)
-WHERE RNUM > #{startIndex}
-  ]]>
-  
-</when>
 
     <otherwise>
       SELECT 1 FROM DUAL
@@ -668,17 +431,11 @@ WHERE RNUM > #{startIndex}
   
 <!-- 전체 창고 수 -->
 <select id="IOSF_getTotalCount" parameterType="string" resultType="int">
-      <if test="wh_type == 'in'">
-	      SELECT COUNT(*) FROM WAREHOUSE_INB
-      </if>
       <if test="wh_type == 'mt'">
 	      SELECT COUNT(*) FROM WAREHOUSE_MATERIAL 
       </if>
       <if test="wh_type == 'fs'">
 	      SELECT COUNT(*) FROM WAREHOUSE_FINISH 
-      </if>
-      <if test="wh_type == 'out'">
-	      SELECT COUNT(*) FROM WAREHOUSE_OUT WHERE OUT_STATUS = '미출고'
       </if>
 </select>
 
@@ -687,7 +444,7 @@ WHERE RNUM > #{startIndex}
   <if test="wh_type == 'in'">
   SELECT 
   inb.WH_CODE AS wh_code,
-  inb.ITEM_QTY AS item_count,
+  inb.ITEM_QTY AS item_qty,
   w.WH_NAME AS wh_name,
   w.WH_ADDR1 AS wh_addr1,
   w.WH_ADDR2 AS wh_addr2,
@@ -721,7 +478,7 @@ WHERE inb.INBOUND_CODE = #{code}
   <if test="wh_type == 'mt'">
     SELECT 
   mt.WH_CODE AS wh_code,
-  mt.ITEM_QTY AS item_count,
+  mt.ITEM_QTY AS item_qty,
   w.WH_NAME AS wh_name,
   w.WH_ADDR1 AS wh_addr1,
   w.WH_ADDR2 AS wh_addr2,
@@ -748,7 +505,7 @@ WHERE inb.INBOUND_CODE = #{code}
 
 FROM WAREHOUSE_MATERIAL mt
 LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
-LEFT JOIN INBOUND ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
+JOIN INBOUND ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
 LEFT JOIN ITM_COMP_VIEW i ON mt.ITEM_CODE = i.ITEM_CODE
 WHERE mt.WMT_CODE = #{code}
   </if>
@@ -756,7 +513,7 @@ WHERE mt.WMT_CODE = #{code}
   <if test="wh_type == 'fs'">
     SELECT 
   fs.WH_CODE AS wh_code,
-  fs.ITEM_QTY AS item_count,
+  fs.ITEM_QTY AS item_qty,
   w.WH_NAME AS wh_name,
   w.WH_ADDR1 AS wh_addr1,
   w.WH_ADDR2 AS wh_addr2,
@@ -787,41 +544,6 @@ LEFT JOIN INBOUND ib ON fs.INBOUND_CODE = ib.INBOUND_CODE
 LEFT JOIN ITM_COMP_VIEW i ON fs.ITEM_CODE = i.ITEM_CODE
 WHERE fs.WFS_CODE = #{code}
   </if>
-  
-  <if test="wh_type == 'out'">
-    SELECT 
-  out.WH_CODE AS wh_code,
-  out.ITEM_QTY AS item_count,
-  w.WH_NAME AS wh_name,
-  w.WH_ADDR1 AS wh_addr1,
-  w.WH_ADDR2 AS wh_addr2,
-  w.WH_ZIPCODE AS wh_zipcode,
-  out.INBOUND_CODE AS inbound_code,
-
-  out.ITEM_CODE AS item_code,
-  i.ITEM_NAME AS item_name,
-  i.ITEM_CLASS1 AS category_main,
-  i.ITEM_CLASS2 AS category_sub,
-
-  i.COM_USE_FLAG AS client_use_yn,
-  i.COMPANY_CODE AS client_code,
-  i.COMPANY_NAME AS client_name,
-
-  TO_CHAR(
-    CASE 
-      WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-      WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-      ELSE NULL
-    END, 'YYYY-MM-DD HH24:MI:SS'
-  ) AS inbound_date
-
-FROM WAREHOUSE_OUT out
-LEFT JOIN WAREHOUSE w ON TRIM(out.WH_CODE) = TRIM(w.WH_CODE)
-LEFT JOIN INBOUND ib ON out.INBOUND_CODE = ib.INBOUND_CODE
-LEFT JOIN ITM_COMP_VIEW i ON out.ITEM_CODE = i.ITEM_CODE
-WHERE out.WOUT_CODE = #{code}
-  </if>
-  
 </select>
 
 <!-- 삭제 -->
@@ -848,59 +570,65 @@ WHERE out.WOUT_CODE = #{code}
  <select id="IOSF_searchTotal" parameterType="map" resultType="int">
       
    <choose>
-    <when test="wh_type == 'in'">
-		SELECT COUNT(*)
-		FROM WAREHOUSE_INB inb
-		LEFT JOIN WAREHOUSE w ON TRIM(inb.WH_CODE) = TRIM(w.WH_CODE)
-		LEFT JOIN ITM_COMP_VIEW i ON inb.ITEM_CODE = i.ITEM_CODE
-		LEFT JOIN INBOUND ib ON inb.INBOUND_CODE = ib.INBOUND_CODE
-		WHERE 
-		      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-		      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'   
-    </when>
-    
-    
     <when test="wh_type == 'mt'">
      SELECT COUNT(*)
 		FROM WAREHOUSE_MATERIAL mt
 		LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
 		LEFT JOIN ITM_COMP_VIEW i ON mt.ITEM_CODE = i.ITEM_CODE
 		LEFT JOIN INBOUND ib ON mt.INBOUND_CODE = ib.INBOUND_CODE
-		WHERE 
-		      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-		      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'   
+		<where>
+	    <if test="wh_name != null">
+	      	TRIM(w.WH_NAME) = TRIM(#{fs_wh_name})
+	      	<if test="m_search!= null">
+		      	AND (
+		      	TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      	  	TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      		TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
+	      		TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
+		      ) 
+	     	</if>
+	    </if>
+	    <if test="wh_name == null and m_search!= null">
+	    	(
+	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
+	      )
+	    	
+	    </if>
+		</where>
     </when>
     
     <when test="wh_type == 'fs'">
-       SELECT COUNT(*)
-		FROM WAREHOUSE_FINISH fs
-		LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-		LEFT JOIN ITM_COMP_VIEW i ON fs.ITEM_CODE = i.ITEM_CODE
-		LEFT JOIN INBOUND ib ON fs.INBOUND_CODE = ib.INBOUND_CODE
-		WHERE 
-		      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-		      i.COMPANY_NAME LIKE '%' || #{m_search} || '%'   
+       SELECT COUNT(*)	    
+	FROM WAREHOUSE_FINISH fs
+    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
+    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
+    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
+		<where>
+	    <if test="fs_wh_name != null">
+	      	TRIM(w.WH_NAME) = TRIM(#{fs_wh_name})
+	      	<if test="m_search!= null">
+		      	AND (
+		      	TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      	  	TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      		TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
+	      		TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+		      ) 
+	     	</if>
+	    </if>
+	    <if test="fs_wh_name == null and m_search!= null">
+	    	(
+	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
+	      )
+	    	
+	    </if>
+		</where>
     </when>
-    
-    <when test="wh_type == 'out'">
-       SELECT COUNT(*)
-		FROM WAREHOUSE_OUT out
-		LEFT JOIN WAREHOUSE w ON TRIM(out.WH_CODE) = TRIM(w.WH_CODE)
-		LEFT JOIN ITM_COMP_VIEW i ON out.ITEM_CODE = i.ITEM_CODE
-		LEFT JOIN INBOUND ib ON out.INBOUND_CODE = ib.INBOUND_CODE
-		WHERE 
-		      w.WH_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_NAME LIKE '%' || #{m_search} || '%' OR
-		      i.ITEM_CODE LIKE '%' || #{m_search} || '%' OR
-		      i.COMPANY_NAME LIKE '%' || #{m_search} || '%' 
-    </when>
-    
     <otherwise>
       SELECT 0 FROM DUAL -- 혹은 기본값 처리
     </otherwise>
@@ -931,5 +659,27 @@ WHERE out.WOUT_CODE = #{code}
     )
  </insert>
   -->
+  
+  <!-- 창고별 이름리스트 출력용 -->
+<select id="wh_nm_list" resultType="String" parameterType="Map">
+	SELECT
+	<choose>
+	<when test="wh_type == 'fs_wh'">
+		TRIM(WH_NAME) FROM WAREHOUSE
+		WHERE WH_TYPE = '완제품창고'
+		ORDER BY WH_INSERT_DATE
+	</when>
+	<when test="wh_type == 'mt_wh'">
+		TRIM(WH_NAME) FROM WAREHOUSE
+		WHERE WH_TYPE = '부자재창고'
+		ORDER BY WH_INSERT_DATE
+	</when>
+	</choose>
+</select>
+
+
+
+
+
 
 </mapper>

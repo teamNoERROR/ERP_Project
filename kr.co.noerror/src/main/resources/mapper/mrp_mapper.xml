@@ -15,11 +15,11 @@ SELECT
     cmp.company_name,
     emp.ename
 FROM production_plan pln
-JOIN production_plan_detail pld ON pln.plan_code = pld.plan_code
-JOIN order_request ord ON pln.order_code = ord.order_code
-JOIN products pdt ON pld.product_code = pdt.product_code
-JOIN client_comp cmp ON pln.company_code = cmp.company_code
-JOIN employee emp ON pln.ecode = emp.ecode
+LEFT JOIN production_plan_detail pld ON pln.plan_code = pld.plan_code
+LEFT JOIN order_request ord ON pln.order_code = ord.order_code
+LEFT JOIN products pdt ON pld.product_code = pdt.product_code
+LEFT JOIN client_comp cmp ON pln.company_code = cmp.company_code
+LEFT JOIN employee2 emp ON pln.ecode = emp.ecode
 WHERE pln.plan_status = '생산계획확정'
   AND pln.mrp_status = '미완료'
   AND ord.due_date BETWEEN #{start_date} AND #{end_date}

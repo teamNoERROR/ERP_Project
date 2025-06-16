@@ -29,13 +29,18 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	@Autowired
 	private M_unique_code_generator unique_code_generator;
 	
+	@Autowired
+	inventory_service inv_svc; //재고 서비스 
+	
+	//생산계획 리스트 
 	@Override
-	public List<prdplan_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info) {
+	public List<prdplan_res_DTO> paged_list(search_condition_DTO search_cond, paging_info_DTO paging_info, String parent) {
 		Map<String, Object> params = new HashMap<>();
         params.put("search_word", search_cond.getSearch_word());
         params.put("statuses", search_cond.getStatuses());
         params.put("start", paging_info.getStart());
         params.put("end", paging_info.getEnd());
+        
         return this.prdplan_dao.prdplan_paged_list(params);
 	}
 	
@@ -46,7 +51,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	
 	@Override
 	public Map<String, Object> prdplan_save(prdplan_req_DTO plandto) {
-		
+		System.out.println("plandto : " + plandto);
 		Map<String, Object> response = new HashMap<>();
 		
         int result1 = 0;
@@ -67,7 +72,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
             prdplan_entity.setEnd_date(plandto.getEnd_date());
             prdplan_entity.setCompany_code(plandto.getCompany_code());
             prdplan_entity.setEcode(plandto.getEcode());
-            prdplan_entity.setPlan_status("계획");
+            prdplan_entity.setPlan_status("생산계획수립");
             prdplan_entity.setMrp_status("미완료");
             prdplan_entity.setMemo(plandto.getMemo());
 
@@ -145,4 +150,5 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	
 	    return response;
 	}
+
 }

@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="https://www.thymeleaf.org/">
 <head th:replace="~{/common/config.html :: config}">
 </head>
+<title>완제품 창고</title>
 <body>
 	<header th:replace="~{/common/header.html :: header}"></header>
 
@@ -14,165 +15,210 @@
 				<h2 class="mb-1">완제품 창고 리스트</h2>
 			</div>
 	<!-- 토글 버튼 영역 -->
-	<div class="mb-4" id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 450px;">
+	<div class="mb-4" id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 350px;">
 		<button type="button" class="toggle_btns" onclick="toggleWh('all')"   style="background: transparent; color: #000;">전체</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('in')"  style="background: transparent; color: #000;">입고</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button>
-		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  id="wh_type" value="mt"  style="background: #82CCDD; color: #fff;">완제품</button>
+<!-- 		<button type="button" class="toggle_btns" onclick="toggleWh('in')"  style="background: transparent; color: #000;">입고</button> -->
+<!-- 		<button type="button" class="toggle_btns" onclick="toggleWh('out')"  style="background: transparent; color: #000;">출고</button> -->
 		<button type="button" class="toggle_btns" onclick="toggleWh('mt')"  style="background: transparent; color: #000;">부자재</button>
+		<button type="button" class="toggle_btns" onclick="toggleWh('fs')"  id="wh_type" value="mt"  style="background: #82CCDD; color: #fff;">완제품</button>
 	</div>
 
-			<label class="form-label d-block  mb-2">*선택하신 출고 창고로 선택된 품목들이 이동 됩니다.</label>
+			<label class="form-label d-block  mb-2">*선택하신 창고로 선택된 품목들이 이동 됩니다.</label>
 			<!-- 같은 줄 안에 배치 (d-flex로 정렬), 기능은 각각 따로 -->
 			<div class="d-flex justify-content-between align-items-center gap-3 mb-3">
 			
 			<!-- 버튼 + 이동 입력폼 (최대한 테이블에 붙임) -->
 			<div class="d-flex align-items-center gap-2 mb-2">
-			  <button class="btn btn-primary modal-trigger"
-			        type="button"
-			        th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}"
-			        data-modal-id="wh_type_list"
-			        style="cursor: pointer;">
-			    <i class="bi bi-search"></i>
-			</button>
+<!-- 			  <button class="btn btn-primary modal-trigger" -->
+<!-- 			        type="button" -->
+<!-- 			        th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}" -->
+<!-- 			        data-modal-id="wh_type_list" -->
+<!-- 			        style="cursor: pointer;"> -->
+<!-- 			    <i class="bi bi-search"></i> -->
+<!-- 			</button> -->
+			<div class="input-group">
+	            <input type="text"  id="wh_name" class="form-control" style="width: 220px;" placeholder="완제품 창고가 선택됩니다" readonly>
+				<input type="hidden" id="wh_code" class="form-control" />
+<!-- 	            <button type="button" class="btn btn-primary modal-trigger"  -->
+<!-- 	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}" -->
+<!-- 	            		data-modal-id="wh_type_list" style="cursor: pointer;"> -->
+           		<button type="button" class="btn btn-primary" 
+	            		onclick="whSelect('fs_wh','wh_name','wh_code')" style="cursor: pointer;">
+	                <i class="bi bi-search"></i>
+	            </button>
+	        </div>
 			
-			  <form class="d-flex align-items-center gap-2 mb-0" >
-			    <input type="text" id="wh_code" class="form-control" style="width: 200px;" placeholder="출고 창고가 선택됩니다."/>
-			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" />
-			    <input type="hidden" name="item_code" id="item_code" class="form-control" />
-			    <input type="hidden" id="client_code" class="form-control" />
-			    <input type="hidden" id="wh_type" class="form-control" />
-			    <input type="hidden" id="in_status" class="form-control" />
-			    <input type="hidden" id="item_count" class="form-control" />
+<!-- 				<form class="d-flex align-items-center gap-2 mb-0" > -->
+<!-- 			    <input type="hidden" name="inbound_code" id="inbound_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" name="item_code" id="item_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="client_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="wh_code" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="in_status" class="form-control" /> -->
+<!-- 			    <input type="hidden" id="item_count" class="form-control" /> -->
+				
+				<!-- 창고이동버튼 -->
 			    <button type="button" class="btn btn-info d-flex align-items-center px-2"
-			            style="white-space: nowrap; min-width: 70px;">
+			            style="white-space: nowrap; min-width: 70px;" onclick="whMove()">
 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동
-			    </button>
-			  </form>
+			    </button>  
+			    
+<!-- 			    <button type="button" class="btn btn-info d-flex align-items-center px-2" -->
+<!-- 			            style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()"> -->
+<!-- 			      <i class="bi bi-rocket-takeoff me-1"></i> 이동 -->
+<!-- 			    </button> -->
+<!-- 			  </form> -->
 			</div>
 			
+		
 			<!-- 검색바: 위 margin 줄이기 (my-4 → my-2) -->
 			<form class="row g-2 my-2 justify-content-end"
-			      th:action="@{/warehouses_mt_list.do}" method="get">
-			  <div class="col-auto">
-			    <div class="input-group input-group-sm">
-			      <select class="form-select" name="wh_searchType" style="max-width: 120px;">
-			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option>
-			      </select> 
-			      <input type="text" name="wh_search" class="form-control" placeholder="검색" th:value="${wh_search}">
-			      <button class="btn btn-primary" type="submit">
-			        <i class="bi bi-search"></i> 검색
+			      th:action="@{/warehouses_fs_list.do}" method="get" id="whfrm">
+			 
+			  <div class="col-auto d-flex gap-2">
+			   <select  class="form-select" style="width: auto; display: inline-block;" name="name_wh_list" onchange="nameWhCh()">
+					<option value="">특정창고만 보기</option>
+				   	<option th:each="fsWh_list : ${whNameList}" th:value="${fsWh_list}" th:text="${fsWh_list}" th:selected="${fsWh_list} == ${fs_wh_name}"></option>
+				  </select>
+			    <div class="input-group input-group-sm" style="width:250px;">
+<!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
+<!-- 			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option> -->
+<!-- 			      </select>  -->
+			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/창고명으로 검색" th:value="${wh_search}">
+			      <button class="btn btn-primary" onclick="searchWH()">
+			        <i class="bi bi-search"></i> 
 			      </button>
 			    </div>
 			  </div>
 			</form>
 			</div>
-			<!-- 부자재 창고 List Table ( 부자재 창고)-->
-			<div class="table-responsive rounded mt-2" th:if="${wh_check == 'yesdata'}">
-				<table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
-				  <thead class="table-light text-center">
+			
+			
+			
+			
+			<!-- 완제품 창고 List Table ( 완제품 창고)-->
+<!-- 			<div class="table-responsive rounded mt-2" th:if="${wh_check == 'yesdata'}"> -->
+			<div class="table-responsive rounded mt-2"  style="width: 100%; overflow-x: auto;">
+				<table class="table align-middle table-bordered text-center" style="white-space: nowrap;" th:classappend="${wh_check != 'nodata'} ? 'table-hover' : ''">
+				  <thead class="table-light ">
 				    <tr>
-				   	  <th scope="col">#</th>
+				   	  <th scope="col"><input type="checkbox" disabled></th>
+				      <th>#</th>
 				      <th>번호</th>
-				      <th>입고코드</th>
 				      <th>창고코드</th>
-				      <th>창고이름</th>
+				      <th>창고명</th>
 				      <th>품목코드</th>
-				      <th>거래처코드</th>
 				      <th>품목명</th>
-				      <th>수량</th>
-				      <th>분류</th>
-				      <th>거래처</th>
-				      <th>입고일자</th>
-				      <th>입고상태</th>
-				      <th>사용여부</th>
+				      <th>변경수량</th>
+				      <th>변경내역</th>
+				      <th>처리자</th>
+				      <th>사원코드</th>
+				      <th>등록일</th>
 				    </tr>
 				  </thead>
 				  <tbody>
+      	  			<tr th:if="${wh_check == 'nodata'}" >
+                		<td class="text-center no_list_tb" colspan="14" > 완제품 창고에 보관된 제품이 없습니다. </td>
+                	</tr>
 				    <tr class="modal-trigger"
 				        th:each="fs_wh, iterStat : ${fs_wh_list}"
 				        th:data-modal-url="@{'/fs_warehouse_modal.do?finish_code=' + ${fs_wh.finish_code}}"
 				       	data-modal-id="wh_fs_list"
 				        style="cursor:pointer;">
-				      <td>
-				      	<input type="checkbox" name="deleteCodes"
+				      <td onclick="event.stopPropagation();">
+				      	<input type="checkbox" name="checkCodes"
 				   			   	class="move-checkbox"
-				      	 	   th:value="${fs_wh.wh_code}" 
-						       th:data-finish_code="${fs_wh.finish_code}" 
-						       th:data-inbound_code="${fs_wh.inbound_code}" 
-						       th:data-item_code="${fs_wh.item_code}" 
-						       th:data-client_code="${fs_wh.client_code}" 
 						       th:data-wh_code="${fs_wh.wh_code}"
-						       data-wh_type="out"
-						       th:data-in_status="${fs_wh.in_status}"
-						       th:data-item_count="${fs_wh.item_count}"
-						       onclick="selectRow(event,this);" />
+						       data-wh_type="fs"
+						       th:data-product_code="${fs_wh.product_code}" 
+						       th:data-pd_qty="${fs_wh.pd_qty}" 
+						       th:data-emp_code="${fs_wh.employee_code}" 
+						       th:data-pdidx="${fs_wh.pidx}" 
+				      	 	   th:value="${fs_wh.wfs_idx}" 
+						       th:data-plan_code="${fs_wh.plan_code}"
+						       th:data-pd_name="${fs_wh.product_name}"  
+						       onclick="selectRow(event,this);" 
+						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료'}" />
 				      </td>
-				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}">16</td>
-				      <td th:text="${fs_wh.inbound_code}">IN-0001</td>
-				      <td th:text="${fs_wh.wh_code}">WH-001</td>
-				      <td th:text="${fs_wh.wh_name}">창고이름</td>
-				      <td th:text="${fs_wh.item_code}">ITEM-123</td>
-				      <td th:text="${fs_wh.client_code}">client-123</td>
-				      <td th:text="${fs_wh.item_name}">나사</td>
-				      <td th:text="${fs_wh.item_count}">12</td>
-				      <td th:text="${fs_wh.category_main + '/' + fs_wh.category_sub}">부품/소모품</td>
-				      <td th:text="${fs_wh.client_name}">삼성전자</td>
-				      <!-- 1. inbound_date2 가 null 또는 빈 문자열이면 in_date 사용 -->
-					  <td th:text="${#strings.isEmpty(fs_wh.inbound_date2) ? fs_wh.finish_date : fs_wh.inbound_date2}">2025-05-29</td>
-					  <!-- 2. in_status 가 null 또는 빈 문자열이면 in_change 사용 -->
-					  <td th:text="${#strings.isEmpty(fs_wh.in_status) ? fs_wh.finish_change : fs_wh.in_status}">입고완료</td>
-				      <td th:text="${fs_wh.use_yn}">Y</td>
+				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
+				      <td th:text="${fs_wh.wfs_code}"></td>
+				      <td th:text="${fs_wh.wh_code}"></td>
+				      <td th:text="${fs_wh.wh_name}"></td>
+				      <td th:text="${fs_wh.product_code}"></td>
+				      <td th:text="${fs_wh.product_name}"></td>
+				      <td th:text="${fs_wh.pd_qty}"></td>
+				      <td th:text="${fs_wh.change_type}"></td>
+				      <td th:text="${fs_wh.emp_name}"></td>
+				      <td th:text="${fs_wh.employee_code}"></td>
+					  <td th:text="${fs_wh.fs_insert.substring(0,16)}"></td>
 				  </tbody>
 				</table>
 			</div>
 			
-			<!-- 게시물이 없을 때 -->
-      	  <div th:if="${wh_check == 'nodata'}" class="text-center my-4">
-         	   등록된 게시물이 없습니다.
-      	  </div>
-			<!-- 페이지 크기 선택 -->
-				<div class="mb-3">
-				  <label for="pageSizeSelect" class="form-label">페이지 크기:</label>
-				  <select id="pageSizeSelect" class="form-select" style="width: auto; display: inline-block;">
-				    <option th:value="5" th:selected="${pageSize == 5}">5개씩</option>
-				    <option th:value="10" th:selected="${pageSize == 10}">10개씩</option>
-				    <option th:value="20" th:selected="${pageSize == 20}">20개씩</option>
-				  </select>
-				</div>
-			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
-				 <!-- 페이징 -->
+<!-- 			<!-- 게시물이 없을 때 --> 
+<!--       	  <div th:if="${wh_check == 'nodata'}" class="text-center my-4"> -->
+<!--          	   등록된 게시물이 없습니다. -->
+<!--       	  </div> -->
+      	  
+      	  
+		
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between my-4">
+			 <div class="d-flex">
+			<!-- 페이징 -->
 			<nav aria-label="Page navigation">
 			  <ul class="pagination">
-			
-			    <!-- 이전 블록 이동 버튼 -->
-			    <li class="page-item" th:classappend="${startPage > 1} ? '' : 'disabled'">
+			   <!-- 첫페이지로 -->
+			    <li class="page-item prev" th:classappend="${1>= pageSize} ? '' : 'disabled'">
 			      <a class="page-link"
-			         th:href="@{/warehouses_fs_list.do(page=${startPage - 1}, wh_search=${wh_search}, pageSize=${pageSize})}">&laquo;</a>
+			         th:href="@{/warehouses_fs_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, fs_wh_list=${fs_wh_name})}">&laquo;</a>
 			    </li>
 			
+					
 			    <!-- 페이지 번호 -->
 			    <li class="page-item" 
 			        th:each="i : ${#numbers.sequence(startPage, endPage)}"
 			        th:classappend="${i == currentPage} ? 'active'">
 			      <a class="page-link" 
-			         th:href="@{/warehouses_fs_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize})}" 
+			         th:href="@{/warehouses_fs_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize}, fs_wh_list=${fs_wh_name})}" 
 			         th:text="${i}">1</a>
 			    </li>
+			    
+			    
 			
-			    <!-- 다음 블록 이동 버튼 -->
-			    <li class="page-item" th:classappend="${endPage < totalPages} ? '' : 'disabled'">
-			      <a class="page-link"
-			         th:href="@{/warehouses_fs_list.do(page=${endPage + 1}, wh_search=${wh_search}, pageSize=${pageSize})}">&raquo;</a>
+			    <!-- 끝페이지로 -->
+			    <li class="page-item next" th:classappend="${currentPage >= totalPages} ? '' : 'disabled'">
+			      <a class="page-link" th:href="@{/warehouses_fs_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, fs_wh_list=${fs_wh_name})}">&raquo;</a>
 			    </li>
 			
 			  </ul>
 			</nav>
+			
+				<!-- 페이지 크기 선택 -->
+				<div class="ms-1">
+<!-- 				  <label for="pageSizeSelect" class="form-label">페이지 크기:</label> -->
+				  <select id="pageSizeSelect" class="form-select" style="width: auto; display: inline-block;">
+				    <option th:value="5" th:selected="${pageSize == 5}">5개씩 보기</option>
+				    <option th:value="10" th:selected="${pageSize == 10}">10개씩 보기</option>
+				    <option th:value="15" th:selected="${pageSize == 15}">15개씩 보기</option>
+				    <option th:value="20" th:selected="${pageSize == 20}">20개씩 보기</option>
+				    <option th:value="25" th:selected="${pageSize == 25}">25개씩 보기</option>
+				    <option th:value="30" th:selected="${pageSize == 30}">30개씩 보기</option>
+				  </select>
+				</div>
+				</div>
+				
 				<!-- Action Buttons -->
-				<div class="mt-4 d-flex gap-2">
+				<div class="d-flex gap-2">
+<!-- 					<button type="button" class="btn btn-info d-flex align-items-center px-2" -->
+<!-- 		            		style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()"> -->
+<!-- 		      			<i class="bi bi-box-seam"></i> &nbsp;출고요청 -->
+<!-- 		    		</button> -->
+		    		<button type="button" class="btn btn-info d-flex align-items-center px-2" onclick="addOutbound()">
+						<i class="bi bi-box-seam"></i> &nbsp;출고요청
+					</button>
 					<div class="ms-auto">
+						
 						<button type="button" class="btn btn-success" onclick="location.href='/warehouse_fs_savePage.do'">
-               				 <i class="bi bi-plus-lg"></i> 수기 등록
+               				 <i class="bi bi-plus-lg"></i> 수기등록
 						</button>
 					</div>
 				</div>

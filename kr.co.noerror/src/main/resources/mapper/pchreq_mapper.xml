@@ -11,6 +11,7 @@
     mrp.shortage_stock,
     itm.item_type,
     itm.item_name,
+    itm.item_spec,
     itm.item_unit,
     itm.item_cost,
     itm.company_code, 
@@ -147,7 +148,7 @@ SELECT
     cmp.biz_num,
     cmp.ceo_name,
     cmp.manager_name,
-    cmp.mng_phone_num,
+    cmp.mng_phone,
     cmp.com_addr1,
     cmp.com_addr2,
     emp.ename

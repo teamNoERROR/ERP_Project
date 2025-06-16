@@ -1,4 +1,5 @@
 var pch_code = document.querySelector("#pch_code");
+var comp_code = document.querySelector("#comp_code");
 var wh_name = document.querySelector("#in_wh_name");
 var wh_code = document.querySelector("#in_wh_code");
 var inbound_date = document.querySelector("#inbound_date");
@@ -14,113 +15,7 @@ function addInbound(){
 	location.href="./inbound_insert.do";
 }
 
-/*--------------------------------------------------------------
-우상단 x 마크 클릭(리스트로 돌아가기)
---------------------------------------------------------------*/
-function goInbndList(){
-	location.href="./inbound.do"
-}
-
-/*--------------------------------------------------------------
-발주리스트에서 선택후 인풋란에 붙여넣기  
---------------------------------------------------------------*/
-function choicePch() {
-	var radios = document.querySelectorAll('input[name="choice_pch"]');
-	var selected_radio = null;
-	
-		
-	for (var i = 0; i < radios.length; i++) {
-	  if (radios[i].checked) {
-	    selected_radio = radios[i];
-	  }
-	}
-	if (!selected_radio) {
-		alert("발주내역을 선택해 주세요.");
-
-	 }else{
-		var tr = selected_radio.closest('tr');
-		var tdList = tr.querySelectorAll('td');
-		var pchcode =  tdList[2].innerText.trim();
-		var cmp_name = tdList[4].innerText.trim();
-		var cmp_code = tr.getAttribute("data-etccode");
-		
-		//inbnd_insert.html에 붙는 부분
-		var pch_code = document.querySelector('#pch_code');
-		var comp_name = document.querySelector('#comp_name');
-		var comp_code = document.querySelector('#comp_code');
-		  
-		pchDtlLoad(pchcode);   //발주목록 테이블에 붙여넣기
-		
-		pch_code.value= pchcode;
-		comp_name.value= cmp_name;
-		comp_code.value= cmp_code;
-		
-	
-		
-		// 선택 후 모달 닫기
-	 	var modalElement = document.getElementById("purchase_list");
-		var modal = bootstrap.Modal.getInstance(modalElement);
-		if (modal) {
-		    modal.hide();
-			setTimeout(() => {
-				document.querySelector("body").focus(); // body에 포커스 주기
-			}, 300);
-		}
-	}
-};
-
-/*--------------------------------------------------------------
-발주한 부자재 리스트 로드 
---------------------------------------------------------------*/
-function pchDtlLoad(pch_code){
-	fetch("./purchase_detail_modal.do?code="+pch_code, {
-		method: "GET",
-		
-	}).then(function(data) {
-		return data.json();
-
-	}).then(function(result) {
-		console.log(result)
-		var tbody = document.querySelector('#inbnd_items');
-		
-		//기존 행 전체 삭제
-		document.querySelectorAll('tr.item_row').forEach(tr => tr.remove());
-		
-		//결과값 붙이기 
-		result.forEach((resultItem, index) => {
-				
-			var tr = document.createElement('tr');
-		  	tr.className = "item_row " 
-		  	tr.innerHTML = `
-			    <td>`+(index+1)+`</td>
-			    <td class="item_code">`+resultItem.item_code+`</td>
-			    <td>`+resultItem.item_name+`</td>
-			    <td>`+resultItem.item_spec+`</td>
-			    <td>`+resultItem.item_qty+`</td>
-			    <td>`+resultItem.item_unit+`</td>
-			    <td>`+resultItem.item_class1+`</td>
-				<td>`+resultItem.item_class2+`</td>
-				<td class="text-end">`+resultItem.item_cost+`</td>
-				<td><input type="number" class="form-control item_qty"></td>
-				<td><input type="date" class="form-control item_exp"></td>
-				<td>
-					<select class="form-select item_deli" aria-label="Default select example" onchange='noDeli(this)'>
-						<option value="" >선택</option>
-						<option value="납품완료" >납품완료</option>
-						<option value="부분입고">부분입고</option>
-						<option value="미납">미납</option>
-					</select>
-				</td>
-			  `;
-		  	tbody.append(tr);
-		});  
-		  
-	}).catch(function(error) {
-		console.log("통신오류발생" + error);
-	});
-	
-}
-
+inbound_date.valueAsDate = new Date();	
 /*--------------------------------------------------------------
 입고리스트 저장버튼 클릭 
 --------------------------------------------------------------*/
@@ -274,10 +169,10 @@ function inbndInsertOk(){
 function openInbndDetail(event){
 	
 	var inbnd_code = event.querySelector(".inbnd_code").textContent.trim();
-	var pch_cd = event.querySelector(".pch_code").getAttribute("data-pch");  //pch-00000_1
-	var ori_pcd = pch_cd.substring(0, 9);  //pch-00000
+	var pch_cd =   event.querySelector(".pch_code").textContent.trim();  //pch-00000 
+	var ind_pcd = event.querySelector(".pch_code").getAttribute("data-indpch"); //pch-00000_1
 
-	fetch("./inbnd_detail_modal.do?ori_pcd="+ori_pcd+"&pch_code="+pch_cd+"&inbnd_code="+inbnd_code, {
+	fetch("./inbnd_detail_modal.do?pch_code="+pch_cd+"&inbnd_code="+inbnd_code+"&ind_pcd="+ind_pcd, {
 		method: "GET",
 		
 	}).then(function(data) {
@@ -312,11 +207,11 @@ function inbCngOk(){
 		var status_chg = new Array();
 		inbnd_ckbx.forEach(inchk => {
 			inb_code = inchk.getAttribute("data-inbcode");
-			pch_code = inchk.getAttribute("data-pchcode");
+			indpchcd = inchk.getAttribute("data-indpch");
 			
 			status_chg.push({ 
 				code: inb_code, 
-				code2: pch_code,
+				code2: indpchcd,
 				statusinb : in_status.value
 			})
 		});

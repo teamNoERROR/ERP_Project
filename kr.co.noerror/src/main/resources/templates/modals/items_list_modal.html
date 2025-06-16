@@ -6,12 +6,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body row  d-flex align-items-center gap-3 ">
-		
-		  
+
 		  <!-- 테이블 영역 -->
       <div th:replace="~{/modals/item_list_body_modal.html :: itmMdList(${parentType}, ${items_total}, ${items_list}, 'modal2')}"></div>
       
       </div>
+
       <div class="modal-footer">
        <!-- Action Buttons -->
         <div class="d-flex gap-2"> 

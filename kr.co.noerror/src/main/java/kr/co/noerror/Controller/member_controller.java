@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
-import kr.co.noerror.DTO.inout_DTO;
+import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.member_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.member_service;
@@ -46,8 +46,9 @@ public class member_controller {
 //		if (status_lst == null) {
 //			status_lst = new String[] {"가입고", "입고완료", "입고취소"};
 //		}
+		String role;
 		
-		List<member_DTO> member_all_list = this.mb_svc.member_all_list();  //입고리스트 제품 리스트
+		List<member_DTO> member_all_list = this.mb_svc.member_all_list();  //사원 리스트
 		
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","사용자관리");

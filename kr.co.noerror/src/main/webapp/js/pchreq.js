@@ -15,11 +15,12 @@ function addToCart() {
       if (checkbox && checkbox.checked) {
         const item_code = row.children[3].innerText.trim();
         const item_name = row.children[4].innerText.trim();
+        const item_spec = row.children[5].innerText.trim();
         const item_unit = row.children[6].innerText.trim();
-        const item_cost = row.children[7].innerText.trim();
-        const purchase_qty = row.children[10].querySelector('input').value;
-        const company_code = row.children[11].innerText.trim();
-        const company_name = row.children[12].innerText.trim();
+        const item_cost = row.children[8].innerText.trim();
+        const purchase_qty = row.children[11].querySelector('input').value;
+        const company_code = row.children[12].innerText.trim();
+        const company_name = row.children[13].innerText.trim();
 
         if (!purchase_qty || purchase_qty <= 0) {
           alert(`발주수량이 올바르지 않습니다. (${item_code})`);
@@ -41,8 +42,9 @@ function addToCart() {
         groupedItems[company_code].items.push({
           item_code,
           item_name,
-          purchase_qty,
+          item_spec,
           item_unit,
+          purchase_qty,
           item_cost
         });
 
@@ -59,12 +61,12 @@ function addToCart() {
 		  count++;
 	      const item_code = row.children[1].querySelector('input')?.value.trim();
 	      const item_name = row.children[2].querySelector('input')?.value.trim();
-	      const purchase_qty = row.children[3].querySelector('input')?.value.trim();
+	      const item_spec = row.children[3].querySelector('input')?.value.trim();
 	      const item_unit = row.children[4].querySelector('input')?.value.trim();
-	      const item_cost = row.children[5].querySelector('input')?.value.trim();
-	      const company_name = row.children[6].querySelector('input')?.value.trim();
+	      const purchase_qty = row.children[5].querySelector('input')?.value.trim();
+	      const item_cost = row.children[6].querySelector('input')?.value.trim();
+	      const company_name = row.children[7].querySelector('input')?.value.trim();
 	      const company_code = company_name || "기타";
-
 	      if (!purchase_qty || purchase_qty <= 0) {
 	        alert(`발주수량이 올바르지 않습니다. (${item_code})`);
 	        return;
@@ -85,8 +87,9 @@ function addToCart() {
 	      groupedItems[company_code].items.push({
 	        item_code,
 	        item_name,
-	        purchase_qty,
+	        item_spec,
 	        item_unit,
+	        purchase_qty,
 	        item_cost
 	      });
 
@@ -131,11 +134,12 @@ function addToCart() {
       tr.innerHTML = `
         <td>${item.item_code}</td>
         <td>${item.item_name}</td>
-        <td>${item.purchase_qty}</td>
+        <td>${item.item_spec}</td>
         <td>${item.item_unit}</td>
+        <td>${item.purchase_qty}</td>
         <td>${item.item_cost}</td>
         <td>${item.purchase_qty * item.item_cost}</td>
-        <td><button class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button></td>
+        <td><button class="btn btn-sm btn-danger" onclick="removeItemRow(this)">삭제</button></td>
       `;
       basket.appendChild(tr);
     });
@@ -201,10 +205,10 @@ function pchreq_save() {
       // 자재 행 처리
       const purchase = {
         item_code: row.children[0].innerText.trim(),
-        item_type: row.children[1].innerText.trim(),
-        item_name: row.children[2].innerText.trim(),
-        item_qty: parseInt(row.children[3].innerText.trim(), 10),
-        item_unit: row.children[4].innerText.trim(),
+        item_name: row.children[1].innerText.trim(),
+        item_type: row.children[2].innerText.trim(),
+        item_unit: row.children[3].innerText.trim(),
+        item_qty: parseInt(row.children[4].innerText.trim(), 10),
         item_cost: parseFloat(row.children[5].innerText.trim()),
         item_amount: parseFloat(row.children[6].innerText.trim())
       };
@@ -420,84 +424,4 @@ function pchreq_update() {
 		console.error(error);
 		alert('수정 중 오류 발생');
 	});
-}
-
-//부자재리스트 모달 오픈 
-function openItemList2(){
-	fetch("./item_list.do", {
-		method: "GET",
-
-	}).then(function(data) {
-		return data.text();
-
-	}).then(function(result) {
-		document.getElementById("modalContainer").innerHTML = result;
-		
-		var modal= new bootstrap.Modal(document.getElementById("items_list"));
-		modal.show();
-		
-	}).catch(function(error) {
-		
-		console.log("통신오류발생" + error);
-	});
-}
-
-function select_items2 () {
-  // 모든 체크된 체크박스를 찾음
-  var selected_box = document.querySelectorAll('input[name="select"]:checked');
-
-  if (selected_box.length == 0) {
-	alert("제품을 1개 이상 선택해 주세요.");
-	
-  }else{
-	  // 부모 테이블 tbody
-	  var tbody = document.querySelector('#pch_items');
-	
-	  //부모 테이블의 기존 행 전체 삭제
-	  document.querySelectorAll('tr.item_add_row').forEach(tr => tr.remove());
-
-	  selected_box.forEach(checkbox => {
-		
-	    var row = checkbox.closest('tr');
-	
-	    var item = {
-	      code: row.dataset.code,
-	      type: '부자재',
-	      name: row.dataset.name,
-	      unit: row.dataset.unit,
-		  cost: row.dataset.cost,
-	      pcomp: row.dataset.company
-	    };
-		
-	    // 부모 화면에 반영
-		appendItemsRow2(tbody, item);
-	  });
-	
-	 // 모달 닫기
-  	var modalElement = document.getElementById("items_list2");
- 	var modal = bootstrap.Modal.getInstance(modalElement);
-	if (modal) {
-	    modal.hide();
-		setTimeout(() => {
-			document.querySelector("body").focus(); // body에 포커스 주기
-		}, 300);
-	}
-  }
-};
-
-//모달에서 선택한 리스트 등록화면의 리스트에 붙여넣기 
-function appendItemsRow2(tbody, item) {
-  const tr = document.createElement('tr');
-  tr.className = "item_added"
-  tr.innerHTML = `
-    <td><input type="checkbox"></td>
-    <td><input type="text" class="form-control item_code" value="${item.code}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.type}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.name}" readonly></td>
-    <td><input type="number" class="form-control" value=""></td>
-    <td><input type="text" class="form-control" value="${item.unit}" readonly></td>
-    <td><input type="text" class="form-control text-end" value="${item.cost}" readonly></td>
-    <td><input type="text" class="form-control" value="${item.pcomp}" readonly></td>
-  `;
-  tbody.append(tr);
 }

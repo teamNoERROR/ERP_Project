@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<title>재고 품목 리스트</title>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+        <!-- Title -->
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        	<h2 class="mb-1">재고 관리</h2>
+        </div>
+
+	
+	<div class="row align-items-center justify-content-between mt-3">
+  <!-- 토글 버튼 영역 -->
+  <div class="col-auto  mb-3">
+    <div id="list-type" style="border-radius: 15px; border: 1px solid #82CCDD; display: flex; justify-content: space-evenly; width: 250px;">
+      <button type="button" class="toggle_btns" id="goods_type" value="product" onclick="stockToggleButton('product')"  style="background: #82CCDD; color: #fff;">완제품</button>
+      <button type="button" class="toggle_btns" onclick="stockToggleButton('item')"  style="background: transparent; color: #000;">부자재</button>
+    </div>
+  </div>
+<!-- 토글 버튼 영역 -->
+
+  <!-- 검색창 영역 -->
+  <div class="col-auto">
+      <div class="col-auto d-flex"  >
+       <form id="frm_class" class="row g-1 align-items-center" onsubmit="return pdSearch()">
+       <!-- 키워드로 검색 -->
+        <div class="input-group input-group-sm" style="width:250px;">
+          <input type="text" class="form-control" id="keyword" name="keyword"  placeholder="검색">
+          <button class="btn btn-primary"  >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+          </form>
+      </div>
+  </div>
+    <!-- 검색창 영역 -->
+</div>
+
+
+        <!-- 제품 List Table -->
+     	<div id="contents_container">
+        <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" >
+            <table class="table align-middle table-bordered text-center" >
+                <thead class="table-light" >
+                    <tr>
+<!--                         <th scope="col"><input type="checkbox" disabled></th> -->
+                        <th scope="col">#</th>
+                        <th scope="col">IMG</th>
+                        <th scope="col">제품코드</th>
+                        <th scope="col">제품명</th>
+                        <th scope="col">대분류</th>
+                        <th scope="col">소분류</th>
+                        <th scope="col">재고합계</th>
+                        <th scope="col" style="width:220px;">상세이력</th>
+                    </tr>
+                </thead>
+                <tbody id="stock_tb">
+                
+                	<tr th:if="${stock_pd_total == 0}" >
+                		<td class="text-center no_list_tb" colspan="8"> 등록된 상품이 없습니다. </td>
+                	</tr>
+                	
+                    <tr th:if="${stock_pd_total != 0}" th:each="stpdlst, idx : ${stock_pd_list}" 
+                    	class="stock_pd_row" style="cursor: default;">
+                        <td >[[${idx.count}]] </td>
+                        <td class="p-0">
+                        
+                        </td>
+                        <td class="st_pdcd">[[${stpdlst.product_code}]]</td>
+                        <td >[[${stpdlst.product_name}]]</td>
+                        <td>[[${stpdlst.product_class1}]]</td>
+                        <td>[[${stpdlst.product_class2}]]</td>
+                         <td>[[${ind_pd_stock[stpdlst.product_code]}]]</td>
+                         <td >
+                         	<button type="button" class="btn btn-warning me-2">입고내역</button>
+                         	<button type="button" class="btn btn-success">출고내역</button>
+                         </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+       
+
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+        <div class="d-flex">
+    	<!-- Pagination -->
+    
+        <!-- 게시물개수 선택  -->
+        
+         </div>
+      
+       
+        
+	</div>
+	</div>
+    </section>
+
+  
+</main>
+
+
+<div id="modalContainer"></div>
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

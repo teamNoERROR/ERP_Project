@@ -31,24 +31,8 @@
 </select>
 
 
-
-<!-- 완제품 식품분류 목록 출력 -->
-<!-- <select id="pd_class_list" resultType="String" parameterType="Map"> -->
-<!-- 	SELECT -->
-<!-- 	<choose> -->
-<!-- 	<when test="key == null"> -->
-<!-- 		DISTINCT PRODUCT_CLASS1 FROM PRODUCTS_CLASS  -->
-<!-- 	</when> -->
-<!-- 	<otherwise> -->
-<!-- 		PRODUCT_CLASS2 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS1 = #{PRODUCT_CLASS1} -->
-<!-- 	</otherwise> -->
-<!-- 	</choose> -->
-<!-- </select> -->
-
-
-
 <!-- 상품코드 중복확인 -->
-<select id="code_dupl" resultType="int" parameterType="kr.co.noerror.DTO.products_DTO">
+<select id="code_dupl_gd" resultType="int" parameterType="kr.co.noerror.DTO.products_DTO">
 	SELECT COUNT(*) AS CNT FROM 
 	<choose>
 		<when test="PRODUCT_TYPE == 'product' or PRODUCT_TYPE == 'half'">
@@ -60,6 +44,7 @@
 	</choose>
 </select>
 
+
 <!-- 완제품 등록  -->
 <insert id="pd_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
 	INSERT INTO PRODUCTS 
@@ -67,9 +52,10 @@
 	(PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, 
 	#{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, 
 	#{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, 
-	#{PD_FILE_NM, jdbcType=CLOB}, #{PD_FILE_RENM, jdbcType=VARCHAR}, #{PD_API_FNM, jdbcType=VARCHAR}, #{PD_IMG_SRC, jdbcType=CLOB}, 
-	#{PD_USE_FLAG}, #{PD_EXP_FLAG}, #{PD_MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+	#{PD_FILE_NM, jdbcType=CLOB}, #{PD_FILE_RENM, jdbcType=VARCHAR}, #{PD_API_FNM, jdbcType=VARCHAR}, 
+	#{PD_USE_FLAG}, #{PD_EXP_FLAG}, #{PD_MEMO, jdbcType=CLOB}, SYSTIMESTAMP, NULL)
 </insert>
+
 
 <!-- 부자재 등록  -->
 <insert id="itm_insert"  parameterType="kr.co.noerror.DTO.products_DTO">
@@ -78,10 +64,9 @@
 	(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
 	#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
 	#{ITEM_COST}, #{ITM_SAFE_STOCK},  
-	#{ITM_FILE_NM, jdbcType=CLOB}, #{ITM_FILE_RENM, jdbcType=VARCHAR}, #{ITM_API_FNM, jdbcType=VARCHAR}, #{ITM_IMG_SRC, jdbcType=CLOB}, 
-	#{COMPANY_CODE}, #{ITM_USE_FLAG}, #{ITM_EXP_FLAG}, #{ITM_MEMO, jdbcType=CLOB}, SYSDATE, NULL)
+	#{ITM_FILE_NM, jdbcType=VARCHAR}, #{ITM_FILE_RENM, jdbcType=VARCHAR}, #{ITM_API_FNM, jdbcType=VARCHAR}, 
+	#{COMPANY_CODE}, #{ITM_USE_FLAG}, #{ITM_EXP_FLAG}, #{ITM_MEMO, jdbcType=CLOB}, SYSTIMESTAMP, NULL)
 </insert>
-
 
 
 <!-- 제품 전체 개수(+페이징,검색)  -->
@@ -97,26 +82,14 @@ SELECT COUNT(*) AS CNT FROM
 	      	<if test="keyword!= null">
       		AND ( 
 				PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%'
 				) 
       		</if>
       	</if>
       	<if test="sclass == null and keyword!= null">
      		( 
 			PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-			PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+			PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 			) 
    		</if>
       </where>
@@ -131,33 +104,20 @@ SELECT COUNT(*) AS CNT FROM
 	      	<if test="keyword!= null">
       		AND ( 
 				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 				) 
       		</if>
       	</if>
       	<if test="sclass == null and keyword!= null">
      		( 
 			ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-			ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-			COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+			ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 			) 
    		</if>
       </where>
   </when>
 </choose>
 </select>
-
 
 
 <!-- 제품 전체 리스트  -->
@@ -175,26 +135,14 @@ SELECT COUNT(*) AS CNT FROM
 		      	<if test="keyword!= null">
 	      		AND ( 
 					PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-					PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+					PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 					) 
 	      		</if>
 	      	</if>
 	      	<if test="sclass == null and keyword!= null">
       			( 
 				PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				PRODUCT_TYPE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PRODUCT_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				PD_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 				) 
       		</if>
 	      </where>
@@ -211,26 +159,14 @@ SELECT COUNT(*) AS CNT FROM
 		      	<if test="keyword!= null">
 	      		AND ( 
 					ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-					ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-					COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+					ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 					) 
 	      		</if>
 	      	</if>
 	      	<if test="sclass == null and keyword!= null">
       			( 
 				ITEM_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR
-				ITEM_CLASS1 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_CLASS2 LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_SPEC LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				ITEM_UNIT LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR 
-				COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				ITEM_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 				) 
       		</if>
 	      </where>
@@ -242,12 +178,6 @@ SELECT COUNT(*) AS CNT FROM
 	WHERE rnum &gt;= #{start}
 	
 </select>
-
-
-
-
-
-
 
 
 <!-- 제품 상세보기 -->

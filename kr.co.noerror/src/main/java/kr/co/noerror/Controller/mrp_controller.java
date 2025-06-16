@@ -23,7 +23,7 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.prdplan_res_DTO;
-import kr.co.noerror.Model.mrp_Calulation;
+import kr.co.noerror.Model.M_mrp_Calulation;
 import kr.co.noerror.Service.mrp_service;
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +39,7 @@ public class mrp_controller {
 	mrp_DAO mdao;
 	
 	@Resource(name="mrp_Calulation")
-	mrp_Calulation mrp_calc;
+	M_mrp_Calulation mrp_calc;
 	
 	@PostMapping("/go_purchase.do")
 	public String go_purchase(@RequestParam("data") String json_data,
@@ -69,7 +69,9 @@ public class mrp_controller {
 	@PostMapping("/mrp_calc.do")
 	@ResponseBody
 	public List<mrp_result_DTO> calculateMrp(@RequestBody List<mrp_input_DTO> mrp_inputs) {
+		System.out.println("mrp_inputs : " + mrp_inputs);
 	    List<mrp_result_DTO> mrp_results = this.mrp_calc.mrp_calc(mrp_inputs);
+	    System.out.println("mrp_results : " + mrp_results);
 	    return mrp_results;  // JSON 응답
 	}
 	
@@ -78,13 +80,14 @@ public class mrp_controller {
 			@RequestParam(name="start_date") String start_date,
 			@RequestParam(name="end_date") String end_date
 			) {
-		
+		System.out.println(start_date);
+		System.out.println(end_date);
 		Map<String, Object> mparam = new HashMap<>();
 		mparam.put("start_date", start_date); 
 		mparam.put("end_date", end_date);  
 		
 		List<prdplan_res_DTO> plans_period = this.mdao.plans_period(mparam);
-		
+		System.out.println(plans_period);
 		m.addAttribute("lmenu","생산 관리");
 		m.addAttribute("smenu","mrp 계산");
 		m.addAttribute("plans_period", plans_period);

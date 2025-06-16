@@ -2,7 +2,7 @@
 
 .tree ul {
 	list-style-type: none;
-	padding-left: 1.5rem;
+/* 	padding-left: 1.5rem; */
 	position: relative;
 }
 
@@ -10,17 +10,18 @@
 	content: '';
 	position: absolute;
 	top: 0;
-	left: 0.5rem;
+/* 	left: 0.5rem; */
 	width: 1px;
 	height: 100%;
 	background: #bdbdbd;
 }
 
 .tree li {
-	margin: 0.5rem 0;
+	margin: 0.5rem 0.5rem 0.5rem 0;
 	cursor: pointer;
 	position: relative;
-	padding-left: 1rem;
+/* 	padding-left: 1rem; */
+
 }
 
 .tree li::before {
@@ -51,11 +52,24 @@
 }
 
 
-.bom_prev {
+.bom_prev.card-body {
 	border : 1px solid #ccc;
 	border-radius:15px;
 	background-color: white;
-	padding : 10px;
+	padding : 10px !important;
 }
 
+ul #bom_tr{
+	padding-left : 5px !important;
+	
+}
+
+ul .bomtop{
+	padding-left: 0 !important;
+}
+
+li .bomlow{
+/* 	top: 30px; */
+	padding-left: 15px;
+}
 

@@ -13,6 +13,11 @@
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
         	<h2 class="mb-1">부자재 등록</h2>
         </div>
+       <!-- 우상단 x 마크  -->     
+		<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+		<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
+		</div>
+		
 <div class="form-section">
 <div class="row">
 	    <!-- 이미지 업로드 -->
@@ -23,27 +28,28 @@
 		  </div>
 		
 		  <!-- 파일 선택 input -->
-		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile()" style="width: 250px; ">
+		  <input type="file" id="itemImage" class="form-control"  accept="image/*" onchange="previewFile('item')" style="width: 250px; ">
 	</div>
 
 <!-- 제품 정보 입력 -->
 <div class="col-md-9">
+<div class="text-end mb-3">* : 필수입력</div>
 	<div class="row mb-3">
 		<div class="col-md-4">
-			<label class="form-label">제품유형</label>
+			<label class="form-label">제품유형*</label>
 			<select class="form-select" id="goods_type" onchange="goodsType(this.value)">
 				<option value="">선택</option>
 				<option value="item">부자재</option>
 			</select>
 		</div>
 		<div class="col-md-4">
-			<label class="form-label">대분류</label>
+			<label class="form-label">대분류*</label>
 			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value)">
 				<option value="" >선택</option>
 			</select>
 		</div>
 		<div class="col-md-4">
-			<label class="form-label">소분류</label>
+			<label class="form-label">소분류*</label>
 			 <select class="form-select" id="products_class2">
 				<option value="">선택</option>
 			</select>
@@ -53,15 +59,15 @@
 
 	<div class="row mb-3">
 		<div class="col-md-5">
-			 <label class="form-label">제품명</label>
+			 <label class="form-label">제품명*</label>
 			<input type="text" class="form-control" id="product_name">
 		</div>
 		<div class="col-md-2">
-			<label class="form-label">제품규격</label>
+			<label class="form-label">제품규격*</label>
 	        <input type="text" class="form-control" id="product_spec">
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">제품단위</label>
+			<label  class="form-label">제품단위*</label>
 			<select class="form-select" id="product_unit">
 				<option value="">선택</option>
 				<option value="ea">ea</option>
@@ -77,22 +83,22 @@
 	</div>
 
 	<div class="row mb-3">
-		<div class="col-md-2">
-			<label  class="form-label">사용여부</label>
+		<div class="col-md-2 pe-0 me-2">
+			<label  class="form-label">사용여부*</label>
 			<div class="ms-2 mt-1">
-				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 </label>
+				<label ><input type="radio" id="useY" name="use_flag" value="Y"> 사용 &nbsp;</label>
 				<label ><input type="radio" id="useN" name="use_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
-		<div class="col-md-2">
-			<label  class="form-label">유통기한</label> 
+		<div class="col-md-2 pe-0 me-2">
+			<label  class="form-label">유통기한*</label> 
 			<div class="ms-2 mt-1">
-				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 </label>
+				<label ><input type="radio" id="expireY" name="exp_flag" value="Y"> 사용 &nbsp;</label>
 				<label ><input type="radio" id="expireN" name="exp_flag" value="N"> 미사용 </label>
 			</div>
 		</div>
 		<div class="col-md-2">
-			<label  class="form-label">제품단가 (원)</label>
+			<label  class="form-label">제품단가 (원)*</label>
 			<input type="text" class="form-control" id="product_cost">
 		</div>
 	</div>
@@ -101,24 +107,24 @@
 	<!-- 부자재 등록일 경우 노출 -->
 	<div class="row mb-3" >
 		<div class="col-md-3">
-			<label class="form-label">거래처코드</label> 
+			<label class="form-label">거래처코드*</label> 
 			<div class="input-group">
 	            <input type="text" class="form-control" placeholder="거래처코드" id="cmp_code" readonly>
-	            <button type="button" class="btn btn-primary" onclick="pCltListOpen()">
+	            <button type="button" class="btn btn-primary" onclick="pcltListOpen()">
 	                <i class="bi bi-search"></i>
 	            </button>
 	        </div>
 		</div>
 		<div class="col-md-3">
-			<label class="form-label">거래처명</label> 
+			<label class="form-label">거래처명*</label> 
 			<input type="text" class="form-control" placeholder="거래처명" id="cmp_name" readonly>
 		</div>
 			<div class="col-md-3">
-			<label class="form-label">담당자명</label> 
+			<label class="form-label">담당자명*</label> 
 			<input type="text" class="form-control" placeholder="담당자명" id="mng_nm" readonly>
 		</div>
 		<div class="col-md-3">
-			<label class="form-label">연락처</label> 
+			<label class="form-label">연락처*</label> 
 			<input type="text" class="form-control" placeholder="연락처" id="mng_tel" readonly>
 		</div>
 	</div>
@@ -134,7 +140,7 @@
 </div>
 <!-- Action Buttons -->
 	<div class="d-flex justify-content-end  gap-2 mt-3">
-	<button type="button" class="btn btn-primary" onclick="insertItm()"><i class="bi bi-plus-lg"></i> 저장</button>
+	<button type="button" class="btn btn-primary" onclick="insertItm()"><i class="bi bi-check2-square"></i> 저장</button>
 	<button type="reset" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
 	</div>
 </div>

@@ -58,6 +58,7 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
     })
     .then(res => res.json())
     .then(result => {
+		console.log(result)
         alert("MRP 계산 완료!");
 		
 		const tbody = document.getElementById("mrp-result-tbody");

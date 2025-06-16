@@ -25,6 +25,7 @@ body {
 	position: fixed;
 	width: 100%;
 	z-index: 1000;
+	top : 0;
 }
 
 .header .logo {
@@ -58,9 +59,12 @@ body {
 	background-color: var(--hover-color);
 }
 
+.bcmenu{
+	top : 0;
+}
 .main {
 	width: 100%;
-	min-height: 100vh;
+	min-height: 88vh;
 	height : auto;
 /* 	display: flex; */
 /* 	align-items: center; */
@@ -68,8 +72,7 @@ body {
 	position: relative;
 	overflow: hidden;
 	padding: 100px 0;
-
-/* 	background: linear-gradient(135deg, var(--background-color), var(--secondary-color)); */
+	top: 0;
 }
 
 /* .main::after { */
@@ -202,6 +205,14 @@ textarea:focus,
 .readonly_text{
 	color : grey;	
 	pointer-events: none;	
+}
+
+
+/*--------------------------------------------------------------
+ breadcrumb
+--------------------------------------------------------------*/
+.breadcrumb-menu{
+	cursor: default;
 }
 
 /*--------------------------------------------------------------
@@ -407,3 +418,21 @@ table td.info-label {
  #modalContainer2{
  	z-index: 1000 !important;
  }
+ 
+ 
+ 
+ textarea {
+    resize: none;
+  }
+  
+  
+/*--------------------------------------------------------------
+  font
+--------------------------------------------------------------*/
+.text_red { 
+	color: red;
+}
+
+.text_blue{
+	color: blue;
+}

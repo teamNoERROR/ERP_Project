@@ -12,16 +12,19 @@
   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
     <h2 class="mb-1">창고 등록</h2>
   </div>
-
+ <!-- 우상단 x 마크  -->     
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+<button type="button" class="btn-close" aria-label="Close" onclick=""></button>
+</div>
   <form id="frm" th:action="@{./warehouse_save.do}" th:object="${wareInsertDTO}" method="post" enctype="multipart/form-data">
     <div class="form-section">
       <div class="row">
         <!-- 이미지 업로드 -->
-        <div class="col-md-3 d-flex flex-column align-items-end">
+        <div class="col-md-3 d-flex flex-column align-items-end mt-4">
           <div class="image-box mb-2">
-            <img id="previewImage" src="" alt="창고 사진" style="max-width: 100%; max-height: 100%;">
+           <img id="previewImage" src="./img/no-image.svg" alt="창고 사진 " style="max-width: 100%; max-height: 100%;">
           </div>
-          <input type="file" id="productImage" th:field="*{wh_file}" class="form-control" accept="image/*" onchange="previewFile()" style="width: 250px;">
+          <input type="file" id="whImage" th:field="*{wh_file}" class="form-control" accept="image/*" onchange="previewFile('warehouse')" style="width: 250px;">
         </div>
         
        
@@ -30,29 +33,27 @@
           <div class="row">
             <div class="col-md-3 mb-3">
               <label class="form-label">창고유형</label>
-              <select class="form-select" th:field="*{wh_type}" required>
+              <select class="form-select" th:field="*{wh_type}" >
                 <option value="">선택</option>
-                <option value="입고창고">입고창고</option>
-                <option value="출고창고">출고창고</option>
-                <option value="완제품창고">완제품창고</option>
+<!--                 <option value="입고창고">입고창고</option> -->
+<!--                 <option value="출고창고">출고창고</option> -->
                 <option value="부자재창고">부자재창고</option>
+                <option value="완제품창고">완제품창고</option>
               </select>
             </div>
             <div class="col-md-4">
               <label class="form-label">창고명</label>
-              <input type="text" class="form-control" th:field="*{wh_name}" required>
+              <input type="text" class="form-control" th:field="*{wh_name}" >
             </div>
             <div class="col-md-3">
               <label class="form-label">전화번호</label>
-              <input type="text" class="form-control" th:field="*{wh_number}" required>
+              <input type="text" class="form-control" th:field="*{wh_number}" maxlength="13">
             </div>
             <div class="col-md-2">
               <label class="form-label">사용 여부</label>
-              <div class="radio-group">
-                <input type="radio" id="useY" th:field="*{wh_use_flag}" value="Y">
-                <label for="useY">사용</label>
-                <input type="radio" id="useN" th:field="*{wh_use_flag}" value="N">
-                <label for="useN">미사용</label>
+              <div class="radio-group mt-1">
+                <label for="useY"><input type="radio" id="useY" th:field="*{wh_use_flag}" value="Y"> 사용 &nbsp;</label>
+                <label for="useN"><input type="radio" id="useN" th:field="*{wh_use_flag}" value="N"> 미사용</label>
               </div>
             </div>
           </div>
@@ -68,14 +69,14 @@
               </div>
               <div class="col">
                 <div class="row gx-2 align-items-center">
+                  <div class="col-md-3 d-flex align-items-center">
+                    <input type="text" class="form-control readonly_text" placeholder="우편번호" th:field="*{wh_zipcode}" readonly>
+                  </div>
                   <div class="col-md-4 d-flex align-items-center">
-                    <input type="text" class="form-control" placeholder="도로명주소" th:field="*{wh_addr1}">
+                    <input type="text" class="form-control readonly_text" placeholder="도로명주소" th:field="*{wh_addr1}" readonly>
                   </div>
                   <div class="col-md-5 d-flex align-items-center">
-                    <input type="text" class="form-control" placeholder="상세주소" th:field="*{wh_addr2}">
-                  </div>
-                  <div class="col-md-3 d-flex align-items-center">
-                    <input type="text" class="form-control" placeholder="우편번호" th:field="*{wh_zipcode}">
+                    <input type="text" class="form-control " placeholder="상세주소" th:field="*{wh_addr2}" >
                   </div>
                 </div>
               </div>
@@ -87,22 +88,29 @@
   			<div class="row gx-1 align-items-center ms-1">
    			<div class="col-auto d-flex align-items-center">
 				<!--    <button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/modals/emp_modal.jsp}" data-modal-id="emp_list" style="cursor: pointer;"> -->
-    			<button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;">
-        			<i class="bi bi-search"></i>
-    			</button>
-  			</div>
+<!--     			<button class="btn btn-primary modal-trigger" type="button" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;"> -->
+<!--         			<i class="bi bi-search"></i> -->
+<!--     			</button> -->
+<!--   			</div> -->
                 <div class="row gx-2">
                   <div class="col-md-3">
-              		 <input type="text" class="form-control" name="wh_mg_name" id="wh_mg_name" placeholder="관리자명">               
+<!--               		 <input type="text" class="form-control" name="wh_mg_name" id="wh_mg_name" placeholder="관리자명">    -->
+		       <div class="input-group">
+		            <input type="text" class="form-control readonly_text" name="wh_mg_name" id="wh_mg_name" placeholder="관리자명" readonly>
+<!-- 		            <button type="button" class="btn btn-primary modal-trigger" th:data-modal-url="@{/employee_list.do}" data-modal-id="emp_list" style="cursor: pointer;"> -->
+		                <button type="button" class="btn btn-primary" onclick="empListOpen('wh_emp')"style="cursor: pointer;">
+		                <i class="bi bi-search"></i>
+		            </button>
+		        </div>    
                   </div>
                   <div class="col-md-3">
-            		  <input type="text" class="form-control" placeholder="사원번호" th:field="*{wh_mg_id}">
+            		  <input type="text" class="form-control readonly_text" placeholder="사원번호" id="wh_mg_cd" th:field="*{wh_mg_id}" readonly>
                    </div>
                   <div class="col-md-3">
-                    <input type="text" class="form-control" name="wh_mg_mp" id="wh_mg_mp" placeholder="부서/직급">              
+                    <input type="text" class="form-control readonly_text" name="wh_mg_mp" id="wh_mg_mp" placeholder="부서/직급" readonly>              
                   </div>
-                  <div class="col-md-3">
-             		   <input type="text" class="form-control" name="wh_mg_ph" id="wh_mg_ph" placeholder="연락처">
+                  <div class="col-md-3"> 
+             		   <input type="text" class="form-control readonly_text" name="wh_mg_ph" id="wh_mg_ph" placeholder="연락처" readonly>
                   </div>
                 </div>
               </div>

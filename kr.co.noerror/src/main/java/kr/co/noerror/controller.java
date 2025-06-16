@@ -1,5 +1,7 @@
 package kr.co.noerror;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,9 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class controller {
-
+	Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	
 	//메인화면
 	@GetMapping("/")
 	public String index(Model m) {
@@ -23,21 +27,16 @@ public class controller {
 	
 
 	
-	//제품 출고 
-	@GetMapping("/outbound.do")
-	public String outbound(Model m) {
-		m.addAttribute("lmenu","입출고관리");
-		m.addAttribute("smenu","제품 출고");
-		return "/warehouse/outbound_list.html";
-	}
+
 	
 	//창고관리 
-	@GetMapping("/warehouse.do")
-	public String warehouse(Model m) {
-		m.addAttribute("lmenu","기준정보관리");
-		m.addAttribute("smenu","창고 관리");
-		return "/warehouse/warehouses_list.html";
-	}
+//	@GetMapping("/warehouse.do")
+//	public String warehouse(Model m) {
+//		m.addAttribute("lmenu","기준정보관리");
+//		m.addAttribute("smenu","창고 관리");
+//		m.addAttribute("mmenu","창고 리스트");
+//		return "/warehouse/warehouses_list.html";
+//	}
 	
 	//창고별 재고
 	@GetMapping("/warehouse_stock.do")

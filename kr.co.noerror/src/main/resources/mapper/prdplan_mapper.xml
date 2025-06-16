@@ -9,9 +9,9 @@ SELECT * FROM (
     FROM (
         SELECT pln.*, ord.due_date, cmp.company_name, emp.ename
         FROM production_plan pln
-        JOIN order_request ord ON pln.order_code = ord.order_code
-        JOIN client_comp cmp ON pln.company_code = cmp.company_code
-        JOIN employee emp ON pln.ecode = emp.ecode
+        LEFT JOIN order_request ord ON pln.order_code = ord.order_code
+        LEFT JOIN client_comp cmp ON pln.company_code = cmp.company_code
+        JOIN employee2 emp ON pln.ecode = emp.ecode
         WHERE 1=1
 		<if test="search_word != null and search_word != ''">
 		  AND (
@@ -38,7 +38,7 @@ SELECT COUNT(*) AS total
 	FROM production_plan pln
 	JOIN order_request ord ON pln.order_code = ord.order_code
 	JOIN client_comp cmp ON pln.company_code = cmp.company_code
-	JOIN employee emp ON pln.ecode = emp.ecode
+	JOIN employee2 emp ON pln.ecode = emp.ecode
 WHERE 1=1
 	<if test="search_word != null and search_word != ''">
 	  AND (
@@ -121,11 +121,11 @@ SELECT * FROM employee ORDER BY eidx desc
   ) VALUES (
     production_plan_no.NEXTVAL, 
     #{plan_code},
-    #{order_code},
+    #{order_code, jdbcType=VARCHAR},
     #{priority},
     #{start_date},
     #{end_date},
-    #{company_code},
+    #{company_code, jdbcType=VARCHAR},
     #{ecode},
     #{plan_status},
     #{mrp_status},
@@ -161,7 +161,8 @@ SELECT
     prd.product_name,
     prd.product_spec,
     prd.product_unit, 
-    ord.product_qty, 
+    pld.product_qty, 
+    pln.priority,
     orh.due_date, 
     prd.product_cost,
     prd.product_class1,
@@ -175,19 +176,19 @@ SELECT
     cmp.biz_num,
     cmp.ceo_name,
     cmp.manager_name,
-    cmp.mng_phone_num,
+    cmp.mng_phone,
     cmp.com_addr1,
     cmp.com_addr2,
     emp.ename
 FROM production_plan_detail pld
 JOIN production_plan pln ON pld.plan_code = pln.plan_code
-JOIN order_request orh ON pln.order_code = orh.order_code
-JOIN order_req_detail ord 
+LEFT JOIN order_request orh ON pln.order_code = orh.order_code
+LEFT JOIN order_req_detail ord 
   ON pln.order_code = ord.order_code 
  AND pld.product_code = ord.product_code
 JOIN products prd ON pld.product_code = prd.product_code
 LEFT JOIN client_comp cmp ON pln.company_code = cmp.company_code
-LEFT JOIN employee emp ON pln.ecode = emp.ecode
+LEFT JOIN employee2 emp ON pln.ecode = emp.ecode
 WHERE pld.plan_code = #{plan_code}
 </select>
 

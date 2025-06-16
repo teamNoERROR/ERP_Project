@@ -1,21 +1,32 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
+import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.client_service;
@@ -30,6 +41,9 @@ public class client_controller {
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
+	
+	@Resource(name="del_DTO")
+	del_DTO d_dto;
 	
 	List<String> list = null; 
 	Map<String, String> map = null;
@@ -87,7 +101,7 @@ public class client_controller {
 	
 	//거래처 상세보기 모달 
 	@PostMapping("/client_detail.do")
-	public String goods_detail(Model m, @RequestParam("cidx") String cidx
+	public String client_detail(Model m, @RequestParam("cidx") String cidx
 								, @RequestParam("code") String code
 								, @RequestParam("type") String type) {
 		
@@ -102,14 +116,145 @@ public class client_controller {
 		}else {
 			m.addAttribute("client_one", client_one);
 			this.url = "/modals/client_detail_modal.html";
-			
 		}
 		return this.url;
 	}
 	
 	
 	
+	//거래처 등록하기 화면이동 
+	@GetMapping("/client_insert.do")
+	public String client_insert(Model m) throws IOException {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","거래처 관리");
+		m.addAttribute("mmenu","거래처 등록");
+		
+		return "/client/client_insert.html";
+	}
 	
 	
+	
+	//거래처 등록 
+	@PostMapping("/client_insertok.do")
+	public String client_insertok(@ModelAttribute client_DTO cdto,
+									@RequestParam(value = "clientImage", required = false) MultipartFile clientImage,
+									HttpServletResponse res) {
+		try {
+			this.pw = res.getWriter();
+			
+			int result = this.clt_svc.clt_insert(cdto, clientImage);  
+			
+			if(result > 0) {  
+				this.pw.write("ok");  //거래처 등록 완료 
+			}
+			else {
+				this.pw.write("fail"); //거래처 등록실패
+			}
+			
+		} catch (IOException e) {
+			this.pw.write("error"); //제품 등록실패
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+	
+	
+	//거래처 수정하기 화면이동 
+	@GetMapping("/client_modify.do")
+	public String client_modify(Model m, @RequestParam("code1") String cidx
+								, @RequestParam("code2") String code
+								) {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","거래처 관리");
+		m.addAttribute("mmenu","거래처 수정");
+		
+		client_DTO client_one = this.clt_svc.clt_one_detail(code, cidx);  //특정게시물 내용 가져오기
+		System.out.println(client_one);
+		m.addAttribute("client_one", client_one);
+		return "/client/client_modify.html";
+	}
+	
+	
+	//거래처 정보 수정 
+	@PostMapping("/client_modifyok.do")
+	public String client_modifyok(@ModelAttribute client_DTO cdto
+									,@RequestParam(value = "clientImage", required = false) MultipartFile clientImage
+									,HttpServletResponse res) {
+		try {
+			this.pw = res.getWriter();
+			int result = this.clt_svc.clt_modifyok(cdto, clientImage);  
+			
+			if(result > 0) {  
+				this.pw.write("ok");  //거래처 수정 완료 
+			}
+			else {
+				this.pw.write("fail"); //거래처 수정실패
+			}
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println("error : " + e);
+			e.printStackTrace();
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+	
+	
+	
+	//거래처 삭제 
+	@DeleteMapping("/client_delete.do/{key}")
+	public String client_delete(@PathVariable(name="key") String key,
+								@RequestBody String clt_data,
+								HttpServletRequest req, HttpServletResponse res) throws IOException {
+		this.pw = res.getWriter();
+		
+		try {
+			JSONArray ja = new JSONArray(clt_data);
+			int data_ea = ja.length();
+			int count = 0;
+			int result = 0;
+			
+			for (int w = 0; w < data_ea; w++) {
+			    JSONObject jo = ja.getJSONObject(w);
+			    
+			    String del_key = jo.getString("type")+"_del";
+			    this.d_dto.setIdx(jo.getInt("idx"));
+			    this.d_dto.setCode(jo.getString("code"));
+			    this.d_dto.setType(jo.getString("type"));
+				
+				if(key.equals(del_key)) {
+	//				
+					result =  this.clt_svc.clt_delete(this.d_dto);
+					if(result >= 1) {
+						count++;
+					}
+						
+				}
+				else {
+					this.pw.write("key error");
+				}
+			}
+			if(data_ea == count ) {  //모든 글 삭제 완료 
+				this.pw.write("ok");
+				
+			}else {  //전체 삭제실패 
+				this.pw.write("fail");
+			}
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 	
 }

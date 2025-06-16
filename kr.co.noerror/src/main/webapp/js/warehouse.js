@@ -63,7 +63,7 @@ function deleteWarehouse(button) {
 
  
  //*******************************부자재 모달 리스트 선택 후 반환 **************************************** */
- function select_iosf_wh() {
+ /*function select_iosf_wh() {
    const selectedRadio = document.querySelector('input[name="iosfSelect"]:checked');
 
    if (!selectedRadio) {
@@ -122,6 +122,7 @@ function deleteWarehouse(button) {
    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
    modal.hide();
  }
+ */
 
 //******************************창고 페이징************************* */ 
 document.addEventListener('DOMContentLoaded', function () {
@@ -230,82 +231,106 @@ document.addEventListener('DOMContentLoaded', function () {
      console.log("선택된 값:", inboundCode, itemCode, clientCode, whCode, inStatus, itemCount);
  }
  
-//체크박스 형태로 여러개의 값 전송
- document.addEventListener('DOMContentLoaded', function () {
-	
-	
-   const moveBtn = document.querySelector('.btn-info');
-   if (!moveBtn) return;
+//체크박스 형태로 여러개의 값 전송(창고이동)
+// document.addEventListener('DOMContentLoaded', function () {
+function whMove(){	
+	//const moveBtn = document.querySelector('.whMoveBtn');
+	//if (!moveBtn) return;
 
-   // 복제하여 기존 이벤트 제거
-   const clonedBtn = moveBtn.cloneNode(true);
-   moveBtn.replaceWith(clonedBtn); // 기존 버튼을 교체
-
-   clonedBtn.addEventListener('click', function () {
-     const checkedBoxes = document.querySelectorAll('.move-checkbox:checked');
-     if (checkedBoxes.length === 0) {
-       alert('이동할 항목을 선택해주세요.');
-       return;
-     }
-
-     const moveData = [];
-     checkedBoxes.forEach(box => {
-       const wh_code = box.getAttribute('data-wh_code');
-       const inbound_code = box.getAttribute('data-inbound_code');
-       const item_code = box.getAttribute('data-item_code');
-       const wh_type = box.getAttribute('data-wh_type');
-       const in_status = box.getAttribute('data-in_status');
-       const item_count = box.getAttribute('data-item_count');
-	   
-       if (wh_code && inbound_code && item_code && wh_type && item_count) {
-         moveData.push({ wh_code, inbound_code, item_code ,wh_type, in_status, item_count});
-       }
-     });
-
-     if (moveData.length === 0) {
-       alert('선택한 항목의 데이터가 누락되었거나 유효하지 않습니다.');
-       return;
-     }
-
-     fetch('/IOSF_warehouse_move.do', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify(moveData)
-     })
-     .then(res => {
-       if (!res.ok) throw new Error('서버 오류');
-       return res.json();
-     })
-	 .then(data => {
-	   if (data.success) {
-	    
-		const wh_type = moveData[0].wh_type; // 첫 항목의 창고 타입 사용 (필요 시 공통성 체크)
-		let wh_kind = "";
-
-		if (wh_type == "in") {
-		    wh_kind = "입고";
-		} else if (wh_type == "mt") {
-		    wh_kind = "부자재";
-		} else if (wh_type == "fs") {
-		    wh_kind = "완제품";
-		} else if (wh_type == "out") {
-		    wh_kind = "출고";
-		}
-	     if (confirm(`이동이 완료되었습니다. ${wh_kind} 리스트로 이동하시겠습니까?`)) {
-	       location.href = `/warehouses_${wh_type}_list.do`;
-	     } else {
-	       alert("이동만 완료되고 현재 페이지에 머물렀습니다.");
+	// 복제하여 기존 이벤트 제거
+	/*const clonedBtn = moveBtn.cloneNode(true);
+	  moveBtn.replaceWith(clonedBtn); // 기존 버튼을 교체*/
+	  
+	//clonedBtn.addEventListener('click', function () {
+		const checkedBoxes = document.querySelectorAll('.move-checkbox:checked');
+		if (checkedBoxes.length === 0) {
+   			alert('이동할 항목을 선택해주세요.');
+   			return;
+ 		}
+ 
+ 		const movetowh = document.querySelector("#wh_name");
+ 		if(movetowh.value==""){
+			alert('이동시킬 창고를 선택해주세요.');
+			return;
+ 		}
+		
+		const moveData = [];
+		checkedBoxes.forEach(box => {
+   			const wh_code = box.getAttribute('data-wh_code');
+   			const wh_type = box.getAttribute('data-wh_type');
+   			const product_code = box.getAttribute('data-product_code');
+   			const pd_qty = box.getAttribute('data-pd_qty');
+   			const emp_code = box.getAttribute('data-emp_code');
+   			const pd_name = box.getAttribute('data-pd_name');
+			
+			const inbound_code = box.getAttribute('data-inbound_code');
+			const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
+			
+			const mv_wh_code = document.querySelector("#wh_code").value;
+   
+   			if (wh_code && wh_type && product_code && pd_qty && emp_code && pd_name && mv_wh_code) {
+     			moveData.push({ 
+					wh_code, 
+					wh_type, 
+					product_code,
+					pd_qty, 
+					emp_code, 
+					pd_name, 
+					mv_wh_code,
+					inbound_code,
+					ind_pch_cd
+				});
+   			}
+ 		});
+		if (moveData.length === 0) {
+	       alert('선택한 항목의 데이터가 누락되었거나 유효하지 않습니다.');
+	       return;
 	     }
-	   } else {
-	     alert("이동 처리 실패: " + (data.message || "알 수 없는 오류"));
-	   }
-	 })
-     .catch(err => {
-       console.error(err);
-       alert("이동 중 오류가 발생했습니다.");
-     });
-   });
- });
+		 
+		 fetch('/IOSF_warehouse_move.do', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(moveData)
+	      })
+		  .then(res => {
+	         if (!res.ok) throw new Error('서버 오류');
+	         return res.json();
+	       })
+		   .then(data => {
+		   	   if (data.success) {
+				alert("선택하신 창고로 제품 이동이 완료되었습니다.");
+				location.reload();
+		   		/*
+		   		const wh_type = moveData[0].wh_type; // 첫 항목의 창고 타입 사용 (필요 시 공통성 체크)
+		   		let wh_kind = "";
+
+		   		if (wh_type == "in") {
+		   		    wh_kind = "입고";
+		   		} else if (wh_type == "mt") {
+		   		    wh_kind = "부자재";
+		   		} else if (wh_type == "fs") {
+		   		    wh_kind = "완제품";
+		   		} else if (wh_type == "out") {
+		   		    wh_kind = "출고";
+		   		}
+		   	     
+		   		
+		   		if (confirm(`이동이 완료되었습니다. ${wh_kind} 리스트로 이동하시겠습니까?`)) {
+		   	       location.href = `/warehouses_${wh_type}_list.do`;
+		   	     } else {
+		   	       alert("이동만 완료되고 현재 페이지에 머물렀습니다.");
+		   	     }
+		   		 */
+		   	   } else {
+		   	     alert("이동 처리 실패: " + (data.message || "알 수 없는 오류"));
+		   	   }
+		   	})
+			.catch(err => {
+		       console.error(err);
+		       alert("이동 중 오류가 발생했습니다.");
+		     });
+	//});
+ }
 
 // ********************************************* 창고 체크박스로 삭제 *****************************************
 function deleteWh(wh_type) {
@@ -410,7 +435,7 @@ function wh_save() {
   }
 
   // 이미지
-  const imageInput = form.querySelector('#productImage');
+  const imageInput = form.querySelector('#whImage');
   const image = imageInput.files[0];
 
   if (!image) {
@@ -425,6 +450,7 @@ function wh_save() {
     return;
   }
   
+  /*
   //전화번호
   const whNumberInput = form.querySelector('[name="wh_number"]');
   let whNumber = whNumberInput.value.trim().replace(/-/g, ''); // 하이픈 제거
@@ -434,7 +460,8 @@ function wh_save() {
     whNumberInput.focus();
     return;
   }
-
+	*/
+	
 
   // 사용여부
   const whUseFlag = form.querySelector('input[name="wh_use_flag"]:checked');
@@ -452,6 +479,7 @@ function wh_save() {
     return;
   }
   
+  
   // 창고 주소 - 상세주소 필수
   const whAddr2 = form.querySelector('[name="wh_addr2"]').value.trim();
   if (!whAddr2) {
@@ -459,6 +487,7 @@ function wh_save() {
     form.querySelector('[name="wh_addr2"]').focus();
     return;
   }
+
 
   // 우편번호 - 숫자 5자리
   const whZip = form.querySelector('[name="wh_zipcode"]').value.trim();
@@ -469,13 +498,14 @@ function wh_save() {
   }
 
   // 관리자명
-  const mgName = form.querySelector('[name="wh_mg_name"]').value.trim();
+  const mgName = form.querySelector('[name="wh_mg_name"]').value;
   if (!mgName) {
-    alert("창고 관리자명을 입력해주세요.");
+    alert("창고 관리자를 선택해주세요.");
     form.querySelector('[name="wh_mg_name"]').focus();
     return;
   }
 
+  /*
   // 사원번호 (영문+숫자, 4~10자리)
   const mgId = form.querySelector('[name="wh_mg_id"]').value.trim();
   if (!/^[a-zA-Z0-9]{4,10}$/.test(mgId)) {
@@ -483,7 +513,13 @@ function wh_save() {
     form.querySelector('[name="wh_mg_id"]').focus();
     return;
   }
-
+*/
+	const mgId = form.querySelector('[name="wh_mg_id"]').value.trim();
+  if (!/^[A-Z]{3}-\d{5}$/.test(mgId)) {
+    alert("사원번호를 입력해주세요.");
+    form.querySelector('[name="wh_mg_id"]').focus();
+    return;
+  }
   // 부서/직급
   const mgMp = form.querySelector('[name="wh_mg_mp"]').value.trim();
   if (!mgMp) {
@@ -492,7 +528,7 @@ function wh_save() {
     return;
   }
 
-   
+   /*
   // 연락처 (휴대폰 형식: 0102223344)
   const mgPh = form.querySelector('[name="wh_mg_ph"]').value.trim();
   if (!/^01[0-9]-\d{3,4}-\d{4}$/.test(mgPh)) {
@@ -500,6 +536,7 @@ function wh_save() {
     form.querySelector('[name="wh_mg_ph"]').focus();
     return;
   }
+  */
   // 설명 (선택사항 - 길이 제한)
   const desc = form.querySelector('[name="wh_desc"]').value.trim();
   if (desc.length > 500) {
@@ -517,9 +554,10 @@ function wh_save() {
   }
 
   // 모든 조건 통과 시 제출
-  frm.submit();
+  form.submit();
   
   }
+  
     
   //**********************************************다음 주소 api********************************************
   function sample6_execDaumPostcode() {
@@ -566,3 +604,4 @@ function wh_save() {
             }
         }).open();
     }
+	

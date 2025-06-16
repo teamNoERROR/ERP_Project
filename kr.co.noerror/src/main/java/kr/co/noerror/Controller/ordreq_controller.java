@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,9 +26,12 @@ import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
 import kr.co.noerror.DTO.products_DTO;
 import kr.co.noerror.DTO.search_condition_DTO;
+import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Model.M_paging2;
 import kr.co.noerror.Model.M_unique_code_generator;
 import kr.co.noerror.Service.generic_list_service;
+import kr.co.noerror.Service.goods_service;
+import kr.co.noerror.Service.inventory_service;
 import kr.co.noerror.Service.ordreq_service;
 import lombok.RequiredArgsConstructor;
 
@@ -49,10 +53,22 @@ public class ordreq_controller {
 	ordreq_DAO odao;
 	
 	@Autowired
+	inventory_service inv_svc; 
+	
+	@Autowired
 	private M_unique_code_generator unique_code_generator;
 	
 	@Autowired
 	M_paging2 m_pg2;
+	
+	@Resource(name="M_paging")  //페이징생성 모델 
+	M_paging m_pg;
+	
+	@Autowired
+	private goods_service g_svc;  //품목 서비스
+	
+	 //버튼 누름 방지
+    String [] no_chng_ordBtn = {"주문확인","주문취소","생산계획수립","생산계획확정"};
 		
 	@PostMapping("/order_save.do")
 	@ResponseBody
@@ -74,8 +90,12 @@ public class ordreq_controller {
 	    );
 	    System.out.println(paging_info);
 	    
-	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info);
+	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info, null);
 
+	    model.addAttribute("lmenu","구매영업관리");
+	    model.addAttribute("smenu","주문 관리");
+	    model.addAttribute("mmenu","주문 리스트");
+	    
 	    model.addAttribute("all", ord_list);
 	    model.addAttribute("paging", paging_info);
 	    model.addAttribute("condition", search_cond);
@@ -83,66 +103,55 @@ public class ordreq_controller {
 	    return "/production/order_list.html";
 	}
 	
-	//modal에 주문리스트 띄우기
-	@GetMapping("/ord_list_modal.do")
-	public String orders_modal(@ModelAttribute search_condition_DTO search_cond, Model model, @RequestParam(value="mode", required = false) String mode) {
-		
-	    int search_count = this.ordreq_list_service.search_count(search_cond);
-	    
-	    paging_info_DTO paging_info = this.m_pg2.calculate(
-	    		search_count, 
-	    		search_cond.getPage_no(), 
-	    		search_cond.getPage_size(), 
-	    		page_block
-	    );
-	    
-	    List<ordreq_res_DTO> ord_list = this.ordreq_list_service.paged_list(search_cond, paging_info);
-
-	    model.addAttribute("all", ord_list);
-	    model.addAttribute("paging", paging_info);
-	    model.addAttribute("condition", search_cond);
-	    
-		if ("modal2".equals(mode)) {
-	        return "/modals/order_list_body_modal.html :: ordMdList";
-	    } else {
-	        return "/modals/order_list_modal.html"; 
-	    }
-	}
 	
-	//생산계획 작성시 주문코드에 해당하는 제품목록 제공
+	
+	//생산계획 작성시 주문제품목록 제공
 	@ResponseBody
 	@GetMapping("/ordreq_products.do")
 	public List<ordreq_res_DTO> ordreq_products(@RequestParam(name="code") String order_code) {
 		List<ordreq_res_DTO> ordreq_products = this.odao.ordreq_products(order_code);
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
+		for (ordreq_res_DTO dto : ordreq_products) {
+		    String code = dto.getProduct_code();
+		    int stockQty = ind_pd_all_stock.getOrDefault(code, 0);  // 없으면 0
+		    dto.setInd_pd_all_stock(stockQty);  // 재고 주입
+		}
+		
 		return ordreq_products;
 	}
 	
-	@GetMapping("/products_modal.do")
-	public String products_modal(Model m) {
-		List<products_DTO> products = this.odao.products_list();
-		m.addAttribute("products",products);
-		return  "/modals/temp_products_list_modal.html";
-	}
 	
+	/*
 	@GetMapping("/clients_modal.do")
 	public String clients_modal(Model m) {
 		List<client_DTO> clients = this.odao.clients_for_order();
 		m.addAttribute("clients",clients);
 		return  "/modals/temp_client_list_modal.html";
-	}
+	}*/
+	
+	
 	
 	@GetMapping("/order_insert.do")
 	public String order_insert(Model m) {
 		m.addAttribute("lmenu","구매영업관리");
-		m.addAttribute("smenu","주문관리");
-		m.addAttribute("mmenu","주문등록");
+		m.addAttribute("smenu","주문 관리");
+		m.addAttribute("mmenu","주문 등록");
 		return "/production/order_insert.html";
 	}
 	
+	
+	//주문건 상세보기 
 	@GetMapping("/ordreq_detail.do")
 	public String ordreq_detail(@RequestParam(name="code") String order_code, Model m) {
-		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);
+		
+		
+		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);  //주문상세
+		
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수 
+		
 		m.addAttribute("details",details);
+		m.addAttribute("ind_pd_all_stock",ind_pd_all_stock);
+		 m.addAttribute("no_chng_ordBtn", no_chng_ordBtn); // 상태 변경 불가
 		return "/modals/order_detail_modal.html";
 	}
 	

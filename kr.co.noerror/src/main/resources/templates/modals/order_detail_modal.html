@@ -144,7 +144,7 @@
 								<td>[[${#numbers.formatDecimal(d.product_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
 								<td>[[${ind_pd_all_stock[d.product_code] == null ? 0 : #numbers.formatInteger(ind_pd_all_stock[d.product_code],0,'COMMA')}]]  
-									<span th:classappend="${((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty ) < 0} ? 'text_red' : 'text_blue'">&nbsp;( [[${#numbers.formatInteger(((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty),0,'COMMA')}]] / [[${#numbers.formatInteger(d.pd_safe_stock,0,'COMMA')}]])</span>
+									<span th:classappend="${((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty ) < 0} ? 'text_red' : 'text_blue'">&nbsp;( [[${#numbers.formatInteger(((ind_pd_all_stock[d.product_code] ?: 0) - d.product_qty),0,'COMMA')}]] )</span>
 								</td>
 								<td>[[${d.product_unit}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.product_cost,

@@ -12,8 +12,6 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
-import kr.co.noerror.DTO.products_DTO;
-import kr.co.noerror.DTO.temp_bom_DTO;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inventory_service;
 

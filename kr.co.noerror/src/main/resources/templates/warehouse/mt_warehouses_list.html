@@ -129,7 +129,7 @@
 						       th:data-ind_pch_cd="${mt_wh.ind_pch_cd}"
 						       th:data-pd_name="${mt_wh.item_name}"
 						        onclick="selectRow(event,this);" 
-						       th:disabled="${mt_wh.change_type == '출고' OR mt_wh.change_type == '출고완료'}" />
+						       th:disabled="${mt_wh.change_type == '출고' OR mt_wh.change_type == '출고완료' OR mt_wh.move_type == '이동'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
 				      <td th:text="${mt_wh.material_code}"></td>
@@ -137,10 +137,10 @@
 				      <td th:text="${mt_wh.wh_name}"></td>
 				      <td th:text="${mt_wh.item_code}"></td>
 				      <td th:text="${mt_wh.item_name}"></td>
-				      <td th:text="${mt_wh.item_qty}"></td>
+				      <td th:text="${#numbers.formatInteger(mt_wh.item_qty,0,'COMMA')}"></td>
 				      <td th:text="${mt_wh.change_type}"></td>
-				      <td th:text="${mt_wh.change_type}"></td>
-				      <td th:text="${mt_wh.change_type}"></td>
+				      <td th:text="${#numbers.formatInteger(mt_wh.total_current_qty,0,'COMMA')}"></td>
+				      <td th:text="${#numbers.formatInteger(mt_wh.current_qty,0,'COMMA')}"></td>
 				      <td th:text="${mt_wh.emp_name}"></td>
 				      <td th:text="${mt_wh.employee_code}"></td>
 					  <td>[[${mt_wh.material_date.substring(0,16)}]]</td>

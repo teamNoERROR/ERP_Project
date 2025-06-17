@@ -94,5 +94,6 @@ public class IOSF_DTO {
     Integer ind_itm_stock;
     Integer current_qty;
     Integer total_current_qty;
-    String move_type;
+    String move_type;  //이동여부 
+    String inv_lot;  //입고로트
 }

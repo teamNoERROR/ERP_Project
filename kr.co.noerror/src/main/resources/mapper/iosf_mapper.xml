@@ -17,7 +17,8 @@
         EMPLOYEE_CODE,
         MT_INSERT_DATE,
         MT_MODIFY_DATE,
-        MOVE_TYPE
+        MOVE_TYPE,
+        INV_LOT 
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
    	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
@@ -29,7 +30,8 @@
         #{employee_code},
         SYSTIMESTAMP,
         NULL,
-        NULL
+        NULL,
+        TO_CHAR(SYSDATE, 'YYMMDDHH24MISS') || '-' || LPAD(TEMP_NO.NEXTVAL, 5, '0')
     )
    </if>
    
@@ -45,7 +47,8 @@
         EMPLOYEE_CODE,
         FS_INSERT_DATE,
         FS_MODIFY_DATE,
-        MOVE_TYPE
+        MOVE_TYPE,
+        INV_LOT
     ) VALUES (
    	    FS_WAREHOUSE_NO.NEXTVAL,
         'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
@@ -57,7 +60,8 @@
         #{employee_code},
         SYSTIMESTAMP,
         NULL,
-        NULL
+        NULL,
+        TO_CHAR(SYSDATE, 'YYMMDDHH24MISS') || '-' || LPAD(TEMP_NO.NEXTVAL, 5, '0')
     )
    </if>
 </insert>
@@ -65,12 +69,21 @@
 <!-- 이동 후 MOVE_TYPE 변경 -->
 <update id="IOSF_warehouse_move_up">
 UPDATE 
+<if test="wh_type == 'mt'">
+  WAREHOUSE_MATERIAL
+  SET 
+  	MOVE_TYPE = '이동'
+    <where>
+    	WH_CODE = #{wh_code} AND ITEM_CODE = #{item_code} AND INBOUND_CODE = #{inbound_code} AND WMT_CODE = #{wmt_code} 
+    </where>
+</if>
+
 <if test="wh_type == 'fs'">
   WAREHOUSE_FINISH
   SET 
   	MOVE_TYPE = '이동'
     <where>
-    	WH_CODE = #{wh_code} AND PRODUCT_CODE = #{product_code} AND PLAN_CODE = #{plan_code}
+    	WH_CODE = #{wh_code} AND PRODUCT_CODE = #{product_code} AND PLAN_CODE = #{plan_code} AND WFS_CODE = #{wfs_code} 
     </where>
 </if>
 
@@ -90,7 +103,8 @@ UPDATE
         EMPLOYEE_CODE,
         MT_INSERT_DATE,
         MT_MODIFY_DATE,
-        MOVE_TYPE
+        MOVE_TYPE,
+        
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
    	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
@@ -256,63 +270,69 @@ UPDATE
 <select id="IOSF_select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.IOSF_DTO">
 <choose>
 <when test="wh_type == 'mt'">
-  <![CDATA[
-SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT
-      mt.WMT_IDX               AS win_idx,
-      mt.WMT_CODE              AS material_code,
-      mt.WH_CODE               AS wh_code,
-      mt.INBOUND_CODE          AS inbound_code,
-      mt.ITEM_CODE             AS item_code,
-      mt.ITEM_QTY              AS item_qty,
-      mt.CHANGE_TYPE           AS change_type,
-      mt.MT_INSERT_DATE        AS material_date,
-      mt.MOVE_TYPE 
-      w.WH_NAME                AS wh_name,
+<!--   <![CDATA[ -->
+SELECT * FROM (
+    SELECT ROWNUM AS RN, A.*
+    FROM (
+        SELECT 
+            WMT.WMT_IDX AS win_idx,
+            WMT.WMT_CODE AS material_code,
+            WMT.WH_CODE,
+            WMT.INBOUND_CODE,
+            WMT.ITEM_CODE,
+            WMT.ITEM_QTY,
+            WMT.CHANGE_TYPE,
+            WMT.MOVE_TYPE,
+            WMT.EMPLOYEE_CODE,
+            WMT.MT_INSERT_DATE AS material_date,
+			WMT.INV_LOT,
+			
+			WH.WH_NAME,
+			ITM.ITEM_NAME,
+			ITM.COMPANY_CODE AS client_code,
+			ITM.COMPANY_NAME AS client_name,
+			ITM.ITEM_CLASS1 AS category_main,
+			ITM.ITEM_CLASS2 AS category_sub,
+            EMP.ENAME AS EMP_NAME,
+            <!-- 창고별 상품별 현재 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WM2.CHANGE_TYPE = '입고' THEN WM2.ITEM_QTY
+                        WHEN WM2.CHANGE_TYPE = '출고' THEN -WM2.ITEM_QTY
+                        WHEN WM2.CHANGE_TYPE = '수동조정' THEN WM2.ITEM_QTY
+                        WHEN WM2.CHANGE_TYPE = '출고완료' THEN -WM2.ITEM_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_MATERIAL WM2
+                WHERE WM2.ITEM_CODE = WMT.ITEM_CODE
+                  AND TRIM(WM2.WH_CODE) = TRIM(WMT.WH_CODE)
+            ) AS CURRENT_QTY,
+            
+ 			<!-- 상품별 전체 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WM3.CHANGE_TYPE = '입고' THEN WM3.ITEM_QTY
+                        WHEN WM3.CHANGE_TYPE = '출고' THEN -WM3.ITEM_QTY
+                        WHEN WM3.CHANGE_TYPE = '수동조정' THEN WM3.ITEM_QTY
+                        WHEN WM3.CHANGE_TYPE = '출고완료' THEN -WM3.ITEM_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_MATERIAL WM3
+                WHERE WM3.ITEM_CODE = WMT.ITEM_CODE
+            ) AS TOTAL_CURRENT_QTY
 
-      i.ITEM_NAME              AS item_name,
-      i.COMPANY_CODE           AS client_code,
-      i.COMPANY_NAME           AS client_name,
-      i.ITEM_CLASS1            AS category_main,
-      i.ITEM_CLASS2            AS category_sub,
-
-      ib.IN_STATUS             AS in_status,
-
-      emp.ECODE                AS employee_code,
-      emp.ENAME                AS emp_name,
-
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD'
-      ) AS inbound_date2
-
-    FROM WAREHOUSE_MATERIAL mt
-
-    LEFT JOIN WAREHOUSE w 
-      ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
-
-    LEFT JOIN INBOUND ib 
-      ON mt.INBOUND_CODE = ib.INBOUND_CODE 
-      AND mt.ITEM_CODE = ib.ITEM_CODE
-
-    LEFT JOIN ITM_COMP_VIEW i 
-      ON mt.ITEM_CODE = i.ITEM_CODE
-
-    LEFT JOIN EMPLOYEE2 emp 
-      ON mt.EMPLOYEE_CODE = emp.ECODE
-
-    ORDER BY mt.WMT_IDX DESC
+        FROM WAREHOUSE_MATERIAL WMT
+        LEFT JOIN ITM_COMP_VIEW ITM ON WMT.ITEM_CODE = ITM.ITEM_CODE
+        LEFT JOIN WAREHOUSE WH ON TRIM(WMT.WH_CODE) = TRIM(WH.WH_CODE)
+        LEFT JOIN EMPLOYEE2 EMP ON WMT.EMPLOYEE_CODE = EMP.ECODE
+        ORDER BY WMT.WMT_IDX DESC
   ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
+    WHERE ROWNUM &lt;= #{startIndex} + #{pageSize} 
 )
-WHERE RNUM > #{startIndex}
- ]]> 
+WHERE RN &gt;= #{startIndex}
+<!--  ]]>  -->
   </when>
   
   <!-- 완제품 창고  -->
@@ -421,86 +441,88 @@ WHERE RN &gt;= #{startIndex}
     <!-- 부자재창고 리스트 검색 -->
 <when test="wh_type == 'mt'">
 <!--   <![CDATA[ -->
-    SELECT *
-FROM (
-  SELECT A.*, ROWNUM RNUM
-  FROM (
-    SELECT
-      mt.WMT_IDX             AS win_idx,
-      mt.WMT_CODE             AS material_code,
-      mt.WH_CODE             AS wh_code,
-      mt.INBOUND_CODE            AS inbound_code,
-      mt.ITEM_CODE         AS item_code,
-      mt.ITEM_QTY        AS item_qty,
-      mt.CHANGE_TYPE           AS change_type,
-      mt.MT_INSERT_DATE     AS material_date,
-      
-      w.WH_NAME               AS wh_name,
+SELECT * FROM (
+    SELECT ROWNUM AS RN, A.*
+    FROM (
+        SELECT 
+            WMT.WMT_IDX AS win_idx,
+            WMT.WMT_CODE AS material_code,
+            WMT.WH_CODE,
+            WMT.INBOUND_CODE,
+            WMT.ITEM_CODE,
+            WMT.ITEM_QTY,
+            WMT.CHANGE_TYPE,
+            WMT.MOVE_TYPE,
+            WMT.EMPLOYEE_CODE,
+            WMT.MT_INSERT_DATE AS material_date,
+			WMT.INV_LOT,
+			
+			WH.WH_NAME,
+			ITM.ITEM_NAME,
+			ITM.COMPANY_CODE AS client_code,
+			ITM.COMPANY_NAME AS client_name,
+			ITM.ITEM_CLASS1 AS category_main,
+			ITM.ITEM_CLASS2 AS category_sub,
+            EMP.ENAME AS EMP_NAME,
+            <!-- 창고별 현재 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WM2.CHANGE_TYPE = '입고' THEN WM2.ITEM_QTY
+                        WHEN WM2.CHANGE_TYPE = '출고' THEN -WM2.ITEM_QTY
+                        WHEN WM2.CHANGE_TYPE = '수동조정' THEN WM2.ITEM_QTY
+                        WHEN WM2.CHANGE_TYPE = '출고완료' THEN -WM2.ITEM_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_MATERIAL WM2
+                WHERE WM2.ITEM_CODE = WMT.ITEM_CODE
+                  AND TRIM(WM2.WH_CODE) = TRIM(WMT.WH_CODE)
+            ) AS CURRENT_QTY,
+            
+ 			<!-- 상품별 전체 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WM3.CHANGE_TYPE = '입고' THEN WM3.ITEM_QTY
+                        WHEN WM3.CHANGE_TYPE = '출고' THEN -WM3.ITEM_QTY
+                        WHEN WM3.CHANGE_TYPE = '수동조정' THEN WM3.ITEM_QTY
+                        WHEN WM3.CHANGE_TYPE = '출고완료' THEN -WM3.ITEM_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_MATERIAL WM3
+                WHERE WM3.ITEM_CODE = WMT.ITEM_CODE
+            ) AS TOTAL_CURRENT_QTY
 
-      i.ITEM_NAME             AS item_name,
-      i.COMPANY_CODE          AS client_code,
-      i.COMPANY_NAME          AS client_name,
-
-      i.ITEM_CLASS1           AS category_main,
-      i.ITEM_CLASS2           AS category_sub,
-
-      ib.IN_STATUS            AS in_status,
-	
-	  emp.ECODE AS employee_code,
-	  emp.ENAME AS emp_name,
-
-      TO_CHAR(
-        CASE 
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 10 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD')
-          WHEN LENGTH(TRIM(ib.INBOUND_DATE)) = 19 THEN TO_DATE(ib.INBOUND_DATE, 'YYYY-MM-DD HH24:MI:SS')
-          ELSE NULL
-        END, 'YYYY-MM-DD'
-      ) AS inbound_date2
-
-    FROM WAREHOUSE_MATERIAL mt
-
-    LEFT JOIN WAREHOUSE w ON TRIM(mt.WH_CODE) = TRIM(w.WH_CODE)
-
-    LEFT JOIN (
-      SELECT INBOUND_CODE, IN_STATUS, INBOUND_DATE, ITEM_CODE
-      FROM INBOUND
-    ) ib ON mt.INBOUND_CODE = ib.INBOUND_CODE AND ib.ITEM_CODE = mt.ITEM_CODE
-
-    LEFT JOIN (
-      SELECT
-        ITEM_CODE, ITEM_NAME, ITEM_CLASS1, ITEM_CLASS2,
-        COMPANY_CODE, COMPANY_NAME, COM_USE_FLAG
-      FROM ITM_COMP_VIEW
-    ) i ON mt.ITEM_CODE = i.ITEM_CODE
-    
-    LEFT JOIN EMPLOYEE2 emp ON mt.EMPLOYEE_CODE = emp.ECODE
-
+        FROM WAREHOUSE_MATERIAL WMT
+        LEFT JOIN ITM_COMP_VIEW ITM ON WMT.ITEM_CODE = ITM.ITEM_CODE
+        LEFT JOIN WAREHOUSE WH ON TRIM(WMT.WH_CODE) = TRIM(WH.WH_CODE)
+        LEFT JOIN EMPLOYEE2 EMP ON WMT.EMPLOYEE_CODE = EMP.ECODE
   <where>
     <if test="wh_name != null">
-      	TRIM(w.WH_NAME) = TRIM(#{wh_name})
+      	TRIM(WH.WH_NAME) = TRIM(#{wh_name})
       	<if test="m_search!= null">
 	      AND (
-	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(i.item_code)  LIKE '%' || #{m_search} || '%' OR
-	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
+	      TRIM(WH.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(WH.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(ITM.item_code)  LIKE '%' || #{m_search} || '%' OR
+	      TRIM(ITM.item_name) LIKE '%' || #{m_search} || '%' 
 	      )
      	</if>
     </if>
     <if test="wh_name == null and m_search!= null">
      	(
-	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(i.item_code) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(i.item_name) LIKE '%' || #{m_search} || '%' 
+	      TRIM(WH.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(WH.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(ITM.item_code) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(ITM.item_name) LIKE '%' || #{m_search} || '%' 
 	      )
     </if>
 	</where>
-    ORDER BY mt.WMT_IDX DESC
+	ORDER BY WMT.WMT_IDX DESC
   ) A
-  WHERE ROWNUM &lt;= #{startIndex} + #{pageSize}
+    WHERE ROWNUM &lt;= #{startIndex} + #{pageSize} 
 )
-WHERE RNUM &gt; #{startIndex}
+WHERE RN &gt;= #{startIndex}
 <!--       ]]> -->
  
 </when>

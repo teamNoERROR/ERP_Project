@@ -130,7 +130,6 @@ function outBndInsertOk(){
 			IND_OUT_STATUS : pdOutSt.value
       	});
 	});
-	console.log(out_pds)
 	
 	fetch("./outbound_insertok.do", {
 		method: "PUT",
@@ -142,7 +141,7 @@ function outBndInsertOk(){
 
 	}).then(function(result) {
 		if(result=="ok"){
-			alert("출고 등록이 완료되었습니다.");
+			alert("출고 처리가 완료되었습니다.");
 			location.href="./outbound.do";
 		}
 

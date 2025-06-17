@@ -243,6 +243,12 @@ public class goods_serviceImpl implements goods_service {
 		return lclass_ck;
 	}
 
+	@Override
+	public String imgs_attach(String filenm) {
+		String imgsattach = this.g_dao.imgs_attach(filenm);
+		return imgsattach;
+	}
+
 
 
 	

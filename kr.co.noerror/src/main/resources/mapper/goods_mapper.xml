@@ -196,7 +196,10 @@ SELECT COUNT(*) AS CNT FROM
 
 
 
-
+<!-- cdn 이미지 url 가져오기 -->
+<select id="imgs_attach" resultType="String">
+	SELECT FILE_RENM FROM PRODUCTS WHERE PD_FILE_RENM = #{filenm}
+</select>
 
 
 

@@ -3,37 +3,19 @@
 <mapper namespace="kr.co.noerror.Mapper.inventory_mapper">
 
 
-<!-- 입고창고 + 부자재창고 아이템별 재고수 -->
-<select id="ind_item_stock" resultType="int" parameterType="String">
-	SELECT SUM(ITEM_QTY) AS TOTAL_QTY
-	FROM (
-	  SELECT ITEM_QTY FROM WAREHOUSE_INB WHERE ITEM_CODE = #{ITEM_CODE}
-	  UNION ALL
-	  SELECT ITEM_QTY FROM WAREHOUSE_MATERIAL WHERE ITEM_CODE = #{ITEM_CODE}
-	);
-</select>
-
-<!--  개별 완제품 재고수  -->
+<!--  완제품별 재고수  -->
 <select id="ind_pd_stock" resultType="kr.co.noerror.DTO.IOSF_DTO">
-<!-- 	SELECT  -->
-<!-- 		NVL(SUM(CASE WHEN CHANGE_TYPE = '입고' THEN PD_QTY ELSE 0 END), 0) - -->
-<!-- 		NVL(SUM(CASE WHEN CHANGE_TYPE = '출고' THEN PD_QTY ELSE 0 END), 0) AS IND_PD_STOCK -->
-<!-- 	FROM WAREHOUSE_FINISH -->
-<!-- 	WHERE PRODUCT_CODE = #{PRODUCT_CODE} -->
 	SELECT 
 	  product_code, product_name,
 	  SUM(CASE WHEN change_type = '입고' THEN pd_qty ELSE 0 END) -
 	  SUM(CASE WHEN change_type = '출고' THEN pd_qty ELSE 0 END) - 
 	  SUM(CASE WHEN change_type = '출고완료' THEN pd_qty ELSE 0 END ) AS ind_pd_stock
 	FROM PD_STOCK_VIEW
-	<where>
-		<if test="wh_code != null">
-		TRIM(WH_CODE) = #{wh_code}
-		</if>
-	</where>
 	GROUP BY product_code, product_name
 	ORDER BY product_code
 </select>
+
+
 
 <!--  완제품 재고 리스트  -->
 <select id="pd_stock_list" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="Map">
@@ -58,6 +40,101 @@
 	ORDER BY PRODUCT_NAME
 <!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
 </select>
+
+<!--  부자재별 재고수 -->
+<select id="ind_itm_stock" resultType="kr.co.noerror.DTO.IOSF_DTO">
+	SELECT 
+		mt.ITEM_CODE, ic.ITEM_NAME,
+		SUM(CASE WHEN mt.change_type = '입고' THEN mt.ITEM_QTY ELSE 0 END) -
+		SUM(CASE WHEN mt.change_type = '출고' THEN mt.ITEM_QTY ELSE 0 END) -
+		SUM(CASE WHEN mt.change_type = '출고완료' THEN mt.ITEM_QTY ELSE 0 END ) AS ind_itm_stock
+	FROM WAREHOUSE_MATERIAL mt
+	LEFT JOIN ITM_COMP_VIEW ic ON mt.item_code = ic.ITEM_CODE
+	GROUP BY mt.ITEM_CODE, ic.ITEM_NAME
+	ORDER BY mt.ITEM_CODE
+</select>
+
+
+<!--  브자재 재고 리스트  -->
+<select id="itm_stock_list" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="Map">
+	SELECT
+		mt.item_code,
+	  	MAX(mt.WMT_IDX) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS wmt_idx,
+	  	MAX(mt.WMT_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS wmt_code,
+	  	MAX(mt.WH_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS wh_code,
+	  	MAX(mt.ITEM_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS item_code,
+	  	MAX(mt.ITEM_QTY) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS item_qty,
+	  	MAX(mt.CHANGE_TYPE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS change_type,
+	  	MAX(mt.EMPLOYEE_CODE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS employee_code,
+	  	MAX(mt.MT_INSERT_DATE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS mt_insert_date,
+	  	MAX(ic.IIDX) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS iidx,
+	  	MAX(ic.ITEM_NAME) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS item_name,
+	  	MAX(ic.ITEM_CLASS1) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS category_main,
+	  	MAX(ic.ITEM_CLASS2) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS category_sub,
+	  	MAX(ic.ITM_FILE_RENM) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS itm_file_renm,
+	  	MAX(ic.ITM_API_FNM) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS itm_api_fnm,
+	  	MAX(ic.ITM_INSERT_DATE) KEEP (DENSE_RANK FIRST ORDER BY ic.ITM_INSERT_DATE DESC) AS itm_insert_date
+	FROM WAREHOUSE_MATERIAL mt
+	LEFT JOIN ITM_COMP_VIEW ic ON mt.item_code = ic.ITEM_CODE
+	GROUP BY mt.item_code
+	ORDER BY item_name
+<!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
+</select>
+
+
+
+
+<!-- 창고별 보유중인 제품 각각의 재고수 -->
+<select id="pd_wh_list" resultType="Integer" parameterType="Map">
+SELECT 
+    PRODUCT_CODE,
+    WH_CODE,
+    SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
+            WHEN CHANGE_TYPE = '출고' THEN -PD_QTY
+            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
+            WHEN CHANGE_TYPE = '출고완료' THEN -PD_QTY
+            ELSE 0
+        END
+    ) AS STOCK_QTY
+FROM WAREHOUSE_FINISH
+<if test="productCode != null">
+WHERE PRODUCT_CODE = #{productCode}
+AND WH_CODE = #{whCode}
+</if>
+GROUP BY PRODUCT_CODE, WH_CODE
+ORDER BY PRODUCT_CODE, WH_CODE
+</select>
+
+
+<select id="wh_pd_sp" resultType="int">
+SELECT COUNT(*) AS ITEM_TYPE_COUNT
+FROM (
+    SELECT PRODUCT_CODE, SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
+            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -PD_QTY
+            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
+            ELSE 0
+        END
+    ) AS CURRENT_QTY
+    FROM WAREHOUSE_FINISH
+    <if test="wh_code!=null">
+    WHERE WH_CODE = #{wh_code}  
+    </if>
+    GROUP BY PRODUCT_CODE
+    HAVING SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
+            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -PD_QTY
+            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
+            ELSE 0
+        END
+    ) > 0
+) T
+</select>
+
 
 
 </mapper>

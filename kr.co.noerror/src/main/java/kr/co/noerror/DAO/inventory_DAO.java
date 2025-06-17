@@ -1,6 +1,7 @@
 package kr.co.noerror.DAO;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +19,58 @@ public class inventory_DAO {
 	private SqlSessionTemplate st;
 	
 	
-	//입고창고 + 부자재창고 아이템별 재고수
-	public int ind_item_stock(String item_code) {
-		int result = this.st.selectOne("ind_item_stock",item_code);
-		return result;
-	}
 
 	//개별 완제품 재고수
-	public List<IOSF_DTO> ind_pd_all_stock() {
+	public List<IOSF_DTO> ind_pd_stock() {
 		List<IOSF_DTO> result = this.st.selectList("ind_pd_stock");
 		return result;
 	};
 
-	//창고별+완제품 재고수
-	public List<IOSF_DTO> ind_pd_stock(String wh_code) {
-		List<IOSF_DTO> result = this.st.selectList("ind_pd_stock", wh_code);
-		return result;
-	}
-	
 	//완제품 재고 리스트
 	public List<IOSF_DTO> pd_stock_list() {
 		List<IOSF_DTO> pd_stock_list = this.st.selectList("pd_stock_list");
 		return pd_stock_list;
 	}
 
+	
+	//개별 부자재 재고수
+	public List<IOSF_DTO> ind_item_all_stock() {
+		List<IOSF_DTO> result = this.st.selectList("ind_itm_stock");
+		return result;
+	}
+
+	//부자재 재고 리스트
+	public List<IOSF_DTO> itm_stock_list() {
+		List<IOSF_DTO> itm_stock_list = this.st.selectList("itm_stock_list");
+		return itm_stock_list;
+	}
+
+	
+	//창고별 보유중인 제품 각각의 재고수
+	public List<IOSF_DTO> pd_stock_bywh_list() {
+		List<IOSF_DTO> pd_stock_bywh_list = this.st.selectList("pd_wh_list");
+		return pd_stock_bywh_list;
+	};
+	
+	
+	// 상품 + 창고별 재고
+	public Integer stockByWhnPd (Map<String, String> mapp) {
+		Integer stockByWhnPd = this.st.selectOne("pd_wh_list" , mapp);
+		return stockByWhnPd;
+	};
+	
+	// 상품별 전체 재고
+	public Integer stockPdTotal (String pdCode) {
+		Integer stockPdTotal = this.st.selectOne("pd_wh_list", pdCode);
+		return stockPdTotal;
+	}
+
+	public int wh_pd_sp() {
+		int wh_pd_sp = this.st.selectOne("wh_pd_sp");
+		return wh_pd_sp;
+	};
+
+	
 	
 
 

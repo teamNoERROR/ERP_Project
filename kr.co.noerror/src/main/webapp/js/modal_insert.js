@@ -639,13 +639,8 @@ function ordDtlLoad2(order_code){
 			    <td>`+resultProduct.product_unit+`</td>
 			    <td class="text-end">`+resultProduct.product_price+`</td>
 				<td >`+resultProduct.product_qty+`</td>
-			    <td>`+resultProduct.product_class1+`</td>
-				<td>`+resultProduct.product_class2+`</td>
+			    <td>`+""+`</td>
 				<td><input type="number" class="form-control out_pd_qty"></td>
-				<td>
-                   	<input type="text" class="form-control readonly_text" value="" id="out_wh_name" readonly>
-               		<input type="hidden" id="out_wh_code">
-				</td>
 			  `;
 		  	tbody.append(tr);
 	

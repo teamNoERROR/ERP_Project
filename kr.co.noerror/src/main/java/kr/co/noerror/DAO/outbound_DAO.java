@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.outbound_DTO;
 
@@ -44,6 +45,11 @@ public class outbound_DAO {
 	public List<outbound_DTO> outbound_detail(Map<String, String> map) {
 		List<outbound_DTO> outbound_detail = this.st.selectList("outbound_detail",map);
 		return outbound_detail;
+	}
+
+	public List<IOSF_DTO> fswh_all_list(Map<String, Object> mapp) {
+		List<IOSF_DTO> fswh_all_list = this.st.selectList("fswh_all_list",mapp);
+		return fswh_all_list;
 	}
 
 	

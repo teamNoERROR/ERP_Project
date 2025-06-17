@@ -60,4 +60,30 @@
 	SELECT * FROM OUTBOUND_DTL_VIEW WHERE OUTBOUND_CODE = #{outbnd_code} AND ORD_CODE = #{ord_cd} 	
 </select>
 
+
+
+<select id="fswh_all_list" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="Map">
+	SELECT 
+      fs.WFS_IDX AS wfs_idx,
+      fs.WFS_CODE AS wfs_code,
+      fs.WH_CODE AS wh_code,
+      fs.PLAN_CODE AS plan_code,
+      fs.PD_QTY AS pd_qty,
+      fs.CHANGE_TYPE AS change_type,
+      fs.EMPLOYEE_CODE AS employee_code,
+      fs.FS_INSERT_DATE AS fs_insert,
+      w.WH_NAME AS wh_name,
+      pd.pidx,
+      pd.product_code,
+      pd.product_name,
+      emp.ename AS emp_name
+    FROM
+      WAREHOUSE_FINISH fs
+    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
+    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
+    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
+    ORDER BY fs.WFS_IDX DESC
+	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
+</select>
+
 </mapper>

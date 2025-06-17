@@ -229,7 +229,6 @@ public class IOSF_Warehouse_Controller {
 	    Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
 	    
 	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
-	      System.out.println("iosf_list_map : " + iosf_list_map);
 	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
 	       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
@@ -349,7 +348,7 @@ public class IOSF_Warehouse_Controller {
            String product_code = (String) param.get("product_code");
            String pd_qty = (String) param.get("pd_qty");
            String emp_code = (String) param.get("emp_code");
-           String planCode = (String) param.get("pd_name");
+           String planCode = (String) param.get("plan_code");
            String mv_wh_code = (String) param.get("mv_wh_code");
            String inbound_code = (String) param.get("inbound_code");
            String ind_pch_cd = (String) param.get("ind_pch_cd");

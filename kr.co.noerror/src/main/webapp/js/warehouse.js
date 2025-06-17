@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
  }
 
 
- //**************************************창고로 입고 정보 이동*************************************************
+ //**************************************창고로 입고할 정보 이동*************************************************
  
  function selectRow(event,checkbox) {
 	 
@@ -261,27 +261,40 @@ function whMove(){
    			const product_code = box.getAttribute('data-product_code');
    			const pd_qty = box.getAttribute('data-pd_qty');
    			const emp_code = box.getAttribute('data-emp_code');
-   			const pd_name = box.getAttribute('data-pd_name');
+   			const plan_code = box.getAttribute('data-plan_code');
 			
 			const inbound_code = box.getAttribute('data-inbound_code');
 			const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
 			
-			const mv_wh_code = document.querySelector("#wh_code").value;
-   
-   			if (wh_code && wh_type && product_code && pd_qty && emp_code && pd_name && mv_wh_code) {
+			const mv_wh_code = document.querySelector("#mv_wh_code").value;
+			console.log("체크박스 데이터:" + mv_wh_code);
+			
+   			
+   			if (wh_code && wh_type && product_code && pd_qty && emp_code && plan_code && mv_wh_code) {
      			moveData.push({ 
 					wh_code, 
 					wh_type, 
 					product_code,
 					pd_qty, 
 					emp_code, 
-					pd_name, 
+					plan_code, 
 					mv_wh_code,
 					inbound_code,
 					ind_pch_cd
 				});
-   			}
+   			}			
+			else {
+				console.warn("❌ 조건 불충족으로 제외됨:");
+				console.warn("  wh_code:", wh_code);
+				console.warn("  wh_type:", wh_type);
+				console.warn("  product_code:", product_code);
+				console.warn("  pd_qty:", pd_qty);
+				console.warn("  emp_code:", emp_code);
+				console.warn("  plan_code:", plan_code);
+				console.warn("  mv_wh_code:", mv_wh_code);
+			  }
  		});
+		console.log(moveData)
 		if (moveData.length === 0) {
 	       alert('선택한 항목의 데이터가 누락되었거나 유효하지 않습니다.');
 	       return;

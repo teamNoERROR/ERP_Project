@@ -147,7 +147,8 @@ public class ordreq_controller {
 		
 		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);  //주문상세
 		
-		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수 
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
+		
 		
 		m.addAttribute("details",details);
 		m.addAttribute("ind_pd_all_stock",ind_pd_all_stock);

@@ -89,17 +89,20 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
         	 this.wh_uq = "WOUT-" + randomNumber;
         }
         */
+		System.out.println("planCode : " + planCode);
 		Map<Object, Object> params = new HashMap<>();
 		params.put("wh_code", wh_code);
 		params.put("wh_type", wh_type);	
 		params.put("product_code", product_code);	
 		params.put("pd_qty", pd_qty);	
 		params.put("employee_code", emp_code);
-		params.put("plan_code", planCode.substring(0, Math.min(3, planCode.length())));
-		params.put("mv_wh_code", mv_wh_code);
+		params.put("plan_code", planCode != null ? planCode : "-" );
+		params.put("mv_wh_code", mv_wh_code);  //출고이동되는 창고(after)
 //		params.put("wh_uq", this.wh_uq);
 		params.put("inbound_code", inbound_code);
-		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move", params); 
+		
+		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move", params); //출고처리
+		int wh_save_update = this.iosf_ware_st.update("IOSF_warehouse_move_up", params); //출고처리
 		
 		return wh_save_result;
 	}
@@ -126,9 +129,9 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		params.put("ind_pch_cd", ind_pch_cd);
 		params.put("inbound_code", inbound_code);
 		
-		int wh_save_result2 = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
+		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
 		
-		return wh_save_result2;
+		return wh_save_result;
 	}
 	
 	

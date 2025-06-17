@@ -97,12 +97,12 @@ public class outbound_controller {
 		try {
 			this.pw = res.getWriter();
 			
-			int result = this.out_svc.outbnd_insert(out_pds);
+			String result = this.out_svc.outbnd_insert(out_pds);
 			
-			if(result > 0) {
+			if(result == "all_complate") {
 				this.pw.write("ok");  //출고 등록 완료 
 				
-			}else {
+			}else if(result == "") {
 				this.pw.write("fail"); //출고 등록실패
 			}
 			

@@ -76,7 +76,7 @@
                         <td >[[${stpdlst.product_name}]]</td>
                         <td>[[${stpdlst.product_class1}]]</td>
                         <td>[[${stpdlst.product_class2}]]</td>
-                         <td>[[${ind_pd_stock[stpdlst.product_code]}]]</td>
+                         <td>[[${#numbers.formatInteger(ind_pd_stock[stpdlst.product_code],0,'COMMA')}]]</td>
                          <td >
                          	<button type="button" class="btn btn-warning me-2">입고내역</button>
                          	<button type="button" class="btn btn-success">출고내역</button>

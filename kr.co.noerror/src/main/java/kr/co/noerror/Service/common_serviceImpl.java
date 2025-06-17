@@ -62,10 +62,8 @@ public class common_serviceImpl implements common_service {
 		    wfs_dto.setWh_code(jo.getString("wh_code"));
 		    outReqList.add(wfs_dto);
 		}
-		System.out.println("outReqList : " + outReqList);
 		
 		List<IOSF_DTO> out_list = this.cmn_dao.out_pd_list(outReqList);
-		System.out.println("out_list : " + out_list);
 		
 		//FE로 돌려보낼 데이터 
 		JSONArray dataArr = new JSONArray();
@@ -79,7 +77,7 @@ public class common_serviceImpl implements common_service {
 	        jo.put("product_name", dto.getProduct_name());
 	        jo.put("pd_qty", dto.getPd_qty());  //
 	        jo.put("wh_code", dto.getWh_code());	
-	        jo.put("wh_name", dto.getWh_name().trim());
+	        jo.put("wh_name", dto.getWh_name());
 	        jo.put("stock_qty", allStockQty);	//제품별 총 재고 
 	        jo.put("is_short", allStockQty < dto.getPd_qty());
 	     

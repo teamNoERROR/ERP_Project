@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.outbound_DAO;
@@ -59,28 +60,34 @@ public class outbound_serviceImpl implements outbound_service{
 
 	//출고 등록 
 	@Override
-	public int outbnd_insert(String out_pds) {
-		int f_result=0;
-		System.out.println(out_pds);
+	@Transactional
+	public String outbnd_insert(String out_pds) {
+		String f_result="";
+		int count = 0;
+		int count2 = 0;
+		
 		 //고유코드생성
         String out_code = this.makeCode.generate("OUT-", code -> this.out_dao.code_dupl_out(code) > 0);
         
         JSONArray ja = new JSONArray(out_pds);
         JSONObject jo = ja.getJSONObject(0);
 		int pd_ea = ja.length();
-		System.out.println("pd_ea : "+ pd_ea);
+		System.out.println("pd_ea: " + pd_ea);
+		
 		outbound_DTO out_dto = new outbound_DTO();
 		
 		//OUTBOUND 테이블에 저장
 		out_dto.setOUTBOUND_CODE(out_code);
 		out_dto.setORD_CODE(jo.getString("ORD_CODE"));
-		out_dto.setWH_CODE(jo.getString("WH_CODE"));
 		out_dto.setOUT_STATUS(jo.getString("OUT_STATUS"));
 		out_dto.setOUTBOUND_DATE(jo.getString("OUTBOUND_DATE"));
 		out_dto.setEMPLOYEE_CODE(jo.getString("EMPLOYEE_CODE"));
 		out_dto.setOUT_MEMO(jo.getString("OUT_MEMO"));
 		
 		int result = this.out_dao.outbnd_insert(out_dto);
+		if(result>0) {
+			count++;
+		}
 		
 		List<outbound_DTO> out_pd_list = new ArrayList<>();
 		int result2 = 0;
@@ -93,8 +100,7 @@ public class outbound_serviceImpl implements outbound_service{
 			 out_detail.setOUTBOUND_CODE(out_dto.getOUTBOUND_CODE());
 			 out_detail.setORD_CODE(out_dto.getORD_CODE());
 			 out_detail.setPRODUCT_CODE(jo2.getString("PRODUCT_CODE"));
-			 out_detail.setPRODUCT_QTY(jo2.getInt("PRODUCT_QTY"));
-			 out_detail.setIND_OUT_STATUS(jo2.getString("IND_OUT_STATUS")); 
+			 out_detail.setOUT_PRODUCT_QTY(jo2.getInt("OUT_PRODUCT_QTY"));
 
 			 out_pd_list.add(out_detail);
 		}
@@ -102,10 +108,16 @@ public class outbound_serviceImpl implements outbound_service{
 		for (outbound_DTO detail_dto : out_pd_list) {
 			result2 += this.out_dao.outbnd_dtl_insert(detail_dto);
 		}
-		if(result == 1 && result2 == pd_ea-1) {
-			f_result = result;
+		if(result2>0) {
+			count2++;
 		}
 		
+		if(count == 1 && count2 == (pd_ea-1)) {
+			f_result = "all_complate";
+		}else {
+			f_result = String.valueOf((pd_ea-1)-count2);  //전체수 - 성공수 = 실패개수 
+		}
+		System.out.println(f_result);
 		return f_result;
 	}
 

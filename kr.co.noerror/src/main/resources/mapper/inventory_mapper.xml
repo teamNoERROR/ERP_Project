@@ -14,7 +14,28 @@
 	GROUP BY product_code, product_name
 	ORDER BY product_code
 </select>
-
+<!-- 창고별 보유중인 제품 각각의 재고수 -->
+<select id="pd_wh_list" resultType="Integer" parameterType="Map">
+SELECT 
+    PRODUCT_CODE,
+    WH_CODE,
+    SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
+            WHEN CHANGE_TYPE = '출고' THEN -PD_QTY
+            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
+            WHEN CHANGE_TYPE = '출고완료' THEN -PD_QTY
+            ELSE 0
+        END
+    ) AS STOCK_QTY
+FROM WAREHOUSE_FINISH
+<if test="productCode != null">
+WHERE PRODUCT_CODE = #{productCode}
+AND WH_CODE = #{whCode}
+</if>
+GROUP BY PRODUCT_CODE, WH_CODE
+ORDER BY PRODUCT_CODE, WH_CODE
+</select>
 
 
 <!--  완제품 재고 리스트  -->
@@ -84,28 +105,7 @@
 
 
 
-<!-- 창고별 보유중인 제품 각각의 재고수 -->
-<select id="pd_wh_list" resultType="Integer" parameterType="Map">
-SELECT 
-    PRODUCT_CODE,
-    WH_CODE,
-    SUM(
-        CASE 
-            WHEN CHANGE_TYPE = '입고' THEN PD_QTY
-            WHEN CHANGE_TYPE = '출고' THEN -PD_QTY
-            WHEN CHANGE_TYPE = '수동조정' THEN PD_QTY
-            WHEN CHANGE_TYPE = '출고완료' THEN -PD_QTY
-            ELSE 0
-        END
-    ) AS STOCK_QTY
-FROM WAREHOUSE_FINISH
-<if test="productCode != null">
-WHERE PRODUCT_CODE = #{productCode}
-AND WH_CODE = #{whCode}
-</if>
-GROUP BY PRODUCT_CODE, WH_CODE
-ORDER BY PRODUCT_CODE, WH_CODE
-</select>
+
 
 
 <select id="wh_pd_sp" resultType="int">

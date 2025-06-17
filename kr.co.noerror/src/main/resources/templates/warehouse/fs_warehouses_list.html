@@ -38,12 +38,12 @@
 <!-- 			</button> -->
 			<div class="input-group">
 	            <input type="text"  id="wh_name" class="form-control" style="width: 220px;" placeholder="완제품 창고가 선택됩니다" readonly>
-				<input type="hidden" id="wh_code" class="form-control" />
+				<input type="hidden" id="mv_wh_code" class="form-control" />
 <!-- 	            <button type="button" class="btn btn-primary modal-trigger"  -->
 <!-- 	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}" -->
 <!-- 	            		data-modal-id="wh_type_list" style="cursor: pointer;"> -->
            		<button type="button" class="btn btn-primary" 
-	            		onclick="whSelect('fs_wh','wh_name','wh_code')" style="cursor: pointer;">
+	            		onclick="whSelect('fs_wh','wh_name','mv_wh_code')" style="cursor: pointer;">
 	                <i class="bi bi-search"></i>
 	            </button>
 	        </div>
@@ -139,7 +139,7 @@
 						       th:data-plan_code="${fs_wh.plan_code}"
 						       th:data-pd_name="${fs_wh.product_name}"  
 						       onclick="selectRow(event,this);" 
-						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료'}" />
+						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료' OR fs_wh.move_type == '이동'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
 				      <td th:text="${fs_wh.wfs_code}"></td>
@@ -147,10 +147,10 @@
 				      <td th:text="${fs_wh.wh_name}"></td>
 				      <td th:text="${fs_wh.product_code}"></td>
 				      <td th:text="${fs_wh.product_name}"></td>
-				      <td th:text="${fs_wh.pd_qty}"></td>
+				      <td th:text="${#numbers.formatInteger(fs_wh.pd_qty,0,'COMMA')}"></td>
 				      <td th:text="${fs_wh.change_type}"></td>
-				      <td th:text="${fs_wh.change_type}"></td>
-				      <td th:text="${fs_wh.change_type}"></td>
+				      <td th:text="${#numbers.formatInteger(fs_wh.total_current_qty,0,'COMMA')}"></td>
+				      <td th:text="${#numbers.formatInteger(fs_wh.current_qty,0,'COMMA')}"></td>
 				      <td th:text="${fs_wh.emp_name}"></td>
 				      <td th:text="${fs_wh.employee_code}"></td>
 					  <td th:text="${fs_wh.fs_insert.substring(0,16)}"></td>

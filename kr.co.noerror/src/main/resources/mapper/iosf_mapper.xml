@@ -16,7 +16,8 @@
         CHANGE_TYPE,
         EMPLOYEE_CODE,
         MT_INSERT_DATE,
-        MT_MODIFY_DATE
+        MT_MODIFY_DATE,
+        MOVE_TYPE
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
    	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
@@ -27,6 +28,7 @@
         '출고',
         #{employee_code},
         SYSTIMESTAMP,
+        NULL,
         NULL
     )
    </if>
@@ -42,24 +44,101 @@
         CHANGE_TYPE,
         EMPLOYEE_CODE,
         FS_INSERT_DATE,
-        FS_MODIFY_DATE
+        FS_MODIFY_DATE,
+        MOVE_TYPE
     ) VALUES (
    	    FS_WAREHOUSE_NO.NEXTVAL,
         'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
         #{wh_code},
-        #{plan_code},
+        '-',
         #{product_code},
         #{pd_qty},
        	'출고',
         #{employee_code},
         SYSTIMESTAMP,
+        NULL,
         NULL
     )
    </if>
 </insert>
 
+<!-- 이동 후 MOVE_TYPE 변경 -->
+<update id="IOSF_warehouse_move_up">
+UPDATE 
+<if test="wh_type == 'fs'">
+  WAREHOUSE_FINISH
+  SET 
+  	MOVE_TYPE = '이동'
+    <where>
+    	WH_CODE = #{wh_code} AND PRODUCT_CODE = #{product_code} AND PLAN_CODE = #{plan_code}
+    </where>
+</if>
+
+</update>
+
 <!-- 창고이동(입고) -->
 <insert id="IOSF_warehouse_move_in" parameterType="map">
+   <if test="wh_type == 'mt'">
+    INSERT INTO WAREHOUSE_MATERIAL (
+        WMT_IDX,
+        WMT_CODE,
+        WH_CODE,
+        INBOUND_CODE,
+        ITEM_CODE,
+        ITEM_QTY,
+        CHANGE_TYPE,
+        EMPLOYEE_CODE,
+        MT_INSERT_DATE,
+        MT_MODIFY_DATE,
+        MOVE_TYPE
+    ) VALUES (
+   	    MT_WAREHOUSE_NO.NEXTVAL,
+   	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
+        #{mv_wh_code},
+        #{inbound_code, jdbcType=VARCHAR},
+        #{product_code},
+        #{pd_qty},
+        '입고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL,
+        NULL
+    )
+   </if>
+   
+   <if test="wh_type == 'fs'">
+  INSERT INTO WAREHOUSE_FINISH (
+        WFS_IDX,
+        WFS_CODE,
+        WH_CODE,
+        PLAN_CODE,
+        PRODUCT_CODE,
+        PD_QTY,
+        CHANGE_TYPE,
+        EMPLOYEE_CODE,
+        FS_INSERT_DATE,
+        FS_MODIFY_DATE,
+        MOVE_TYPE
+        
+    ) VALUES (
+   	    FS_WAREHOUSE_NO.NEXTVAL,
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+        #{mv_wh_code},
+        #{plan_code},
+        #{product_code},
+        #{pd_qty},
+       	'입고',
+        #{employee_code},
+        SYSTIMESTAMP,
+        NULL,
+        NULL
+    )
+   </if>
+</insert>
+
+<!-- 창고입고 -->
+<!-- 
+<insert id="IOSF_warehouse_insert" parameterType="map">
    <if test="wh_type == 'mt'">
     INSERT INTO WAREHOUSE_MATERIAL (
         WMT_IDX,
@@ -113,7 +192,7 @@
     )
    </if>
 </insert>
-
+ -->
 <!-- 완제품 출고처리 -->
 <insert id="fs_warehouse_out" parameterType="map">
 	INSERT INTO WAREHOUSE_FINISH (
@@ -126,7 +205,8 @@
 	    CHANGE_TYPE,
 	    EMPLOYEE_CODE,
 	    FS_INSERT_DATE,
-	    FS_MODIFY_DATE
+	    FS_MODIFY_DATE,
+	    MOVE_TYPE
 	    
 	) VALUES (
 	    FS_WAREHOUSE_NO.NEXTVAL,
@@ -138,6 +218,7 @@
 	   	'출고완료',
 	    #{employee_code},
 	    SYSTIMESTAMP,
+	    NULL,
 	    NULL
 	)
 </insert>
@@ -189,7 +270,7 @@ FROM (
       mt.ITEM_QTY              AS item_qty,
       mt.CHANGE_TYPE           AS change_type,
       mt.MT_INSERT_DATE        AS material_date,
-      
+      mt.MOVE_TYPE 
       w.WH_NAME                AS wh_name,
 
       i.ITEM_NAME              AS item_name,
@@ -236,36 +317,93 @@ WHERE RNUM > #{startIndex}
   
   <!-- 완제품 창고  -->
   <when test="wh_type == 'fs'">
-  <![CDATA[
-SELECT *
-FROM (
-  SELECT A.*, ROWNUM AS RNUM
-  FROM (
-    SELECT
-      fs.WFS_IDX AS wfs_idx,
-      fs.WFS_CODE AS wfs_code,
-      fs.WH_CODE AS wh_code,
-      fs.PLAN_CODE AS plan_code,
-      fs.PD_QTY AS pd_qty,
-      fs.CHANGE_TYPE AS change_type,
-      fs.EMPLOYEE_CODE AS employee_code,
-      fs.FS_INSERT_DATE AS fs_insert,
-      w.WH_NAME AS wh_name,
-      pd.pidx,
-      pd.product_code,
-      pd.product_name,
-      emp.ename AS emp_name
-    FROM
-      WAREHOUSE_FINISH fs
-    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
-    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
-    ORDER BY fs.WFS_IDX DESC
-  ) A
-  WHERE ROWNUM <= #{startIndex} + #{pageSize}
+<!--   <![CDATA[ -->
+<!-- SELECT * -->
+<!-- FROM ( -->
+<!--   SELECT A.*, ROWNUM AS RNUM -->
+<!--   FROM ( -->
+<!--     SELECT -->
+<!--       fs.WFS_IDX AS wfs_idx, -->
+<!--       fs.WFS_CODE AS wfs_code, -->
+<!--       fs.WH_CODE AS wh_code, -->
+<!--       fs.PLAN_CODE AS plan_code, -->
+<!--       fs.PD_QTY AS pd_qty, -->
+<!--       fs.CHANGE_TYPE AS change_type, -->
+<!--       fs.EMPLOYEE_CODE AS employee_code, -->
+<!--       fs.FS_INSERT_DATE AS fs_insert, -->
+<!--       w.WH_NAME AS wh_name, -->
+<!--       pd.pidx, -->
+<!--       pd.product_code, -->
+<!--       pd.product_name, -->
+<!--       emp.ename AS emp_name -->
+<!--     FROM -->
+<!--       WAREHOUSE_FINISH fs -->
+<!--     LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE) -->
+<!--     LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE -->
+<!--     LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE -->
+<!--     ORDER BY fs.WFS_IDX DESC -->
+<!--   ) A -->
+<!--   WHERE ROWNUM <= #{startIndex} + #{pageSize} -->
+<!-- ) -->
+<!-- WHERE RNUM > #{startIndex} -->
+<!-- ]]> -->
+SELECT * FROM (
+    SELECT ROWNUM AS RN, A.*
+    FROM (
+        SELECT 
+            WFS.WFS_IDX ,
+            WFS.WFS_CODE,
+            WFS.PRODUCT_CODE,
+            WFS.WH_CODE,
+            WH.WH_NAME,
+            WFS.CHANGE_TYPE,
+            WFS.MOVE_TYPE,
+            WFS.PLAN_CODE,
+            WFS.PD_QTY,
+            WFS.EMPLOYEE_CODE,
+            WFS.FS_INSERT_DATE AS fs_insert,
+            PD.PIDX,
+            PD.PRODUCT_NAME ,
+            EMP.ENAME AS EMP_NAME,
+            
+            <!-- 창고별 현재 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WF2.CHANGE_TYPE = '입고' THEN WF2.PD_QTY
+                        WHEN WF2.CHANGE_TYPE = '출고' THEN -WF2.PD_QTY
+                        WHEN WF2.CHANGE_TYPE = '수동조정' THEN WF2.PD_QTY
+                        WHEN WF2.CHANGE_TYPE = '출고완료' THEN -WF2.PD_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_FINISH WF2
+                WHERE WF2.PRODUCT_CODE = WFS.PRODUCT_CODE
+                  AND TRIM(WF2.WH_CODE) = TRIM(WFS.WH_CODE)
+            ) AS CURRENT_QTY,
+
+            <!-- 상품별 전체 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WF3.CHANGE_TYPE = '입고' THEN WF3.PD_QTY
+                        WHEN WF3.CHANGE_TYPE = '출고' THEN -WF3.PD_QTY
+                        WHEN WF3.CHANGE_TYPE = '수동조정' THEN WF3.PD_QTY
+                        WHEN WF3.CHANGE_TYPE = '출고완료' THEN -WF3.PD_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_FINISH WF3
+                WHERE WF3.PRODUCT_CODE = WFS.PRODUCT_CODE
+            ) AS TOTAL_CURRENT_QTY
+
+        FROM WAREHOUSE_FINISH WFS
+        LEFT JOIN PRODUCTS PD ON WFS.PRODUCT_CODE = PD.PRODUCT_CODE
+        LEFT JOIN WAREHOUSE WH ON TRIM(WFS.WH_CODE) = TRIM(WH.WH_CODE)
+        LEFT JOIN EMPLOYEE2 EMP ON WFS.EMPLOYEE_CODE = EMP.ECODE
+        ORDER BY WFS.WFS_IDX DESC
+    ) A
+    WHERE ROWNUM &lt;= #{startIndex} + #{pageSize} 
 )
-WHERE RNUM > #{startIndex}
-]]>
+WHERE RN &gt;= #{startIndex}
   
 </when>
     <otherwise>
@@ -374,32 +512,60 @@ FROM (
   SELECT A.*, ROWNUM RNUM
   FROM (
     SELECT 
-	    fs.WFS_IDX AS wfs_idx,
-	    fs.WFS_CODE AS wfs_code,
-	    fs.WH_CODE AS wh_code,
-	    fs.PLAN_CODE AS plan_code,
-	    fs.PD_QTY AS pd_qty,
-	    fs.CHANGE_TYPE AS change_type,
-	    fs.EMPLOYEE_CODE AS employee_code,
-	    fs.FS_INSERT_DATE AS fs_insert,
-	    TRIM(w.WH_NAME) AS wh_name,
-	    w.WH_TYPE AS wh_type,
-	    pd.pidx,
-	    pd.product_code,
-	    pd.product_name,
-	    emp.ename AS emp_name
-	FROM
-    WAREHOUSE_FINISH fs
-    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
-    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
+            WFS.WFS_IDX,
+            WFS.WFS_CODE,
+            WFS.PRODUCT_CODE,
+            PD.PIDX,
+            PD.PRODUCT_NAME ,
+            WFS.WH_CODE,
+            WH.WH_NAME,
+            WFS.CHANGE_TYPE,
+            WFS.MOVE_TYPE,
+            WFS.PD_QTY,
+            WFS.EMPLOYEE_CODE,
+            EMP.ENAME AS EMP_NAME,
+            WFS.FS_INSERT_DATE AS fs_insert,
+            
+            <!-- 창고별 현재 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WF2.CHANGE_TYPE = '입고' THEN WF2.PD_QTY
+                        WHEN WF2.CHANGE_TYPE = '출고' THEN -WF2.PD_QTY
+                        WHEN WF2.CHANGE_TYPE = '수동조정' THEN WF2.PD_QTY
+                        WHEN WF2.CHANGE_TYPE = '출고완료' THEN -WF2.PD_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_FINISH WF2
+                WHERE WF2.PRODUCT_CODE = WFS.PRODUCT_CODE
+                  AND TRIM(WF2.WH_CODE) = TRIM(WFS.WH_CODE)
+            ) AS CURRENT_QTY,
+
+            <!-- 상품별 전체 재고수 --> 
+            (SELECT SUM(
+                    CASE 
+                        WHEN WF3.CHANGE_TYPE = '입고' THEN WF3.PD_QTY
+                        WHEN WF3.CHANGE_TYPE = '출고' THEN -WF3.PD_QTY
+                        WHEN WF3.CHANGE_TYPE = '수동조정' THEN WF3.PD_QTY
+                        WHEN WF3.CHANGE_TYPE = '출고완료' THEN -WF3.PD_QTY
+                        ELSE 0
+                    END
+                )
+                FROM WAREHOUSE_FINISH WF3
+                WHERE WF3.PRODUCT_CODE = WFS.PRODUCT_CODE
+            ) AS TOTAL_CURRENT_QTY
+
+        FROM WAREHOUSE_FINISH WFS
+        LEFT JOIN PRODUCTS PD ON WFS.PRODUCT_CODE = PD.PRODUCT_CODE
+        LEFT JOIN WAREHOUSE WH ON TRIM(WFS.WH_CODE) = TRIM(WH.WH_CODE)
+        LEFT JOIN EMPLOYEE2 EMP ON WFS.EMPLOYEE_CODE = EMP.ECODE
     <where>
     <if test="wh_name != null">
-      	TRIM(w.WH_NAME) = TRIM(#{wh_name})
+      	TRIM(WH.WH_NAME) = TRIM(#{wh_name})
       	<if test="m_search!= null">
 	      AND (
-	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(WH.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(WH.WH_NAME) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
 	      )
@@ -407,15 +573,15 @@ FROM (
     </if>
     <if test="wh_name == null and m_search!= null">
      	(
-	      TRIM(w.WH_CODE) LIKE '%' || #{m_search} || '%' OR
-	      TRIM(w.WH_NAME) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(WH.WH_CODE) LIKE '%' || #{m_search} || '%' OR
+	      TRIM(WH.WH_NAME) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(pd.PRODUCT_CODE) LIKE '%' || #{m_search} || '%' OR
 	      TRIM(pd.PRODUCT_NAME) LIKE '%' || #{m_search} || '%' 
 	      )
      	
     </if>
 	</where>
-    ORDER BY fs.WFS_IDX DESC
+    ORDER BY WFS.WFS_IDX DESC
   ) A
   WHERE ROWNUM &lt;= #{startIndex} + #{pageSize}
 )

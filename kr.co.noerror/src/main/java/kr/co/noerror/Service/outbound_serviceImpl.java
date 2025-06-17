@@ -63,8 +63,6 @@ public class outbound_serviceImpl implements outbound_service{
 	@Transactional
 	public String outbnd_insert(String out_pds) {
 		String f_result="";
-		int count = 0;
-		int count2 = 0;
 		
 		 //고유코드생성
         String out_code = this.makeCode.generate("OUT-", code -> this.out_dao.code_dupl_out(code) > 0);
@@ -85,8 +83,8 @@ public class outbound_serviceImpl implements outbound_service{
 		out_dto.setOUT_MEMO(jo.getString("OUT_MEMO"));
 		
 		int result = this.out_dao.outbnd_insert(out_dto);
-		if(result>0) {
-			count++;
+		if(result<=0) {
+			throw new RuntimeException("출고 테이블 저장 실패");
 		}
 		
 		List<outbound_DTO> out_pd_list = new ArrayList<>();
@@ -105,20 +103,19 @@ public class outbound_serviceImpl implements outbound_service{
 			 out_pd_list.add(out_detail);
 		}
 		
+		int count = 0;
 		for (outbound_DTO detail_dto : out_pd_list) {
-			result2 += this.out_dao.outbnd_dtl_insert(detail_dto);
-		}
-		if(result2>0) {
-			count2++;
+			int inserted = this.out_dao.outbnd_dtl_insert(detail_dto);
+	        if (inserted > 0) {
+	        	count++;
+	        }
 		}
 		
-		if(count == 1 && count2 == (pd_ea-1)) {
-			f_result = "all_complate";
-		}else {
-			f_result = String.valueOf((pd_ea-1)-count2);  //전체수 - 성공수 = 실패개수 
-		}
-		System.out.println(f_result);
-		return f_result;
+		if (count < out_pd_list.size()) {
+	        throw new RuntimeException("출고 상세 저장 실패: 일부 항목 저장 실패");
+	    }
+
+		return "all_complate";
 	}
 
 	//출고 상세보기 

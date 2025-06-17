@@ -157,7 +157,7 @@ function outBndInsertOk(){
 		return data.text();
 
 	}).then(function(result) {
-		if(result=="ok"){
+		if(result=="all_complate"){
 			alert("출고 처리가 완료되었습니다.");
 			location.href="./outbound.do";
 		}

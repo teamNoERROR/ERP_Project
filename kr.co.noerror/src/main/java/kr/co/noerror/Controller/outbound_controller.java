@@ -98,16 +98,12 @@ public class outbound_controller {
 			this.pw = res.getWriter();
 			
 			String result = this.out_svc.outbnd_insert(out_pds);
-			
-			if(result == "all_complate") {
-				this.pw.write("ok");  //출고 등록 완료 
-				
-			}else if(result == "") {
-				this.pw.write("fail"); //출고 등록실패
-			}
-			
+			System.out.println(result);
+			this.pw.write(result);  
+		
 		} catch (IOException e) {
-			this.pw.write("error"); //입고 등록실패
+			
+			this.pw.write("error"); //출고 등록실패
 			this.log.error(e.toString());
 			e.printStackTrace();
 			

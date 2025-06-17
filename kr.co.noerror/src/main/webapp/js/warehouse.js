@@ -271,6 +271,21 @@ function whMove(){
 			
 			const wmt_code = box.getAttribute('data-mt_code');
 			const wfs_code = box.getAttribute('data-fs_code');
+			
+			console.log(wh_code)
+			console.log(wh_type)
+			console.log(emp_code)
+			console.log(inv_lot)
+			console.log(product_code)
+			console.log(pd_qty)
+			console.log(plan_code)
+			console.log(inbound_code)
+			console.log(wmt_code)
+			console.log(wfs_code)
+			
+			
+			
+			
    			if (wh_code && wh_type && product_code && pd_qty && emp_code && mv_wh_code && inv_lot) {
 				if(plan_code && wfs_code){
 	     			moveData.push({ 
@@ -292,7 +307,6 @@ function whMove(){
 						pd_qty, 
 						emp_code, 
 						mv_wh_code,
-						plan_code,
 						inbound_code,
 						wmt_code,
 						inv_lot

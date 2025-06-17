@@ -31,7 +31,7 @@
         SYSTIMESTAMP,
         NULL,
         NULL,
-        TO_CHAR(SYSDATE, 'YYMMDDHH24MISS') || '-' || LPAD(TEMP_NO.NEXTVAL, 5, '0')
+ 		#{inv_lot}
     )
    </if>
    
@@ -61,8 +61,8 @@
         SYSTIMESTAMP,
         NULL,
         NULL,
-        TO_CHAR(SYSDATE, 'YYMMDDHH24MISS') || '-' || LPAD(TEMP_NO.NEXTVAL, 5, '0')
-    )
+ 		#{inv_lot}
+     )
    </if>
 </insert>
 
@@ -390,7 +390,7 @@ SELECT * FROM (
             PD.PIDX,
             PD.PRODUCT_NAME ,
             EMP.ENAME AS EMP_NAME,
-            
+            WFS.INV_LOT,
             <!-- 창고별 현재 재고수 --> 
             (SELECT SUM(
                     CASE 
@@ -552,7 +552,7 @@ FROM (
             WFS.EMPLOYEE_CODE,
             EMP.ENAME AS EMP_NAME,
             WFS.FS_INSERT_DATE AS fs_insert,
-            
+            WFS.INV_LOT,
             <!-- 창고별 현재 재고수 --> 
             (SELECT SUM(
                     CASE 

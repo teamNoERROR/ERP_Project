@@ -139,6 +139,7 @@
 				      	 	   th:value="${fs_wh.wfs_idx}" 
 						       th:data-plan_code="${fs_wh.plan_code}"
 						       th:data-pd_name="${fs_wh.product_name}"  
+						       th:data-inv_lot="${fs_wh.inv_lot}"
 						       onclick="selectRow(event,this);" 
 						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료' OR fs_wh.move_type == '이동'}" />
 				      </td>

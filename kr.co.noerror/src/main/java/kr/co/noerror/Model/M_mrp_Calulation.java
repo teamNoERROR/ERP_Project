@@ -25,11 +25,12 @@ public class M_mrp_Calulation {
 	private goods_service g_svc;
 	
 	@Autowired
-	inventory_service inv_svc; 
+	inventory_service inv_svc;
 	
 	
 	public List<mrp_result_DTO> mrp_calc(List<mrp_input_DTO> mrp_inputs) {
 		Map<String, mrp_result_DTO> aggregated = new HashMap<>();
+		Map<String, Integer> ind_item_all_stock = this.inv_svc.ind_item_all_stock();
 		
 		for (mrp_input_DTO input : mrp_inputs) {
 			List<bom_DTO> boms = this.mdao.boms_for_mrp(input.getBom_code());
@@ -37,8 +38,8 @@ public class M_mrp_Calulation {
 			for (bom_DTO bom : boms) {
 				String item_code = bom.getITEM_CODE();
 				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();
-				int total_stock = 0;
-				int safety_stock = 0;
+				int total_stock = ind_item_all_stock.getOrDefault(item_code, 0); 
+				int safety_stock = this.mdao.itm_safe_stock(item_code);
 				int reserved_stock = 0;
 				int available_stock = total_stock - safety_stock - reserved_stock;
 				int shortage_stock = Math.min(available_stock - required_qty, 0);

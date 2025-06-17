@@ -254,45 +254,51 @@ function whMove(){
 			return;
  		}
 		
+		const mv_wh_code = document.querySelector("#mv_wh_code").value;
 		const moveData = [];
 		checkedBoxes.forEach(box => {
    			const wh_code = box.getAttribute('data-wh_code');
    			const wh_type = box.getAttribute('data-wh_type');
-   			const product_code = box.getAttribute('data-product_code');
-   			const pd_qty = box.getAttribute('data-pd_qty');
    			const emp_code = box.getAttribute('data-emp_code');
+			const inv_lot = box.getAttribute('data-inv_lot');
+			
+			const product_code = box.getAttribute('data-product_code');
+			const pd_qty = box.getAttribute('data-pd_qty');
    			const plan_code = box.getAttribute('data-plan_code');
 			
 			const inbound_code = box.getAttribute('data-inbound_code');
-			const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
+			//const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
 			
-			const mv_wh_code = document.querySelector("#mv_wh_code").value;
-			console.log("체크박스 데이터:" + mv_wh_code);
-			
-   			
-   			if (wh_code && wh_type && product_code && pd_qty && emp_code && plan_code && mv_wh_code) {
-     			moveData.push({ 
-					wh_code, 
-					wh_type, 
-					product_code,
-					pd_qty, 
-					emp_code, 
-					plan_code, 
-					mv_wh_code,
-					inbound_code,
-					ind_pch_cd
-				});
+			const wmt_code = box.getAttribute('data-mt_code');
+			const wfs_code = box.getAttribute('data-fs_code');
+   			if (wh_code && wh_type && product_code && pd_qty && emp_code && mv_wh_code && inv_lot) {
+				if(plan_code && wfs_code){
+	     			moveData.push({ 
+						wh_code, 
+						wh_type, 
+						product_code,
+						pd_qty, 
+						emp_code, 
+						mv_wh_code,
+						plan_code,
+						wfs_code,
+						inv_lot
+					});
+				}else if(inbound_code && wmt_code){
+					moveData.push({ 
+						wh_code, 
+						wh_type, 
+						product_code,
+						pd_qty, 
+						emp_code, 
+						mv_wh_code,
+						plan_code,
+						inbound_code,
+						wmt_code,
+						inv_lot
+					});
+				}
    			}			
-			else {
-				console.warn("❌ 조건 불충족으로 제외됨:");
-				console.warn("  wh_code:", wh_code);
-				console.warn("  wh_type:", wh_type);
-				console.warn("  product_code:", product_code);
-				console.warn("  pd_qty:", pd_qty);
-				console.warn("  emp_code:", emp_code);
-				console.warn("  plan_code:", plan_code);
-				console.warn("  mv_wh_code:", mv_wh_code);
-			  }
  		});
 		console.log(moveData)
 		if (moveData.length === 0) {

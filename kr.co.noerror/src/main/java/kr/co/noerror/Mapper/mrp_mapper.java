@@ -18,4 +18,5 @@ public interface mrp_mapper {
 	int mrp_code_check(String mrp_code);
 	int insert_mrp_header(String mrp_code);
 	int insert_mrp_detail(mrp_result_DTO mdto);
+	int itm_safe_stock(String item_code);
 }

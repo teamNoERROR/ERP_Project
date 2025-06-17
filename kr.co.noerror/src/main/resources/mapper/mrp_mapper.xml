@@ -72,4 +72,10 @@ ORDER BY pln.pidx DESC
   ) 
 </insert>
 
+
+<!-- 자재 안전재고 -->  
+<select id="itm_safe_stock" parameterType="String">
+ SELECT itm_safe_stock FROM items WHERE item_code = #{item_code}
+</select>
+
 </mapper>

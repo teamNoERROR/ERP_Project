@@ -352,20 +352,23 @@ public class IOSF_Warehouse_Controller {
            String mv_wh_code = (String) param.get("mv_wh_code");
            String inbound_code = (String) param.get("inbound_code");
            String ind_pch_cd = (String) param.get("ind_pch_cd");
+           String wmt_code = (String) param.get("wmt_code");
+           String wfs_code = (String) param.get("wfs_code");
+           String inv_lot = (String) param.get("inv_lot");
 //           String in_status = (String) param.get("in_status");
 //           String item_count = (String) param.get("item_count");
-           
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
+          
+           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd,wmt_code,wfs_code,inv_lot);
            successCount += updatedCount;
-           
-           int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
-           successCount2 += updatedCount2;
+           System.out.println("successCount + " +successCount);
+           System.out.println("updatedCount + " +updatedCount);
+           //int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd,wmt_code);
+           //successCount2 += updatedCount2;
        }
 
        
        
        Map<String, Object> result = new HashMap<>();
-      if(successCount == successCount2) {
     	  if (successCount > 0) {
     		  result.put("success", true);
     		  result.put("message", successCount + "건 이동 완료");
@@ -373,7 +376,6 @@ public class IOSF_Warehouse_Controller {
     		  result.put("success", false);
     		  result.put("message", "이동 처리 실패");
     	  }
-      }
        
 
        return result;

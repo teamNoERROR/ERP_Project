@@ -45,5 +45,11 @@ public class mrp_DAO {
 		int result = this.sql.insert("insert_mrp_detail", mdto);
 		return result;
 	}
+	
+	//자재 안전재고
+	public int itm_safe_stock(String item_code) {
+		int itm_safe_stock = this.sql.selectOne("itm_safe_stock", item_code);
+		return itm_safe_stock;
+	}
 
 }

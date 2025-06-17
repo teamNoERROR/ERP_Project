@@ -66,6 +66,8 @@
    </if>
 </insert>
 
+
+
 <!-- 이동 후 MOVE_TYPE 변경 -->
 <update id="IOSF_warehouse_move_up">
 UPDATE 
@@ -74,7 +76,7 @@ UPDATE
   SET 
   	MOVE_TYPE = '이동'
     <where>
-    	WH_CODE = #{wh_code} AND ITEM_CODE = #{item_code} AND INBOUND_CODE = #{inbound_code} AND WMT_CODE = #{wmt_code} 
+    	WH_CODE = #{wh_code} AND ITEM_CODE = #{product_code} AND INBOUND_CODE = #{inbound_code} AND WMT_CODE = #{wmt_code} 
     </where>
 </if>
 
@@ -104,7 +106,7 @@ UPDATE
         MT_INSERT_DATE,
         MT_MODIFY_DATE,
         MOVE_TYPE,
-        
+        INV_LOT
     ) VALUES (
    	    MT_WAREHOUSE_NO.NEXTVAL,
    	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
@@ -116,7 +118,8 @@ UPDATE
         #{employee_code},
         SYSTIMESTAMP,
         NULL,
-        NULL
+        NULL,
+        #{inv_lot}
     )
    </if>
    
@@ -132,7 +135,8 @@ UPDATE
         EMPLOYEE_CODE,
         FS_INSERT_DATE,
         FS_MODIFY_DATE,
-        MOVE_TYPE
+        MOVE_TYPE,
+        INV_LOT
         
     ) VALUES (
    	    FS_WAREHOUSE_NO.NEXTVAL,
@@ -145,7 +149,8 @@ UPDATE
         #{employee_code},
         SYSTIMESTAMP,
         NULL,
-        NULL
+        NULL,
+        #{inv_lot}
     )
    </if>
 </insert>

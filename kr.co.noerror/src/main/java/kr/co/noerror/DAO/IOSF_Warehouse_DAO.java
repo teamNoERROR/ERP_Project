@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DTO.IOSF_DTO;
@@ -61,6 +62,7 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 	
 	//창고 이동
 	@Override
+	@Transactional
 	public int IOSF_warehouse_move(String wh_code, 
 									String wh_type,
 									String product_code,
@@ -68,10 +70,13 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 									String emp_code,
 									String planCode, 
 									String mv_wh_code,
+									String inbound_code,
 									String ind_pch_cd,
-									String inbound_code) {
-		
-//		if (in_status == null || in_status.trim().isEmpty()) {
+									String wmt_code,
+									String wfs_code,
+									String inv_lot) {
+
+		//		if (in_status == null || in_status.trim().isEmpty()) {
 //		    in_status = "입고완료";
 //		}
 		
@@ -89,7 +94,8 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
         	 this.wh_uq = "WOUT-" + randomNumber;
         }
         */
-		System.out.println("planCode : " + planCode);
+		int f_result = 0;
+		
 		Map<Object, Object> params = new HashMap<>();
 		params.put("wh_code", wh_code);
 		params.put("wh_type", wh_type);	
@@ -98,15 +104,29 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		params.put("employee_code", emp_code);
 		params.put("plan_code", planCode != null ? planCode : "-" );
 		params.put("mv_wh_code", mv_wh_code);  //출고이동되는 창고(after)
-//		params.put("wh_uq", this.wh_uq);
 		params.put("inbound_code", inbound_code);
+		params.put("wmt_code", wmt_code);
+		params.put("wfs_code", wfs_code);
+		params.put("inv_lot", inv_lot);
 		
 		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move", params); //출고처리
-		int wh_save_update = this.iosf_ware_st.update("IOSF_warehouse_move_up", params); //출고처리
+		int wh_save_update = this.iosf_ware_st.update("IOSF_warehouse_move_up", params); //출고처리시 이동표시
+		int wh_save_result2 = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
 		
-		return wh_save_result;
+		System.out.println("wh_save_result + " +wh_save_result);
+        System.out.println("wh_save_update + " +wh_save_update);
+        System.out.println("wh_save_result2 + " +wh_save_result2);
+		if (wh_save_result != wh_save_update && wh_save_update != wh_save_result2) {
+	        throw new RuntimeException("창고 이동 처리 실패");
+	    }
+		
+		if(wh_save_result == wh_save_update && wh_save_update == wh_save_result2) {
+			f_result = wh_save_result;
+		}
+		
+		return f_result;
 	}
-	
+	/*
 	//이동된 창고 입고처리 
 	@Override
 	public int IOSF_warehouse_move_in(String wh_code, 
@@ -117,7 +137,8 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 									String planCode, 
 									String mv_wh_code,
 									String ind_pch_cd,
-									String inbound_code) {
+									String inbound_code,
+									String wmt_code) {
 		
 		Map<Object, Object> params = new HashMap<>();
 		params.put("wh_type", wh_type);	
@@ -128,12 +149,12 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		params.put("mv_wh_code", mv_wh_code);
 		params.put("ind_pch_cd", ind_pch_cd);
 		params.put("inbound_code", inbound_code);
-		
+		params.put("wmt_code", wmt_code);
 		int wh_save_result = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
 		
 		return wh_save_result;
 	}
-	
+	*/
 	
 	//게시물 저장
 	@Override

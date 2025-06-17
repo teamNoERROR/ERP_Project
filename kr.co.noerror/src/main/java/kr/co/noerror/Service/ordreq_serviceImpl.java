@@ -72,7 +72,7 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 	        	this.ordreq_dto.setMemo((String)orders.get(0).get("MEMO"));
 
 	        	 // 총 금액 계산
-	            int pay_amount = 0;
+	            Long pay_amount = 0L;
 	            for (Map<String, Object> order : orders) {
 	                pay_amount += Long.parseLong((String)order.get("PRODUCT_AMOUNT"));
 	            }

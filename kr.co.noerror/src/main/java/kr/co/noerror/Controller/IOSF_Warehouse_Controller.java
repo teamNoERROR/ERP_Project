@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
+import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
+import kr.co.noerror.Service.common_service;
+import kr.co.noerror.Service.inventory_service;
 
 @Controller
 public class IOSF_Warehouse_Controller {
@@ -54,7 +58,12 @@ public class IOSF_Warehouse_Controller {
 
     @Resource(name="IOSF_DTO")
        IOSF_DTO iosf_dto;
+    
+    @Autowired
+	common_service common_svc;
 
+    @Autowired
+	inventory_service inv_svc; 
    
    @GetMapping("/warehouse_in_savePage.do")
    public String warehouse_in_savePage(Model m) {
@@ -173,19 +182,22 @@ public class IOSF_Warehouse_Controller {
 	   return "/warehouse/out_warehouses_list.html";
    }
    */
+   
+   
  //완제품 창고 리스트
-   @GetMapping("/warehouses_fs_list.do")
+   @GetMapping({"/warehouses_fs_list.do", "/outbound.do"})
    public String warehouses_fs_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
 	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
 			  @RequestParam(value = "name_wh_list", required = false) String fs_wh_list
+//			  ,@RequestBody String out_pd_data
+			  
 		   		) {
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
 		m.addAttribute("mmenu","완제품 창고");
-		System.out.println("fs_wh_list : " + fs_wh_list);
-		System.out.println("wh_search : " + wh_search);
+		
 		//창고별 리스트 출력용
 		List<String> schlist = new ArrayList<>();
  		JSONArray fswhList = this.iosf_service.wh_type_list("fs_wh");  //창고명목록
@@ -209,10 +221,15 @@ public class IOSF_Warehouse_Controller {
 	   	this.map = new HashMap<>();
 	    Map<Object, Object>   iosf_list_map = this.map;
 	   
-	      this.wh_type = "fs";
-	      
+	    this.wh_type = "fs";
+	    
+	    
+	    
+//	    String out_pd_list = this.common_svc.out_pd_list(out_pd_data);  //창고별 완제품 재고 
+	    Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
+	    
 	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
-	      
+	      System.out.println("iosf_list_map : " + iosf_list_map);
 	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
 	       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
@@ -223,6 +240,9 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
 	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
 		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
+		   
+//		   m.addAttribute("out_pd_list", out_pd_list); // 창고별 완제품 재고
+		   m.addAttribute("ind_pd_all_stock", ind_pd_all_stock); //개별 완제품 재고수
 	   
 	   return "/warehouse/fs_warehouses_list.html";
    }
@@ -335,9 +355,6 @@ public class IOSF_Warehouse_Controller {
            String ind_pch_cd = (String) param.get("ind_pch_cd");
 //           String in_status = (String) param.get("in_status");
 //           String item_count = (String) param.get("item_count");
-           
-           System.out.println(" inbound_code : " + inbound_code);
-           System.out.println(" ind_pch_cd : " + ind_pch_cd);
            
            int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
            successCount += updatedCount;

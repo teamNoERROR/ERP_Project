@@ -186,7 +186,7 @@
 						<button type="button" class="btn btn-info go_back" data-bs-dismiss="modal" aria-label="Close">
 							<i class="bi bi-card-list"></i> 이전으로
 						</button>
-						<button type="button" class="btn btn-success">
+						<button type="button" class="btn btn-success" onclick="bomModify()">
 							<i class="bi bi-pencil-square"></i> 수정
 						</button>
 						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-etccode="${bom_code}" data-type="bom" onclick="bomDelete(this)">

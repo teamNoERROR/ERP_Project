@@ -34,6 +34,7 @@ public class common_serviceImpl implements common_service {
 		return all_data;
 	}
 	
+	//창고타입별 창고 리스트 
 	@Override
 	public List<WareHouse_DTO> warehouse_list(String wh_tp) {
 		List<WareHouse_DTO> warehouse_list = this.cmn_dao.warehouse_list(wh_tp);
@@ -43,7 +44,7 @@ public class common_serviceImpl implements common_service {
 	//출고제품 리스트 모달 안에 들어갈 내용
 	@Override
 	public String out_pd_list(String out_pd_data) {
-		
+		System.out.println("out_pd_data : " + out_pd_data);
 		JSONArray ja = new JSONArray(out_pd_data);
 		int data_ea = ja.length();
 		
@@ -61,7 +62,10 @@ public class common_serviceImpl implements common_service {
 		    wfs_dto.setWh_code(jo.getString("wh_code"));
 		    outReqList.add(wfs_dto);
 		}
+		System.out.println("outReqList : " + outReqList);
+		
 		List<IOSF_DTO> out_list = this.cmn_dao.out_pd_list(outReqList);
+		System.out.println("out_list : " + out_list);
 		
 		//FE로 돌려보낼 데이터 
 		JSONArray dataArr = new JSONArray();
@@ -85,5 +89,6 @@ public class common_serviceImpl implements common_service {
 		
 		return dataArr.toString();
 	}
+
 
 }

@@ -23,4 +23,6 @@ public interface goods_service {
 	int pd_delete(del_DTO d_dto); 	//제품 삭제 
 	String lclass_ck(String sclass);
 	
+	String imgs_attach(String filenm);
+	
 }

@@ -138,7 +138,7 @@ public class inbound_controller {
 		int pch_qty_total=0;  //총 주문수량 
 		int inb_qty_total=0;  //총 입고수량 
 		int itm_cost_total=0;  //총 제품 단가
-		int pch_amount_total=0;  //총 구매금액
+		Long pch_amount_total=0L;  //총 구매금액
 		
 		for(inbound_DTO sum : inbound_detail) {
 			pch_qty_total += sum.getP_QTY();        // P_QTY 누적

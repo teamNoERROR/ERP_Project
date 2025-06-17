@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.noerror.DAO.common_DAO;
 import kr.co.noerror.DAO.pchreq_DAO;
-import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
@@ -375,7 +372,9 @@ public class common_controller {
 	
 	//발주 리스트 모달 띄우기 
   @GetMapping("/pch_list_modal.do")
-  public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, Model model, @RequestParam(value="mode", required = false) String mode) {
+  public String pch_list_modal(@ModelAttribute search_condition_DTO search_cond, 
+		  						Model model, 
+		  						@RequestParam(value="mode", required = false) String mode) {
 
 	  	int search_count = this.pchreq_list_service.search_count(search_cond);
 	    

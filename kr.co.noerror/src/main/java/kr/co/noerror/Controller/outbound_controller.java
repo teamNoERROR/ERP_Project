@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,7 +81,7 @@ public class outbound_controller {
 	@GetMapping("/outbound_insert.do")
 	public String outbound_insert(Model m) {
 		m.addAttribute("lmenu","입출고관리");
-		m.addAttribute("smenu","자재 출고");
+		m.addAttribute("smenu","제품 출고");
 		m.addAttribute("mmenu","출고 등록");
 		
 		return "/inout/outbound_insert.html";
@@ -89,6 +90,7 @@ public class outbound_controller {
 	//출고등록
 	@PutMapping("/outbound_insertok.do")
 	public String outbound_insertok(@RequestBody String out_pds, HttpServletResponse res) {
+		System.out.println("out_pds : " + out_pds);
 		try {
 			this.pw = res.getWriter();
 			
@@ -110,6 +112,37 @@ public class outbound_controller {
 	}
 	
 	
+	
+	//완제품 출고 
+    @PostMapping("/outProduct.do")
+    public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
+    	System.out.println("outData : " + outData);
+  	  
+  	  this.pw = res.getWriter();
+		
+		try {
+			
+			String out_product = this.iosf_service.out_product(outData);
+			if(out_product == "out_complete") {
+				this.pw.print("out_success");
+				
+			}else {
+				this.pw.print("out_fail");
+			}
+			
+//			String go_outlist = this.iosf_dao.go_outlist();
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+    
 	
 	//출고내역 상세보기 모달
 	@GetMapping("/outbnd_detail_modal.do")

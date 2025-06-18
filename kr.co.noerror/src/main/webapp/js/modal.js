@@ -719,7 +719,7 @@ function appendOutPdsRow(tbody, dataList){
 
 //상품 출고
 function goOutList(){
-	var outPdTrList = document.querySelectorAll("tr.outPd_row");
+	var outPdTrList = document.querySelectorAll("tr.pd_row");
 	var empCd = document.querySelector("#employee_code");
 	var qty = [];
 	

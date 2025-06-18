@@ -29,9 +29,10 @@
 <!-- 							<option value="출고완료">출고완료</option> -->
 <!-- 							<option value="반품">반품</option> -->
 						</select>
-						<select class="form-select" th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}"  th:if="${details[0].order_status == '생산계획수립' or details[0].order_status == '생산계획확정'}">
+						<select class="form-select" th:disabled="${#arrays.contains(no_chng_ordBtn, #strings.trim(details[0].order_status))}"  th:if="${details[0].order_status == '생산계획수립' or details[0].order_status == '생산계획확정' or details[0].order_status == '출고완료'}">
 							<option value="생산계획수립" th:selected="${details[0].order_status == '생산계획수립'}">생산계획수립</option>
 							<option value="생산계획확정" th:selected="${details[0].order_status == '생산계획확정'}">생산계획확정</option>
+							<option value="생산계획확정" th:selected="${details[0].order_status == '출고완료'}">출고완료</option>
 						</select>
 
 						<button type="button" class="btn " style="white-space: nowrap;" 

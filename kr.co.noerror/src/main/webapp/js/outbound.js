@@ -103,23 +103,7 @@ function validateInputs() {
 		return true;
 	}
 }
-		
 
-/*
-//미납되는 상품의 처리 
-function noOut(out_value){
-	var tr=out_value.closest("tr");
-	var qty_input = tr.querySelector(".out_pd_qty");
-	
-	if(out_value.value == "미납"){
-		qty_input.value = "0";
-		qty_input.disabled = true;
-		
-	}else{
-		qty_input.disabled = false;		
-	}
-}
-*/
 /*--------------------------------------------------------------
 출고저장 ajax
 --------------------------------------------------------------*/
@@ -159,14 +143,58 @@ function outBndInsertOk(){
 	}).then(function(result) {
 		if(result=="all_complate"){
 			alert("출고 처리가 완료되었습니다.");
-			location.href="./outbound.do";
+			location.href="./warehouses_fs_list.do";  //완제품 창고로 이동 
 		}
 
 	}).catch(function(error) {
 		console.log("통신오류발생" + error);
 	});
 }
+/*
+function outBndInsertOk(){
+	var tbody = document.querySelector("#outbnd_pds");
+	var rows = tbody.querySelectorAll('tr.pd_row');
+	var out_pds = [];
+	
+	rows.forEach(row => {
+		var pdCd = row.querySelector(".out_pd_code");  //상품코드
+		var outPdQty = row.querySelector(".out_pd_qty");  //출고수량
+		
+		//다 입력했으면 배열에 넣기
+      	out_pds.push({
+			PRODUCT_CODE: pdCd.textContent,
+			OUT_PRODUCT_QTY:outPdQty.value,
+      	});
+	});
+	var out_pds_list = {
+		ORD_CODE : ord_code.value,
+		OUTBOUND_DATE: out_date.value,
+		OUT_STATUS: out_status.value,
+		EMPLOYEE_CODE : employee_code.value,
+        OUT_MEMO: ob_memo.value,
+		outList: out_pds
+	};	
+	
+	
+	
+	fetch("./outbound_insertok.do", {
+		method: "PUT",
+		headers: {'content-type': 'application/json'},
+		body : JSON.stringify(out_pds_list)
+		
+	}).then(function(data) {
+		return data.text();
 
+	}).then(function(result) {
+		if(result=="all_complate"){
+			alert("출고 처리가 완료되었습니다.");
+			location.href="./warehouses_fs_list.do";  //완제품 창고로 이동 
+		}
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}*/
 
 /*--------------------------------------------------------------
 출고건 상세보기 모달 

@@ -638,7 +638,7 @@ public class IOSF_Warehouse_Controller {
       }
 
       
-      
+      /*
       //완제품 출고 
       @PostMapping("/outProduct.do")
       public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
@@ -668,7 +668,7 @@ public class IOSF_Warehouse_Controller {
   		
   		return null;
   	}
-      
+     */ 
       
       
       

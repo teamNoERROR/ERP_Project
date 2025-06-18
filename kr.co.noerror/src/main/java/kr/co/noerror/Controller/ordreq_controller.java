@@ -69,6 +69,7 @@ public class ordreq_controller {
 	
 	 //버튼 누름 방지
     String [] no_chng_ordBtn = {"주문확인","주문취소","생산계획수립","생산계획확정"};
+    String [] no_chng_ordBtn2 = {"생산계획수립","생산계획확정","생산중","","지연중","출고완료"};
 		
 	@PostMapping("/order_save.do")
 	@ResponseBody
@@ -153,6 +154,7 @@ public class ordreq_controller {
 		m.addAttribute("details",details);
 		m.addAttribute("ind_pd_all_stock",ind_pd_all_stock);
 		 m.addAttribute("no_chng_ordBtn", no_chng_ordBtn); // 상태 변경 불가
+		 m.addAttribute("no_chng_ordBtn2", no_chng_ordBtn2); // 상태 변경 불가
 		return "/modals/order_detail_modal.html";
 	}
 	

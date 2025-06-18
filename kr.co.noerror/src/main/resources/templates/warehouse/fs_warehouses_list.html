@@ -83,7 +83,7 @@
 <!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
 <!-- 			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option> -->
 <!-- 			      </select>  -->
-			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/창고명으로 검색" th:value="${wh_search}">
+			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/제품코드로 검색" th:value="${wh_search}">
 			      <button class="btn btn-primary" onclick="searchWH()">
 			        <i class="bi bi-search"></i> 
 			      </button>
@@ -214,11 +214,7 @@
 				
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
-					<button type="button" class="btn btn-info d-flex align-items-center px-2"
-		            		style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()">
-		      			<i class="bi bi-box-seam"></i> &nbsp;테스트
-		    		</button>
-		    		<button type="button" class="btn btn-info d-flex align-items-center px-2" onclick="addOutbound()">
+		    		<button type="button" class="btn btn-primary d-flex align-items-center px-2" onclick="addOutbound()">
 						<i class="bi bi-box-seam"></i> &nbsp;출고요청
 					</button>
 					<div class="ms-auto">

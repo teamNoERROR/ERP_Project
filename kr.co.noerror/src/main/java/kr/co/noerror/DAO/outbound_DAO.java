@@ -52,6 +52,19 @@ public class outbound_DAO {
 		return fswh_all_list;
 	}
 
+	//제품 재고 출고처리를 위한 정보 
+	public List<IOSF_DTO> out_productList(String product_code) {
+		List<IOSF_DTO> out_productList = this.st.selectList("outPd_info",product_code);
+		return out_productList;
+	}
+
+	//칭고에서 출고처리
+	public int out_fswh_result(Map<String, Object> outParams) {
+		int out_fswh_result = this.st.insert("fs_warehouse_out",outParams);
+		return out_fswh_result;
+	}
+
+
 	
 	
 }

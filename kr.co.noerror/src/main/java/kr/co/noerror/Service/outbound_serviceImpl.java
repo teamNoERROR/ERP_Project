@@ -62,7 +62,7 @@ public class outbound_serviceImpl implements outbound_service{
 	@Override
 	@Transactional
 	public String outbnd_insert(String out_pds) {
-		String f_result="";
+		System.out.println("서비스 : " + out_pds);
 		
 		 //고유코드생성
         String out_code = this.makeCode.generate("OUT-", code -> this.out_dao.code_dupl_out(code) > 0);
@@ -88,7 +88,6 @@ public class outbound_serviceImpl implements outbound_service{
 		}
 		
 		List<outbound_DTO> out_pd_list = new ArrayList<>();
-		int result2 = 0;
 		
 		//OUTBOUND_DETAIL 테이블에 저장 
 		for (int w = 1; w < pd_ea; w++) {
@@ -114,7 +113,59 @@ public class outbound_serviceImpl implements outbound_service{
 		if (count < out_pd_list.size()) {
 	        throw new RuntimeException("출고 상세 저장 실패: 일부 항목 저장 실패");
 	    }
+		
+		
+		
+		//재고 출고처리
+		List<String> pd_codes = new ArrayList<>(); 
+		List<Integer> pd_qtys = new ArrayList<>();
+		
+		JSONArray out_ja = new JSONArray(out_pds);
+		for (int f = 1; f < pd_ea; f++) {
+			JSONObject out_jo = out_ja.getJSONObject(f);
+			
+			String pdcode = out_jo.getString("PRODUCT_CODE");
+			int pd_out_qty = out_jo.getInt("OUT_PRODUCT_QTY");
 
+			pd_codes.add(pdcode);
+			pd_qtys.add(pd_out_qty);
+		}
+		
+		System.out.println("pd_codes : " + pd_codes);
+		System.out.println("pd_out_qty : " + pd_qtys);
+		
+		for (int i = 0; i < pd_codes.size(); i++) {
+			String pdCode = pd_codes.get(i);
+			int ordPdQty = pd_qtys.get(i); // 제품별 출고 수량 정확히 적용
+
+			List<IOSF_DTO> outpdinfo_result = this.out_dao.out_productList(pdCode);
+
+			for (IOSF_DTO lot : outpdinfo_result) {
+				if (ordPdQty <= 0) break;
+
+				int availableQty = lot.getPd_qty();
+				int usedQty = Math.min(availableQty, ordPdQty);
+
+				// 출고완료 INSERT
+				Map<String, Object> outParams = new HashMap<>();
+				outParams.put("wh_code", lot.getWh_code());
+				outParams.put("plan_code", lot.getPlan_code());
+				outParams.put("product_code", pdCode);
+				outParams.put("pd_qty", usedQty);
+				outParams.put("employee_code", lot.getEmployee_code());
+				outParams.put("inv_lot", lot.getInv_lot());
+
+				this.out_dao.out_fswh_result(outParams);
+				ordPdQty -= usedQty;
+			}
+			
+			if (ordPdQty > 0) {
+				throw new RuntimeException("재고 부족: " + pdCode);
+			}
+		}
+			
+			
+		
 		return "all_complate";
 	}
 

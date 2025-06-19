@@ -178,9 +178,9 @@ public class bom_controller {
 		
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, "product");
-//		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
 		
-//		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
+		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 		m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
 		m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
 		m.addAttribute("bom_result", resultlist);

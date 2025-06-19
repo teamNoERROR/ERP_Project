@@ -153,7 +153,7 @@ public class bom_controller {
 	}
 	
 	
-	
+	/*
 	//BOM 수정하기 화면이동 
 	@GetMapping("/bom_modify.do")
 	public String bom_modify(Model m, @RequestParam("pd_code") String pd_code) {
@@ -170,7 +170,7 @@ public class bom_controller {
 		
 		return "/goods/bom_modify.html";
 	}
-	
+	*/
 	
 	//BOM 상세보기 모달ver
 	@GetMapping("/bom_detail.do")

@@ -44,7 +44,7 @@ public class rest_controller {
 		//img_url = "http://210.178.108.186:8080/noerror/imgfile/"+filenm;
 			
 		if(!filenm.equals(null) || !filenm.equals("")) {
-			img_url = "http://210.178.108.186:8080/noerror/imgfile/";
+			img_url = "http://210.178.108.186:83/imgfile/";
 			String cdn_imgs = this.g_svc.imgs_attach(filenm); //cdn 이미지 url 가져오기
 			try {
 				URL url = new URL(img_url+cdn_imgs);

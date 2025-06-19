@@ -46,7 +46,12 @@ public class M_mrp_Calulation {
 				aggregated.merge(item_code,
 						new mrp_result_DTO(item_code, bom.getITEM_TYPE(), bom.getITEM_NAME(), required_qty, bom.getITEM_UNIT(), bom.getITEM_COST(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
 						(oldVal, newVal) -> {
-                            oldVal.setRequired_qty(oldVal.getRequired_qty() + newVal.getRequired_qty());
+					        int updatedRequiredQty = oldVal.getRequired_qty() + newVal.getRequired_qty();
+					        oldVal.setRequired_qty(updatedRequiredQty);
+
+					        int availableStock = oldVal.getTotal_stock() - oldVal.getSafety_stock() - oldVal.getReserved_stock();
+					        int updatedShortage = Math.min(availableStock - updatedRequiredQty, 0);
+					        oldVal.setShortage_stock(updatedShortage);
                             return oldVal;
                         }						
 					);

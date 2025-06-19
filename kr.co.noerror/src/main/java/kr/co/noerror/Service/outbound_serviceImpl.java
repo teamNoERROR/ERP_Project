@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.outbound_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.inbound_DTO;
+import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.outbound_DTO;
 import kr.co.noerror.Mapper.outbound_mapper;
 import kr.co.noerror.Model.M_paging;
@@ -62,7 +63,6 @@ public class outbound_serviceImpl implements outbound_service{
 	@Override
 	@Transactional
 	public String outbnd_insert(String out_pds) {
-		System.out.println("서비스 : " + out_pds);
 		
 		 //고유코드생성
         String out_code = this.makeCode.generate("OUT-", code -> this.out_dao.code_dupl_out(code) > 0);
@@ -70,7 +70,6 @@ public class outbound_serviceImpl implements outbound_service{
         JSONArray ja = new JSONArray(out_pds);
         JSONObject jo = ja.getJSONObject(0);
 		int pd_ea = ja.length();
-		System.out.println("pd_ea: " + pd_ea);
 		
 		outbound_DTO out_dto = new outbound_DTO();
 		
@@ -115,8 +114,7 @@ public class outbound_serviceImpl implements outbound_service{
 	    }
 		
 		
-		
-		//재고 출고처리
+		//완제품 재고 출고처리
 		List<String> pd_codes = new ArrayList<>(); 
 		List<Integer> pd_qtys = new ArrayList<>();
 		
@@ -136,7 +134,7 @@ public class outbound_serviceImpl implements outbound_service{
 		
 		for (int i = 0; i < pd_codes.size(); i++) {
 			String pdCode = pd_codes.get(i);
-			int ordPdQty = pd_qtys.get(i); // 제품별 출고 수량 정확히 적용
+			int ordPdQty = pd_qtys.get(i); // 제품별 출고 수량
 
 			List<IOSF_DTO> outpdinfo_result = this.out_dao.out_productList(pdCode);
 
@@ -164,8 +162,6 @@ public class outbound_serviceImpl implements outbound_service{
 			}
 		}
 			
-			
-		
 		return "all_complate";
 	}
 
@@ -209,5 +205,25 @@ public class outbound_serviceImpl implements outbound_service{
 		
 		List<IOSF_DTO> fswh_all_list = this.out_dao.fswh_all_list(mapp);
 		return fswh_all_list;
+	}
+
+	//부자재창고 부자재 출고 처리 전 mrp 계산 필요수량 가져오기 
+	@Override
+	public List<mrp_result_DTO> select_mrp_result(String plan_code) {
+		List<mrp_result_DTO> mrp_reqQty = this.out_dao.select_mrp_result(plan_code);
+		return mrp_reqQty;
+	}
+
+	//부자재 창고 출고처리 전 재고있는 창고 확인  
+	@Override
+	public List<IOSF_DTO> out_itemList(String itmCode) {
+		List<IOSF_DTO> out_itemList = this.out_dao.out_itemList(itmCode);
+		return out_itemList;
+	}
+
+	@Override
+	public void out_mtwh_result(Map<String, Object> outParams) {
+		// TODO Auto-generated method stub
+		
 	}
 }

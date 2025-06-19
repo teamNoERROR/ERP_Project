@@ -12,8 +12,6 @@ import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.mrp_input_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
-import kr.co.noerror.DTO.products_DTO;
-import kr.co.noerror.DTO.temp_bom_DTO;
 import kr.co.noerror.Service.goods_service;
 import kr.co.noerror.Service.inventory_service;
 
@@ -27,23 +25,24 @@ public class M_mrp_Calulation {
 	private goods_service g_svc;
 	
 	@Autowired
-	inventory_service inv_svc; 
+	inventory_service inv_svc;
 	
 	
 	public List<mrp_result_DTO> mrp_calc(List<mrp_input_DTO> mrp_inputs) {
 		Map<String, mrp_result_DTO> aggregated = new HashMap<>();
+		Map<String, Integer> ind_item_all_stock = this.inv_svc.ind_item_all_stock();
 		
 		for (mrp_input_DTO input : mrp_inputs) {
 			List<bom_DTO> boms = this.mdao.boms_for_mrp(input.getBom_code());
 			
 			for (bom_DTO bom : boms) {
 				String item_code = bom.getITEM_CODE();
-				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();
-				int total_stock = 0;
-				int safety_stock = 0;
-				int reserved_stock = 0;
-				int available_stock = total_stock - safety_stock - reserved_stock;
-				int shortage_stock = Math.min(available_stock - required_qty, 0);
+				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();  //필요수량
+				int total_stock = ind_item_all_stock.getOrDefault(item_code, 0);  //전체재고 
+				int safety_stock = this.mdao.itm_safe_stock(item_code);  //안전재고 
+				int reserved_stock = 0;	//예약재고
+				int available_stock = total_stock - safety_stock - reserved_stock;  //가용수량
+				int shortage_stock = Math.min(available_stock - required_qty, 0);  //부족수량 
 				aggregated.merge(item_code,
 						new mrp_result_DTO(item_code, bom.getITEM_TYPE(), bom.getITEM_NAME(), required_qty, bom.getITEM_UNIT(), bom.getITEM_COST(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
 						(oldVal, newVal) -> {

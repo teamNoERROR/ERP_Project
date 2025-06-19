@@ -47,6 +47,7 @@ public class ordreq_res_DTO {
     private String product_class1;      // 대분류
     private String product_class2;      // 소분류
     private Long product_price;		//판매가
+    private Long pd_safe_stock;
     
     //BOM code
     private String bom_code = "-";

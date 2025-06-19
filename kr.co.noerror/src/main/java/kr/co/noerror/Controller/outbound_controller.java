@@ -2,26 +2,22 @@ package kr.co.noerror.Controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.noerror.DTO.IOSF_DTO;
-import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.outbound_DTO;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
@@ -85,7 +81,7 @@ public class outbound_controller {
 	@GetMapping("/outbound_insert.do")
 	public String outbound_insert(Model m) {
 		m.addAttribute("lmenu","입출고관리");
-		m.addAttribute("smenu","자재 출고");
+		m.addAttribute("smenu","제품 출고");
 		m.addAttribute("mmenu","출고 등록");
 		
 		return "/inout/outbound_insert.html";
@@ -94,20 +90,17 @@ public class outbound_controller {
 	//출고등록
 	@PutMapping("/outbound_insertok.do")
 	public String outbound_insertok(@RequestBody String out_pds, HttpServletResponse res) {
+		System.out.println("out_pds : " + out_pds);
 		try {
 			this.pw = res.getWriter();
 			
-			int result = this.out_svc.outbnd_insert(out_pds);
-			
-			if(result > 0) {
-				this.pw.write("ok");  //출고 등록 완료 
-				
-			}else {
-				this.pw.write("fail"); //출고 등록실패
-			}
-			
+			String result = this.out_svc.outbnd_insert(out_pds);
+			System.out.println(result);
+			this.pw.write(result);  
+		
 		} catch (IOException e) {
-			this.pw.write("error"); //입고 등록실패
+			
+			this.pw.write("error"); //출고 등록실패
 			this.log.error(e.toString());
 			e.printStackTrace();
 			
@@ -119,6 +112,37 @@ public class outbound_controller {
 	}
 	
 	
+	
+	//완제품 출고 
+    @PostMapping("/outProduct.do")
+    public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
+    	System.out.println("outData : " + outData);
+  	  
+  	  this.pw = res.getWriter();
+		
+		try {
+			
+			String out_product = this.iosf_service.out_product(outData);
+			if(out_product == "out_complete") {
+				this.pw.print("out_success");
+				
+			}else {
+				this.pw.print("out_fail");
+			}
+			
+//			String go_outlist = this.iosf_dao.go_outlist();
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+    
 	
 	//출고내역 상세보기 모달
 	@GetMapping("/outbnd_detail_modal.do")

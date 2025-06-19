@@ -51,7 +51,7 @@
 	VALUES 
 	(PRODUCTS_NO.NEXTVAL, #{PRODUCT_CODE}, #{PRODUCT_NAME}, #{PRODUCT_TYPE}, 
 	#{PRODUCT_CLASS1}, #{PRODUCT_CLASS2}, #{PRODUCT_SPEC}, #{PRODUCT_UNIT}, 
-	#{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK}, 
+	#{PRODUCT_COST}, #{PRODUCT_PRICE}, #{PD_SAFE_STOCK, jdbcType=INTEGER}, 
 	#{PD_FILE_NM, jdbcType=CLOB}, #{PD_FILE_RENM, jdbcType=VARCHAR}, #{PD_API_FNM, jdbcType=VARCHAR}, 
 	#{PD_USE_FLAG}, #{PD_EXP_FLAG}, #{PD_MEMO, jdbcType=CLOB}, SYSTIMESTAMP, NULL)
 </insert>
@@ -63,7 +63,7 @@
 	VALUES 
 	(ITEMS_NO.NEXTVAL, #{ITEM_CODE}, #{ITEM_NAME}, #{ITEM_TYPE}, 
 	#{ITEM_CLASS1}, #{ITEM_CLASS2}, #{ITEM_SPEC}, #{ITEM_UNIT}, 
-	#{ITEM_COST}, #{ITM_SAFE_STOCK},  
+	#{ITEM_COST}, #{ITM_SAFE_STOCK, jdbcType=VARCHAR},  
 	#{ITM_FILE_NM, jdbcType=VARCHAR}, #{ITM_FILE_RENM, jdbcType=VARCHAR}, #{ITM_API_FNM, jdbcType=VARCHAR}, 
 	#{COMPANY_CODE}, #{ITM_USE_FLAG}, #{ITM_EXP_FLAG}, #{ITM_MEMO, jdbcType=CLOB}, SYSTIMESTAMP, NULL)
 </insert>
@@ -184,11 +184,11 @@ SELECT COUNT(*) AS CNT FROM
 <select id="pd_one_detail" resultType="kr.co.noerror.DTO.products_DTO" parameterType="Map">
 	SELECT * FROM 
 	<choose>
-		<when test="type=='product' or type==null">
-		PRODUCTS WHERE PRODUCT_CODE = #{PRODUCT_CODE}
+		<when test="PRODUCT_TYPE != null and (PRODUCT_TYPE.equals('product') or PRODUCT_TYPE.equals('half'))">
+		PRODUCTS WHERE PRODUCT_CODE = #{PRODUCT_CODE, jdbcType=VARCHAR}
 		</when>
-		<when test="type=='item'">
-		ITEMS WHERE ITEM_CODE = #{ITEM_CODE}
+		<when test="ITEM_TYPE != null and ITEM_TYPE.equals('item')">
+		ITM_COMP_VIEW WHERE ITEM_CODE = #{ITEM_CODE, jdbcType=VARCHAR}
 		</when>
 	</choose>
 </select>
@@ -217,9 +217,48 @@ SELECT COUNT(*) AS CNT FROM
 </delete>
 
 
-<select id="lclass_ck" resultType="String" parameterType="String">
+<!-- 선택된 대분류항목 가져오기 -->
+<select id="lclass_ck" resultType="String" parameterType="Map">
+	
+	<choose>
+	<when test="key == 'pd_sc'">
+<!-- 	<when test="key.equals('pd_sc')"> -->
 	SELECT PRODUCT_CLASS1 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS2 = #{PRODUCT_CLASS2, jdbcType=VARCHAR}
+	</when>
+	<when test="key == 'itm_sc'">
+<!-- 	<when test="key.equals('itm_sc')"> -->
+	SELECT ITEMS_CLASS1 FROM ITEMS_CLASS WHERE ITEMS_CLASS2 = #{ITEMS_CLASS2, jdbcType=VARCHAR}
+	</when>
+	</choose>
 </select>
 
+
+<!-- 거래처 정보수정 -->
+<update id="goods_modify" parameterType="kr.co.noerror.DTO.products_DTO">
+	UPDATE 
+	<choose>
+		<when test="PRODUCT_TYPE =='product' or PRODUCT_TYPE=='half'">
+		PRODUCTS SET PRODUCT_NAME = #{PRODUCT_NAME}, PRODUCT_CLASS1 = #{PRODUCT_CLASS1}, PRODUCT_CLASS2 = #{PRODUCT_CLASS2},
+		PRODUCT_SPEC = #{PRODUCT_SPEC}, PRODUCT_UNIT = #{PRODUCT_UNIT}, PRODUCT_COST=#{PRODUCT_COST}, PRODUCT_PRICE = #{PRODUCT_PRICE}, PD_SAFE_STOCK = #{PD_SAFE_STOCK, jdbcType=INTEGER},
+		<if test="PD_FILE_NM != null and PD_FILE_RENM != null and PD_API_FNM != null">
+		PD_FILE_NM = #{PD_FILE_NM, jdbcType=VARCHAR}, PD_FILE_RENM = #{PD_FILE_RENM, jdbcType=VARCHAR}, PD_API_FNM = #{PD_API_FNM, jdbcType=VARCHAR},
+		</if>
+		PD_USE_FLAG = #{PD_USE_FLAG}, PD_EXP_FLAG = #{PD_EXP_FLAG}, 
+		PD_MEMO = #{PD_MEMO, jdbcType=CLOB}, PD_MODIFY_DATE = SYSTIMESTAMP 
+		WHERE PIDX = #{PIDX} AND PRODUCT_CODE = #{PRODUCT_CODE}
+		</when>
+		
+		<when test="ITEM_TYPE=='item'">
+		ITEMS SET ITEM_NAME = #{ITEM_NAME}, ITEM_CLASS1 = #{ITEM_CLASS1}, ITEM_CLASS2 = #{ITEM_CLASS2},
+		ITEM_SPEC = #{ITEM_SPEC}, ITEM_UNIT = #{ITEM_UNIT}, ITEM_COST=#{ITEM_COST}, ITM_SAFE_STOCK = #{ITM_SAFE_STOCK, jdbcType=INTEGER},
+		<if test="ITM_FILE_NM != null and ITM_FILE_RENM != null and ITM_API_FNM != null">
+		ITM_FILE_NM = #{ITM_FILE_NM, jdbcType=VARCHAR}, ITM_FILE_RENM = #{ITM_FILE_RENM, jdbcType=VARCHAR}, ITM_API_FNM = #{ITM_API_FNM, jdbcType=VARCHAR},
+		</if>
+		COMPANY_CODE = #{COMPANY_CODE}, ITM_USE_FLAG = #{ITM_USE_FLAG}, ITM_EXP_FLAG = #{ITM_EXP_FLAG}, 
+		ITM_MEMO = #{ITM_MEMO, jdbcType=CLOB}, ITM_MODIFY_DATE = SYSTIMESTAMP 
+		WHERE IIDX = #{IIDX} AND ITEM_CODE = #{ITEM_CODE}
+		</when>
+	</choose>
+</update>
 
 </mapper>

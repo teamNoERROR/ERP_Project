@@ -76,7 +76,8 @@ function insertItm(){
 	}else if(purchase_corp.value==""){
 		alert("거래처를 선택하세요");
 		purchase_corp.focus();		
-	}else if(itmImage){    //파일첨부 함경우 	
+	}
+	else if(itmImage){    //파일첨부 함경우 	
 		var imgSize = itmImage.size; // 파일 크기
 		var maxSize = 2 * 1024 * 1024; // 2MB제한
 			

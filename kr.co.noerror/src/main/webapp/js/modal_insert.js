@@ -9,11 +9,11 @@ let selectedMoveData = [];  // 체크된 항목들 저장
 function saveSelectedProducts() {
   const checked = document.querySelectorAll('.move-checkbox:checked');
   selectedMoveData = Array.from(checked).map(cb => ({
-    wh_code: cb.dataset.wh_code,
-    pd_name: cb.dataset.pd_name
+    wh_code: cb.dataset.wh_code.trim(),
+    pd_name: cb.dataset.pd_name,
   }));
 }
-console.log(selectedMoveData)
+
 
 //타입별창고리스트 모달 열기
 function whSelect(wh_type, name_id, code_id){
@@ -57,13 +57,13 @@ function choiceWh() {
 		alert("창고를 선택해 주세요.");
 	 }
 	 else{
-		const whCode = selected_radio.value;
+		const whCode = selected_radio.value.trim();
 		const whName = selected_radio.getAttribute('data-wh_name');
 		const whZipcode = selected_radio.getAttribute('data-wh_zipcode');
 		const whAddr1 = selected_radio.getAttribute('data-wh_addr1');
 		const whAddr2 = selected_radio.getAttribute('data-wh_addr2');
 		const whType = selected_radio.getAttribute('data-wh_type');  // ← 여기서 타입 읽기
-
+		
 		const whNameInput = document.getElementById(targetWhNameId);
 		const whCodeInput = document.getElementById(targetWhCodeId);
 		const whAddrInput = document.getElementById('wh_location');
@@ -537,18 +537,21 @@ function choiceOrd(parentType) {
  		var tdList = tr.querySelectorAll('td');
  		
 		var orderCode =  tdList[2].innerText.trim();
-		var companyCode =  tdList[4].innerText.trim();
-		var companyName =  tdList[5].innerText.trim();
+		var companyCode =  tdList[3].innerText.trim();
+		var companyName =  tdList[4].innerText.trim();
+		var mngName =  tdList[5].innerText.trim();
 		
 		var ord_code = document.querySelector('#ord_code');
 		var comp_name = document.querySelector('#comp_name');
 		var comp_code = document.querySelector('#comp_code');
+		var mng_name = document.querySelector('#mng_name');
 		
 		ordDtlLoad2(orderCode);   //발주목록 테이블에 붙여넣기
 				
 		ord_code.value= orderCode;
 		comp_name.value= companyCode;
 		comp_code.value= companyName;
+		mng_name.value= mngName;
  	}
 	
 	// 선택 후 모달 닫기
@@ -592,7 +595,7 @@ function ordDtlLoad(order_code){
 			  <td>${resultProduct.product_name}</td>
 			  <td>${resultProduct.product_spec}</td>
 			  <td>${resultProduct.product_unit}</td>
-			  <td>${resultProduct.ind_pd_all_stock}</td>
+			  <td>${resultProduct.ind_pd_all_stock} (/${resultProduct.pd_safe_stock})</td>
 			  <td>
 			    <input type="number" class="form-control plan_qty" value="${resultProduct.product_qty}">
 			  </td>
@@ -611,7 +614,7 @@ function ordDtlLoad(order_code){
 	});
 }
 
-//출고인서트 페이지에서 
+//출고등록 페이지에서 
 function ordDtlLoad2(order_code){
 	
 	fetch("./ordreq_products.do?code="+order_code, {
@@ -637,10 +640,10 @@ function ordDtlLoad2(order_code){
 			    <td>`+resultProduct.product_name+`</td>
 			    <td>`+resultProduct.product_spec+`</td>
 			    <td>`+resultProduct.product_unit+`</td>
-			    <td class="text-end">`+resultProduct.product_price+`</td>
-				<td >`+resultProduct.product_qty+`</td>
-			    <td>`+""+`</td>
-				<td><input type="number" class="form-control out_pd_qty"></td>
+			    <td class="text-end">`+resultProduct.product_price.toLocaleString()+`</td>
+				<td class="text_red ord_pd_qty">`+resultProduct.product_qty.toLocaleString()+`</td>
+			    <td class="all_pd_stock">`+resultProduct.ind_pd_all_stock.toLocaleString()+`</td>
+				<td><input type="number" min="1" class="form-control out_pd_qty"></td>
 			  `;
 		  	tbody.append(tr);
 	
@@ -732,7 +735,6 @@ function pchDtlLoad(pch_code){
 				<td>`+resultItem.item_class2+`</td>
 				<td class="text-end">`+resultItem.item_cost+`</td>
 				<td><input type="number" class="form-control item_qty"></td>
-				<td><input type="date" class="form-control item_exp"></td>
 				<td>
 					<select class="form-select item_deli" aria-label="Default select example" onchange='noDeli(this)'>
 						<option value="" >선택</option>
@@ -741,6 +743,7 @@ function pchDtlLoad(pch_code){
 						<option value="미납">미납</option>
 					</select>
 				</td>
+				<td><input type="date" class="form-control item_exp"></td>
 			  `;
 		  	tbody.append(tr);
 			

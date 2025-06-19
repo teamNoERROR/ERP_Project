@@ -81,6 +81,8 @@ function completeOutbound() {
 }
 */
 
+
+
 //특정창고정보만 보기 select태그선택
 function nameWhCh(){
 	searchWH();

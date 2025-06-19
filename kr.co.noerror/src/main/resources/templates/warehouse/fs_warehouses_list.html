@@ -38,12 +38,12 @@
 <!-- 			</button> -->
 			<div class="input-group">
 	            <input type="text"  id="wh_name" class="form-control" style="width: 220px;" placeholder="완제품 창고가 선택됩니다" readonly>
-				<input type="hidden" id="wh_code" class="form-control" />
+				<input type="hidden" id="mv_wh_code" class="form-control" />
 <!-- 	            <button type="button" class="btn btn-primary modal-trigger"  -->
 <!-- 	            		 th:data-modal-url="@{/wh_type_list.do(wh_type='fs_wh')}" -->
 <!-- 	            		data-modal-id="wh_type_list" style="cursor: pointer;"> -->
            		<button type="button" class="btn btn-primary" 
-	            		onclick="whSelect('fs_wh','wh_name','wh_code')" style="cursor: pointer;">
+	            		onclick="whSelect('fs_wh','wh_name','mv_wh_code')" style="cursor: pointer;">
 	                <i class="bi bi-search"></i>
 	            </button>
 	        </div>
@@ -83,7 +83,7 @@
 <!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
 <!-- 			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option> -->
 <!-- 			      </select>  -->
-			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/창고명으로 검색" th:value="${wh_search}">
+			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/제품코드로 검색" th:value="${wh_search}">
 			      <button class="btn btn-primary" onclick="searchWH()">
 			        <i class="bi bi-search"></i> 
 			      </button>
@@ -129,6 +129,7 @@
 				      <td onclick="event.stopPropagation();">
 				      	<input type="checkbox" name="checkCodes"
 				   			   	class="move-checkbox"
+				   			   	th:data-fs_code="${fs_wh.wfs_code}"
 						       th:data-wh_code="${fs_wh.wh_code}"
 						       data-wh_type="fs"
 						       th:data-product_code="${fs_wh.product_code}" 
@@ -138,8 +139,9 @@
 				      	 	   th:value="${fs_wh.wfs_idx}" 
 						       th:data-plan_code="${fs_wh.plan_code}"
 						       th:data-pd_name="${fs_wh.product_name}"  
+						       th:data-inv_lot="${fs_wh.inv_lot}"
 						       onclick="selectRow(event,this);" 
-						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료'}" />
+						       th:disabled="${fs_wh.change_type == '출고' OR fs_wh.change_type == '출고완료' OR fs_wh.move_type == '이동'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
 				      <td th:text="${fs_wh.wfs_code}"></td>
@@ -147,10 +149,10 @@
 				      <td th:text="${fs_wh.wh_name}"></td>
 				      <td th:text="${fs_wh.product_code}"></td>
 				      <td th:text="${fs_wh.product_name}"></td>
-				      <td th:text="${fs_wh.pd_qty}"></td>
+				      <td th:text="${#numbers.formatInteger(fs_wh.pd_qty,0,'COMMA')}"></td>
 				      <td th:text="${fs_wh.change_type}"></td>
-				      <td th:text="${fs_wh.change_type}"></td>
-				      <td th:text="${fs_wh.change_type}"></td>
+				      <td th:text="${#numbers.formatInteger(fs_wh.total_current_qty,0,'COMMA')}"></td>
+				      <td th:text="${#numbers.formatInteger(fs_wh.current_qty,0,'COMMA')}"></td>
 				      <td th:text="${fs_wh.emp_name}"></td>
 				      <td th:text="${fs_wh.employee_code}"></td>
 					  <td th:text="${fs_wh.fs_insert.substring(0,16)}"></td>
@@ -212,11 +214,7 @@
 				
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
-					<button type="button" class="btn btn-info d-flex align-items-center px-2"
-		            		style="white-space: nowrap; min-width: 70px;" onclick="pdOutReq()">
-		      			<i class="bi bi-box-seam"></i> &nbsp;테스트
-		    		</button>
-		    		<button type="button" class="btn btn-info d-flex align-items-center px-2" onclick="addOutbound()">
+		    		<button type="button" class="btn btn-primary d-flex align-items-center px-2" onclick="addOutbound()">
 						<i class="bi bi-box-seam"></i> &nbsp;출고요청
 					</button>
 					<div class="ms-auto">

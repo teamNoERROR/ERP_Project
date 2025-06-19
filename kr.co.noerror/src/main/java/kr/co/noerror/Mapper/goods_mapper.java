@@ -25,5 +25,7 @@ public interface goods_mapper {
 	
 	int pd_delete(Map<String, Object> p);  //제품 삭제 
 	
-	String lclass_ck(String sclass);
+	String lclass_ck(Map<String, String> map); //선택된 대분류항목 가져오기
+	
+	int goods_modify(products_DTO pdto);  //제품 수정 
 }

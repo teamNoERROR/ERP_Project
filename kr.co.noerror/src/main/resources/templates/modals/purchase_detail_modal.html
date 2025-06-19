@@ -121,8 +121,8 @@
 				<!-- 주문항목 List Table -->
 				<div class="table-responsive  rounded">
 					<h5 class="">발주 제품 내역</h5>
-					<table class="table table-hover align-middle table-bordered">
-						<thead class="table-light text-center">
+					<table class="table table-hover align-middle table-bordered text-center">
+						<thead class="table-light ">
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">제품코드</th>
@@ -132,8 +132,8 @@
 								<th scope="col">단위</th>
 								<th scope="col">제품단가(원)</th>
 								<th scope="col">구매금액(원)</th>
-								<th scope="col">대분류</th>
-								<th scope="col">소분류</th>
+<!-- 								<th scope="col">대분류</th> -->
+<!-- 								<th scope="col">소분류</th> -->
 
 							</tr>
 						</thead>
@@ -143,30 +143,24 @@
 								<td>[[${d.item_code}]]</td>
 								<td>[[${d.item_name}]]</td>
 								<td>[[${d.item_spec}]]</td>
-								<td align="right">[[${#numbers.formatDecimal(d.item_qty, 0,
+								<td >[[${#numbers.formatDecimal(d.item_qty, 0,
 									'COMMA', 0, 'POINT')}]]</td>
 								<td>[[${d.item_unit}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.item_cost,
 									0, 'COMMA', 0, 'POINT')}]]</td>
 								<td align="right">[[${#numbers.formatDecimal(d.item_qty *
 									d.item_cost, 0, 'COMMA', 0, 'POINT')}]]</td>
-								<td>[[${d.item_class1}]]</td>
-								<td>[[${d.item_class2}]]</td>
+<!-- 								<td>[[${d.item_class1}]]</td> -->
+<!-- 								<td>[[${d.item_class2}]]</td> -->
 							</tr>
 
 						</tbody>
 						<tfoot>
 							<tr>
-								<td class="info-label" colspan="2">합계</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td class="info-label" colspan="7">합계</td>
 								<td align="right">[[${#numbers.formatDecimal(details[0].pay_amount,
 									0, 'COMMA', 0, 'POINT')}]]</td>
-								<td></td>
-								<td></td>
+<!-- 								<td class="info-label" colspan="2"></td> -->
 							</tr>
 						</tfoot>
 					</table>

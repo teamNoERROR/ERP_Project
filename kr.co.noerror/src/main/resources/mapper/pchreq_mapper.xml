@@ -156,7 +156,7 @@ FROM purchase_req_detail prd
 JOIN purchase_req pch ON prd.pch_code = pch.pch_code
 JOIN items itm ON prd.item_code = itm.item_code
 LEFT JOIN client_comp cmp ON itm.company_code = cmp.company_code
-LEFT JOIN employee emp ON pch.ecode = emp.ecode
+LEFT JOIN employee2 emp ON pch.ecode = emp.ecode
 WHERE prd.pch_code = #{pch_code}
 </select>
 

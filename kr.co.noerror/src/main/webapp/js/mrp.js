@@ -77,7 +77,6 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
 		            <td>${item.item_cost}</td>
 		            <td>${item.total_stock}</td>
 		            <td>${item.safety_stock}</td>
-		            <td>${item.reserved_stock}</td>
 		            <td>${item.available_stock}</td>
 		            <td>${item.shortage_stock}</td>
 		        `;
@@ -166,7 +165,7 @@ function collectMRPResultData() {
                 item_cost: cells[6].textContent.trim(),
                 total_stock: parseInt(cells[7].textContent.trim()),
                 safety_stock: parseInt(cells[8].textContent.trim()),
-                reserved_stock: parseInt(cells[9].textContent.trim()),
+                //reserved_stock: parseInt(cells[9].textContent.trim()),
                 available_stock: parseInt(cells[10].textContent.trim()),
                 shortage_stock: parseInt(cells[11].textContent.trim())
             });
@@ -193,7 +192,7 @@ function excel_download() {
                 '소요량': parseInt(cells[5].textContent.trim()),
                 '단위': cells[6].textContent.trim(),
                 '총재고': parseInt(cells[7].textContent.trim()),
-                '안전재고': parseInt(cells[8].textContent.trim()),
+                //'안전재고': parseInt(cells[8].textContent.trim()),
                 '예약재고': parseInt(cells[9].textContent.trim()),
                 '가용재고': parseInt(cells[10].textContent.trim()),
                 '부족재고': parseInt(cells[11].textContent.trim())

@@ -166,8 +166,8 @@ function collectMRPResultData() {
                 total_stock: parseInt(cells[7].textContent.trim()),
                 safety_stock: parseInt(cells[8].textContent.trim()),
                 //reserved_stock: parseInt(cells[9].textContent.trim()),
-                available_stock: parseInt(cells[10].textContent.trim()),
-                shortage_stock: parseInt(cells[11].textContent.trim())
+                available_stock: parseInt(cells[9].textContent.trim()),
+                shortage_stock: parseInt(cells[10].textContent.trim())
             });
         }
     });

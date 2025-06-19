@@ -10,7 +10,7 @@
 				<div class="col-md-4 text-center comp_logo mt-3">
 					<th:block>
 					<img th:if="${goods_one.PD_API_FNM == null}" src="./img/no-image.svg" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
-					<img th:if="${goods_one.PD_API_FNM != null}" src="#" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
+					<img th:if="${goods_one.PD_API_FNM != null}" th:src="@{'http://210.178.108.186:83/imgfile/' + ${goods_one.PD_FILE_RENM}}" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
 					</th:block>
 				</div>
 
@@ -188,9 +188,9 @@
 						<button type="button" class="btn btn-info go_back" data-bs-dismiss="modal" aria-label="Close">
 							<i class="bi bi-card-list"></i> 이전으로
 						</button>
-						<button type="button" class="btn btn-success" onclick="bomModify()">
-							<i class="bi bi-pencil-square"></i> 수정
-						</button>
+<!-- 						<button type="button" class="btn btn-success" onclick="bomModify()"> -->
+<!-- 							<i class="bi bi-pencil-square"></i> 수정 -->
+<!-- 						</button> -->
 						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-etccode="${bom_code}" data-type="bom" onclick="bomDelete(this)">
 							<i class="bi bi-trash"></i> 삭제
 						</button>

@@ -1,6 +1,5 @@
 package kr.co.noerror.Model;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -12,9 +11,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -22,11 +19,9 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import kr.co.noerror.DAO.client_DAO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
-import kr.co.noerror.Service.goods_serviceImpl;
 
 @Repository("M_file")
 public class M_file {
@@ -76,7 +71,7 @@ public class M_file {
 					
 					this.fc.enterLocalPassiveMode();
 					this.fc.setFileType(FTP.BINARY_FILE_TYPE);  //바이너리인지 타입만 확인 (이미지, 동영상, ZIP, PDF..)
-					this.result = this.fc.storeFile("/home/noerror/imgfile/"+this.file_rnm, image_file.getInputStream());  //ftp디렉토리 경로 설정 후 해당 파일을 byte로 전송
+					this.result = this.fc.storeFile("/home/noerror/html/imgfile/"+this.file_rnm, image_file.getInputStream());  //ftp디렉토리 경로 설정 후 해당 파일을 byte로 전송
 					//파일 먼저 저장 후 DB저장
 					//파일저장되면 여기서  this.result = true가 됨
 					
@@ -115,49 +110,6 @@ public class M_file {
 	
 		
 	
-	//cdn이미지 요청 
-	public byte[] cdn_img(String filename) {
-		
-		byte[] imageBytes = null;
-		Session session = null;
-		ChannelSftp channelSftp = null;
-		
-		try {
-			JSch jsch = new JSch();
-			session = jsch.getSession(this.user, this.host, this.port);
-			session.setPassword(this.pass);
-			
-			Properties config = new Properties();
-			config.put("StrictHostKeyChecking", "no");
-			session.setConfig(config);
-			
-			session.connect();
-			channelSftp = (ChannelSftp) session.openChannel("sftp");
-			channelSftp.connect();
-			
-			try (InputStream is = channelSftp.get("imgfile/" + filename)) {
-				imageBytes = is.readAllBytes();
-				
-			} catch(Exception e2) {
-				System.out.println("파일을 찾을 수 없음: " + filename);
-				 e2.printStackTrace();
-			}
-			
-		} catch (Exception e) {
-			 System.out.println("SFTP 연결 실패");
-			 e.printStackTrace();
-			 
-		} finally {
-			
-			if (channelSftp != null && channelSftp.isConnected()) {
-				channelSftp.disconnect();
-			}
-			if (session != null && session.isConnected()) {
-				session.disconnect();
-			}
-		}
-		return imageBytes;
-	}
 	
 	//cdn서버에 있는 해당 파일을 삭제하는 메소드 
 	public boolean cdn_ftpdel(String fileYes) throws Exception {

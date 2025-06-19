@@ -32,7 +32,7 @@ public class IOSF_DTO {
     String category_sub;   // 제품 소분류
     String use_yn;         // 제품 사용 여부
     String in_status; 	   // 입고 상태
-    String item_qty;	   // 제품 갯수
+    int item_qty;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
     String itm_file_renm;
     String itm_api_fnm;

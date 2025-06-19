@@ -219,14 +219,11 @@ SELECT COUNT(*) AS CNT FROM
 
 <!-- 선택된 대분류항목 가져오기 -->
 <select id="lclass_ck" resultType="String" parameterType="Map">
-	
 	<choose>
 	<when test="key == 'pd_sc'">
-<!-- 	<when test="key.equals('pd_sc')"> -->
 	SELECT PRODUCT_CLASS1 FROM PRODUCTS_CLASS WHERE PRODUCT_CLASS2 = #{PRODUCT_CLASS2, jdbcType=VARCHAR}
 	</when>
 	<when test="key == 'itm_sc'">
-<!-- 	<when test="key.equals('itm_sc')"> -->
 	SELECT ITEMS_CLASS1 FROM ITEMS_CLASS WHERE ITEMS_CLASS2 = #{ITEMS_CLASS2, jdbcType=VARCHAR}
 	</when>
 	</choose>

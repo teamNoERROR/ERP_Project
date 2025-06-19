@@ -97,8 +97,8 @@
              					data-cost=${(mode == 'modal') ? itmlist.ITEM_COST : ''}, 
              					data-company=${(mode == 'modal') ? itmlist.COMPANY_CODE : ''},
                       		    data-company_name=${(mode == 'modal') ? itmlist.COMPANY_NAME : ''},
-                          		data-company_use_flag=${(mode == 'modal') ? itmlist.COM_USE_FLAG : ''}
-             					"
+                          		data-company_use_flag=${(mode == 'modal') ? itmlist.COM_USE_FLAG : ''},
+             					data-type=${(mode == 'modal') ? itmlist.ITEM_TYPE : ''} "
              			th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"
                     	style="cursor: pointer;">
                     	

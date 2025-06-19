@@ -98,7 +98,7 @@ public class bom_controller {
 		}
 			
 		if(sclass!=null) {
-			String lclass_ck = this.g_svc.lclass_ck(sclass);
+			String lclass_ck = this.g_svc.lclass_ck("product",sclass);
 			m.addAttribute("lclass_ck",lclass_ck);
 			m.addAttribute("sclass",sclass);
 

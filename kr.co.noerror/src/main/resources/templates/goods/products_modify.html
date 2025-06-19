@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<title>제품 정보 수정</title>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container ">
+	<!-- Title -->
+	<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+		<h2 class="mb-1">제품 정보 수정</h2>
+	</div>
+			<!-- 우상단 x 마크  -->     
+			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+			<button type="button" class="btn-close" aria-label="Close" onclick="goBack()"></button>
+			</div>
+<!--  <form id="frm" method="post" action="./cdn_uploadok.do" enctype="multipart/form-data"> -->
+<div class="form-section">
+<div class="row">
+	    <!-- 이미지 업로드 -->
+	<div class="col-md-3 d-flex flex-column align-items-end mt-4">
+			<!-- 미리보기 네모칸 -->
+		  <div class="image-box mb-2" >
+			<img th:if="${goods_one.PD_API_FNM} == null" id="previewImage" src="./img/no-image.svg" alt="제품 사진" style="max-width: 100%; max-height: 100%;">
+		    <img th:if="${goods_one.PD_API_FNM} != null" id="previewImage" src="" alt="제품 사진" style="max-width: 100%; max-height: 100%;">		  
+		  </div>
+		  
+		  <!-- 파일 선택 input -->
+		  <input type="file" id="productImage" class="form-control"  accept="image/*" onchange="previewFile('product')" style="width: 250px; ">
+	</div>
+
+<!-- 제품 정보 입력 -->
+<div class="col-md-9">
+<div class="text-end mb-3">* : 필수입력</div>
+	<div class="row mb-3">
+		<div class="col-md-4">
+			<label class="form-label">제품유형*</label>
+			<select class="form-select" id="goods_type" disabled>
+				<option value="">선택</option>
+				<option value="product" th:selected="${goods_one.PRODUCT_TYPE} == 'product'">완제품</option>
+				<option value="half" th:selected="${goods_one.PRODUCT_TYPE} == 'half'">반제품</option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">대분류*</label>
+			<select class="form-select" name="products_class1" id="products_class1" onchange="lcSc(this.value,type)">
+				<option th:each="l_class : ${lclass}" th:value="${l_class}"  th:text="${l_class}" th:selected="${l_class} == ${lclass_ck}"></option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">소분류*</label>
+			 <select class="form-select" id="products_class2">
+				<option th:each="s_list : ${slist}" th:if="${sclass != null}" th:value="${s_list}" th:text="${s_list}" th:selected="${s_list} == ${sclass}" ></option>
+			</select>
+		</div>
+	</div>
+
+
+	<div class="row mb-3">
+		<div class="col-md-5">
+			 <label class="form-label">제품명*</label>
+			<input type="text" class="form-control" id="product_name" th:value="${goods_one.PRODUCT_NAME}">
+		</div>
+		<div class="col-md-2">
+			<label class="form-label">제품규격*</label>
+	        <input type="text" class="form-control" id="product_spec" th:value="${goods_one.PRODUCT_SPEC}">
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">제품단위*</label>
+			<select class="form-select" id="product_unit" >
+				<option value="" >선택</option>
+				<option value="ea" th:selected="${goods_one.PRODUCT_UNIT} == 'ea'">ea</option>
+				<option value="g" th:selected="${goods_one.PRODUCT_UNIT} == 'g'">g</option>
+				<option value="ml" th:selected="${goods_one.PRODUCT_UNIT} == 'ml'">ml</option>
+			</select>
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">안전재고</label>
+			<input type="text" class="form-control" id="pd_safe_stock" th:value="${goods_one.PD_SAFE_STOCK}">
+		</div>
+		
+	</div>
+
+	<!-- 사용여부라인 -->
+	<div class="row mb-3">
+		<div class="col-md-2">
+			<label  class="form-label">사용여부*</label>
+			<div class="ms-2 mt-1">
+				<label ><input type="radio" id="useY" name="use_flag" value="Y" th:checked="${goods_one.PD_USE_FLAG == 'Y'}"> 사용 </label>
+				<label ><input type="radio" id="useN" name="use_flag" value="N" th:checked="${goods_one.PD_USE_FLAG == 'N'}"> 미사용 </label>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">유통기한*</label> 
+			<div class="ms-2 mt-1">
+				<label ><input type="radio" id="expireY" name="exp_flag" value="Y" th:checked="${goods_one.PD_EXP_FLAG == 'Y'}"> 사용 </label>
+				<label><input type="radio" id="expireN" name="exp_flag" value="N" th:checked="${goods_one.PD_EXP_FLAG == 'N'}"> 미사용 </label>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label  class="form-label">제품단가 (원)*</label>
+			<input type="text" class="form-control text-end" id="product_cost" th:value="${goods_one.PRODUCT_COST}">
+		</div>
+		
+		<!-- 선택제품이 완제품일 경우 -->
+		<div class=" col-md-2 " >
+		<label class="form-label ss">판매가 (원)*</label>	
+		<input type="text" class="form-control text-end" id="product_price" th:value="${goods_one.PRODUCT_PRICE}">
+		</div>
+	</div>
+	
+
+	 
+	
+	<div class="row mb-3">
+		<label class="form-label">비고</label>
+		<textarea class="form-control" rows="2" id="memo" th:text="${goods_one.PD_MEMO}"></textarea>
+	</div>
+	
+	
+</div>
+</div>
+<!-- Action Buttons -->
+	<div class="d-flex justify-content-end  gap-2 mt-3">
+	<button type="button" class="btn btn-primary" th:data-code="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" th:data-type="${goods_one.PRODUCT_TYPE}"  onclick="modify_goods(this)"><i class="bi bi-check2-square"></i> 저장</button>
+	<button type="reset" class="btn btn-outline-secondary ms-2" onclick="resetBtn()"><i class="bi bi-x-circle"></i> 초기화</button>
+	</div>
+</div>
+<!-- </form> -->
+</section>
+
+</main>
+
+
+
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+
+</body>
+</html>

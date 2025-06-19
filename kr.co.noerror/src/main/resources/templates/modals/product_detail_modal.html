@@ -6,9 +6,6 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body row justify-content-center d-flex gap-3">
-
-
-
 				<!-- 제품 이미지 -->
 				<div class="col-md-4 text-center comp_logo mt-3">
 					<th:block>
@@ -71,23 +68,28 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer d-flex justify-content-between">
 				<!-- Action Buttons -->
-				<div class="d-flex gap-2">
-					<div class="ms-auto">
+						<div >
 						<button type="button" class="btn btn-info bom_btn" 
 								th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" 
 								onclick="bomBtn(this)">
 							<i class="bi bi-card-list"></i> BOM조회
 						</button>
-						<button type="button" class="btn btn-success">
+						</div>
+						<div class="ms-auto">
+						<button type="button" class="btn btn-success"  
+								th:data-code="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" th:data-type="${goods_one.PRODUCT_TYPE}" 
+								onclick="gdModify(this)">
 							<i class="bi bi-pencil-square"></i> 수정
 						</button>
-						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" data-type="product" onclick="deleteBtn(this)">
+						<button class="btn btn-danger"  
+								th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" data-type="product" 
+								onclick="deleteBtn(this)">
 							<i class="bi bi-trash"></i> 삭제
 						</button>
+						</div>
 					</div>
-				</div>
 
 			</div>
 		</div>

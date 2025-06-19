@@ -220,7 +220,7 @@ function open_gd_detail(event){
 		var modal;
 		document.getElementById("modalContainer").innerHTML = result;
 		
-		if(gd_type == "product"){
+		if(gd_type == "product" || gd_type == "half"){
 			modal = new bootstrap.Modal(document.getElementById("pd_detail"));
 			
 		}else if(gd_type == "item"){
@@ -234,7 +234,212 @@ function open_gd_detail(event){
 	});
 }
 
+/*--------------------------------------------------------------
+제품 수정하기 
+--------------------------------------------------------------*/
+//화면이동
+function gdModify(btn){
+	var type= btn.getAttribute("data-type");
+	var code= btn.getAttribute("data-code");
+	
+	location.href="./goods_modify.do?type="+type+"&code="+code;
+		
+}
 
+//제품 정보 수정 
+function modify_goods(btn){
+	var idx= btn.getAttribute("data-idx");
+	var code= btn.getAttribute("data-code");
+	var type= btn.getAttribute("data-type");
+	var gd_file;
+	
+	if(type == 'product' || type == 'half'){
+		gd_file = document.querySelector("#productImage").files[0];
+		
+		if(pd_type.value ==""){
+			alert("제품유형을 선택하세요");
+			pd_type.focus();
+		}
+		else if(products_class1.value ==""){
+			alert("대분류를 선택하세요");
+			products_class1.focus();
+		}
+		else if(products_class2.value ==""){ 
+			alert("소분류를 선택하세요");
+			products_class2.focus();
+		}
+		else if(product_name.value ==""){ 
+			alert("제품명을 입력하세요");
+			product_name.focus();	
+				
+		}else if(product_spec.value ==""){ 
+			alert("제품규격을 입력하세요");
+			product_spec.focus();		
+					
+		}else if(product_unit.value ==""){ 
+			alert("제품단위를 입력하세요");
+			product_unit.focus();		
+					
+		}
+		else if(gd_file){   //파일첨부 함경우 
+			var imgSize = gd_file.size; // 파일 크기
+			var maxSize = 2 * 1024 * 1024; // 2MB제한
+				
+			if (!gd_file.type.startsWith("image/")) {
+	    		alert("이미지 파일만 첨부 가능합니다 (jpg, png, gif 등)");
+			}
+			else if(imgSize > maxSize){
+				alert("파일첨부 용량은 2MB이하만 가능합니다.");
+				
+			}else {
+				gdModifyOk(idx,code,type);
+			}
+		}else {
+			gdModifyOk(idx,code,type);
+		}
+		
+	}else if(type == 'item'){
+		gd_file = document.querySelector("#itemImage").files[0];
+		
+		if(itm_type.value ==""){
+			alert("제품유형을 선택하세요");
+			itm_type.focus();
+		}
+		else if(item_class1.value ==""){
+			alert("대분류를 선택하세요");
+			item_class1.focus();
+		}
+		else if(item_class2.value ==""){ 
+			alert("소분류를 선택하세요");
+			item_class2.focus();
+		}
+		else if(item_name.value ==""){ 
+			alert("제품명을 입력하세요");
+			item_name.focus();	
+				
+		}else if(item_spec.value ==""){ 
+			alert("제품규격을 입력하세요");
+			item_spec.focus();		
+					
+		}else if(item_unit.value ==""){ 
+			alert("제품단위를 입력하세요");
+			item_unit.focus();		
+					
+		}
+		else if(useY.checked == false && useN.checked == false){ 
+			alert("사용유무를 선택하세요");
+		}
+		else if(expireY.checked == false && expireN.checked == false){ 
+			alert("유통기한 사용유무를 선택하세요");
+		}
+		else if(item_cost.value ==""){ 
+			alert("단가를 입력하세요");
+			item_cost.focus();							
+					
+		}else if(!reg_num.test(item_cost.value)){
+			alert("단가는 숫자만 입력이 가능합니다.");
+			product_cost.focus();	
+			
+		}else if(purchase_corp.value==""){
+			alert("거래처를 선택하세요");
+			purchase_corp.focus();		
+		}
+		else if(gd_file){   //파일첨부 함경우 
+			var imgSize = gd_file.size; // 파일 크기
+			var maxSize = 2 * 1024 * 1024; // 2MB제한
+				
+			if (!gd_file.type.startsWith("image/")) {
+	    		alert("이미지 파일만 첨부 가능합니다 (jpg, png, gif 등)");
+			}
+			else if(imgSize > maxSize){
+				alert("파일첨부 용량은 2MB이하만 가능합니다.");
+				
+			}else {
+				gdModifyOk(idx,code,type);
+			}
+		}else {
+			gdModifyOk(idx,code,type);
+		}
+	}
+}
 
+//게시글 수정(ajax)
+function gdModifyOk(idx,code,type){
+	console.log("idx2 : " + idx)
+	console.log("code2 : " + code)
+	console.log("type2 : " + type)
+	
+	
+	var use_flag = document.querySelector('input[name="use_flag"]:checked');
+	var exp_flag = document.querySelector('input[name="exp_flag"]:checked');
+	var pdfile;
+	var formData = new FormData();
+	
+	if(type == 'product' || type == 'half'){
+		pdfile = document.querySelector("#productImage").files[0];
+		
+		formData.append("PIDX", idx);
+		formData.append("PRODUCT_CODE", code);
+		formData.append("PRODUCT_TYPE", type);
+		formData.append("PRODUCT_NAME", product_name.value);
+		formData.append("PRODUCT_CLASS1", products_class1.value);
+		formData.append("PRODUCT_CLASS2", products_class2.value);
+		formData.append("PRODUCT_SPEC", product_spec.value);
+		formData.append("PRODUCT_UNIT", product_unit.value);
+		formData.append("PRODUCT_COST", product_cost.value);
+		formData.append("PRODUCT_PRICE", product_price.value);
+		formData.append("PD_SAFE_STOCK", pd_safe_stock.value);
+		formData.append("PD_USE_FLAG", use_flag.value);
+		formData.append("PD_EXP_FLAG", exp_flag.value);
+		formData.append("PD_MEMO", pd_memo.value);
+		
+	}else if(type == 'item'){
+		pdfile = document.querySelector("#itemImage").files[0];
+		
+		formData.append("IIDX", idx);
+		formData.append("ITEM_CODE", code);
+		formData.append("ITEM_TYPE", type);
+		formData.append("ITEM_NAME", item_name.value);
+		formData.append("ITEM_CLASS1", item_class1.value);
+		formData.append("ITEM_CLASS2", item_class2.value);
+		formData.append("ITEM_SPEC", item_spec.value);
+		formData.append("ITEM_UNIT", item_unit.value);
+		formData.append("ITEM_COST", item_cost.value);
+		formData.append("ITM_SAFE_STOCK", itm_safe_stock.value);
+		formData.append("ITM_USE_FLAG", use_flag.value);
+		formData.append("ITM_EXP_FLAG", exp_flag.value);
+		formData.append("ITM_MEMO", itm_memo.value);
+		formData.append("COMPANY_CODE", purchase_corp.value);
+	}
+
+	if (pdfile) { //새로 파일 첨부를 한 경우 
+    	formData.append("goodsImage", pdfile);
+	}
+		
+	fetch("./goods_modifyok.do", {
+		method: "POST",
+		body : formData
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		if(result=="ok"){
+			alert("제품 정보가 수정되었습니다.");
+			
+			if(type == "product" || type == "half"){
+				location.href="./goods.do?type=product";
+			}else if(type == "item"){
+				location.href="./goods.do?type=item";
+			}
+			
+		}else if(result=="fail"){
+			alert("시스템문제로 제품 정보 수정에 실패했습니다.\n관리자에게 문의해주세요.");
+		}
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}
 
 

@@ -27,6 +27,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DTO.bom_DTO;
+import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
@@ -99,7 +100,7 @@ public class goods_controller {
 			this.list.add(lc_list.getString(i));
 		}
 		
-		String lclass_ck = this.g_svc.lclass_ck(sclass);
+		String lclass_ck = this.g_svc.lclass_ck(type, sclass);
 		JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
 		List<String> slist = new ArrayList<>();
 		for (int i = 0; i < sc_list.length(); i++) {
@@ -267,41 +268,132 @@ public class goods_controller {
 	//품목 상세보기 모달 
 	@PostMapping("/goods_detail.do")
 	public String goods_detail(Model m, @RequestParam("pd_code") String pd_code,  @RequestParam("type") String type) {
+		System.out.println("zzz  : " + pd_code);
+		System.out.println("ssss  : " + type);
 		
-		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
-		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);  //bom상세보기 클릭시
-		
-		if(goods_one == null) {
-			this.msg = "alert('시스템문제로 해당 제품의 상세페이지를 불러올 수 없습니다.');"
-					+ "history.go(-1);";
-			m.addAttribute("msg", msg);
-			this.url = "WEB-INF/views/message";
+		if("product".equals(type) || "half".equals(type)) { 
+			products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
+			List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);  //bom상세보기 클릭시
+			Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
 			
-		}else {
-			if("product".equals(type)) { 
-				
-				Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
-				
-				m.addAttribute("goods_one", goods_one);
-				m.addAttribute("ind_pd_stock", ind_pd_all_stock);
-				
-				if(!resultlist.isEmpty()) {    //bom이 등록된 경우 
-					m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
-					m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
-					m.addAttribute("bom_result", resultlist);
-					m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
-				}
-				
-				this.url = "/modals/product_detail_modal.html";
-				
-			}else if("item".equals(type)) {
-				
-				m.addAttribute("goods_one", goods_one);
-				this.url = "/modals/item_detail_modal.html";
+			System.out.println("goods_one : " + goods_one);
+			
+			m.addAttribute("goods_one", goods_one);
+			m.addAttribute("ind_pd_stock", ind_pd_all_stock);
+			
+			if(!resultlist.isEmpty()) {    //bom이 등록된 경우 
+				m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
+				m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
+				m.addAttribute("bom_result", resultlist);
+				m.addAttribute("bom_code",resultlist.get(0).getBOM_CODE());
 			}
+			
+			this.url = "/modals/product_detail_modal.html";
+			
+		}else if("item".equals(type)) {
+			
+			products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, type);  //특정게시물 내용 가져오기
+			m.addAttribute("goods_one", goods_one);
+			this.url = "/modals/item_detail_modal.html";
 		}
 		return this.url;
 	}
+	
+	//제품 수정하기 화면이동 
+	@GetMapping("/goods_modify.do")
+	public String goods_modify(Model m, @RequestParam("code") String gd_code, @RequestParam("type") String type
+								) {
+		m.addAttribute("lmenu","기준정보관리");
+		m.addAttribute("smenu","품목 관리");
+		m.addAttribute("mmenu","제품 정보 수정");
+		
+		products_DTO goods_one = this.g_svc.pd_one_detail(gd_code, type);  //특정게시물 내용 가져오기
+		
+		JSONArray lc_list = this.g_svc.gd_class(type);  //대분류목록 불러오기
+		this.list = new ArrayList<>();
+		for (int i = 0; i < lc_list.length(); i++) {
+			this.list.add(lc_list.getString(i));
+		}
+				
+		//완제품인 경우
+		if("product".equals(type) || "half".equals(type)) { 
+			String lclass_ck = this.g_svc.lclass_ck(type, goods_one.getPRODUCT_CLASS2());
+			JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록 불러오기
+			List<String> slist = new ArrayList<>();
+			for (int i = 0; i < sc_list.length(); i++) {
+				slist.add(sc_list.getString(i));
+			}
+			System.out.println(slist);
+			
+			m.addAttribute("lclass",this.list);  //대분류목록 
+			m.addAttribute("slist",slist);  //소분류목록 
+			
+			m.addAttribute("lclass_ck",lclass_ck);  //선택한 대분류항목
+			m.addAttribute("sclass",goods_one.getPRODUCT_CLASS2());  //선택한 소분류항목
+			
+			this.url = "/goods/products_modify.html";
+			
+		//부재재인 경우
+		}else if("item".equals(type)) {
+			System.out.println(goods_one);
+			
+			String lclass_ck = this.g_svc.lclass_ck(type, goods_one.getITEM_CLASS2());
+			
+			System.out.println("lclass_ck : " + lclass_ck);
+			
+			JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
+			System.out.println("sc_list : " + sc_list);
+			
+			List<String> slist = new ArrayList<>();
+			for (int i = 0; i < sc_list.length(); i++) {
+				slist.add(sc_list.getString(i));
+			}
+			System.out.println(slist);
+			
+			m.addAttribute("lclass_ck",lclass_ck);  //선택한 대분류항목
+			m.addAttribute("sclass",goods_one.getITEM_CLASS2());  //선택한 소분류항목
+			
+			System.out.println(slist);
+			m.addAttribute("lclass",this.list);  //대분류목록 
+			m.addAttribute("slist",slist);  //소분류목록 
+			
+			this.url = "/goods/items_modify.html";
+		}
+		
+		m.addAttribute("goods_one", goods_one);
+		
+		return this.url;
+	}
+	
+	//제품 정보 수정 
+	@PostMapping("/goods_modifyok.do")
+	public String goods_modifyok(@ModelAttribute products_DTO pdto
+									,@RequestParam(value = "goodsImage", required = false) MultipartFile goodsImage
+									,HttpServletResponse res) {
+		try {
+			this.pw = res.getWriter();
+			int result = this.g_svc.goods_modifyok(pdto, goodsImage);  
+			
+			if(result > 0) {  
+				this.pw.write("ok");  //거래처 수정 완료 
+			}
+			else {
+				this.pw.write("fail"); //거래처 수정실패
+			}
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println("error : " + e);
+			e.printStackTrace();
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+	
+	
 
 	
 	//제품 삭제 

@@ -735,7 +735,6 @@ function pchDtlLoad(pch_code){
 				<td>`+resultItem.item_class2+`</td>
 				<td class="text-end">`+resultItem.item_cost+`</td>
 				<td><input type="number" class="form-control item_qty"></td>
-				<td><input type="date" class="form-control item_exp"></td>
 				<td>
 					<select class="form-select item_deli" aria-label="Default select example" onchange='noDeli(this)'>
 						<option value="" >선택</option>
@@ -744,6 +743,7 @@ function pchDtlLoad(pch_code){
 						<option value="미납">미납</option>
 					</select>
 				</td>
+				<td><input type="date" class="form-control item_exp"></td>
 			  `;
 		  	tbody.append(tr);
 			

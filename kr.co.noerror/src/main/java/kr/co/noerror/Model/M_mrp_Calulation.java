@@ -37,12 +37,12 @@ public class M_mrp_Calulation {
 			
 			for (bom_DTO bom : boms) {
 				String item_code = bom.getITEM_CODE();
-				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();
-				int total_stock = ind_item_all_stock.getOrDefault(item_code, 0); 
-				int safety_stock = this.mdao.itm_safe_stock(item_code);
-				int reserved_stock = 0;
-				int available_stock = total_stock - safety_stock - reserved_stock;
-				int shortage_stock = Math.min(available_stock - required_qty, 0);
+				int required_qty = bom.getBOM_QTY() * input.getProduct_qty();  //필요수량
+				int total_stock = ind_item_all_stock.getOrDefault(item_code, 0);  //전체재고 
+				int safety_stock = this.mdao.itm_safe_stock(item_code);  //안전재고 
+				int reserved_stock = 0;	//예약재고
+				int available_stock = total_stock - safety_stock - reserved_stock;  //가용수량
+				int shortage_stock = Math.min(available_stock - required_qty, 0);  //부족수량 
 				aggregated.merge(item_code,
 						new mrp_result_DTO(item_code, bom.getITEM_TYPE(), bom.getITEM_NAME(), required_qty, bom.getITEM_UNIT(), bom.getITEM_COST(), total_stock, safety_stock, reserved_stock, available_stock, shortage_stock),
 						(oldVal, newVal) -> {

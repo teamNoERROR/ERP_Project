@@ -120,8 +120,8 @@
 
 							</tr>
 						</thead>
-						<tbody>
-							<tr th:each="d, no : ${details}">
+						<tbody id="order_pd">
+							<tr class="order_pd_row" th:each="d, no : ${details}">
 								<td>[[${no.count}]]</td>
 								<td>[[${d.product_code}]]</td>
 								<td>[[${d.product_name}]]</td>

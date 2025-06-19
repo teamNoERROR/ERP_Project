@@ -236,7 +236,7 @@ function plan_status_update() {
     const selectEl = document.getElementById("modal-status-select");
     const selectedStatus = selectEl.value;
     const plan_code = selectEl.getAttribute("data-plan-code");
-
+	
     if (selectedStatus === "생산상태 선택") {
         alert("생산상태를 선택하세요.");
         return;

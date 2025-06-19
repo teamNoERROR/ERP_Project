@@ -66,7 +66,6 @@
                         <th scope="col">단위</th>
                         <th scope="col">단가 (원)</th>
                         <th scope="col">판매가 (원)</th>
-                        <th scope="col">재고합계</th>
                         <th scope="col">사용</th>
                     </tr>
                 </thead>
@@ -94,8 +93,8 @@
                         	<input type="checkbox"  th:name="${mode == 'modal'} ? 'bomSelected' : 'bom_select'" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td class="p-0">
-<!-- 							<img th:if="${bomlist.PD_API_FNM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${bomlist.PD_FILE_RENM}" style="width:50px;"> -->
-                        	<img th:if="${bomlist.PD_API_FNM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
+							<img th:if="${bomlist.PD_FILE_RENM != null}"  th:src="@{'http://210.178.108.186:83/imgfile/' + ${bomlist.PD_FILE_RENM}}" style="width:50px;">
+                        	<img th:if="${bomlist.PD_FILE_RENM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
                         </td>
                         <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>
                         <td class="text-start">[[${bomlist.PRODUCT_NAME}]]</td>
@@ -109,7 +108,6 @@
                         <td>[[${bomlist.PRODUCT_UNIT}]]</td>
                         <td class="text-end">[[${#numbers.formatInteger(bomlist.PRODUCT_COST,0,'COMMA')}]] </td>
                         <td class="text-end">[[${#numbers.formatInteger(bomlist.PRODUCT_PRICE,0,'COMMA')}]] </td>
-                        <td>재고합계</td>
                         <td>[[${bomlist.PD_USE_FLAG}]]</td>
                     </tr>
                 </tbody>

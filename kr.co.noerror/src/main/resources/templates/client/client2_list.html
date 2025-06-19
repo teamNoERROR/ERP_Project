@@ -67,7 +67,7 @@
 							th:attr="data-idx=${cltlist.CIDX}, data-code=${cltlist.COMPANY_CODE}, data-type='p_client'"
 							style="cursor: pointer;">
 							<td onclick="event.stopPropagation()">
-								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" th:name="${mode == 'modal'} ? 'selected_clt2' : 'sel_clt'" 
+								<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" th:name="${mode == 'modal'} ? 'sel_clt2' : 'selelted_clt2'" 
 										th:attr="data-idx=${cltlist.CIDX}, data-code=${cltlist.COMPANY_CODE}," data-type="p_client" class="clt_sb"></td>
 							<td>[[${bno - idx.index}]]</td>
 							<td>[[${cltlist.COMPANY_CODE}]]</td>

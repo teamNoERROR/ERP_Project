@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.member_DTO;
 import kr.co.noerror.Model.M_paging;
@@ -22,6 +27,9 @@ import kr.co.noerror.Service.member_service;
 public class member_controller {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	PrintWriter pw = null;
+	
+	@Autowired 
+	HttpSession se;
 	
 	@Autowired
 	private member_service mb_svc;
@@ -69,8 +77,6 @@ public class member_controller {
 //						,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 //						,@RequestParam(value="status_lst", required=false) String[] status_lst
 						) {
-	
-		
 		
 		m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","사용자관리");
@@ -80,8 +86,48 @@ public class member_controller {
 		return "/member/member_insert.html";
 	}
 	
+	//로그인 
+	@PostMapping("/member_loginOk.do")
+	public String member_loginOk(@ModelAttribute member_DTO m_dto, HttpServletResponse res) throws Exception {
+		this.pw = res.getWriter();
+		
+		System.out.println("m_dto : " + m_dto);
+		member_DTO login_member = this.mb_svc.login_member(m_dto); 
+		
+		System.out.println("login_member : " + login_member);
+		
+		if(login_member == null){  //아이디 및 패스워드가 틀릴경우 	
+			
+			this.pw.write("no");
+			
+		}
+		else {    //로그인 후 회원정보 세션에 저장 
+			String mid = login_member.getECODE();	
+			String mname = login_member.getENAME();
+			String mposi = login_member.getEMP_POSITION();
+			int role = login_member.getROLE_ID();
+
+			this.se.setAttribute("mid", mid);  //아이디  
+			this.se.setAttribute("mname", mname);  //이름
+			this.se.setAttribute("mposi", mposi);  //직급
+			this.se.setAttribute("role", role);  //권한
+			
+			this.pw.write("ok");
+		} 
+		return null;
+	}
 	
 	
+	@GetMapping("/member_logoutOk.do")
+	public String member_logout(HttpServletResponse res) throws IOException {
+		this.pw = res.getWriter();
+		
+		this.se.invalidate(); //세션에 저장된 정보들 파기 
+		
+		this.pw.write("ok");
+		
+		return null;
+	}
 	
 	
 	

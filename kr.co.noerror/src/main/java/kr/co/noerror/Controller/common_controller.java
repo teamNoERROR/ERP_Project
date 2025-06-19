@@ -93,16 +93,6 @@ public class common_controller {
 	@Autowired
 	M_paging2 m_pg2;
 
-	/*
-	//관리자 리스트 모달 
-	@GetMapping("/employee_list.do")
-	public String emp_list(Model m) {
-		List<employee_DTO> all_data = this.common_svc.emp_list();  //DB로드
-	
-		m.addAttribute("employees",all_data);
-		
-		return  "/modals/employee_list_modal.html";
-	}*/
 	
 	//전체창고리스트 모달 
 	@GetMapping("/warehouse_list.do")
@@ -164,7 +154,9 @@ public class common_controller {
 	//발주처리스트 모달 띄우기 
 	@GetMapping("/client_list2.do")
 	public String client_list2(Model m
+			 				,@RequestParam(value = "parent", required = true) String parent
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
+							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea 
 							,@RequestParam(value="mode", required = false) String mode) {
 		
@@ -175,10 +167,12 @@ public class common_controller {
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, client_total);
 		int bno = this.m_pg.serial_no(client_total, pageno, post_ea); 
 		
+		m.addAttribute("parentType",parent);
+		m.addAttribute("keyword",keyword);
+		m.addAttribute("bno", bno);
 		m.addAttribute("clt_total", client_total);
 		m.addAttribute("clt_list", client_list);
 		m.addAttribute("pageinfo", pageinfo);
-		m.addAttribute("bno", bno);
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/client2_list_body_modal.html :: cl2PgList";
@@ -199,8 +193,6 @@ public class common_controller {
 								,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 								,@RequestParam(value="mode", required = false) String mode
 								)  {
-		System.out.println("zldnjem : " + keyword);
-		System.out.println("parent : " + parent);
 		int goods_total = this.g_svc.gd_all_ea_sch("item", sclass, keyword); //제품 총개수
 		List<products_DTO> goods_all_list = this.g_svc.gd_all_list_sch("item",sclass, keyword, pageno, post_ea);  //제품 리스트 
 		
@@ -215,7 +207,6 @@ public class common_controller {
 		m.addAttribute("items_total", goods_total);
 		m.addAttribute("items_list", goods_all_list);
 		m.addAttribute("pageinfo", pageinfo);
-		
 		
 		if ("modal2".equals(mode)) {
 	        return "/modals/item_list_body_modal.html :: itmMdList";
@@ -298,8 +289,8 @@ public class common_controller {
 									,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
 									,@RequestParam(value="mode", required = false) String mode
 								)  {
-		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(null ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
-		
+		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(null ,keyword, pageno, post_ea, parent);  //bom리스트 제품 리스트
+
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, bom_all_list_sch.size());
 		int bno = this.m_pg.serial_no(bom_all_list_sch.size(), pageno, post_ea); 
@@ -310,7 +301,6 @@ public class common_controller {
 		    int stockQty = ind_pd_all_stock.getOrDefault(code, 0);  // 없으면 0
 		    dto.setInd_pd_stock(stockQty);  // 재고 주입
 		}
-		System.out.println("bom_all_list_sch : "+ bom_all_list_sch);
 		
 		//페이지로 보낼 것들 
 		m.addAttribute("keyword",keyword);

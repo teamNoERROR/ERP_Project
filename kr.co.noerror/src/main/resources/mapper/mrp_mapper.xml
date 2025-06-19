@@ -45,35 +45,43 @@ ORDER BY pln.pidx DESC
  SELECT count(*) FROM mrp_result_header WHERE mrp_code = #{mrp_code}
 </select>
 
-<!-- MRP계산 정보 저장 -->  
+<!-- MRP Header 저장 -->
 <insert id="insert_mrp_header" parameterType="String">
- INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
+    INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
 </insert>
 
-<insert id="insert_mrp_detail" parameterType="kr.co.noerror.DTO.mrp_result_DTO">
-  INSERT INTO mrp_result_detail (
-    mrp_code,
-    item_code,
-    required_qty,
-    total_stock,
-    safety_stock,
-    reserved_stock,
-    available_stock,
-    shortage_stock
-  ) VALUES (
-    #{mrp_code},
-    #{item_code},
-    #{required_qty},
-    #{total_stock},
-    #{safety_stock},
-    #{reserved_stock},
-    #{available_stock},
-    #{shortage_stock} 
-  ) 
+<!-- 요약 저장 (item_code 기준) -->
+<insert id="insert_mrp_summary" parameterType="kr.co.noerror.DTO.mrp_result_DTO">
+    INSERT INTO mrp_result_detail (
+        mrp_code, item_code, required_qty,
+        total_stock, safety_stock,reserved_stock,
+        available_stock, shortage_stock
+    ) VALUES (
+        #{mrp_code}, #{item_code}, #{required_qty},
+        #{total_stock}, #{safety_stock}, #{reserved_stock},
+        #{available_stock}, #{shortage_stock}
+    )
 </insert>
 
+<!-- 상세 저장 (plan_code + item_code 기준) -->
+<insert id="insert_mrp_detail" parameterType="kr.co.noerror.DTO.mrp_result2_DTO">
+    INSERT INTO mrp_result_detail2 (
+        mrp_code, plan_code, bom_code, item_code, required_qty,
+        total_stock, safety_stock, reserved_stock,
+        available_stock, shortage_stock
+    ) VALUES (
+        #{mrp_code}, #{plan_code}, #{bom_code}, #{item_code}, #{required_qty},
+        #{total_stock}, #{safety_stock}, #{reserved_stock},
+        #{available_stock}, #{shortage_stock}
+    )
+</insert>
 
-<!-- 자재 안전재고 -->  
+<!-- MRP계산 저장시 mrp_status 업데이트 -->
+<update id="update_mrp_status" parameterType="String">
+UPDATE production_plan SET mrp_status = '완료' WHERE plan_code = #{plan_code}
+</update>
+
+<!-- 자재 안전재고  --> 
 <select id="itm_safe_stock" parameterType="String">
  SELECT itm_safe_stock FROM items WHERE item_code = #{item_code}
 </select>

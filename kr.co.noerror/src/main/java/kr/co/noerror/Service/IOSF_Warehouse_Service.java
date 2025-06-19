@@ -99,8 +99,6 @@ public class IOSF_Warehouse_Service {
 	//타입별 창고리스트 
     public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String wh_name) { 
         Map<Object, Object> wh_map = new HashMap<>();
-		System.out.println("fs_wh_name : " + wh_name);
-		System.out.println("wh_search : " + wh_search);
 
         try {
             int startIndex = (page - 1) * pageSize;

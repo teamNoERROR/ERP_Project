@@ -157,7 +157,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     	System.out.println("requestParam : " + requestParam);
 
     	try {
-        	int result = this.prdplan_dao.plan_status_update(requestParam);
+        	int result = this.prdplan_dao.plan_status_update(requestParam);  //plan_status 상태변경 
         	
         	String status = requestParam.get("plan_status");
             String planCode = requestParam.get("plan_code");
@@ -173,6 +173,8 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     			List<String> item_codes = new ArrayList<>(); 
     			List<Integer> item_qtys = new ArrayList<>();
     			
+    			
+    			//mrp테이블에서 가져온 부자재 리스트 
     			for (int w = 1; w < mrp_result.size(); w++) {
     				String itmcode = mrp_result.get(w).getItem_code();
     				int itm_req_qty = mrp_result.get(w).getRequired_qty();
@@ -200,7 +202,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     					Map<String, Object> outParams = new HashMap<>();
     					outParams.put("wh_code", lot.getWh_code());
     					outParams.put("inbound_code", "-");
-    					outParams.put("ind_pch_code", "");
+    					outParams.put("ind_pch_code", lot.getInd_pch_cd());
     					outParams.put("item_code", itmCode);
     					outParams.put("item_qty", usedQty);
     					outParams.put("employee_code", lot.getEmployee_code());

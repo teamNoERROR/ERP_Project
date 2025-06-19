@@ -34,16 +34,21 @@ document.addEventListener("change", function (e) {
   }
 });
 
-
-//mrp 계산
+//MRP 계산
 document.getElementById("mrp_calc").addEventListener("click", function () {
     const checkboxes = document.querySelectorAll(".row-checkbox-input:checked");
     const dataToSend = [];
 
     checkboxes.forEach(checkbox => {
+        const planCode = checkbox.dataset.planCode;
         const bomCode = checkbox.dataset.bomCode;
         const qty = parseInt(checkbox.dataset.productQty);
-        dataToSend.push({ bom_code: bomCode, product_qty: qty });
+
+        dataToSend.push({
+            plan_code: planCode,
+            bom_code: bomCode,
+            product_qty: qty
+        });
     });
 
     if (dataToSend.length === 0) {
@@ -58,62 +63,100 @@ document.getElementById("mrp_calc").addEventListener("click", function () {
     })
     .then(res => res.json())
     .then(result => {
-		console.log(result)
         alert("MRP 계산 완료!");
-		
-		const tbody = document.getElementById("mrp-result-tbody");
-		    tbody.innerHTML = ""; // 이전 내용 초기화
 
-		    result.forEach((item, index) => {
-		        const row = document.createElement("tr");
+        // 전체 상세 결과 저장
+        window.detailedMrpResults = result;
 
-		        row.innerHTML = `
-		            <td><input type="checkbox" checked disabled class="row-checkbox-result"></td>
-		            <td>${index + 1}</td>
-		            <td>${item.item_code}</td>
-		            <td>${item.item_name}</td>
-		            <td>${item.required_qty}</td>
-		            <td>${item.item_unit}</td>
-		            <td>${item.item_cost}</td>
-		            <td>${item.total_stock}</td>
-		            <td>${item.safety_stock}</td>
-		            <td>${item.available_stock}</td>
-		            <td>${item.shortage_stock}</td>
-		        `;
+        // item_code 기준 통합 요약
+        const summaryMap = {};
 
-		        tbody.appendChild(row);
-		    });
-		
-		
+        result.forEach(item => {
+            if (!summaryMap[item.item_code]) {
+                summaryMap[item.item_code] = { ...item };
+            } else {
+                summaryMap[item.item_code].required_qty += item.required_qty;
+                const available = summaryMap[item.item_code].total_stock
+                    - summaryMap[item.item_code].safety_stock
+                    - summaryMap[item.item_code].reserved_stock;
+                summaryMap[item.item_code].shortage_stock = Math.min(available - summaryMap[item.item_code].required_qty, 0);
+            }
+        });
+
+        const tbody = document.getElementById("mrp-result-tbody");
+        tbody.innerHTML = "";
+
+        Object.values(summaryMap).forEach((item, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><input type="checkbox" class="row-checkbox-result" data-item-code="${item.item_code}" checked></td>
+                <td>${index + 1}</td>
+                <td>${item.item_code}</td>
+                <td>${item.item_name}</td>
+                <td>${item.required_qty}</td>
+                <td>${item.item_unit}</td>
+                <td>${item.item_cost}</td>
+                <td>${item.total_stock}</td>
+                <td>${item.safety_stock}</td>
+                <td>${item.available_stock}</td>
+                <td>${item.shortage_stock}</td>
+            `;
+            tbody.appendChild(row);
+        });
     })
     .catch(err => {
         alert("에러 발생: " + err.message);
     });
 });
 
-//MRP 계산결과 저장
+//MRP 저장
 function calc_save() {
-    const dataToSave = collectMRPResultData();
-
-    if (dataToSave.length === 0) {
-        alert("데이터베이스에 저장할 체크된 행이 없습니다.");
+    const checked = document.querySelectorAll(".row-checkbox-result:checked");
+    if (checked.length === 0) {
+        alert("저장할 항목을 선택하세요.");
         return;
     }
 
+    const selectedItemCodes = Array.from(checked).map(cb => cb.dataset.itemCode);
+
+    // 저장용 요약: item_code 기준 통합본
+    const summaryMap = {};
+
+    window.detailedMrpResults.forEach(item => {
+        if (selectedItemCodes.includes(item.item_code)) {
+            // 요약용
+            if (!summaryMap[item.item_code]) {
+                summaryMap[item.item_code] = { ...item };
+            } else {
+                summaryMap[item.item_code].required_qty += item.required_qty;
+                const available = summaryMap[item.item_code].total_stock
+                    - summaryMap[item.item_code].safety_stock
+                    - summaryMap[item.item_code].reserved_stock;
+                summaryMap[item.item_code].shortage_stock = Math.min(available - summaryMap[item.item_code].required_qty, 0);
+            }
+        }
+    });
+
+    const summaryList = Object.values(summaryMap);
+
+    // 상세용: plan_code + item_code 기준 상세 데이터
+    const detailList = window.detailedMrpResults.filter(item => selectedItemCodes.includes(item.item_code));
+
+    const payload = {
+        summary: summaryList,
+        detail: detailList
+    };
+
     fetch("/mrp_save.do", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataToSave)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
     })
     .then(res => res.json())
     .then(response => {
         if (response.success) {
             alert("MRP 결과 저장 완료!");
-			
-			// mrp_code를 숨겨진 input에 저장
-			document.getElementById("mrpCodeHidden").value = response.mrp_code;
+            document.getElementById("mrpCodeHidden").value = response.mrp_code;
         } else {
             alert("저장 실패: " + response.message);
         }
@@ -122,7 +165,6 @@ function calc_save() {
         alert("에러 발생: " + err.message);
     });
 }
-
 //발주화면으로 이동
 function go_purchase() {
 	const mrpCode = document.getElementById("mrpCodeHidden").value;
@@ -148,33 +190,6 @@ function go_purchase() {
 	form.submit();
 }
 
-function collectMRPResultData() {
-    const rows = document.querySelectorAll("#mrp-result-tbody tr");
-    const resultData = [];
-
-    rows.forEach(row => {
-        const checkbox = row.querySelector(".row-checkbox-result");
-        if (checkbox && checkbox.checked) {
-            const cells = row.querySelectorAll("td");
-
-            resultData.push({
-                item_code: cells[2].textContent.trim(),
-                item_name: cells[3].textContent.trim(),
-                required_qty: parseInt(cells[4].textContent.trim()),
-                item_unit: cells[5].textContent.trim(),
-                item_cost: cells[6].textContent.trim(),
-                total_stock: parseInt(cells[7].textContent.trim()),
-                safety_stock: parseInt(cells[8].textContent.trim()),
-                //reserved_stock: parseInt(cells[9].textContent.trim()),
-                available_stock: parseInt(cells[9].textContent.trim()),
-                shortage_stock: parseInt(cells[10].textContent.trim())
-            });
-        }
-    });
-
-    return resultData;
-}
-
 //엑셀 다운로드
 function excel_download() {
     const rows = document.querySelectorAll("#mrp-result-tbody tr");
@@ -192,10 +207,9 @@ function excel_download() {
                 '소요량': parseInt(cells[5].textContent.trim()),
                 '단위': cells[6].textContent.trim(),
                 '총재고': parseInt(cells[7].textContent.trim()),
-                //'안전재고': parseInt(cells[8].textContent.trim()),
-                '예약재고': parseInt(cells[9].textContent.trim()),
-                '가용재고': parseInt(cells[10].textContent.trim()),
-                '부족재고': parseInt(cells[11].textContent.trim())
+                '안전재고': parseInt(cells[8].textContent.trim()),
+                '가용재고': parseInt(cells[9].textContent.trim()),
+                '부족재고': parseInt(cells[10].textContent.trim())
             });
         }
     });

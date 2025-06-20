@@ -68,10 +68,11 @@ public class bom_controller {
 							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value = "products_class2", required = false) String sclass
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
+							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+							) {
 
 		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass , keyword); //bom리스트 제품 총개수
-		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
+		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea, null);  //bom리스트 제품 리스트
 		
 		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
 		for (bom_DTO dto : bom_all_list_sch) {

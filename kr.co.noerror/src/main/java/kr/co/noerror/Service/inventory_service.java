@@ -24,7 +24,7 @@ public interface inventory_service {
 	List<IOSF_DTO> pd_by_whlist();
 	
 	// 상품 + 창고별 재고 
-	Integer stockByWhnPd (String whCode, String pdCode);
+	Map<String, Integer> stockByWhnPd ();
 	
 	// 상품별 전체 재고
 	Integer stockPdTotal (String pdCode);

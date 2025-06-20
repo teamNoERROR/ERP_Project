@@ -21,11 +21,8 @@ public interface outbound_service {
 	//완제품창고리스트이동(출고처리)
 	List<IOSF_DTO> fswh_all_list(String keyword, Integer pageno, int post_ea);
 
-	List<mrp_result_DTO> select_mrp_result(String plan_code);
 
-	List<IOSF_DTO> out_itemList(String itmCode);
-
-	void out_mtwh_result(Map<String, Object> outParams);
+//	void out_mtwh_result(Map<String, Object> outParams);
 	
 	
 

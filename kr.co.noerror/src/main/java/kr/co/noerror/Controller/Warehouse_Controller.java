@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -22,6 +23,7 @@ import kr.co.noerror.DAO.Warehouse_DAO;
 import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.Model.M_file;
 import kr.co.noerror.Service.Warehouse_Service;
+import kr.co.noerror.Service.inventory_service;
 
 @Controller
 public class Warehouse_Controller {
@@ -37,13 +39,14 @@ public class Warehouse_Controller {
     @Resource(name="Warehouse_Service")
     Warehouse_Service ws_service;	
     
-
+    @Autowired
+   	inventory_service inv_svc; 
 
     //창고 저장, 수정 구분하기 위한 변수
     String check_insertOrModify;
    
     //창고 삭제 방지 
-    String [] no_del_wh = {"WHS-80967","WHS-30257"};
+    String [] no_del_wh = {"WHS-97265","WHS-13927"};
 
     
     
@@ -199,7 +202,8 @@ public class Warehouse_Controller {
 		
 		wh_list_map = ws_service.warehouse_list(page, wh_search, pageSize);
 
-		
+		Map<String, Integer> stockByWhnPd = this.inv_svc.stockByWhnPd();
+	    System.out.println("stockByWhnPd : " + stockByWhnPd);
 		
 		m.addAttribute("wh_list", wh_list_map.get("wh_list")); // 리스트
 	    m.addAttribute("search_check", wh_list_map.get("search_check")); // 검색 여부

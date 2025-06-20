@@ -734,13 +734,10 @@ function pchDtlLoad(pch_code){
 			    <td>`+resultItem.item_class1+`</td>
 				<td>`+resultItem.item_class2+`</td>
 				<td class="text-end">`+resultItem.item_cost+`</td>
-				<td><input type="number" class="form-control item_qty"></td>
+				<td><input type="number" class="form-control item_qty" min="1"></td>
 				<td>
 					<select class="form-select item_deli" aria-label="Default select example" onchange='noDeli(this)'>
-						<option value="" >선택</option>
 						<option value="납품완료" >납품완료</option>
-						<option value="부분입고">부분입고</option>
-						<option value="미납">미납</option>
 					</select>
 				</td>
 				<td><input type="date" class="form-control item_exp"></td>

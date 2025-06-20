@@ -126,7 +126,7 @@ public class bom_serviceImpl implements bom_service{
 
 	 //BOM등록된제품 리스트
 	@Override
-	public List<bom_DTO> bom_all_list_sch(String sclass, String keyword, Integer pageno, int post_ea) {
+	public List<bom_DTO> bom_all_list_sch(String sclass, String keyword, Integer pageno, int post_ea, String parent) {
 		int start = (pageno - 1) * post_ea;
 		int count = post_ea; 
 		
@@ -135,7 +135,9 @@ public class bom_serviceImpl implements bom_service{
 		map.put("sclass", sclass);
 		map.put("start", start);
 		map.put("count", count);
-
+		map.put("parent", parent);
+		System.out.println("parent : " + parent);
+		System.out.println("map : " + map);
 		List<bom_DTO> bom_list = this.b_dao.bom_all_list_sch(map);  
 		return bom_list;
 	}

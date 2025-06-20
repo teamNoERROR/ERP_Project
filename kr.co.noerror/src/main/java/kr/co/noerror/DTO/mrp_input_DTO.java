@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Repository("mrp_input_DTO")
 public class mrp_input_DTO {
+	private String plan_code;
 	private String bom_code;
 	private int product_qty;
 	

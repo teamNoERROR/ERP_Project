@@ -1,6 +1,5 @@
 package kr.co.noerror.Controller;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,15 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +23,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
-import kr.co.noerror.DTO.WareHouse_DTO;
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
 import kr.co.noerror.Service.common_service;
 import kr.co.noerror.Service.inventory_service;
@@ -223,9 +218,6 @@ public class IOSF_Warehouse_Controller {
 	   
 	    this.wh_type = "fs";
 	    
-	    
-	    
-//	    String out_pd_list = this.common_svc.out_pd_list(out_pd_data);  //창고별 완제품 재고 
 	    Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
 	    
 	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
@@ -240,9 +232,10 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
 		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
 		   
-//		   m.addAttribute("out_pd_list", out_pd_list); // 창고별 완제품 재고
 		   m.addAttribute("ind_pd_all_stock", ind_pd_all_stock); //개별 완제품 재고수
-	   
+		   
+		   System.out.println( iosf_list_map.get("wh_list"));
+		   
 	   return "/warehouse/fs_warehouses_list.html";
    }
    

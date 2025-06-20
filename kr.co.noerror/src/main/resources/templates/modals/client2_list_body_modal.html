@@ -3,8 +3,8 @@
 		  <div class="d-flex justify-content-end mb-2">
 		      <div class="col-auto">
 		        <div class="input-group input-group-sm">
-		          <input type="text" class="form-control" placeholder="회사명/회사코드로 검색">
-		          <button class="btn btn-primary"  type="button">
+		          <input type="text" class="form-control" placeholder="회사명/회사코드로 검색" id="keyword" name="keyword" th:value="${keyword}" onkeyup="MdSearch(event,'cltMd2')">
+		          <button class="btn btn-primary"  type="button" onclick="MdSearchBtn('cltMd2')">
 		            <i class="bi bi-search"></i>
 		          </button>
 		        </div>

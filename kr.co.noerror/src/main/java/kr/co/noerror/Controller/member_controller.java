@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.co.noerror.DTO.inbound_DTO;
 import kr.co.noerror.DTO.member_DTO;
+import kr.co.noerror.Model.M_login_check;
 import kr.co.noerror.Model.M_paging;
 import kr.co.noerror.Service.member_service;
 
@@ -36,6 +37,9 @@ public class member_controller {
 	
 	@Resource(name="M_paging")  //페이징생성 모델 
 	M_paging m_pg;
+	
+	@Resource(name="login_ck") 
+	M_login_check login_ck;  //로그인체크 모델 
 	
 	List<String> list = null; 
 	Map<String, String> map = null;
@@ -91,10 +95,7 @@ public class member_controller {
 	public String member_loginOk(@ModelAttribute member_DTO m_dto, HttpServletResponse res) throws Exception {
 		this.pw = res.getWriter();
 		
-		System.out.println("m_dto : " + m_dto);
 		member_DTO login_member = this.mb_svc.login_member(m_dto); 
-		
-		System.out.println("login_member : " + login_member);
 		
 		if(login_member == null){  //아이디 및 패스워드가 틀릴경우 	
 			
@@ -121,10 +122,14 @@ public class member_controller {
 	@GetMapping("/member_logoutOk.do")
 	public String member_logout(HttpServletResponse res) throws IOException {
 		this.pw = res.getWriter();
+String login_yn = this.login_ck.login_chk();  //로그인 체크
 		
-		this.se.invalidate(); //세션에 저장된 정보들 파기 
+		if(login_yn.equals("ok")){  //로그인 이미 되어있으면
+			this.se.invalidate(); //세션에 저장된 정보들 파기 
+			
+			this.pw.write("ok");
+		}
 		
-		this.pw.write("ok");
 		
 		return null;
 	}

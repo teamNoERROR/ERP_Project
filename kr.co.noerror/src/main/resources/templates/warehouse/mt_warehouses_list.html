@@ -160,9 +160,9 @@
 					  <ul class="pagination">
 					
 					     <!-- 첫페이지로 -->
-					    <li class="page-item prev" th:classappend="${1>= pageSize} ? '' : 'disabled'">
+					    <li class="page-item prev" th:classappend="${startPage > 1} ? '' : 'disabled'">
 					      <a class="page-link"
-					        th:href="@{/warehouses_mt_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&laquo;</a>
+					        th:href="@{/warehouses_mt_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, name_wh_list=${mt_wh_name})}">&laquo;</a>
 					    </li>
 				
 					    <!-- 페이지 번호 -->
@@ -170,14 +170,14 @@
 					        th:each="i : ${#numbers.sequence(startPage, endPage)}"
 					        th:classappend="${i == currentPage} ? 'active'">
 					      <a class="page-link" 
-					         th:href="@{/warehouses_mt_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}" 
+					         th:href="@{/warehouses_mt_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize}, name_wh_list=${mt_wh_name})}" 
 					         th:text="${i}">1</a>
 					    </li>
 					
 					       <!-- 끝페이지로 -->
-					    <li class="page-item next" th:classappend="${currentPage >= totalPages} ? '' : 'disabled'">
+					    <li class="page-item next" th:classappend="${endPage >= totalPages} ? '' : 'disabled'">
 					      <a class="page-link"
-					         th:href="@{/warehouses_mt_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&raquo;</a>
+					         th:href="@{/warehouses_mt_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, name_wh_list=${mt_wh_name})}">&raquo;</a>
 					    </li>
 						  </ul>
 						</nav>

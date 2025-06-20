@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.mrp_result2_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
+import kr.co.noerror.DTO.mrp_result_header_DTO;
 import kr.co.noerror.Model.M_unique_code_generator;
 
 @Service
@@ -40,15 +41,11 @@ public class mrp_serviceImpl implements mrp_service {
 
 	        int detailResult = 0;
 	        List<String> planCodeList = new ArrayList<>();
-	        
-	        
-	        
 	        for (mrp_result2_DTO dto : detailList) {
 	        	// 중복없는 plan_code list 생성
 	        	if (!planCodeList.contains(dto.getPlan_code())) {
 	        		planCodeList.add(dto.getPlan_code());
 	        	}
-	        	System.out.println("planCodeList : " + planCodeList);
 	        	
 	        	//Detail 저장
 	            dto.setMrp_code(mrp_code);
@@ -75,5 +72,11 @@ public class mrp_serviceImpl implements mrp_service {
 	    }
 
 	    return response;
+	}
+	
+	@Override
+	public List<mrp_result_header_DTO> mrp_result_list(String mrp_status) {
+		List<mrp_result_header_DTO> mrp_list =  this.mrp_dao.mrp_result_list(mrp_status);
+		return mrp_list;
 	}
 }

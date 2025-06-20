@@ -67,7 +67,7 @@ public class proplan_controller {
 	public String production2(Model m) {
 		m.addAttribute("lmenu","생산 관리");
 		m.addAttribute("smenu","생산 계획");
-		m.addAttribute("mmenu","주문 생산계획 등록");
+		m.addAttribute("mmenu","생산계획 등록");
 		return "/production/production_plan_insert.html";
 	}
 	//생산계획 등록(주문)

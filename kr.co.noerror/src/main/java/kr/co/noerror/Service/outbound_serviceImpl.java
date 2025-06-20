@@ -129,9 +129,6 @@ public class outbound_serviceImpl implements outbound_service{
 			pd_qtys.add(pd_out_qty);
 		}
 		
-		System.out.println("pd_codes : " + pd_codes);
-		System.out.println("pd_out_qty : " + pd_qtys);
-		
 		for (int i = 0; i < pd_codes.size(); i++) {
 			String pdCode = pd_codes.get(i);
 			int ordPdQty = pd_qtys.get(i); // 제품별 출고 수량
@@ -152,8 +149,12 @@ public class outbound_serviceImpl implements outbound_service{
 				outParams.put("pd_qty", usedQty);
 				outParams.put("employee_code", lot.getEmployee_code());
 				outParams.put("inv_lot", lot.getInv_lot());
+				outParams.put("wh_type", "fs");
+				outParams.put("wfs_code", lot.getWfs_code());
 
 				this.out_dao.out_fswh_result(outParams);
+				this.out_dao.IOSF_warehouse_move_up(outParams);  //출고처리 후 원입고건 체크박스 막기
+				
 				ordPdQty -= usedQty;
 			}
 			
@@ -207,23 +208,11 @@ public class outbound_serviceImpl implements outbound_service{
 		return fswh_all_list;
 	}
 
-	//부자재창고 부자재 출고 처리 전 mrp 계산 필요수량 가져오기 
-	@Override
-	public List<mrp_result_DTO> select_mrp_result(String plan_code) {
-		List<mrp_result_DTO> mrp_reqQty = this.out_dao.select_mrp_result(plan_code);
-		return mrp_reqQty;
-	}
 
-	//부자재 창고 출고처리 전 재고있는 창고 확인  
-	@Override
-	public List<IOSF_DTO> out_itemList(String itmCode) {
-		List<IOSF_DTO> out_itemList = this.out_dao.out_itemList(itmCode);
-		return out_itemList;
-	}
 
-	@Override
-	public void out_mtwh_result(Map<String, Object> outParams) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void out_mtwh_result(Map<String, Object> outParams) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

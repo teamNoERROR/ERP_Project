@@ -25,6 +25,7 @@ import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.employee_DTO;
 import kr.co.noerror.DTO.member_DTO;
+import kr.co.noerror.DTO.mrp_result_header_DTO;
 import kr.co.noerror.DTO.ordreq_res_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
 import kr.co.noerror.DTO.pchreq_res_DTO;
@@ -80,6 +81,8 @@ public class common_controller {
 	@Autowired
 	generic_list_service<ordreq_res_DTO> ordreq_list_service; //주문관리 서비스 
 	
+	@Autowired
+	kr.co.noerror.Service.mrp_service mrp_service; //MRP관리 서비스
 
 	@Autowired
 	pchreq_DAO pdao; 
@@ -474,4 +477,16 @@ public class common_controller {
 		 return null; 
    
 	 }
+	 
+	 
+	//MRP 리스트 모달 띄우기
+	@GetMapping("/mrp_list_modal.do")
+	public String mrp_list(Model m, @RequestParam(name="status") String mrp_status) {
+		
+		List<mrp_result_header_DTO> all_data = this.mrp_service.mrp_result_list(mrp_status);
+		
+		m.addAttribute("mrp_data", all_data);
+		
+		return  "/modals/mrp_list_modal.html";
+	}
 }

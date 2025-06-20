@@ -46,7 +46,7 @@
         <!-- 제품 List Table -->
      	<div id="contents_container">
         <div id="table-container" class="table-responsive  rounded" style="width: 100%; overflow-x: auto;" >
-            <table class="table align-middle table-bordered text-center" >
+            <table class="table align-middle table-bordered table-hover text-center" >
                 <thead class="table-light" >
                     <tr>
 <!--                         <th scope="col"><input type="checkbox" disabled></th> -->
@@ -77,7 +77,7 @@
                         <td >[[${stitmlst.item_name}]]</td>
                         <td>[[${stitmlst.category_main}]]</td>
                         <td>[[${stitmlst.category_sub}]]</td>
-                         <td>[[${ind_itm_stock[stitmlst.item_code]}]]</td>
+                         <td th:text="${#numbers.formatInteger(ind_itm_stock[stitmlst.item_code],0,'COMMA')}"></td>
                          <td >
                          	<button type="button" class="btn btn-warning me-2" disabled>입고내역</button>
                          	<button type="button" class="btn btn-success" disabled>출고내역</button>

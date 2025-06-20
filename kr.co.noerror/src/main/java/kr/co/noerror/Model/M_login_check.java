@@ -1,7 +1,5 @@
 package kr.co.noerror.Model;
 
-import java.io.PrintWriter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

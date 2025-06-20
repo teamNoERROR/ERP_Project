@@ -8,4 +8,6 @@ public interface prdplan_service {
 	Map<String, Object> prdplan_save(prdplan_req_DTO plandto);
 	Map<String, Object> prdplan_update(prdplan_req_DTO reqdto);
 	Map<String, Object> plan_status_update(Map<String, String> requestParam);
+	
+
 }

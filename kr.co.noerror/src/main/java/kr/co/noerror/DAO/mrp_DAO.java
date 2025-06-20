@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.mrp_result2_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
+import kr.co.noerror.DTO.mrp_result_header_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.prdplan_res_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
@@ -55,6 +56,11 @@ public class mrp_DAO {
 	public int update_mrp_status(String plan_code) {
 		int result = this.sql.update("update_mrp_status", plan_code);
 		return result;
+	}
+	
+	public List<mrp_result_header_DTO> mrp_result_list(String mrp_status) {
+		List<mrp_result_header_DTO> mrp_list = this.sql.selectList("mrp_result_list", mrp_status);
+		return mrp_list;
 	}
 	
 	//자재 안전재고

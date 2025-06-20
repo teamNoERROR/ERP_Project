@@ -1,3 +1,46 @@
+function select_mrp(){
+	// 선택된 라디오 버튼 찾기
+	const selectedRadio = document.querySelector('input[name="mrpSelect"]:checked');
+
+	if (!selectedRadio) {
+	  alert("MPP를 선택하세요.");
+	  return;
+	}
+
+	// 선택된 라디오 버튼의 부모 <tr> 찾기
+	const selectedRow = selectedRadio.closest('tr');
+	if (!selectedRow) {
+	  alert("선택된 MRP 행을 찾을 수 없습니다.");
+	  return;
+	}
+
+	// data-* 속성 가져오기
+	const mrpCode = selectedRow.getAttribute('data-mrp_code');
+	
+	// 폼 생성
+    const form = document.createElement("form");
+    form.method = "GET";
+    form.action = "/mrp_result_select.do"
+
+	// 데이터 input
+	const dataInput = document.createElement("input");
+	dataInput.type = "hidden";
+	dataInput.name = "mrp_code";
+	dataInput.value = mrpCode;
+	form.appendChild(dataInput); 
+
+	document.body.appendChild(form);
+	form.submit();
+
+	// 모달 닫기 (Bootstrap 5 기준)
+	const modalEl = document.getElementById('mrp_list');
+	const modalInstance = bootstrap.Modal.getInstance(modalEl);
+	if (modalInstance) {
+	  modalInstance.hide();
+	}
+}
+
+
 function addToCart() {
   const activeTab = document.querySelector('.nav-link.active').id;
   const basket = document.getElementById('basketBody');

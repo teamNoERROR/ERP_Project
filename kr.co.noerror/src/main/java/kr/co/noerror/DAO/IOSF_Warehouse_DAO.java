@@ -113,9 +113,6 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 		int wh_save_update = this.iosf_ware_st.update("IOSF_warehouse_move_up", params); //출고처리시 이동표시
 		int wh_save_result2 = this.iosf_ware_st.insert("IOSF_warehouse_move_in", params); 
 		
-		System.out.println("wh_save_result + " +wh_save_result);
-        System.out.println("wh_save_update + " +wh_save_update);
-        System.out.println("wh_save_result2 + " +wh_save_result2);
 		if (wh_save_result != wh_save_update && wh_save_update != wh_save_result2) {
 	        throw new RuntimeException("창고 이동 처리 실패");
 	    }

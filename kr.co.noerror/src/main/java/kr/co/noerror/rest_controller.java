@@ -28,7 +28,7 @@ public class rest_controller {
 	@Autowired
 	private goods_service g_svc;
 	
-	//이미지 전송 
+	/*//이미지 전송 
 	@ResponseBody
 	@GetMapping("/imgfile/{filenm}")
 	public byte[] cdn_listapi(@PathVariable(name="filenm") String filenm) {
@@ -61,7 +61,7 @@ public class rest_controller {
 			
 		return img;   
 	}
-	
+	*/
 	
 	
 	

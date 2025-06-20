@@ -22,7 +22,7 @@ LEFT JOIN client_comp cmp ON pln.company_code = cmp.company_code
 LEFT JOIN employee2 emp ON pln.ecode = emp.ecode
 WHERE pln.plan_status = '생산계획확정'
   AND pln.mrp_status = '미완료'
-  AND ord.due_date BETWEEN #{start_date} AND #{end_date}
+  AND pln.end_date BETWEEN #{start_date} AND #{end_date}
 ORDER BY pln.pidx DESC
 </select>
 
@@ -47,7 +47,7 @@ ORDER BY pln.pidx DESC
 
 <!-- MRP Header 저장 -->
 <insert id="insert_mrp_header" parameterType="String">
-    INSERT INTO mrp_result_header (mrp_code) VALUES (#{mrp_code})
+    INSERT INTO mrp_result_header (mrp_code, mrp_status) VALUES (#{mrp_code}, '발주 미완료')
 </insert>
 
 <!-- 요약 저장 (item_code 기준) -->
@@ -76,10 +76,15 @@ ORDER BY pln.pidx DESC
     )
 </insert>
 
-<!-- MRP계산 저장시 mrp_status 업데이트 -->
+<!-- MRP계산 저장시 production_plan의 mrp_status 업데이트 -->
 <update id="update_mrp_status" parameterType="String">
 UPDATE production_plan SET mrp_status = '완료' WHERE plan_code = #{plan_code}
 </update>
+
+<!--MRP Result Header list -->
+<select id="mrp_result_list" resultType="kr.co.noerror.DTO.mrp_result_header_DTO">
+SELECT * FROM mrp_result_header WHERE mrp_status = #{mrp_status}
+</select>
 
 <!-- 자재 안전재고  --> 
 <select id="itm_safe_stock" parameterType="String">

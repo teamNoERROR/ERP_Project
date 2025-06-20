@@ -925,4 +925,28 @@ function MdSearchBtn(type) {
 	}*/
 		
  }
+ 
+ 
+ /*———————————————————————————————
+ 	MRP 리스트 모달 
+ ————————————————————————————— */
+ function mrpListOpen(){
+ 	const mrp_status = "발주 미완료";
+ 	fetch("./mrp_list_modal.do?status="+mrp_status, {
+ 		method: "GET",
+
+ 	}).then(function(data) {
+ 		return data.text();
+
+ 	}).then(function(result) {
+ 		document.getElementById("modalContainer").innerHTML = result;
+ 		
+ 		var modal= new bootstrap.Modal(document.getElementById("mrp_list"));
+ 		modal.show();
+ 		
+ 	}).catch(function(error) {
+ 		
+ 		console.log("통신오류발생" + error);
+ 	});
+ }
 

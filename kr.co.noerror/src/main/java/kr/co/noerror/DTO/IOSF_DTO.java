@@ -97,4 +97,10 @@ public class IOSF_DTO {
     String move_type;  //이동여부 
     String inv_lot;  //입고로트
     Integer pd_count;
+    
+    //입고,출고 수량(SUM)
+    Integer indata,outdata;
+    Integer total_qty;
+    
+    
 }

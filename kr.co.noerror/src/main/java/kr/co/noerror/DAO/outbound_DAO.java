@@ -65,6 +65,11 @@ public class outbound_DAO {
 		return out_fswh_result;
 	}
 
+	public int IOSF_warehouse_move_up(Map<String, Object> outParams) {
+		int result = this.st.update("IOSF_warehouse_move_up", outParams);
+		return result;
+	}
+
 
 	
 	

@@ -234,6 +234,8 @@ public class IOSF_Warehouse_Controller {
 		   
 		   m.addAttribute("ind_pd_all_stock", ind_pd_all_stock); //개별 완제품 재고수
 		   
+		   System.out.println( iosf_list_map.get("wh_list"));
+		   
 	   return "/warehouse/fs_warehouses_list.html";
    }
    

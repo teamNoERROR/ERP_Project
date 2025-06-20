@@ -13,9 +13,9 @@
 			<!-- Title -->
 			<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-2">
 				<h2 class="mb-1">입고번호 : [[${inbnd_detail.get(0).INBOUND_CODE}]] </h2>
-				<button type="button" class="btn btn-success" onclick="inboundOk()">
-					<i class="bi bi-pencil-square"></i> 저장  	<!--  입고완료상태에서는 disabled 처리 -->
-				</button> 
+<!-- 				<button type="button" class="btn btn-success" onclick="inboundOk()"> -->
+<!-- 					<i class="bi bi-pencil-square"></i> 저장  	 입고완료상태에서는 disabled 처리 -->
+<!-- 				</button>  -->
 			</div>
 			<div class="table-responsive  rounded">
 				<table class="table table-bordered align-middle rounded">
@@ -103,7 +103,7 @@
 							<th scope="col">대분류</th>
 							<th scope="col">소분류</th>
 <!-- 							<th scope="col">비고</th> -->
-							<th scope="col">주문상태</th>
+<!-- 							<th scope="col">주문상태</th> -->
 							
 						</tr>
 					</thead>
@@ -121,31 +121,31 @@
 							<td class="text-end">[[${#numbers.formatInteger(inbnd.ITEM_COST * inbnd.P_QTY,0,'COMMA')}]]</td>
 							<td>[[${inbnd.ITEM_CLASS1}]]</td>
 							<td>[[${inbnd.ITEM_CLASS2}]]</td>
-							<td >
-							<select class="form-select item_deli" id="" >
-								<option value="입고완료" >입고완료</option>
-								<option value="입고취소" >입고취소</option>
-								<option value="미입고">미입고</option>
-							</select>
-							</td>
+<!-- 							<td > -->
+<!-- 							<select class="form-select item_deli" id="" > -->
+<!-- 								<option value="입고완료" >입고완료</option> -->
+<!-- 								<option value="입고취소" >입고취소</option> -->
+<!-- 								<option value="미입고">미입고</option> -->
+<!-- 							</select> -->
+<!-- 							</td> -->
 						</tr>
 					</tbody>
-					<tfoot>
-						<tr>
-							<td class="info-label" colspan="2">합계</td>
-							<td >-</td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-							<td class="text-end">[[${pch_qty_total}]]</td>  <!-- 총 주문수량 -->
-							<td class="text-end">[[${inb_qty_total}]]</td>  <!-- 총 입고수량 -->
-							<td class="text-end">[[${itm_cost_total}]]</td>  <!-- 총 주문수량 -->
-							<td class="text-end">[[${pch_amount_total}]]</td>		
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-						</tr>
-					</tfoot>
+<!-- 					<tfoot> -->
+<!-- 						<tr> -->
+<!-- 							<td class="info-label" colspan="2">합계</td> -->
+<!-- 							<td >-</td> -->
+<!-- 							<td>-</td> -->
+<!-- 							<td>-</td> -->
+<!-- 							<td>-</td> -->
+<!-- 							<td class="text-end">[[${pch_qty_total}]]</td>  총 주문수량 -->
+<!-- 							<td class="text-end">[[${inb_qty_total}]]</td>  총 입고수량 -->
+<!-- 							<td class="text-end">[[${itm_cost_total}]]</td>  총 주문수량 -->
+<!-- 							<td class="text-end">[[${pch_amount_total}]]</td>		 -->
+<!-- 							<td>-</td> -->
+<!-- 							<td>-</td> -->
+<!-- 							<td>-</td> -->
+<!-- 						</tr> -->
+<!-- 					</tfoot> -->
 				</table>
 			</div>
 			

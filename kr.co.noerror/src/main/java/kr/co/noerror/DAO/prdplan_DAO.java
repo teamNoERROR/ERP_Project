@@ -107,14 +107,26 @@ public class prdplan_DAO {
 	}
 
 	//부자재 재고 출고처리를 위한 정보 
-	public List<IOSF_DTO> out_itemList(String itmCode) {
-		List<IOSF_DTO> out_itemList = this.sql.selectList("outItm_info",itmCode);
-		return out_itemList;
+	public List<IOSF_DTO> out_itemList2(String itmCode) {
+		List<IOSF_DTO> out_itemList2 = this.sql.selectList("outItm_info2",itmCode);
+		return out_itemList2;
+	}
+	
+	//부자재 총재고수 
+	public Integer out_itemQty(String itmCode) {
+		Integer out_itemQty = this.sql.selectOne("outItm_info",itmCode);
+		System.out.println("out_itemQty : " + out_itemQty);
+		return out_itemQty;
 	}
 
 	//부자재 창고에서 출고처리 
 	public int out_mtwh_result(Map<String, Object> outParams) {
 		int out_mtwh_result = this.sql.insert("mt_warehouse_out",outParams);
 		return out_mtwh_result;
+	}
+	
+	public int IOSF_warehouse_move_up(Map<String, Object> outParams) {
+		int result = this.sql.update("IOSF_warehouse_move_up", outParams);
+		return result;
 	}
 }

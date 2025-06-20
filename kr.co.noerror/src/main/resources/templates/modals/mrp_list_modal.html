@@ -1,0 +1,47 @@
+<div class="modal fade" id="mrp_list" tabindex="-1" aria-labelledby="mrp_list_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="mrp_list_label">MRP 리스트</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body row justify-content-center d-flex gap-3" style="width: 100%; overflow-x: auto;">
+        <div class="table-responsive rounded" >
+          <table class="table table-hover align-middle table-bordered" style="white-space: nowrap;">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">선택</th>
+                <th scope="col">#</th>
+                <th scope="col">MRP 번호</th>
+                <th scope="col">MRP 일자</th>
+                <th scope="col">MRP 상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr align="center" style="cursor: pointer;" id="mrp_data"  th:each="m, idx : ${mrp_data}"
+              	  th:attr="data-mrp_code=${m.mrp_code}">
+                <td>
+                  <input type="radio" name="mrpSelect" th:value="${m.mrp_code}">
+                </td>
+                <td>[[${idx.count}]]</td>
+                <td>[[${m.mrp_code}]]</td>
+                <td>[[${m.calculation_date}]]</td>
+                <td>[[${m.mrp_status}]]</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="d-flex gap-2">
+          <div class="ms-auto">
+          <!-- 단일 버튼만 보여주고 -->
+				<button type="button" id="selectMrpBtn" class="btn btn-success" onclick="select_mrp()">
+ 					 <i class="bi bi-check2-square"></i> 선택
+				</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

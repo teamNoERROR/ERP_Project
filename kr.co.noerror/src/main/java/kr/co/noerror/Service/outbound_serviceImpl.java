@@ -129,9 +129,6 @@ public class outbound_serviceImpl implements outbound_service{
 			pd_qtys.add(pd_out_qty);
 		}
 		
-		System.out.println("pd_codes : " + pd_codes);
-		System.out.println("pd_out_qty : " + pd_qtys);
-		
 		for (int i = 0; i < pd_codes.size(); i++) {
 			String pdCode = pd_codes.get(i);
 			int ordPdQty = pd_qtys.get(i); // 제품별 출고 수량
@@ -152,8 +149,12 @@ public class outbound_serviceImpl implements outbound_service{
 				outParams.put("pd_qty", usedQty);
 				outParams.put("employee_code", lot.getEmployee_code());
 				outParams.put("inv_lot", lot.getInv_lot());
+				outParams.put("wh_type", "fs");
+				outParams.put("wfs_code", lot.getWfs_code());
 
 				this.out_dao.out_fswh_result(outParams);
+				this.out_dao.IOSF_warehouse_move_up(outParams);  //출고처리 후 원입고건 체크박스 막기
+				
 				ordPdQty -= usedQty;
 			}
 			

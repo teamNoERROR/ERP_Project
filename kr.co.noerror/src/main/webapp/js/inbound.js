@@ -296,7 +296,7 @@ function inSearch(){
 function go_in_pg(ee){
 	var keyword = ee.getAttribute('data-keyword');
 	var page_no = ee.getAttribute('data-pageno');
-	var status = ee.getAttribute('data-status');
+	var status_lst = ee.getAttribute('data-status');
 	
 	var params = {  
 		    type: ee.getAttribute('data-type'),
@@ -308,8 +308,8 @@ function go_in_pg(ee){
 		    params["keyword"] = keyword;
 		}
 
-		if (status) {
-		    var statusList = status.split(',');  // 배열로 분리
+		if (status_lst) {
+		    var statusList = status_lst.split(',');  // 배열로 분리
 		    statusList.forEach((s) => {
 		        params["status_lst"] = params["status_lst"] || [];
 		        params["status_lst"].push(s);
@@ -329,9 +329,6 @@ function inbPostEa(type){
 	form.action = "./inbound.do";
 	form.type.value=type;
 	form.pageno.value = 1; //
+	
 	form.submit();
 }
-
-
-
-

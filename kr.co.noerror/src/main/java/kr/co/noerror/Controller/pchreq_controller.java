@@ -76,7 +76,7 @@ public class pchreq_controller {
 	@GetMapping("/mrp_result_select.do")
 	public String mrp_result_select(@RequestParam(name="mrp_code") String mrp_code,
 			Model m) {
-		
+		System.out.println(mrp_code);
 		List<mrp_result_DTO> mrp_results = this.pdao.mrp_result_select(mrp_code);
 		
 		m.addAttribute("lmenu","구매영업관리");

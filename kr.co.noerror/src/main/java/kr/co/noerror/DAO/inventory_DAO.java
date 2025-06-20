@@ -54,8 +54,8 @@ public class inventory_DAO {
 	
 	
 	// 상품 + 창고별 재고
-	public Integer stockByWhnPd (Map<String, String> mapp) {
-		Integer stockByWhnPd = this.st.selectOne("pd_wh_list" , mapp);
+	public List<IOSF_DTO> stockByWhnPd () {
+		List<IOSF_DTO> stockByWhnPd = this.st.selectList("pd_wh_list");
 		return stockByWhnPd;
 	};
 	

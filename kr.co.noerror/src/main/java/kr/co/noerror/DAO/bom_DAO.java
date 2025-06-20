@@ -67,7 +67,7 @@ public class bom_DAO {
 
 	//고유번호 중복체크 
 	public int code_dupl_bom(String code) {
-		int result = this.st.delete("bom_cd_ck", code);
+		int result = this.st.selectOne("bom_cd_ck", code);
 		return result;
 	}
 

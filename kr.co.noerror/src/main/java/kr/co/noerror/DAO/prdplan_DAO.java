@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.bom_DTO;
 import kr.co.noerror.DTO.employee_DTO;
+import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.ordreq_DTO;
 import kr.co.noerror.DTO.ordreq_res_DTO;
 import kr.co.noerror.DTO.pchreq_DTO;
@@ -93,6 +95,38 @@ public class prdplan_DAO {
 	
 	public int plan_status_update(Map<String, String> mparam) {
 		int result = this.sql.update("plan_status_update", mparam);
+		return result;
+	}
+	
+	
+	//생산완료 처리시 부자재 창고 재고 차감 
+	//부자재 출고를 위한 mrp정보 확인 
+	public List<mrp_result_DTO> select_mrp_result(String plan_code) {
+		List<mrp_result_DTO> select_mrp_result = this.sql.selectList("select_mrp_result",plan_code);
+		return select_mrp_result;
+	}
+
+	//부자재 재고 출고처리를 위한 정보 
+	public List<IOSF_DTO> out_itemList2(String itmCode) {
+		List<IOSF_DTO> out_itemList2 = this.sql.selectList("outItm_info2",itmCode);
+		return out_itemList2;
+	}
+	
+	//부자재 총재고수 
+	public Integer out_itemQty(String itmCode) {
+		Integer out_itemQty = this.sql.selectOne("outItm_info",itmCode);
+		System.out.println("out_itemQty : " + out_itemQty);
+		return out_itemQty;
+	}
+
+	//부자재 창고에서 출고처리 
+	public int out_mtwh_result(Map<String, Object> outParams) {
+		int out_mtwh_result = this.sql.insert("mt_warehouse_out",outParams);
+		return out_mtwh_result;
+	}
+	
+	public int IOSF_warehouse_move_up(Map<String, Object> outParams) {
+		int result = this.sql.update("IOSF_warehouse_move_up", outParams);
 		return result;
 	}
 }

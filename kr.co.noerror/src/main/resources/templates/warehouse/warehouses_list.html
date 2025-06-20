@@ -92,8 +92,8 @@
                     <td th:text="${wh.wh_type}"></td>
                     <td th:text="${'(' + wh.wh_zipcode +') ' + wh.wh_addr1 + ' ' + wh.wh_addr2}"></td>
                     <td th:text="${wh.wh_use_flag}"></td>
-                    <td ></td>
-                    <td ></td>
+                    <td th:text="${#numbers.formatInteger(wh.PD_COUNT,0,'COMMA')}"></td>
+                    <td th:text="${#numbers.formatInteger(wh.TOTAL_QTY,0,'COMMA')}"></td>
                     <td th:text="${wh.wh_insert_date.substring(0,10)}"></td>
                 </tr>
                 
@@ -142,10 +142,10 @@
 				  <select id="pageSizeSelect" class="form-select" style="width: auto; display: inline-block;">
 				    <option th:value="5" th:selected="${pageSize == 5}">5개씩 보기</option>
 				    <option th:value="10" th:selected="${pageSize == 10}">10개씩 보기</option>
-				    <option th:value="10" th:selected="${pageSize == 15}">15개씩 보기</option>
-				    <option th:value="10" th:selected="${pageSize == 20}">20개씩 보기</option>
-				    <option th:value="10" th:selected="${pageSize == 25}">25개씩 보기</option>
-				    <option th:value="20" th:selected="${pageSize == 30}">30개씩 보기</option>
+				    <option th:value="15" th:selected="${pageSize == 15}">15개씩 보기</option>
+				    <option th:value="20" th:selected="${pageSize == 20}">20개씩 보기</option>
+				    <option th:value="25" th:selected="${pageSize == 25}">25개씩 보기</option>
+				    <option th:value="30" th:selected="${pageSize == 30}">30개씩 보기</option>
 				  </select>
 				</div>
 				</div>

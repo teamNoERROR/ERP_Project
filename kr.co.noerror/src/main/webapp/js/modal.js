@@ -22,25 +22,40 @@ function cltListOpen(parentType){
 
 
 
-
-
 //거래처리스트 모달 페이징
-function cl_modal_pg (page){
-	var parent = page.getAttribute('data-parent');
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+function pcl_modal_pg (page){
+	var parent = "pcl";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'pcl';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'pcl';
+		pageno = 1;
+	}
 	
 	var params = {  
-			parent: parent,  
-		  //  type: page.getAttribute('data-type'),
-		    pageno: page_no,
-		    post_ea: page.getAttribute('data-pea'),
-		};
-		
-		if (keyword) {  //키워드가 있으면
-		    params["keyword"] = keyword;
-		}
-		var pString = new URLSearchParams(params).toString();
+		parent: parent,  
+	    type: type,
+	    pageno: pageno,
+	    post_ea: post_ea,
+	};
+	
+	if (keyword) {  //키워드가 있으면
+	    params["keyword"] = keyword;
+	}
+	var pString = new URLSearchParams(params).toString();
 		
 		
 	fetch("./client_list.do?"+pString+"&mode=modal2", {
@@ -82,10 +97,29 @@ function pcltListOpen(){
 
 //발주처리스트 모달 페이징
 function cl2_modal_pg (page){
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+	var parent = "cl2";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'cl2';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'cl2';
+		pageno = 1;
+	}
 	
 	var params = {  
+			parent: parent,  
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),
 		};
@@ -300,7 +334,7 @@ function pd_modal_pg2 (page){
 	}
 	
 	var params = {  
-			//parent: parent,  
+			parent: parent,  
 		    type: type,
 		    pageno: pageno,
 		    post_ea: post_ea,
@@ -331,7 +365,7 @@ function pd_modal_pg2 (page){
 	bom등록된 제품 리스트 모달 오픈 
 ----------------------------------------------------------- */
 function bomListOpen(parent){
-	
+	console.log(parent)
 	fetch("./bom_md_list.do?parent="+parent, {
 		method: "GET",
 
@@ -427,10 +461,29 @@ function inbndListOpen(){
 
 //입고리스트 모달 페이징
 function inbnd_modal_pg (page){
-	var keyword = page.getAttribute('data-keyword');
-	var page_no = page.getAttribute('data-pageno');
+	var parent = "inbnd";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'inbnd';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'inbnd';
+		pageno = 1;
+	}
 	
 	var params = {  
+			parent: parent,  
 		    type: page.getAttribute('data-type'),
 		    pageno: page_no,
 		    post_ea: page.getAttribute('data-pea'),
@@ -490,10 +543,29 @@ function ordListOpen(parentType){
 
 //주문리스트 모달 페이징
 function ord_modal_pg (page){
-	var keyword = page.getAttribute('data-keyword');
-	var pageno = page.getAttribute('data-pageno');
+	var parent = "ord";
+	var keyword = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		keyword = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'ord';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		keyword = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'ord';
+		pageno = 1;
+	}
 	
 	var params = {  
+			parent: parent,  
 		    page_no: pageno,
 		    page_size: page.getAttribute('data-pea'),
 		};
@@ -544,10 +616,29 @@ function pchListOpen(){
 
 //발주리스트 모달 페이징
 function pch_modal_pg (page){
-	var search_word = page.getAttribute('data-keyword');
-	var pageno = page.getAttribute('data-pageno');
+	var parent = "pch";
+	var search_word = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+	
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		search_word = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'pch';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		search_word = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'pch';
+		pageno = 1;
+	}
 	
 	var params = {  
+			parent: parent,  
 		    pageno: pageno,
 		    page_ea: page.getAttribute('data-pea'),
 		};
@@ -597,10 +688,29 @@ function empListOpen(parentType){
 
 //사원리스트 모달 페이징
 function emp_modal_pg (page){
-	var search_word = page.getAttribute('data-keyword');
-	var pageno = page.getAttribute('data-pageno');
+	var parent = "emp";
+	var search_word = "";
+	var pageno = "1";
+	var post_ea = 5;
+	var type = '';
+
+	// 페이지 버튼에서 호출된 경우 버튼 클릭 시 페이징 처리
+	if (page instanceof HTMLElement) {
+		search_word = page.getAttribute('data-keyword') || '';
+		parent = page.getAttribute('data-parent') || 'emp';
+		pageno = page.getAttribute('data-pageno') || 1;
+		post_ea = page.getAttribute('data-pea') || 5;
+		type = page.getAttribute('data-type') || '';
+	} 
+	// 검색창에서 직접 호출된 경우
+	else {
+		search_word = document.getElementById("keyword")?.value || '';
+		parent = document.querySelector('[data-parenttype]')?.getAttribute('data-parenttype') || 'emp';
+		pageno = 1;
+	}
 	
 	var params = {  
+			parent: parent,  
 		    pageno: pageno,
 		    page_ea: page.getAttribute('data-pea'),
 		};
@@ -719,7 +829,7 @@ function appendOutPdsRow(tbody, dataList){
 
 //상품 출고
 function goOutList(){
-	var outPdTrList = document.querySelectorAll("tr.outPd_row");
+	var outPdTrList = document.querySelectorAll("tr.pd_row");
 	var empCd = document.querySelector("#employee_code");
 	var qty = [];
 	
@@ -765,7 +875,9 @@ function goOutList(){
 	})
 }
 
-//검색
+/*--------------------------------------------------------------
+	모달  검색
+----------------------------------------------------------- */
 function MdSearch(event, type) {
     if (event.key === 'Enter') {
       MdSearchBtn(type);
@@ -774,11 +886,67 @@ function MdSearch(event, type) {
 
 
 function MdSearchBtn(type) {
-	if(type=="itmMd"){
+	console.log("type : " + type)
+	if(type=="itmMd"){  //부자재모달 
 		itm_modal_pg();
 	}
-	else if(type=="bomMd"){
+	else if(type=="bomMd"){  //bom완제품 모달  
 		bom_modal_pg();
 	}
+	else if(type=="cltMd"){  //거래처모달 
+		pcl_modal_pg();
+	}
+	else if(type=="cltMd2"){  //발주처 모달
+		cl2_modal_pg();
+	}
+	else if(type=="inbMd"){  //입고리스트모달 
+		inbnd_modal_pg();
+	}
+	else if(type=="membMd"){  //사원리스트 모달  
+		//bom_modal_pg();
+	}
+	else if(type=="ordMd"){  //주문건리스트 모달 
+		ord_modal_pg();
+	}
+	else if(type=="ordMd2"){  //주문건리스트 모달
+		ord_modal_pg();
+	}
+	else if(type=="pdMd"){  //완제품리스트모달 
+		pd_modal_pg();
+	}
+	else if(type=="pdMd2"){  //완제품리스트모달 
+		pd_modal_pg();
+	}
+	else if(type=="pchMd"){  //발주리스트 모달 
+		pch_modal_pg();
+	}
+	/*else if(type=="whMd"){  //유형별 창고리스트 모달  
+		bom_modal_pg();
+	}*/
+		
+ }
+ 
+ 
+ /*———————————————————————————————
+ 	MRP 리스트 모달 
+ ————————————————————————————— */
+ function mrpListOpen(){
+ 	const mrp_status = "발주 미완료";
+ 	fetch("./mrp_list_modal.do?status="+mrp_status, {
+ 		method: "GET",
+
+ 	}).then(function(data) {
+ 		return data.text();
+
+ 	}).then(function(result) {
+ 		document.getElementById("modalContainer").innerHTML = result;
+ 		
+ 		var modal= new bootstrap.Modal(document.getElementById("mrp_list"));
+ 		modal.show();
+ 		
+ 	}).catch(function(error) {
+ 		
+ 		console.log("통신오류발생" + error);
+ 	});
  }
 

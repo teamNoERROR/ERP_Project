@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.inbound_DTO;
+import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.outbound_DTO;
 
 @Repository("outbound_DAO")
@@ -51,6 +52,24 @@ public class outbound_DAO {
 		List<IOSF_DTO> fswh_all_list = this.st.selectList("fswh_all_list",mapp);
 		return fswh_all_list;
 	}
+
+	//제품 재고 출고처리를 위한 정보 
+	public List<IOSF_DTO> out_productList(String product_code) {
+		List<IOSF_DTO> out_productList = this.st.selectList("outPd_info",product_code);
+		return out_productList;
+	}
+
+	//완제품 창고에서 출고처리
+	public int out_fswh_result(Map<String, Object> outParams) {
+		int out_fswh_result = this.st.insert("fs_warehouse_out",outParams);
+		return out_fswh_result;
+	}
+
+	public int IOSF_warehouse_move_up(Map<String, Object> outParams) {
+		int result = this.st.update("IOSF_warehouse_move_up", outParams);
+		return result;
+	}
+
 
 	
 	

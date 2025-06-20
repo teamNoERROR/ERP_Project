@@ -21,4 +21,10 @@ public interface outbound_mapper {
 	List<outbound_DTO> outbound_detail(Map<String, String> map);
 	
 	List<IOSF_DTO> fswh_all_list(Map<String, Object> mapp);
+	
+	//제품 재고 출고처리를 위한 정보
+	List<IOSF_DTO> out_productList(String product_code);
+	
+	int out_fswh_result(IOSF_DTO wh_out_dto);
 }
+

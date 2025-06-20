@@ -68,10 +68,11 @@ public class bom_controller {
 							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value = "products_class2", required = false) String sclass
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
-							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea ) {
+							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea
+							) {
 
 		int bom_total_sch = this.b_svc.bom_all_ea_sch(sclass , keyword); //bom리스트 제품 총개수
-		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea);  //bom리스트 제품 리스트
+		List<bom_DTO> bom_all_list_sch = this.b_svc.bom_all_list_sch(sclass ,keyword, pageno, post_ea, null);  //bom리스트 제품 리스트
 		
 		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
 		for (bom_DTO dto : bom_all_list_sch) {
@@ -98,7 +99,7 @@ public class bom_controller {
 		}
 			
 		if(sclass!=null) {
-			String lclass_ck = this.g_svc.lclass_ck(sclass);
+			String lclass_ck = this.g_svc.lclass_ck("product",sclass);
 			m.addAttribute("lclass_ck",lclass_ck);
 			m.addAttribute("sclass",sclass);
 
@@ -153,7 +154,7 @@ public class bom_controller {
 	}
 	
 	
-	
+	/*
 	//BOM 수정하기 화면이동 
 	@GetMapping("/bom_modify.do")
 	public String bom_modify(Model m, @RequestParam("pd_code") String pd_code) {
@@ -170,7 +171,7 @@ public class bom_controller {
 		
 		return "/goods/bom_modify.html";
 	}
-	
+	*/
 	
 	//BOM 상세보기 모달ver
 	@GetMapping("/bom_detail.do")
@@ -178,9 +179,9 @@ public class bom_controller {
 		
 		List<bom_DTO> resultlist = this.b_svc.bom_detail(pd_code);
 		products_DTO goods_one = this.g_svc.pd_one_detail(pd_code, "product");
-//		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock(); // pd재고수 
 		
-//		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
+		m.addAttribute("ind_pd_stock", ind_pd_all_stock);
 		m.addAttribute("top_pd", resultlist.get(0).getPRODUCT_NAME());
 		m.addAttribute("top_pd_code", resultlist.get(0).getPRODUCT_CODE());
 		m.addAttribute("bom_result", resultlist);

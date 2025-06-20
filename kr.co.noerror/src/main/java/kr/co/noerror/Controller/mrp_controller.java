@@ -21,7 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.mrp_DAO;
 import kr.co.noerror.DTO.mrp_input_DTO;
+import kr.co.noerror.DTO.mrp_result2_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
+import kr.co.noerror.DTO.mrp_save_req_DTO;
 import kr.co.noerror.DTO.prdplan_res_DTO;
 import kr.co.noerror.Model.M_mrp_Calulation;
 import kr.co.noerror.Service.mrp_service;
@@ -59,20 +61,23 @@ public class mrp_controller {
 	    return "/production/purchase_insert.html";
 	}
 	
-	@PostMapping("/mrp_save.do")
-	@ResponseBody
-	public Map<String, Object> mrp_save(@RequestBody List<mrp_result_DTO> mrp_results) {
-	    return mrp_service.mrp_save(mrp_results);
-	}
-	
-	//mrp 계산 및 계산내역 ajax 리턴
 	@PostMapping("/mrp_calc.do")
 	@ResponseBody
-	public List<mrp_result_DTO> calculateMrp(@RequestBody List<mrp_input_DTO> mrp_inputs) {
-		System.out.println("mrp_inputs : " + mrp_inputs);
-	    List<mrp_result_DTO> mrp_results = this.mrp_calc.mrp_calc(mrp_inputs);
-	    System.out.println("mrp_results : " + mrp_results);
-	    return mrp_results;  // JSON 응답
+	public List<mrp_result2_DTO> calculateMrp(@RequestBody List<mrp_input_DTO> mrp_inputs) {		
+	    return this.mrp_calc.mrp_calc(mrp_inputs);
+	}
+
+	@PostMapping("/mrp_save.do")
+	@ResponseBody
+	public Map<String, Object> saveMrpResults(@RequestBody mrp_save_req_DTO request) {
+	    List<mrp_result_DTO> summaryList = request.getSummary();
+	    List<mrp_result2_DTO> detailList = request.getDetail();
+	    System.out.println(summaryList);
+	    System.out.println(detailList);
+	    
+	    //MRP 계산결과 저장 및 production_plan 테이블에 mrp_status 값 업데이트
+	    Map<String, Object> response = mrp_service.save(summaryList, detailList);
+	    return response;
 	}
 	
 	@GetMapping("/production_period.do")

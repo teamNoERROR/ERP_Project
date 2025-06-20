@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.co.noerror.DTO.bom_DTO;
+import kr.co.noerror.DTO.mrp_result2_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
+import kr.co.noerror.DTO.mrp_result_header_DTO;
 import kr.co.noerror.DTO.plan_DTO;
 import kr.co.noerror.DTO.prdplan_res_DTO;
 import kr.co.noerror.DTO.temp_bom_DTO;
@@ -37,13 +39,34 @@ public class mrp_DAO {
 	}
 	
 	public int insert_mrp_header(String mrp_code) {
-		int result = this.sql.insert("insert_mrp_header", mrp_code);
+	    int result = this.sql.insert("insert_mrp_header", mrp_code);
+	    return result;
+	}
+
+	public int insert_mrp_summary(mrp_result_DTO dto) {
+		int result = this.sql.insert("insert_mrp_summary", dto);
+		return result;
+	}
+
+	public int insert_mrp_detail(mrp_result2_DTO dto) {
+		int result = this.sql.insert("insert_mrp_detail", dto);
+	    return result;
+	}
+	
+	public int update_mrp_status(String plan_code) {
+		int result = this.sql.update("update_mrp_status", plan_code);
 		return result;
 	}
 	
-	public int insert_mrp_detail(mrp_result_DTO mdto) {
-		int result = this.sql.insert("insert_mrp_detail", mdto);
-		return result;
+	public List<mrp_result_header_DTO> mrp_result_list(String mrp_status) {
+		List<mrp_result_header_DTO> mrp_list = this.sql.selectList("mrp_result_list", mrp_status);
+		return mrp_list;
+	}
+	
+	//자재 안전재고
+	public int itm_safe_stock(String item_code) {
+		int itm_safe_stock = this.sql.selectOne("itm_safe_stock", item_code);
+		return itm_safe_stock;
 	}
 
 }

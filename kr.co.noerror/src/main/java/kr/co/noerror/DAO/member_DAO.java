@@ -23,5 +23,15 @@ public class member_DAO {
 		return member_all_list;
 	}
 	
+	
+//	public member_DTO login_member(Map<String, String> member_info ) {
+//		member_DTO member_login = this.st.selectOne("member_login",member_info);
+//		return member_login;
+//	}
+	
+	public member_DTO login_member(member_DTO m_dto) {
+		member_DTO member_login = this.st.selectOne("member_login",m_dto);
+		return member_login;
+	}
 
 }

@@ -51,6 +51,8 @@ public class proplan_controller {
 	@Autowired
 	M_paging2 m_pg2;
 	
+	String [] no_chng_plnBtn = {"생산계획수립","생산계획확정","생산중","","생산지연","생산완료"};
+	
 	/*
 	@GetMapping("/emps_modal.do")
 	public String empls_modal(Model m) {
@@ -65,7 +67,7 @@ public class proplan_controller {
 	public String production2(Model m) {
 		m.addAttribute("lmenu","생산 관리");
 		m.addAttribute("smenu","생산 계획");
-		m.addAttribute("mmenu","주문 생산계획 등록");
+		m.addAttribute("mmenu","생산계획 등록");
 		return "/production/production_plan_insert.html";
 	}
 	//생산계획 등록(주문)
@@ -127,6 +129,7 @@ public class proplan_controller {
 		List<prdplan_res_DTO> details = this.pdao.prdplan_detail(plan_code);
 		System.out.println("details : " + details);
 		m.addAttribute("details",details);
+	    m.addAttribute("no_chng_plnBtn", no_chng_plnBtn);
 		return "/modals/production_plan_detail_modal.html";
 	}
 	

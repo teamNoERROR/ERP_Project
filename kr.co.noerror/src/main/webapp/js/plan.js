@@ -1,57 +1,3 @@
-/*function toggleButton9(num){
-	const orderBtn = document.getElementById('order-list');
-	  const productBtn = document.getElementById('product-list');
-	  const orderForm = document.getElementById('order-production-form');
-	  const stockForm = document.getElementById('stock-production-form');
-
-	  if (type === 1) {
-	    orderBtn.style.background = '#82CCDD';
-	    orderBtn.style.color = '#fff';
-	    productBtn.style.background = 'transparent';
-	    productBtn.style.color = '#000';
-	    orderForm.style.display = 'block';
-	    stockForm.style.display = 'none';
-	  } else {
-	    orderBtn.style.background = 'transparent';
-	    orderBtn.style.color = '#000';
-	    productBtn.style.background = '#82CCDD';
-	    productBtn.style.color = '#fff';
-	    orderForm.style.display = 'none';
-	    stockForm.style.display = 'block';
-	  }
-	}
-
-	function resetOrderForm() {
-	  const form = document.getElementById('order-production-form');
-	  form.querySelectorAll('input, select, textarea').forEach(el => {
-	    if (el.tagName === 'SELECT') {
-	      el.selectedIndex = 1;
-	    } else {
-	      el.value = '';
-	    }
-	  });
-	}
-
-	function resetStockForm() {
-	  const form = document.getElementById('stock-production-form');
-	  form.querySelectorAll('input, select, textarea').forEach(el => {
-	    if (el.tagName === 'SELECT') {
-	      el.selectedIndex = 0;
-	    } else {
-	      el.value = '';
-	    }
-	  });
-}*/
-/*
-function toggleButton9(type) {
-	if(type == "order"){
-	 	location.href = "/production_in.do"; //페이지 이동
-	}else if(type == "stock"){
-		location.href = "/production_in_stock.do";
-	}
-}
-*/
-
 function close_bom_items() {
 	// 모달 닫기
 	const modalEl = document.getElementById('bom_items');
@@ -290,7 +236,7 @@ function plan_status_update() {
     const selectEl = document.getElementById("modal-status-select");
     const selectedStatus = selectEl.value;
     const plan_code = selectEl.getAttribute("data-plan-code");
-
+	
     if (selectedStatus === "생산상태 선택") {
         alert("생산상태를 선택하세요.");
         return;

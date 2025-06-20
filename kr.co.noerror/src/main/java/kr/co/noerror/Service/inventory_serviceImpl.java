@@ -75,12 +75,17 @@ public class inventory_serviceImpl implements inventory_service {
 
 	// 상품 + 창고별 재고
 	@Override
-	public Integer stockByWhnPd (String whCode, String pdCode) {
-		Map<String, String> mapp = new HashMap<>();
-		mapp.put("whCode", whCode);
-		mapp.put("pdCode", pdCode);
-		Integer stockByWhnPd = this.inv_dao.stockByWhnPd(mapp);
-		return stockByWhnPd;
+	public Map<String, Integer> stockByWhnPd () {
+		List<IOSF_DTO> stockByWhnPd = this.inv_dao.stockByWhnPd();
+		
+		Map<String, Integer> wh_pd_cnt = new HashMap<>();
+		for (IOSF_DTO dto : stockByWhnPd) {
+			if (dto.getPd_count() == null) {
+			    dto.setPd_count(0);
+			}
+			wh_pd_cnt.put(dto.getWh_code(), dto.getPd_count());
+		}
+		return wh_pd_cnt;
 	};
 	
 	// 상품별 전체 재고

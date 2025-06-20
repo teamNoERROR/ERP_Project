@@ -12,47 +12,25 @@
 	SELECT DISTINCT OUTBOUND_CODE, ORD_CODE, WH_CODE, OUT_STATUS, 
 	OUTBOUND_DATE, EMPLOYEE_CODE, OUT_INSERT_DATE, DUE_DATE, WH_NAME, COMPANY_CODE, COMPANY_NAME, ENAME
 	FROM OUTBOUND_DTL_VIEW
-<!-- 	 WHERE 1=1 -->
-<!-- 		AND OUT_STATUS IN -->
-<!-- 		<foreach item="o_statuslst" collection="OUT_STATUS" open="(" separator="," close=")"> -->
-<!-- 		  #{o_statuslst} -->
-<!-- 		</foreach> -->
-<!-- 			<if test="keyword!= null "> -->
-<!-- 		      AND  -->
-<!-- 		      OUTBOUND_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      ORD_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      WH_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      WH_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      EMPLOYEE_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      ENAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      PRODUCT_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      PRODUCT_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      COMPANY_CODE LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      COMPANY_NAME LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' OR -->
-<!-- 		      OUT_MEMO LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%' -->
-<!-- 			 </if> -->
-<!--     </if> -->
 	ORDER BY OIDX DESC
 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
 </select>
 
-
-
-<!-- 출고등록 -->
+<!-- 출고리스트등록 -->
 <insert id="insert_outbnd" parameterType="kr.co.noerror.DTO.outbound_DTO">
     INSERT INTO OUTBOUND
     VALUES
     (OUTBOUND_NO.NEXTVAL, #{OUTBOUND_CODE}, #{ORD_CODE}, 
-    #{WH_CODE}, #{OUT_STATUS}, #{OUTBOUND_DATE}, #{EMPLOYEE_CODE}, 
+    #{OUT_STATUS}, #{OUTBOUND_DATE}, #{EMPLOYEE_CODE}, 
     #{OUT_MEMO}, SYSTIMESTAMP, NULL)
 </insert>
 
-<!-- 출고등록(상세)-->
+<!-- 출고리스트등록(상세)-->
 <insert id="insert_outbnd_dtl" parameterType="kr.co.noerror.DTO.outbound_DTO">
     INSERT INTO OUTBOUND_DETAIL
     VALUES
     (#{OUTBOUND_CODE}, #{ORD_CODE}, 
-    #{PRODUCT_CODE}, #{PRODUCT_QTY}, #{IND_OUT_STATUS}, SYSTIMESTAMP)
+    #{PRODUCT_CODE}, #{OUT_PRODUCT_QTY}, SYSTIMESTAMP)
 </insert>
 
 <!-- 출고 상세보기 모달  -->
@@ -61,29 +39,49 @@
 </select>
 
 
-
-<select id="fswh_all_list" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="Map">
-	SELECT 
-      fs.WFS_IDX AS wfs_idx,
-      fs.WFS_CODE AS wfs_code,
-      fs.WH_CODE AS wh_code,
-      fs.PLAN_CODE AS plan_code,
-      fs.PD_QTY AS pd_qty,
-      fs.CHANGE_TYPE AS change_type,
-      fs.EMPLOYEE_CODE AS employee_code,
-      fs.FS_INSERT_DATE AS fs_insert,
-      w.WH_NAME AS wh_name,
-      pd.pidx,
-      pd.product_code,
-      pd.product_name,
-      emp.ename AS emp_name
-    FROM
-      WAREHOUSE_FINISH fs
-    LEFT JOIN WAREHOUSE w ON TRIM(fs.WH_CODE) = TRIM(w.WH_CODE)
-    LEFT JOIN PRODUCTS pd ON fs.PRODUCT_CODE = pd.PRODUCT_CODE
-    LEFT JOIN EMPLOYEE2 emp ON fs.EMPLOYEE_CODE = emp.ECODE
-    ORDER BY fs.WFS_IDX DESC
-	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY
+<!-- 완제품 출고되는 제품의 창고 정보  -->
+<select id="outPd_info" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="String">
+	SELECT * FROM WAREHOUSE_FINISH WHERE PRODUCT_CODE = #{product_code} AND CHANGE_TYPE = '입고'  AND (MOVE_TYPE IS NULL) 
+	ORDER BY INV_LOT
 </select>
+
+
+
+<!-- 완제품 출고처리 창고리스트에 반영 -->
+<insert id="fs_warehouse_out" parameterType="Map">
+	INSERT INTO WAREHOUSE_FINISH (
+	    WFS_IDX,
+	    WFS_CODE,
+	    WH_CODE,
+	    PLAN_CODE,
+	    PRODUCT_CODE,
+	    PD_QTY,
+	    CHANGE_TYPE,
+	    EMPLOYEE_CODE,
+	    FS_INSERT_DATE,
+	    FS_MODIFY_DATE,
+	    MOVE_TYPE,
+	    INV_LOT
+	    
+	) VALUES (
+	    FS_WAREHOUSE_NO.NEXTVAL,
+	    'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+	    #{wh_code},
+	    #{plan_code},
+	    #{product_code},
+	    #{pd_qty},
+	   	'출고완료',
+	    #{employee_code},
+	    SYSTIMESTAMP,
+	    NULL,
+	    NULL,
+	    #{inv_lot}
+	)
+</insert>
+
+
+
+
+
 
 </mapper>

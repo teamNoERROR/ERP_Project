@@ -82,13 +82,20 @@ public class goods_DAO {
 		return result;
 	}
 
-	public String lclass_ck(String sclass) {
-		String result = this.st.selectOne("lclass_ck", sclass);
+	//선택된 대분류항목 가져오기
+	public String lclass_ck(Map<String, String> map) {
+		String result = this.st.selectOne("lclass_ck", map);
 		return result;
 	}
 
 	public String imgs_attach(String filenm) {
 		String result = this.st.selectOne("imgs_attach", filenm);
+		return result;
+	}
+
+	public int goods_modifyok(products_DTO pdto) {
+		System.out.println("pdto : " + pdto);
+		int result = this.st.update("goods_modify", pdto);
 		return result;
 	}
 

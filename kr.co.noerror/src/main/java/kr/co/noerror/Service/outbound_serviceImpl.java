@@ -207,23 +207,11 @@ public class outbound_serviceImpl implements outbound_service{
 		return fswh_all_list;
 	}
 
-	//부자재창고 부자재 출고 처리 전 mrp 계산 필요수량 가져오기 
-	@Override
-	public List<mrp_result_DTO> select_mrp_result(String plan_code) {
-		List<mrp_result_DTO> mrp_reqQty = this.out_dao.select_mrp_result(plan_code);
-		return mrp_reqQty;
-	}
 
-	//부자재 창고 출고처리 전 재고있는 창고 확인  
-	@Override
-	public List<IOSF_DTO> out_itemList(String itmCode) {
-		List<IOSF_DTO> out_itemList = this.out_dao.out_itemList(itmCode);
-		return out_itemList;
-	}
 
-	@Override
-	public void out_mtwh_result(Map<String, Object> outParams) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void out_mtwh_result(Map<String, Object> outParams) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

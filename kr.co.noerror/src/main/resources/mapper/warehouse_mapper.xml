@@ -111,6 +111,71 @@
    -->
 <select id="select_wh_list" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
    <![CDATA[
+ SELECT *
+FROM (
+    SELECT A.*, ROWNUM RNUM
+    FROM (
+        SELECT 
+            W.WIDX, W.WH_CODE, W.WH_NAME, W.WH_ZIPCODE, W.WH_ADDR1, W.WH_ADDR2,
+            W.WH_TYPE, W.WH_USE_FLAG, 
+            TO_CHAR(W.WH_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_INSERT_DATE,
+            TO_CHAR(W.WH_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_MODIFY_DATE,
+            W.WH_NUMBER, W.WH_MG_ID,
+            W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
+            W.WH_DESC, W.WH_NOTE,
+            E.EIDX, E.ENAME, E.ECODE, E.EMP_PART, E.EMP_POSITION, E.EMP_PHONE, 
+            E.EMP_TEL, E.EMP_EMAIL, E.EMP_FAX, E.EMP_MEMO,
+            TO_CHAR(E.EMP_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE,
+            NVL(AGG.PD_COUNT, 0) AS PD_COUNT,
+            NVL(AGG.TOTAL_QTY, 0) AS TOTAL_QTY
+        FROM WAREHOUSE W
+        LEFT JOIN EMPLOYEE2 E ON W.WH_MG_ID = E.ECODE
+        LEFT JOIN (
+            SELECT 
+                WH_CODE,
+                COUNT(*) AS PD_COUNT,
+                SUM(QTY) AS TOTAL_QTY
+            FROM (
+                SELECT WH_CODE, ITEM_OR_PRODUCT_CODE, SUM(ADJUSTED_QTY) AS QTY
+                FROM (
+                    SELECT 
+                        TRIM(WH_CODE) AS WH_CODE,
+                        PRODUCT_CODE AS ITEM_OR_PRODUCT_CODE,
+                        CASE 
+                            WHEN CHANGE_TYPE IN ('입고', '수동조정') THEN NVL(PD_QTY, 0)
+                            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -NVL(PD_QTY, 0)
+                            ELSE 0
+                        END AS ADJUSTED_QTY
+                    FROM WAREHOUSE_FINISH
+                    UNION ALL
+                    SELECT 
+                        TRIM(WH_CODE) AS WH_CODE,
+                        ITEM_CODE AS ITEM_OR_PRODUCT_CODE,
+                        CASE 
+                            WHEN CHANGE_TYPE IN ('입고', '수동조정') THEN NVL(ITEM_QTY, 0)
+                            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -NVL(ITEM_QTY, 0)
+                            ELSE 0
+                        END AS ADJUSTED_QTY
+                    FROM WAREHOUSE_MATERIAL
+                )
+                GROUP BY WH_CODE, ITEM_OR_PRODUCT_CODE
+                HAVING SUM(ADJUSTED_QTY) > 0
+            )
+            GROUP BY WH_CODE
+        ) AGG ON TRIM(W.WH_CODE) = TRIM(AGG.WH_CODE)
+        ORDER BY W.WH_INSERT_DATE DESC
+    ) A
+    WHERE ROWNUM <= #{startIndex} + #{pageSize}
+)
+WHERE RNUM > #{startIndex}
+
+  ]]>
+</select>
+
+
+  <!-- 검색 + 페이지네이션 -->
+  <select id="search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
+  <![CDATA[
   SELECT *
 FROM (
     SELECT A.*, ROWNUM RNUM
@@ -133,100 +198,34 @@ FROM (
         LEFT JOIN (
             SELECT 
                 WH_CODE,
-                COUNT(DISTINCT ITEM_OR_PRODUCT_CODE) AS PD_COUNT,
+                COUNT(*) AS PD_COUNT,
                 SUM(QTY) AS TOTAL_QTY
             FROM (
-                SELECT 
-                    TRIM(WH_CODE) AS WH_CODE,
-                    PRODUCT_CODE AS ITEM_OR_PRODUCT_CODE,
-                    SUM(
+                SELECT WH_CODE, ITEM_OR_PRODUCT_CODE, SUM(ADJUSTED_QTY) AS QTY
+                FROM (
+                    SELECT 
+                        TRIM(WH_CODE) AS WH_CODE,
+                        PRODUCT_CODE AS ITEM_OR_PRODUCT_CODE,
                         CASE 
                             WHEN CHANGE_TYPE IN ('입고', '수동조정') THEN NVL(PD_QTY, 0)
                             WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -NVL(PD_QTY, 0)
                             ELSE 0
-                        END
-                    ) AS QTY
-                FROM WAREHOUSE_FINISH
-                GROUP BY TRIM(WH_CODE), PRODUCT_CODE
-                UNION ALL
-                SELECT 
-                    TRIM(WH_CODE) AS WH_CODE,
-                    ITEM_CODE AS ITEM_OR_PRODUCT_CODE,
-                    SUM(
+                        END AS ADJUSTED_QTY
+                    FROM WAREHOUSE_FINISH
+                    UNION ALL
+                    SELECT 
+                        TRIM(WH_CODE) AS WH_CODE,
+                        ITEM_CODE AS ITEM_OR_PRODUCT_CODE,
                         CASE 
                             WHEN CHANGE_TYPE IN ('입고', '수동조정') THEN NVL(ITEM_QTY, 0)
                             WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -NVL(ITEM_QTY, 0)
                             ELSE 0
-                        END
-                    ) AS QTY
-                FROM WAREHOUSE_MATERIAL
-                GROUP BY TRIM(WH_CODE), ITEM_CODE
-            ) T
-            GROUP BY WH_CODE
-        ) AGG ON TRIM(W.WH_CODE) = TRIM(AGG.WH_CODE)
-        ORDER BY W.WH_INSERT_DATE DESC
-    ) A
-    WHERE ROWNUM <= #{startIndex} + #{pageSize}
-)
-WHERE RNUM > #{startIndex}
-  ]]>
-</select>
-
-
-  <!-- 검색 + 페이지네이션 -->
-  <select id="search_whpaged" parameterType="map" resultType="kr.co.noerror.DTO.WareHouse_DTO">
-  <![CDATA[
-    SELECT *
-    FROM (
-      SELECT A.*, ROWNUM RNUM
-      FROM (
-        SELECT 
-          W.WIDX, W.WH_CODE, W.WH_NAME, W.WH_ZIPCODE, W.WH_ADDR1, W.WH_ADDR2,
-          W.WH_TYPE, W.WH_USE_FLAG, 
-          TO_CHAR(W.WH_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_INSERT_DATE,
-          TO_CHAR(W.WH_MODIFY_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WH_MODIFY_DATE,
-          W.WH_NUMBER, W.WH_MG_ID,
-          W.WH_FILE_ORI, W.WH_FILE_NEW, W.WH_FILE_URL,
-          W.WH_DESC, W.WH_NOTE,
-          E.EIDX, E.ENAME, E.ECODE, E.EMP_PART, E.EMP_POSITION, E.EMP_PHONE, 
-          E.EMP_TEL, E.EMP_EMAIL, E.EMP_FAX, E.EMP_MEMO,
-          TO_CHAR(E.EMP_INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE,
-          NVL(AGG.PD_COUNT, 0) AS PD_COUNT,
-            NVL(AGG.TOTAL_QTY, 0) AS TOTAL_QTY
-        FROM WAREHOUSE W
-        LEFT JOIN EMPLOYEE2 E ON W.WH_MG_ID = E.ECODE
-        LEFT JOIN (
-            SELECT 
-                WH_CODE,
-                COUNT(DISTINCT ITEM_OR_PRODUCT_CODE) AS PD_COUNT,
-                SUM(QTY) AS TOTAL_QTY
-            FROM (
-                SELECT 
-                    TRIM(WH_CODE) AS WH_CODE,
-                    PRODUCT_CODE AS ITEM_OR_PRODUCT_CODE,
-                    SUM(
-                        CASE 
-                            WHEN CHANGE_TYPE IN ('입고', '수동조정') THEN NVL(PD_QTY, 0)
-                            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -NVL(PD_QTY, 0)
-                            ELSE 0
-                        END
-                    ) AS QTY
-                FROM WAREHOUSE_FINISH
-                GROUP BY TRIM(WH_CODE), PRODUCT_CODE
-                UNION ALL
-                SELECT 
-                    TRIM(WH_CODE) AS WH_CODE,
-                    ITEM_CODE AS ITEM_OR_PRODUCT_CODE,
-                    SUM(
-                        CASE 
-                            WHEN CHANGE_TYPE IN ('입고', '수동조정') THEN NVL(ITEM_QTY, 0)
-                            WHEN CHANGE_TYPE IN ('출고', '출고완료') THEN -NVL(ITEM_QTY, 0)
-                            ELSE 0
-                        END
-                    ) AS QTY
-                FROM WAREHOUSE_MATERIAL
-                GROUP BY TRIM(WH_CODE), ITEM_CODE
-            ) T
+                        END AS ADJUSTED_QTY
+                    FROM WAREHOUSE_MATERIAL
+                )
+                GROUP BY WH_CODE, ITEM_OR_PRODUCT_CODE
+                HAVING SUM(ADJUSTED_QTY) > 0
+            )
             GROUP BY WH_CODE
         ) AGG ON TRIM(W.WH_CODE) = TRIM(AGG.WH_CODE)
         WHERE 

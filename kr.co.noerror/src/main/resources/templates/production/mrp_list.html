@@ -59,6 +59,7 @@
 		    <tr th:each="p, no : ${plans_period}">
 		      <td>
 		        <input type="checkbox" class="row-checkbox-input"
+		               th:data-plan-code="${p.plan_code}"
 		               th:data-bom-code="${p.bom_code}"
          			   th:data-product-qty="${p.product_qty}">
 		      </td>

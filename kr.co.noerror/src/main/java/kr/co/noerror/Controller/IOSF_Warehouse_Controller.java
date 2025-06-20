@@ -218,7 +218,6 @@ public class IOSF_Warehouse_Controller {
 	   
 	    this.wh_type = "fs";
 	    
-//	    String out_pd_list = this.common_svc.out_pd_list(out_pd_data);  //창고별 완제품 재고 
 	    Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
 	    
 	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
@@ -233,7 +232,6 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
 		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
 		   
-//		   m.addAttribute("out_pd_list", out_pd_list); // 창고별 완제품 재고
 		   m.addAttribute("ind_pd_all_stock", ind_pd_all_stock); //개별 완제품 재고수
 		   
 	   return "/warehouse/fs_warehouses_list.html";

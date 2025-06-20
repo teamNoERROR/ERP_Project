@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +15,6 @@ import kr.co.noerror.DAO.prdplan_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
-import kr.co.noerror.DTO.pchreq_DTO;
-import kr.co.noerror.DTO.pchreq_detail_DTO;
-import kr.co.noerror.DTO.pchreq_item_DTO;
 import kr.co.noerror.DTO.prdplan_DTO;
 import kr.co.noerror.DTO.prdplan_detail_DTO;
 import kr.co.noerror.DTO.prdplan_product_DTO;
@@ -151,7 +146,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public Map<String, Object> plan_status_update(Map<String, String> requestParam) {
 		Map<String, Object> response = new HashMap<>();
     	System.out.println("requestParam : " + requestParam);
@@ -165,7 +160,7 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
           //생산완료 상태일 경우에만 출고 처리
         	if ("생산완료".equals(status)) {
     			//mrp 정보 확인
-    			List<mrp_result_DTO> mrp_result = this.out_svc.select_mrp_result(planCode);
+    			List<mrp_result_DTO> mrp_result = this.prdplan_dao.select_mrp_result(planCode);
     			
     			System.out.println("mrp_result : " + mrp_result);
     			
@@ -190,7 +185,8 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     				String itmCode = item_codes.get(i);
     				int itmQty = item_qtys.get(i); 
     				
-    				List<IOSF_DTO> outitminfo_result = this.out_svc.out_itemList(itmCode);
+    				List<IOSF_DTO> outitminfo_result = this.prdplan_dao.out_itemList(itmCode);
+    				System.out.println("outitminfo_result : " + outitminfo_result);
     				
     				for (IOSF_DTO lot : outitminfo_result) {
     					if (itmQty <= 0) break;
@@ -201,14 +197,14 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     					// 출고완료 INSERT
     					Map<String, Object> outParams = new HashMap<>();
     					outParams.put("wh_code", lot.getWh_code());
-    					outParams.put("inbound_code", "-");
-    					outParams.put("ind_pch_code", lot.getInd_pch_cd());
+//    					outParams.put("inbound_code", "-");
+    					outParams.put("ind_pch_code", lot.getInd_pch_cd() != null ? lot.getInd_pch_cd() : "-");
     					outParams.put("item_code", itmCode);
     					outParams.put("item_qty", usedQty);
     					outParams.put("employee_code", lot.getEmployee_code());
     					outParams.put("inv_lot", lot.getInv_lot());
     					
-    					this.out_dao.out_mtwh_result(outParams);
+    					this.prdplan_dao.out_mtwh_result(outParams);
     					itmQty -= usedQty;
     				}
     				
@@ -219,12 +215,17 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
         	}
         	
         	response.put("success", (result == 1));
+        	   return response;
+        	   
         } catch (Exception e) {
 			e.printStackTrace();
-			response.put("success", false);
+//			response.put("success", false);
+			throw new RuntimeException("트랜잭션 롤백", e); // 반드시 던져야 rollback 됨
 		}
 	
-	    return response;
+	 
 	}
+	
+	
 
 }

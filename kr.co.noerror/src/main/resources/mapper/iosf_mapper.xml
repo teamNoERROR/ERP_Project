@@ -844,7 +844,68 @@ WHERE fs.WFS_CODE = #{code}
 </select>
 
 
-
+<!-- 재고 수동조정  -->
+<insert id="wh_stock_change" parameterType="map">
+   <if test="wh_type == 'mt'">
+    INSERT INTO WAREHOUSE_MATERIAL (
+        WMT_IDX,
+        WMT_CODE,
+        WH_CODE,
+        INBOUND_CODE,
+        ITEM_CODE,
+        ITEM_QTY,
+        CHANGE_TYPE,
+        EMPLOYEE_CODE,
+        MT_INSERT_DATE,
+        MT_MODIFY_DATE,
+        MOVE_TYPE,
+        INV_LOT
+    ) VALUES (
+   	    MT_WAREHOUSE_NO.NEXTVAL,
+   	    'WMT-' || LPAD(PCH_ITMWH_NO.NEXTVAL, 5, '0'),
+        #{mv_wh_code},
+        #{inbound_code, jdbcType=VARCHAR},
+        #{product_code},
+        #{pd_qty},
+        #{CHANGE_TYPE},
+        #{EMPLOYEE_CODE},
+        SYSTIMESTAMP,
+        NULL,
+        NULL,
+        '-'
+    )
+   </if>
+   
+   <if test="wh_type == 'fs'">
+  INSERT INTO WAREHOUSE_FINISH (
+        WFS_IDX,
+        WFS_CODE,
+        WH_CODE,
+        PLAN_CODE,
+        PRODUCT_CODE,
+        PD_QTY,
+        CHANGE_TYPE,
+        EMPLOYEE_CODE,
+        FS_INSERT_DATE,
+        FS_MODIFY_DATE,
+        MOVE_TYPE,
+        INV_LOT
+    ) VALUES (
+   	    FS_WAREHOUSE_NO.NEXTVAL,
+        'WFS-' || LPAD(PLN_PDWH_TRG_NO.NEXTVAL, 5, '0'),
+        #{WH_CODE},
+        #{PLAN_CODE},
+        #{PRODUCT_CODE},
+        #{PD_QTY},
+       	#{CHANGE_TYPE},
+        #{EMPLOYEE_CODE},
+        SYSTIMESTAMP,
+        NULL,
+        NULL,
+        '-'
+    )
+   </if>
+</insert>
 
 
 

@@ -265,9 +265,14 @@ public class IOSF_Warehouse_DAO implements IOSF_Warehouse_Mapper{
 
 	//창고별 리스트 출력용
 	public List<String> wh_nm_list(Map<String, String> schMap) {
-		System.out.println("schMap : "+ schMap);
 		List<String> wh_type_list = this.iosf_ware_st.selectList("wh_nm_list", schMap);
 		return wh_type_list;
+	}
+
+
+	public int stock_change(Map<String, Object> wh_pd_stk) {
+		int stock_change = this.iosf_ware_st.insert("wh_stock_change",wh_pd_stk);
+		return stock_change;
 	}
 	
 }

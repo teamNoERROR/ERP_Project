@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -80,14 +82,17 @@ public class IOSF_Warehouse_Controller {
       return "/warehouse/mt_warehouse_insert.html";
    }
    
+   
+   //완제품창고 수기등록 이동 
    @GetMapping("/warehouse_fs_savePage.do")
    public String warehouse_fs_savePage(Model m) {
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
 		m.addAttribute("mmenu","완제품 창고 관리");
+		m.addAttribute("mmmenu","완제품 재고 수동등록");
 		
-      m.addAttribute("IOSF_DTO", this.iosf_dto);
-      return "/warehouse/fs_warehouse_insert.html";
+//      m.addAttribute("IOSF_DTO", this.iosf_dto);
+      return "/warehouse/fs_warehouse_insert2.html";
    }
    
    @GetMapping("/warehouse_out_savePage.do")
@@ -663,6 +668,31 @@ public class IOSF_Warehouse_Controller {
   	}
      */ 
       
-      
-      
+    //완제품 창고 재고조정 
+	@PutMapping("/stock_changeOk.do")
+	public String stock_changeOk(@RequestBody String stockChange, HttpServletResponse res) throws IOException  {
+		this.pw = res.getWriter();
+	
+		try {
+			String stock_change = this.iosf_service.stock_change(stockChange);
+			if(stock_change == "save_complete") {
+				this.pw.print("save_complete");
+				
+			}else {
+				this.pw.print("save_fail");
+			}
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+	      
+	      
+	      
 }

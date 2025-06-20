@@ -417,6 +417,23 @@ function pdChoice(parentType) {
 		var top_pd = product_name;
 		document.querySelector("#bom_top_pd").innerHTML=`<i class="bi bi-caret-right-fill"></i>`+top_pd.value;
 	}
+	else if(ptype == "fsWhPd"){
+		var tr = selected_radio.closest('tr');
+		var tdList = tr.querySelectorAll('td');
+				
+		var pd_cd = tr.getAttribute("data-code");
+		var pd_nm = tr.getAttribute("data-name");
+		var pd_cl1 = tr.getAttribute("data-class1");
+		var pd_cl2 = tr.getAttribute("data-class2");
+		
+		var product_code = document.querySelector('#product_code');
+		var product_name = document.querySelector('#product_name');
+		var product_cls1 = document.querySelector('#product_class');
+		
+		product_code.value= pd_cd;
+		product_name.value= pd_nm;
+		product_cls1.value= pd_cl1 + " / " + pd_cl2;
+	}
 	
 	// 선택 후 모달 닫기
  	var modalElement = document.getElementById("product_list");

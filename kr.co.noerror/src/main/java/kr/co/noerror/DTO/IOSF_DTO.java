@@ -98,12 +98,9 @@ public class IOSF_DTO {
     String inv_lot;  //입고로트
     Integer pd_count;
     
-<<<<<<< HEAD
-=======
     //입고,출고 수량(SUM)
     Integer indata,outdata;
     Integer total_qty;
     
     
->>>>>>> branch 'leegy' of https://github.com/teamNoERROR/ERP_Project.git
 }

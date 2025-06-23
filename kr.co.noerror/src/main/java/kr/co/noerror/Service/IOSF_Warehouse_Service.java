@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
@@ -91,11 +92,13 @@ public class IOSF_Warehouse_Service {
     	return iosf_result;
     }
     
-    //타입별 창고리스트 
+    
+ 
+
+
+	//타입별 창고리스트 
     public Map<Object, Object> IOSF_wh_list(int page, String wh_search, String wh_type, int pageSize, String wh_name) { 
         Map<Object, Object> wh_map = new HashMap<>();
-		System.out.println("fs_wh_name : " + wh_name);
-		System.out.println("wh_search : " + wh_search);
 
         try {
             int startIndex = (page - 1) * pageSize;
@@ -220,17 +223,45 @@ public class IOSF_Warehouse_Service {
 	public JSONArray wh_type_list(String wh_type) {
 		List<String> schlist = new ArrayList<>();
 		Map<String, String> schMap = new HashMap<>();
-		System.out.println("wh_type : " + wh_type);
+		
 		if("fs_wh".equals(wh_type) ) {
 			schMap.put("wh_type", wh_type);
+			
 		}else if("mt_wh".equals(wh_type) ) {
 			schMap.put("wh_type", wh_type);
 		}
-		System.out.println("schMap66 : " + schMap);
 		schlist = this.iosf_dao.wh_nm_list(schMap);
 		JSONArray jsonlist = new JSONArray(schlist);
 		
 		return jsonlist;
+	}
+
+
+
+
+	//완제품 창고 재고조정 
+	public String stock_change(String fs_pdstock) {
+		String result="";
+		JSONArray ja = new JSONArray(fs_pdstock);
+		JSONObject jo = ja.getJSONObject(0);
+		System.out.println("jo : " + jo);
+		
+		
+		Map<String, Object> wh_pd_stk = new HashMap<>();
+		wh_pd_stk.put("wh_type", "fs");
+		wh_pd_stk.put("WH_CODE", jo.getString("WH_CODE"));
+		wh_pd_stk.put("PLAN_CODE", jo.getString("PLAN_CODE"));
+		wh_pd_stk.put("PRODUCT_CODE", jo.getString("PRODUCT_CODE"));
+		wh_pd_stk.put("PD_QTY", jo.getString("PD_QTY"));
+	    wh_pd_stk.put("CHANGE_TYPE", jo.getString("CHANGE_TYPE"));
+	    wh_pd_stk.put("EMPLOYEE_CODE", jo.getString("EMPLOYEE_CODE"));
+	    
+	    int stock_change = this.iosf_dao.stock_change(wh_pd_stk);
+	    if(stock_change > 0) {
+	    	result = "save_complete";
+	    }
+	    
+		return result;
 	}
     
 }

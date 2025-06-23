@@ -8,15 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +26,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.co.noerror.DAO.IOSF_Warehouse_DAO;
 import kr.co.noerror.DTO.IOSF_DTO;
 import kr.co.noerror.Service.IOSF_Warehouse_Service;
+import kr.co.noerror.Service.common_service;
+import kr.co.noerror.Service.inventory_service;
 
 @Controller
 public class IOSF_Warehouse_Controller {
@@ -54,7 +55,12 @@ public class IOSF_Warehouse_Controller {
 
     @Resource(name="IOSF_DTO")
        IOSF_DTO iosf_dto;
+    
+    @Autowired
+	common_service common_svc;
 
+    @Autowired
+	inventory_service inv_svc; 
    
    @GetMapping("/warehouse_in_savePage.do")
    public String warehouse_in_savePage(Model m) {
@@ -76,14 +82,17 @@ public class IOSF_Warehouse_Controller {
       return "/warehouse/mt_warehouse_insert.html";
    }
    
+   
+   //완제품창고 수기등록 이동 
    @GetMapping("/warehouse_fs_savePage.do")
    public String warehouse_fs_savePage(Model m) {
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
 		m.addAttribute("mmenu","완제품 창고 관리");
+		m.addAttribute("mmmenu","완제품 재고 수동등록");
 		
-      m.addAttribute("IOSF_DTO", this.iosf_dto);
-      return "/warehouse/fs_warehouse_insert.html";
+//      m.addAttribute("IOSF_DTO", this.iosf_dto);
+      return "/warehouse/fs_warehouse_insert2.html";
    }
    
    @GetMapping("/warehouse_out_savePage.do")
@@ -173,19 +182,22 @@ public class IOSF_Warehouse_Controller {
 	   return "/warehouse/out_warehouses_list.html";
    }
    */
+   
+   
  //완제품 창고 리스트
-   @GetMapping("/warehouses_fs_list.do")
+   @GetMapping({"/warehouses_fs_list.do", "/outbound.do"})
    public String warehouses_fs_list(Model m,
 		   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 	          @RequestParam(value = "wh_search", required = false, defaultValue = "") String wh_search,
 	          @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
 			  @RequestParam(value = "name_wh_list", required = false) String fs_wh_list
+//			  ,@RequestBody String out_pd_data
+			  
 		   		) {
 	   m.addAttribute("lmenu","기준정보관리");
 		m.addAttribute("smenu","창고 관리");
 		m.addAttribute("mmenu","완제품 창고");
-		System.out.println("fs_wh_list : " + fs_wh_list);
-		System.out.println("wh_search : " + wh_search);
+		
 		//창고별 리스트 출력용
 		List<String> schlist = new ArrayList<>();
  		JSONArray fswhList = this.iosf_service.wh_type_list("fs_wh");  //창고명목록
@@ -209,10 +221,11 @@ public class IOSF_Warehouse_Controller {
 	   	this.map = new HashMap<>();
 	    Map<Object, Object>   iosf_list_map = this.map;
 	   
-	      this.wh_type = "fs";
-	      
+	    this.wh_type = "fs";
+	    
+	    Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //개별 완제품 재고수 
+	    
 	      iosf_list_map = iosf_service.IOSF_wh_list(page, wh_search.trim(), this.wh_type, pageSize, fs_wh_list);
-	      
 	       m.addAttribute("fs_wh_list", iosf_list_map.get("wh_list")); // 리스트
 	       m.addAttribute("search_check", iosf_list_map.get("search_check")); // 검색 여부
 	       m.addAttribute("wh_check", iosf_list_map.get("wh_check")); // 데이터 존재 여부
@@ -223,7 +236,11 @@ public class IOSF_Warehouse_Controller {
 	       m.addAttribute("wh_search", iosf_list_map.get("wh_search")); // 검색어 유지
 	       m.addAttribute("startPage", iosf_list_map.get("startPage")); // 검색어 유지
 		   m.addAttribute("endPage", iosf_list_map.get("endPage")); // 검색어 유지
-	   
+		   
+		   m.addAttribute("ind_pd_all_stock", ind_pd_all_stock); //개별 완제품 재고수
+		   
+		   System.out.println( iosf_list_map.get("wh_list"));
+		   
 	   return "/warehouse/fs_warehouses_list.html";
    }
    
@@ -329,27 +346,27 @@ public class IOSF_Warehouse_Controller {
            String product_code = (String) param.get("product_code");
            String pd_qty = (String) param.get("pd_qty");
            String emp_code = (String) param.get("emp_code");
-           String planCode = (String) param.get("pd_name");
+           String planCode = (String) param.get("plan_code");
            String mv_wh_code = (String) param.get("mv_wh_code");
            String inbound_code = (String) param.get("inbound_code");
            String ind_pch_cd = (String) param.get("ind_pch_cd");
+           String wmt_code = (String) param.get("wmt_code");
+           String wfs_code = (String) param.get("wfs_code");
+           String inv_lot = (String) param.get("inv_lot");
 //           String in_status = (String) param.get("in_status");
 //           String item_count = (String) param.get("item_count");
-           
-           System.out.println(" inbound_code : " + inbound_code);
-           System.out.println(" ind_pch_cd : " + ind_pch_cd);
-           
-           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
+          
+           int updatedCount = iosf_dao.IOSF_warehouse_move(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd,wmt_code,wfs_code,inv_lot);
            successCount += updatedCount;
-           
-           int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd);
-           successCount2 += updatedCount2;
+           System.out.println("successCount + " +successCount);
+           System.out.println("updatedCount + " +updatedCount);
+           //int updatedCount2 = iosf_dao.IOSF_warehouse_move_in(wh_code, wh_type, product_code, pd_qty, emp_code,planCode,mv_wh_code, inbound_code, ind_pch_cd,wmt_code);
+           //successCount2 += updatedCount2;
        }
 
        
        
        Map<String, Object> result = new HashMap<>();
-      if(successCount == successCount2) {
     	  if (successCount > 0) {
     		  result.put("success", true);
     		  result.put("message", successCount + "건 이동 완료");
@@ -357,7 +374,6 @@ public class IOSF_Warehouse_Controller {
     		  result.put("success", false);
     		  result.put("message", "이동 처리 실패");
     	  }
-      }
        
 
        return result;
@@ -620,7 +636,7 @@ public class IOSF_Warehouse_Controller {
       }
 
       
-      
+      /*
       //완제품 출고 
       @PostMapping("/outProduct.do")
       public String out_product(@RequestBody String outData, HttpServletResponse res) throws IOException {
@@ -650,8 +666,33 @@ public class IOSF_Warehouse_Controller {
   		
   		return null;
   	}
+     */ 
       
-      
-      
-      
+    //완제품 창고 재고조정 
+	@PutMapping("/stock_changeOk.do")
+	public String stock_changeOk(@RequestBody String stockChange, HttpServletResponse res) throws IOException  {
+		this.pw = res.getWriter();
+	
+		try {
+			String stock_change = this.iosf_service.stock_change(stockChange);
+			if(stock_change == "save_complete") {
+				this.pw.print("save_complete");
+				
+			}else {
+				this.pw.print("save_fail");
+			}
+			
+		} catch (Exception e) {
+			this.log.error(e.toString());
+			e.printStackTrace();
+			
+		} finally {
+			this.pw.close();
+		}
+		
+		return null;
+	}
+	      
+	      
+	      
 }

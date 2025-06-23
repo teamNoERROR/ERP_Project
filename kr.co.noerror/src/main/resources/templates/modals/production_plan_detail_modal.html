@@ -15,12 +15,12 @@
 						<select class="form-select" id="modal-status-select"
 							style="max-width: 150px;"
 							th:attr="data-plan-code=${details[0].plan_code}" th:disabled="${details[0].plan_status == '생산완료'}">
-							<option selected value="발주상태 선택">생산상태 선택</option>
+							<option value="발주상태 선택">생산상태 선택</option>
 <!-- 							<option value="생산계획수립">생산계획수립</option> -->
-							<option value="생산계획확정">생산계획확정</option>
-							<option value="생산중">생산중</option>
-							<option value="생산완료" th:selected="${details[0].plan_status == '생산완료'}">생산완료</option>
-							<option value="생산지연">생산지연</option>
+							<option value="생산계획확정"  th:if="${details[0].plan_status == '생산계획수립'}">생산계획확정</option>
+							<option value="생산중"  th:if="${details[0].plan_status == '생산계획수립' or details[0].plan_status == '생산계획확정'}">생산중</option>
+							<option value="생산완료"  th:if="${#arrays.contains(no_chng_plnBtn, #strings.trim(details[0].plan_status))}" th:selected="${details[0].plan_status == '생산완료'}">생산완료</option>
+							<option value="생산지연" >생산지연</option>
 						</select>
 						
 						<button type="button" class="btn"  
@@ -120,8 +120,8 @@
 
 							</tr>
 						</thead>
-						<tbody>
-							<tr th:each="d, no : ${details}">
+						<tbody id="order_pd">
+							<tr class="order_pd_row" th:each="d, no : ${details}">
 								<td>[[${no.count}]]</td>
 								<td>[[${d.product_code}]]</td>
 								<td>[[${d.product_name}]]</td>

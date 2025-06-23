@@ -120,6 +120,14 @@ function bomDelete(del_pd){
 	}
 }
 
+/*--------------------------------------------------------------
+bom수정하기로 이동 
+--------------------------------------------------------------*/
+function bomModify(){
+	location.href="./bom_modify.do"
+}
+
+
 
 /*--------------------------------------------------------------
 bom등록 트리화면 
@@ -139,40 +147,44 @@ function bomSave(){
 	var pd_code = document.querySelector("#product_code");
 	var pd_type = document.querySelector("#product_type");
 	
+	var item_code =  document.querySelectorAll(".item_code");
+	var item_qty =   document.querySelectorAll('.item_qty');
+	var item_unit =  document.querySelectorAll('.select_unit');
+	var count = 0;
+	
   	var items = [];
 	
 	if (rows.length == 0) {
         alert("BOM 등록을 위한 부자재를 선택하세요.");
         return;
     }
-  	rows.forEach(row => {
-	    // 각 컬럼에서 값을 읽어오기
-		var item_code = row.querySelector(".item_code");
-		var item_qty =  row.querySelector('.item_qty');
-		var item_unit = row.querySelector('.select_unit');
-		console.log(item_code.value)
-		
-		if(item_qty.value == ""){
+	for (var i = 0; i < rows.length; i++) {
+		var itemQty = item_qty[i].value.trim();
+		var itemUnit = item_unit[i].value.trim();
+		 
+		if (itemQty == "" || isNaN(itemQty) || itemQty <= 0) {
 			alert("소요수량을 입력해야 합니다.");
-			item_qty.focus();
-			
-		}else if(item_unit.value == ""){
+			item_qty[i].focus();
+			return;
+		} 
+		
+		if (itemUnit == "") {
 			alert("단위를 입력해야 합니다.");
-			item_unit.focus();
-			
-		}else{
-		    if(item_qty.value > 0 && item_unit.value != "") {
-				//다 입력했으면 배열에 넣기
-		      	items.push({
-					cProductCode : pd_code.value,
-			        cItemCode: item_code.value,
-					bomQty: Number(item_qty.value),
-					unit: item_unit.value,
-					pd_type:pd_type.value
-		      	});
-	    	}
+			item_unit[i].focus();
+			return;
 		}
-  	});
+		if(itemQty > 0 && itemUnit != "") {
+			//다 입력했으면 배열에 넣기
+	      	items.push({
+				cProductCode : pd_code.value,
+		        cItemCode: item_code[i].value,
+				bomQty: Number(itemQty),
+				unit: itemUnit,
+				pd_type:pd_type.value
+	      	});
+    	}
+	}
+	
 	fetch("./bom_insertok.do", {
 		method: "PUT",
 		headers: {'content-type': 'application/json'},

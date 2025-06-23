@@ -6,14 +6,11 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body row justify-content-center d-flex gap-3">
-
-
-
 				<!-- 제품 이미지 -->
 				<div class="col-md-4 text-center comp_logo mt-3">
 					<th:block>
 					<img th:if="${goods_one.PD_API_FNM == null}" src="./img/no-image.svg" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
-					<img th:if="${goods_one.PD_API_FNM != null}" src="#" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
+					<img th:if="${goods_one.PD_API_FNM != null}" th:src="@{'http://210.178.108.186:83/imgfile/' + ${goods_one.PD_FILE_RENM}}" alt="제품 이미지" class="img-fluid border" style="width: 100%; height: 100%;">
 					</th:block>
 				</div>
 
@@ -71,23 +68,28 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer d-flex justify-content-between">
 				<!-- Action Buttons -->
-				<div class="d-flex gap-2">
-					<div class="ms-auto">
+						<div >
 						<button type="button" class="btn btn-info bom_btn" 
 								th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" 
 								onclick="bomBtn(this)">
 							<i class="bi bi-card-list"></i> BOM조회
 						</button>
-						<button type="button" class="btn btn-success">
+						</div>
+						<div class="ms-auto">
+						<button type="button" class="btn btn-success"  
+								th:data-code="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" th:data-type="${goods_one.PRODUCT_TYPE}" 
+								onclick="gdModify(this)">
 							<i class="bi bi-pencil-square"></i> 수정
 						</button>
-						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" data-type="product" onclick="deleteBtn(this)">
+						<button class="btn btn-danger"  
+								th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-idx="${goods_one.PIDX}" data-type="product" 
+								onclick="deleteBtn(this)">
 							<i class="bi bi-trash"></i> 삭제
 						</button>
+						</div>
 					</div>
-				</div>
 
 			</div>
 		</div>
@@ -163,7 +165,7 @@
 					<td th:text="${itm.BOM_QTY}"></td>
 					<td th:text="${itm.BOM_UNIT}"></td>
 					<td th:text="${itm.ITEM_COST}"></td>
-					<td ></td>
+					<td th:text="${itm.COMPANY_NAME}"></td>
 					<td th:text="${itm.ITM_MEMO ?: '비고없음'}"></td>
 				  </tr>
 				</tbody>
@@ -186,9 +188,9 @@
 						<button type="button" class="btn btn-info go_back" data-bs-dismiss="modal" aria-label="Close">
 							<i class="bi bi-card-list"></i> 이전으로
 						</button>
-						<button type="button" class="btn btn-success">
-							<i class="bi bi-pencil-square"></i> 수정
-						</button>
+<!-- 						<button type="button" class="btn btn-success" onclick="bomModify()"> -->
+<!-- 							<i class="bi bi-pencil-square"></i> 수정 -->
+<!-- 						</button> -->
 						<button class="btn btn-danger"  th:data-pdcode="${goods_one.PRODUCT_CODE}" th:data-etccode="${bom_code}" data-type="bom" onclick="bomDelete(this)">
 							<i class="bi bi-trash"></i> 삭제
 						</button>

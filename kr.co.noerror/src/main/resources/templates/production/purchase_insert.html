@@ -18,11 +18,11 @@
 						<button class="nav-link active" id="mrp-tab" data-bs-toggle="tab"
 							data-bs-target="#mrp" type="button" role="tab">MRP 기반</button>
 					</li>
-					<li class="nav-item">
-						<button class="nav-link" id="supplier-tab" data-bs-toggle="tab"
-							data-bs-target="#supplier" type="button" role="tab">매입처
-							기준</button>
-					</li>
+<!-- 					<li class="nav-item"> -->
+<!-- 						<button class="nav-link" id="supplier-tab" data-bs-toggle="tab" -->
+<!-- 							data-bs-target="#supplier" type="button" role="tab">매입처 -->
+<!-- 							기준</button> -->
+<!-- 					</li> -->
 					<li class="nav-item">
 						<button class="nav-link" id="item-tab" data-bs-toggle="tab"
 							data-bs-target="#item" type="button" role="tab">자재 검색</button>
@@ -38,7 +38,7 @@
 
 				<div class="tab-content p-3 border border-top-0"
 					id="orderTabContent">
-
+					
 					<!-- MRP 기반 -->
 					<div class="tab-pane fade show active" id="mrp" role="tabpanel">
 						<div class="row mb-3">
@@ -46,9 +46,8 @@
 								<form method="get" action="/mrp_result_select.do">
 									<label class="form-label">MRP코드 검색</label>
 									<div class="input-group">
-										<input type="text" class="form-control" name="mrp_code"
-											placeholder="MRP 코드" th:value="${mrp_code}">
-										<button class="btn btn-outline-primary">
+										<input type="text" class="form-control" name="mrp_code" id="mrp_code" placeholder="MRP 코드"  th:value="${mrp_code}">
+										<button type="button" class="btn btn-primary" th:onclick="mrpListOpen()" style="cursor: pointer;">
 											<i class="bi bi-search"></i>
 										</button>
 									</div>
@@ -95,6 +94,13 @@
 										th:value="${-m.shortage_stock}"></td>
 									<td>[[${m.company_code}]]</td>
 									<td>[[${m.company_name}]]</td>
+								</tr>
+								
+								<!-- 조건에 맞는 항목이 없을 경우 메시지 출력 -->
+							    <tr th:if="${mrp_results != null and #lists.isEmpty(mrp_results.?[shortage_stock < 0])}">
+								  <td colspan="14" class="text-center text-danger">
+								    [[${mrp_code}]]: 부족 수량이 있는 자재가 없습니다.
+								  </td>
 								</tr>
 							</tbody>
 						</table>

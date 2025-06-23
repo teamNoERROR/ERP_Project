@@ -69,6 +69,7 @@ public class ordreq_controller {
 	
 	 //버튼 누름 방지
     String [] no_chng_ordBtn = {"주문확인","주문취소","생산계획수립","생산계획확정"};
+    
 		
 	@PostMapping("/order_save.do")
 	@ResponseBody
@@ -147,11 +148,13 @@ public class ordreq_controller {
 		
 		List<ordreq_res_DTO> details = this.odao.ordreq_detail(order_code);  //주문상세
 		
-		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수 
+		Map<String, Integer> ind_pd_all_stock = this.inv_svc.ind_pd_all_stock();  //상품별 재고수
+		
 		
 		m.addAttribute("details",details);
 		m.addAttribute("ind_pd_all_stock",ind_pd_all_stock);
 		 m.addAttribute("no_chng_ordBtn", no_chng_ordBtn); // 상태 변경 불가
+		
 		return "/modals/order_detail_modal.html";
 	}
 	

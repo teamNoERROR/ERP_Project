@@ -220,4 +220,76 @@ SET plan_status = #{plan_status}
 WHERE plan_code = #{plan_code}
 </update>
 
+
+
+<!--  생산완료 처리시 부자재 창고 재고 차감  -->
+<!-- plancode에 해당하는 mrp정보 가져옴  -->
+<select id="select_mrp_result" resultType="kr.co.noerror.DTO.mrp_result_DTO" parameterType="String">
+	<!-- 
+	SELECT ITEM_CODE, REQUIRED_QTY
+    FROM MRP_RESULT_DETAIL2 WHERE PLAN_CODE = #{PLAN_CODE}
+    -->
+    SELECT ITEM_CODE, sum(REQUIRED_QTY) as REQUIRED_QTY FROM MRP_RESULT_DETAIL2 where PLAN_CODE = #{PLAN_CODE} GROUP BY ITEM_CODE
+</select>
+
+<!-- 부자재 출고되는 제품의 창고 정보  -->
+<select id="outItm_info2" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="String">
+	SELECT * FROM WAREHOUSE_MATERIAL WHERE ITEM_CODE = #{item_code} AND CHANGE_TYPE = '입고'  AND (MOVE_TYPE IS NULL) 
+	ORDER BY INV_LOT
+</select>
+
+ <select id="outItm_info" resultType="Integer" parameterType="String">
+<!-- SELECT  -->
+<!-- (SELECT SUM(ITEM_QTY) FROM WAREHOUSE_MATERIAL WHERE ITEM_CODE = #{item_code} AND CHANGE_TYPE = '입고' ) as indata, -->
+<!-- (SELECT SUM(ITEM_QTY) FROM WAREHOUSE_MATERIAL WHERE ITEM_CODE = #{item_code} AND CHANGE_TYPE = '출고완료') as outdata  -->
+<!-- from WAREHOUSE_MATERIAL -->
+<!-- WHERE ITEM_CODE = #{item_code} GROUP BY ITEM_CODE -->
+
+SELECT 
+    SUM(
+        CASE 
+            WHEN CHANGE_TYPE = '입고' THEN ITEM_QTY 
+            WHEN CHANGE_TYPE = '출고' THEN -ITEM_QTY
+            WHEN CHANGE_TYPE = '출고완료' THEN -ITEM_QTY
+            ELSE 0
+        END
+    ) AS outdata
+FROM WAREHOUSE_MATERIAL
+WHERE ITEM_CODE = #{item_code}
+GROUP BY ITEM_CODE
+ </select>
+ 
+<!--  부자재 출고처리 창고리스트에 반영 -->
+<insert id="mt_warehouse_out" parameterType="Map">
+	INSERT INTO WAREHOUSE_MATERIAL (
+	    WMT_IDX,
+	    WMT_CODE,
+	    WH_CODE,
+	    INBOUND_CODE,
+	    IND_PCH_CD,
+	    ITEM_CODE,
+	    ITEM_QTY,
+	    CHANGE_TYPE,
+	    EMPLOYEE_CODE,
+	    MT_INSERT_DATE,
+	    MT_MODIFY_DATE,
+	    MOVE_TYPE,
+	    INV_LOT
+	) VALUES (
+	    MT_WAREHOUSE_NO.NEXTVAL,
+	    'WMT-' || LPAD(WIN_CODE_SEQ.NEXTVAL, 5, '0'),
+	    #{wh_code},
+	    '-',
+	    #{ind_pch_code},
+	    #{item_code},
+	    #{item_qty},
+	   	'출고완료',
+	    #{employee_code},
+	    SYSTIMESTAMP,
+	    NULL,
+	    NULL,
+	    #{inv_lot}
+	)
+</insert>
+
 </mapper>

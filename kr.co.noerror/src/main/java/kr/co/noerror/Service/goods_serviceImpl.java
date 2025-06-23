@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.Resource;
 import kr.co.noerror.DAO.goods_DAO;
+import kr.co.noerror.DTO.client_DTO;
 import kr.co.noerror.DTO.del_DTO;
 import kr.co.noerror.DTO.file_DTO;
 import kr.co.noerror.DTO.products_DTO;
@@ -204,14 +205,15 @@ public class goods_serviceImpl implements goods_service {
 	@Override
 	public products_DTO pd_one_detail(String pd_code, String type) {
 		this.map = new HashMap<>();
-		if("product".equals(type)) {
-			this.map.put("type", type);
+		if("product".equals(type) || "half".equals(type) ) {
+			this.map.put("PRODUCT_TYPE", type);
 			this.map.put("PRODUCT_CODE", pd_code);
 			
 		}else if("item".equals(type)) {
-			this.map.put("type", type);
+			this.map.put("ITEM_TYPE", type);
 			this.map.put("ITEM_CODE", pd_code);
 		}
+		
 		products_DTO goods_one = this.g_dao.pd_one_detail(this.map);
 		
 		return goods_one;
@@ -237,10 +239,87 @@ public class goods_serviceImpl implements goods_service {
 		return goods_del;
 	}
 
+	
 	@Override
-	public String lclass_ck(String sclass) {
-		String lclass_ck = this.g_dao.lclass_ck(sclass);
+	public String lclass_ck(String type, String sclass) {
+		
+		this.map = new HashMap<>();
+		if("product".equals(type) || "half".equals(type) || type == null) {
+			this.map.put("key", "pd_sc");
+			this.map.put("PRODUCT_CLASS2", sclass);
+			
+		}else if("item".equals(type)) {
+			this.map.put("key", "itm_sc");
+			this.map.put("ITEMS_CLASS2", sclass);
+		}
+		
+		String lclass_ck = this.g_dao.lclass_ck(this.map);
 		return lclass_ck;
+	}
+
+	@Override
+	public String imgs_attach(String filenm) {
+		String imgsattach = this.g_dao.imgs_attach(filenm);
+		return imgsattach;
+	}
+
+	//제품 수정 
+	@Override
+	public int goods_modifyok(products_DTO pdto, MultipartFile goodsImage) {
+		boolean filedel = false;
+		boolean fileattach = false;
+		int result = 0;
+		
+		System.out.println("pdto : " + pdto);
+		try {
+			//새로 첨부파일 있는경우 
+			if(goodsImage != null) {
+				this.map = new HashMap<>();
+				
+				if("product".equals(pdto.getPRODUCT_TYPE()) || "half".equals(pdto.getPRODUCT_TYPE())) {
+					this.map.put("PRODUCT_TYPE", pdto.getPRODUCT_TYPE());
+					this.map.put("PIDX", String.valueOf(pdto.getPIDX()));
+					this.map.put("PRODUCT_CODE", pdto.getPRODUCT_CODE());
+					
+				}else if("item".equals(pdto.getITEM_TYPE())) {
+					this.map.put("ITEM_TYPE", pdto.getITEM_TYPE());
+					this.map.put("IIDX", String.valueOf(pdto.getIIDX()));
+					this.map.put("ITEM_CODE", pdto.getITEM_CODE());
+				}
+				
+				products_DTO goods_one = this.g_dao.pd_one_detail(this.map);  //해당제품 정보 가져오기 
+				String filenm = goods_one.getPD_FILE_RENM();  //변수에 해당파일의 저장된 파일명 넣음 
+				
+				//기존 파일 삭제 
+				filedel = this.m_file.cdn_ftpdel(filenm);
+				
+				if(filedel == true) {  //파일 삭제 완료 후 
+					//새 첨부파일 저장 
+					fileattach = this.m_file.cdn_filesave(this.f_dto, goodsImage);
+					
+					if(fileattach == true) {  //FTP에 파일저장 완료 후 
+					//새 파일 첨부
+						pdto.setPD_FILE_NM(this.f_dto.getFilenm());
+						pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
+						pdto.setPD_API_FNM(this.f_dto.getApinm());
+					}
+				}else {  //ftp 파일삭제 실패시
+					result = 0;
+				}
+			}
+			String attach_yn = pdto.getPD_FILE_NM();
+			System.out.println("attach_yn : "+attach_yn);  //미첨부시 null or 첨부원래파일명 출력됨 
+		
+			//db에 수정된 정보 업데이트
+			result = this.g_dao.goods_modifyok(pdto);
+			
+		} catch (Exception e) {
+			
+			this.log.error(e.toString());
+			e.printStackTrace();
+		}		
+		
+		return result;
 	}
 
 

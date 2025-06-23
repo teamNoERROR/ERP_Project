@@ -33,6 +33,7 @@ SELECT * FROM (
 		     </if>
 		     <if test="parent == 'outbndPage'">
 		        AND (ord.order_status = '주문확인' OR pln.plan_status = '생산완료')
+		        AND ord.order_status NOT IN ('출고완료')
 		     </if>
 	    </if>
         ORDER BY ord.oidx DESC
@@ -142,6 +143,7 @@ SELECT
     prd.product_name,
     prd.product_spec,
     prd.product_unit, 
+    prd.pd_safe_stock, 
     ord.product_qty, 
     prd.product_cost,
     prd.product_class1,
@@ -207,6 +209,7 @@ SELECT DISTINCT
 	prd.product_price,
 	prd.product_class1,
 	prd.product_class2,
+	prd.pd_safe_stock,
 	ord.product_qty,
 	orh.due_date,
 	bom.bom_code

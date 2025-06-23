@@ -22,7 +22,9 @@ public class mrp_result_DTO {
     private int available_stock;
     private int shortage_stock;
     private String company_code;
-    private String company_name = "-";
+    private String company_name;
+    
+    private String plan_code;
     
 	public mrp_result_DTO(String item_code, String item_type, String item_name, int required_qty,
 			String item_unit, int item_cost, int total_stock, int safety_stock, int reserved_stock, int available_stock,

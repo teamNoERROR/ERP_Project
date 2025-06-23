@@ -8,4 +8,6 @@ public interface member_service {
 
 	List<member_DTO> member_all_list();
 
+	member_DTO login_member(member_DTO m_dto);
+
 }

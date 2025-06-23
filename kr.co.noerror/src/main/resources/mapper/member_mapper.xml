@@ -10,5 +10,18 @@
 <!-- 	OFFSET #{start} ROWS FETCH NEXT #{count} ROWS ONLY -->
 </select>
 
+<!-- 로그인 -->
+<select id="member_login" resultType="kr.co.noerror.DTO.member_DTO" parameterType="Map">
+<!-- 	SELECT EMP.ECODE, EMP.ENAME, ER.ROLE_ID  -->
+<!-- 	FROM EMPLOYEE2 EMP -->
+<!-- 	JOIN EMPLOYEE_ROLE ER ON EMP.ECODE = ER.ECODE -->
+<!-- 	WHERE EMP.ECODE=#{ECODE} AND EMP.EMP_PASSWD=#{EMP_PASSWD}  -->
+	
+	SELECT EMP.ECODE, EMP.ENAME, EMP.EMP_POSITION
+	FROM EMPLOYEE2 EMP
+	WHERE EMP.ECODE=#{ECODE} AND EMP.EMP_PASSWD=#{EMP_PASSWD} 
+</select>
+
+
 
 </mapper>

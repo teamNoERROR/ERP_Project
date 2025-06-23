@@ -25,15 +25,17 @@ public class IOSF_DTO {
     String inbound_date2;
     
     // 제품 정보
+    int iidx;
     String item_code;      // 제품 코드
     String item_name;      // 제품 이름
     String category_main;  // 제품 대분류
     String category_sub;   // 제품 소분류
     String use_yn;         // 제품 사용 여부
     String in_status; 	   // 입고 상태
-    String item_qty;	   // 제품 갯수
+    int item_qty;	   // 제품 갯수
     LocalDateTime inbound_date;   // 입고 날짜
-    
+    String itm_file_renm;
+    String itm_api_fnm;
     
     
     //입고 창고
@@ -86,5 +88,22 @@ public class IOSF_DTO {
     
     String mv_wh_code;  //이동창고 코드 
     
+    String wmt_idx;
+    String wmt_code; 
+    String mt_insert_date;
+    Integer ind_itm_stock;
+    Integer current_qty;
+    Integer total_current_qty;
+    String move_type;  //이동여부 
+    String inv_lot;  //입고로트
+    Integer pd_count;
     
+<<<<<<< HEAD
+=======
+    //입고,출고 수량(SUM)
+    Integer indata,outdata;
+    Integer total_qty;
+    
+    
+>>>>>>> branch 'leegy' of https://github.com/teamNoERROR/ERP_Project.git
 }

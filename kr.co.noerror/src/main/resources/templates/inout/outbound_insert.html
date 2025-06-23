@@ -22,26 +22,30 @@
 </div>
 
 <div class="form-section">
-	
+	<div class="text-end mb-3">* : 필수입력</div>
      <div class="row justify-content-center">
                     <form class=" ">
                         <div class="row mb-3">
                             <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">주문번호</label>
+                                <label class="form-label fw-semibold">주문번호*</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="주문코드" id="ord_code" readonly>
+                                    <input type="text" class="form-control readonly_text" placeholder="주문코드" id="ord_code" readonly>
                                     <button type="button" class="btn btn-primary" onclick="ordListOpen('outbndPage')">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">거래처명</label>
-                                <input type="text" class="form-control" placeholder="거래처명" id="comp_name" readonly>
+                                <label class="form-label fw-semibold">거래처명*</label>
+                                <input type="text" class="form-control readonly_text" placeholder="거래처명" id="comp_name" readonly>
                             </div>
                               <div class="col-md-3">
-                                <label class="form-label fw-semibold">거래처처코드</label>
-                                <input type="text" class="form-control" placeholder="거래처코드" id="comp_code" readonly>
+                                <label class="form-label fw-semibold">거래처처코드*</label>
+                                <input type="text" class="form-control readonly_text" placeholder="거래처코드" id="comp_code" readonly>
+                            </div>
+                            <div class="col-md-3">
+                            	<label class="form-label fw-semibold">거래처 담당자*</label>
+                            	<input type="text" class="form-control readonly_text" placeholder="거래처 담당자" id="mng_name" readonly>
                             </div>
 <!--                             <div class="col-md-3"> -->
 <!--                                 <label class="form-label fw-semibold">출고창고</label> -->
@@ -61,7 +65,7 @@
                       
                             <!-- 출고항목 List Table -->
 			<div class="table-responsive  rounded" style="width: 100%; overflow-x: auto;">
-				<h5 >출고 제품 내역</h5>
+				<h5 >출고 제품 내역*</h5>
 				<table class="table table-hover align-middle table-bordered text-center" style="white-space: nowrap;">
 					<thead class="table-light ">
 						<tr>
@@ -70,12 +74,10 @@
 							<th scope="col" style="width: 15%;">제품명</th>
 							<th scope="col" style="width: 5%;">규격</th>
 							<th scope="col" style="width: 5%;">단위</th>
-							<th scope="col" style="width: 5%;">판매가</th>
+							<th scope="col" style="width: 5%;">판매가 (원)</th>
 							<th scope="col" style="width: 5%;">주문수량</th>
-							<th scope="col" style="width: 5%;">대분류</th>
-							<th scope="col" style="width: 5%;">소분류</th>
+							<th scope="col" style="width: 5%;">총재고수</th>
 							<th scope="col" style="width: 5%;">출고수량</th>
-							<th scope="col" style="width: 10%;">출고창고</th>
 						</tr>
 					</thead>
 					<tbody id="outbnd_pds">
@@ -114,18 +116,21 @@
                         
                         
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">출고요청일</label>
-                                <input type="date" class="form-control" id="out_req_date" readonly>
+                                <label class="form-label fw-semibold">출고요청일*</label>
+                                <input type="date" class="form-control readonly_text" id="out_req_date" readonly>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">출고일</label>
+                                <label class="form-label fw-semibold">출고일*</label>
                                 <input type="date" class="form-control" id="out_date">
+                                <input type="hidden" id="plan_start_date" >
+                                <input type="hidden" id="dueDate">
+                                <input type="hidden" id="stock_start_date">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">출고상태</label>
+                                <label class="form-label fw-semibold">출고상태*</label>
                                 <select class="form-select" id="out_status">
-								<option value="출고요청" >출고요청</option>
 								<option value="출고완료">출고완료</option>
+								<option value="출고요청" >출고요청</option>
  							</select> 
                             </div>
                             </div>
@@ -134,12 +139,12 @@
                         <div class="row mb-3">  
                         <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
                             <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">작성자</label>
-                                <input type="text" class="form-control" value="이명헌" readonly>
+                                <label class="form-label fw-semibold">작성자*</label>
+                                <input type="text" class="form-control readonly_text" value="이명헌" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
-                                <label class="form-label fw-semibold">사원코드</label>
-                                <input type="text" class="form-control" id="employee_code" value="EMP-00001" readonly>
+                                <label class="form-label fw-semibold">사원코드*</label>
+                                <input type="text" class="form-control readonly_text" id="employee_code" value="EMP-00001" readonly>
                             </div>
                         </div>
                            

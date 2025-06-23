@@ -16,7 +16,7 @@ public interface bom_service  {
 
 	
 	int bom_all_ea_sch(String sclass, String keyword);  //BOM등록된제품 전체개수 
-	List<bom_DTO> bom_all_list_sch(String sclass, String keyword, Integer pageno, int post_ea); //BOM등록된제품 전체 리스트 
+	List<bom_DTO> bom_all_list_sch(String sclass, String keyword, Integer pageno, int post_ea,String parent); //BOM등록된제품 전체 리스트 
 
 	int bom_delete(del_DTO d_dto);
 

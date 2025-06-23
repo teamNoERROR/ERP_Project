@@ -38,14 +38,14 @@
 <!-- 			</button> -->
 			<div class="input-group">
 	             <input type="text"  id="wh_name" class="form-control" style="width: 220px;" placeholder="부자재 창고가 선택됩니다" readonly>
-	            <input type="hidden" id="wh_code" class="form-control" />
+	            <input type="hidden" id="mv_wh_code" class="form-control" />
 <!-- 	            <button type="button" class="btn btn-primary modal-trigger"  -->
 <!-- 	            		th:data-modal-url="@{/wh_type_list.do(wh_type='mt_wh')}" -->
 <!-- 	            		data-modal-id="wh_type_list" style="cursor: pointer;"> -->
 <!-- 	                <i class="bi bi-search"></i> -->
 <!-- 	            </button> -->
 				<button type="button" class="btn btn-primary" 
-	            		onclick="whSelect('mt_wh','wh_name','wh_code')" style="cursor: pointer;">
+	            		onclick="whSelect('mt_wh','wh_name','mv_wh_code')" style="cursor: pointer;">
 	                <i class="bi bi-search"></i>
 	            </button>
 	        </div>
@@ -77,7 +77,7 @@
 <!-- 			      <select class="form-select" name="wh_searchType" style="max-width: 120px;"> -->
 <!-- 			        <option value="" th:selected="${#strings.isEmpty(wh_searchType)}">전체</option> -->
 <!-- 			      </select>  -->
-			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/창고명으로 검색" th:value="${wh_search}">
+			      <input type="text" name="wh_search" class="form-control" placeholder="제품명/제품코드로 검색" th:value="${wh_search}">
 			      <button class="btn btn-primary" onclick="searchWH()">
 			        <i class="bi bi-search"></i> 
 			      </button>
@@ -100,6 +100,8 @@
 				      <th>품목명</th>
 				      <th>변경수량</th>
 				      <th>변경내역</th>
+				      <th>전체재고</th>
+				      <th>창고별재고</th>
 				      <th>처리자</th>
 				      <th>사원코드</th>
 				      <th>등록일</th>
@@ -107,7 +109,7 @@
 				  </thead>
 				  <tbody>
 				  	<tr th:if="${wh_check == 'nodata'}" >
-                		<td class="text-center no_list_tb" colspan="11" > 부자재 창고에 보관된 제품이 없습니다. </td>
+                		<td class="text-center no_list_tb" colspan="14" > 부자재 창고에 보관된 제품이 없습니다. </td>
                 	</tr>
 				    <tr class="modal-trigger"
 				        th:each="mt_wh, iterStat : ${mt_wh_list}"
@@ -117,7 +119,8 @@
 				      <td>
 				      	<input type="checkbox" name="deleteCodes"
 				   			   	class="move-checkbox"
-				      	 	   th:value="${mt_wh.win_idx}" 
+				      	 	   th:value="${mt_wh.win_idx}"
+				      	 	   th:data-mt_code="${mt_wh.material_code}" 
 						       th:data-wh_code="${mt_wh.wh_code}" 
 						       data-wh_type="mt"
 						       th:data-product_code="${mt_wh.item_code}" 
@@ -126,8 +129,9 @@
 						       th:data-inbound_code="${mt_wh.inbound_code}"
 						       th:data-ind_pch_cd="${mt_wh.ind_pch_cd}"
 						       th:data-pd_name="${mt_wh.item_name}"
+						       th:data-inv_lot="${mt_wh.inv_lot}"
 						        onclick="selectRow(event,this);" 
-						       th:disabled="${mt_wh.change_type == '출고' OR mt_wh.change_type == '출고완료'}" />
+						       th:disabled="${mt_wh.change_type == '출고' OR mt_wh.change_type == '출고완료' OR mt_wh.move_type == '이동'}" />
 				      </td>
 				      <td th:text="${totalCount - ((currentPage - 1) * pageSize + iterStat.index)}"></td>
 				      <td th:text="${mt_wh.material_code}"></td>
@@ -135,8 +139,10 @@
 				      <td th:text="${mt_wh.wh_name}"></td>
 				      <td th:text="${mt_wh.item_code}"></td>
 				      <td th:text="${mt_wh.item_name}"></td>
-				      <td th:text="${mt_wh.item_qty}"></td>
+				      <td th:text="${#numbers.formatInteger(mt_wh.item_qty,0,'COMMA')}"></td>
 				      <td th:text="${mt_wh.change_type}"></td>
+				      <td th:text="${#numbers.formatInteger(mt_wh.total_current_qty,0,'COMMA')}"></td>
+				      <td th:text="${#numbers.formatInteger(mt_wh.current_qty,0,'COMMA')}"></td>
 				      <td th:text="${mt_wh.emp_name}"></td>
 				      <td th:text="${mt_wh.employee_code}"></td>
 					  <td>[[${mt_wh.material_date.substring(0,16)}]]</td>
@@ -154,9 +160,9 @@
 					  <ul class="pagination">
 					
 					     <!-- 첫페이지로 -->
-					    <li class="page-item prev" th:classappend="${1>= pageSize} ? '' : 'disabled'">
+					    <li class="page-item prev" th:classappend="${startPage > 1} ? '' : 'disabled'">
 					      <a class="page-link"
-					        th:href="@{/warehouses_mt_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&laquo;</a>
+					        th:href="@{/warehouses_mt_list.do(page=1, wh_search=${wh_search}, pageSize=${pageSize}, name_wh_list=${mt_wh_name})}">&laquo;</a>
 					    </li>
 				
 					    <!-- 페이지 번호 -->
@@ -164,14 +170,14 @@
 					        th:each="i : ${#numbers.sequence(startPage, endPage)}"
 					        th:classappend="${i == currentPage} ? 'active'">
 					      <a class="page-link" 
-					         th:href="@{/warehouses_mt_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}" 
+					         th:href="@{/warehouses_mt_list.do(page=${i}, wh_search=${wh_search}, pageSize=${pageSize}, name_wh_list=${mt_wh_name})}" 
 					         th:text="${i}">1</a>
 					    </li>
 					
 					       <!-- 끝페이지로 -->
-					    <li class="page-item next" th:classappend="${currentPage >= totalPages} ? '' : 'disabled'">
+					    <li class="page-item next" th:classappend="${endPage >= totalPages} ? '' : 'disabled'">
 					      <a class="page-link"
-					         th:href="@{/warehouses_mt_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, mt_wh_list=${mt_wh_name})}">&raquo;</a>
+					         th:href="@{/warehouses_mt_list.do(page=${endPage}, wh_search=${wh_search}, pageSize=${pageSize}, name_wh_list=${mt_wh_name})}">&raquo;</a>
 					    </li>
 						  </ul>
 						</nav>
@@ -192,7 +198,7 @@
 				<!-- Action Buttons -->
 				<div class="d-flex gap-2">
 					<div class="ms-auto">
-						<button type="button" class="btn btn-success" onclick="location.href='/warehouse_mt_savePage.do'">
+						<button type="button" class="btn btn-success" onclick="location.href='/warehouse_mt_savePage.do'" disabled>
                				 <i class="bi bi-plus-lg"></i> 수기 등록
 						</button>
 					</div>

@@ -96,15 +96,15 @@
              					data-unit=${(mode == 'modal') ? pdlist.PRODUCT_UNIT : ''}, 
              					data-cost=${(mode == 'modal') ? pdlist.PRODUCT_COST : ''}, 
              					data-price=${(mode == 'modal') ? pdlist.PRODUCT_PRICE : ''},
-             					data-memo=${(mode == 'modal') ? pdlist.PD_MEMO : ''}"
+             					data-memo=${(mode == 'modal') ? pdlist.PD_MEMO : ''}, data-type=${(mode == 'modal') ? pdlist.PRODUCT_TYPE : ''} "
                     	th:onclick="${mode != 'modal'} ? 'open_gd_detail(event)' : ''"  style="cursor: pointer;">
                         <td onclick="event.stopPropagation()">
                         	<input th:type="${mode == 'modal'} ? 'radio' : 'checkbox'" th:name="${mode == 'modal'} ? 'selectpd' : 'selected_box'" class="sb" 
-                        			th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}" data-type="product">
+                        			th:attr="data-idx=${pdlist.PIDX}, data-pdcode=${pdlist.PRODUCT_CODE}, data-type=${pdlist.PRODUCT_TYPE}">
                         </td>
                         <td > [[${bno - idx.index}]]</td>
                         <td class="p-0">
-                        	<img th:if="${pdlist.PD_API_FNM != null}"  th:src="@{'http://localhost:8081/img_attach/' + ${pdlist.PD_FILE_RENM}}" style="width:50px;">
+                        	<img th:if="${pdlist.PD_API_FNM != null}"  th:src="@{'http://210.178.108.186:83/imgfile/' + ${pdlist.PD_FILE_RENM}}" style="width:50px;">
                         	<img th:if="${pdlist.PD_API_FNM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
                         </td>
                         <td class="pd_code" >[[${pdlist.PRODUCT_CODE}]]</td>

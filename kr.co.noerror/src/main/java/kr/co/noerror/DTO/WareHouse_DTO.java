@@ -37,7 +37,7 @@ public class WareHouse_DTO {
 	//     관리자 번호	 관리자 이메일   관리자 팩스	관리자 메모		관리자 생성 시간		
 			EMP_TEL, 	 EMP_EMAIL, 	 EMP_FAX, 		EMP_MEMO, 		EMP_INSERT_DATE;
 
-	
+	Long PD_COUNT, TOTAL_QTY;
 	
 	
 	//모달에서 창고리스트 선택용 변수 

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{/common/config.html :: config}">
+</head>
+<body>
+<header th:replace="~{/common/header.html :: header}"></header>
+
+<main class="main">
+<section th:replace="~{/common/breadcrumb.html :: breadcrumb}"></section>
+<section class="container">
+  <!-- Title -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <h2 class="mb-1">완제품 창고 재고 수정</h2>
+  </div>
+ <!-- 우상단 x 마크  -->     
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-end me-2">
+<button type="button" class="btn-close" aria-label="Close" onclick=""></button>
+</div>
+    <div class="form-section">
+      <div class="row">
+        <!-- 창고 정보 입력 -->
+        <div class="col-md-12">
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <label class="form-label">창고 선택 </label>
+               <div class="input-group">
+		            <input type="text" class="form-control readonly_text" id="wh_name" placeholder="완제품 창고 선택" readonly>
+		                <button type="button" class="btn btn-primary" onclick="whSelect('fs_wh','wh_name','wh_code')"
+        						style="cursor: pointer;">
+		                <i class="bi bi-search"></i>
+		            </button>
+		        </div>    
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">창고 코드</label>
+              <input type="text" class="form-control readonly_text" id="wh_code" placeholder="창고 코드" readonly>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+             <div class="col-md-3">
+              <label class="form-label">제품 선택 </label>
+               <div class="input-group">
+		            <input type="text" class="form-control readonly_text" id="product_name" placeholder="제품명" readonly>
+		                <button type="button" class="btn btn-primary " onclick="pdListOpen('fsWhPd')"
+        						 style="cursor: pointer;">
+		                <i class="bi bi-search"></i>
+		            </button>
+		        </div>    
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">제품 코드 </label>
+               <div class="input-group">
+		            <input type="text" class="form-control readonly_text" id="product_code" placeholder="제품코드" readonly>
+		        </div>    
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">대분류/소분류 </label>
+               <div class="input-group">
+		            <input type="text" class="form-control readonly_text" id="product_class" placeholder="제품군 분류" readonly>
+		        </div>    
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">수량</label>
+	            <input type="number" class="form-control" min="1" id="pd_qty" placeholder="수량">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">입/출고 선택</label>
+                <select class="form-select" id="change_type"  >
+		            <option value="">선택</option>
+		            <option value="입고">수동입고</option>
+		            <option value="출고">수동출고</option>
+          		</select>
+            </div>
+          </div>
+
+		  <div class="row  mb-3 ">
+  			<label class="form-label">처리담당자</label>
+  			<div class="d-flex gap-2">
+				<div class="col-md-3 mb-3 mb-md-0">
+	                <input type="text" class="form-control"  name="ename" id="ename" value="이명헌" readonly>
+	            </div>
+	            <div class="col-md-3 mb-3 mb-md-0">
+	                <input type="text" class="form-control" name="ecode" id="ecode"  value="EMP-00001" readonly>
+	            </div>
+            </div>
+          </div>
+
+          <!-- 설명 -->
+
+          <!-- 액션 버튼 -->
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-primary" onclick="whStkSave()"><i class="bi bi-check2-square"></i> 저장</button>
+            <button type="reset" class="btn btn-outline-secondary ms-2">초기화</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+</section>
+</main>
+
+<div id="modalContainer"></div>
+<footer th:replace="~{/common/footer.html :: footer}"></footer>
+</body>
+</html>

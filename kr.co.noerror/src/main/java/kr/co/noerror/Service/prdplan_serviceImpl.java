@@ -1,17 +1,20 @@
 package kr.co.noerror.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.annotation.Resource;
+import kr.co.noerror.DAO.outbound_DAO;
 import kr.co.noerror.DAO.prdplan_DAO;
+import kr.co.noerror.DTO.IOSF_DTO;
+import kr.co.noerror.DTO.mrp_result_DTO;
 import kr.co.noerror.DTO.paging_info_DTO;
-import kr.co.noerror.DTO.pchreq_DTO;
-import kr.co.noerror.DTO.pchreq_detail_DTO;
-import kr.co.noerror.DTO.pchreq_item_DTO;
 import kr.co.noerror.DTO.prdplan_DTO;
 import kr.co.noerror.DTO.prdplan_detail_DTO;
 import kr.co.noerror.DTO.prdplan_product_DTO;
@@ -31,6 +34,12 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	
 	@Autowired
 	inventory_service inv_svc; //재고 서비스 
+	
+	@Autowired
+	private outbound_service out_svc;  //출고 서비스
+	
+	@Resource(name="outbound_DAO")
+	outbound_DAO out_dao; // 출고 DAO
 	
 	//생산계획 리스트 
 	@Override
@@ -137,18 +146,107 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
 	}
 	
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public Map<String, Object> plan_status_update(Map<String, String> requestParam) {
 		Map<String, Object> response = new HashMap<>();
-    	
+    	System.out.println("requestParam : " + requestParam);
+
     	try {
-    		int result = this.prdplan_dao.plan_status_update(requestParam);
-    		response.put("success", (result == 1));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        response.put("success", false);
-	    }
+        	int result = this.prdplan_dao.plan_status_update(requestParam);  //plan_status 상태변경 
+        	
+        	String status = requestParam.get("plan_status");
+            String planCode = requestParam.get("plan_code");
+          //생산완료 상태일 경우에만 출고 처리
+        	if ("생산완료".equals(status)) {
+    			//mrp 정보 확인
+    			List<mrp_result_DTO> mrp_result = this.prdplan_dao.select_mrp_result(planCode);
+    			
+    			//부자재 재고 출고처리
+    			List<String> item_codes = new ArrayList<>(); 
+    			List<Integer> item_qtys = new ArrayList<>();
+    			
+    			//mrp테이블에서 가져온 부자재 리스트 
+    			for (int w = 0; w < mrp_result.size(); w++) {
+    				String itmcode = mrp_result.get(w).getItem_code();
+    				int itm_req_qty = mrp_result.get(w).getRequired_qty();
+    				
+    				item_codes.add(itmcode);
+    				item_qtys.add(itm_req_qty);
+    			}
+    			
+    			for (int i = 0; i < item_codes.size(); i++) {
+    				String itmCode = item_codes.get(i);
+    				int itmQty = item_qtys.get(i); 
+    				
+    				//inv_lot순으로 정렬된 리스트를 다시 리스트에 넣기 
+    				Integer jego = this.prdplan_dao.out_itemQty(itmCode);
+    				if(jego == null) {
+    					jego = 0;
+    				}
+    				
+    				List<IOSF_DTO> outitminfo_result2 = this.prdplan_dao.out_itemList2(itmCode);
+    				
+    				if(itmQty <= jego) {		//출고완료 insert 
+//    					int availableQty = outitminfo_result2.get(i).getItem_qty();
+//    					int usedQty = Math.min(availableQty, itmQty);
+//    					for (IOSF_DTO lot : outitminfo_result2) {
+    						if (itmQty <= 0) break;
+        					
+    						//부자재 출고완료 INSERT
+    						Map<String, Object> outParams = new HashMap<>();
+    						outParams.put("wh_code", outitminfo_result2.get(0).getWh_code());
+    						outParams.put("inbound_code", "-");
+    						outParams.put("ind_pch_code", outitminfo_result2.get(0).getInd_pch_cd() != null ? outitminfo_result2.get(0).getInd_pch_cd() : "-");
+    						outParams.put("item_code", itmCode);
+    						outParams.put("item_qty", itmQty);
+    						outParams.put("employee_code", outitminfo_result2.get(0).getEmployee_code());
+    						outParams.put("inv_lot", outitminfo_result2.get(0).getInv_lot());
+    						outParams.put("product_code", itmCode);
+    						outParams.put("wmt_code", outitminfo_result2.get(0).getWmt_code());
+    						outParams.put("wh_type", "mt");
+    						
+    						System.out.println("outParams : " + outParams);
+    						this.prdplan_dao.out_mtwh_result(outParams);   //부자재 출고처리
+    						this.prdplan_dao.IOSF_warehouse_move_up(outParams);  //출고처리 후 원입고건 체크박스 막기
+    						
+//    					}
+    					
+    				}
+    				
+    				else if (itmQty > jego) {
+    					throw new RuntimeException("재고 부족: " + itmCode);
+    				}
+    				
+    				/*
+    				 1. 완제품을 만들기 위한 각 부재 전체 수량(sum)
+    				 2. wherehouse_material => 출고  각 부재 전체 수량(sum) 
+    				*/
+    				
+    				
+    				/*    					if (itmQty <= 0) break;
+    					
+    			
+    					
+    					
+    				}
+    				
+    				
+    				*/
+    			}
+        	}
+        	
+        	response.put("success", (result == 1));
+        	return response;
+        	   
+        } catch (Exception e) {
+			e.printStackTrace();
+//			response.put("success", false);
+			throw new RuntimeException("트랜잭션 롤백", e); // 반드시 던져야 rollback 됨
+		}
 	
-	    return response;
+	 
 	}
+	
+	
 
 }

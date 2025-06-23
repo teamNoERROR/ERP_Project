@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
  }
 
 
- //**************************************창고로 입고 정보 이동*************************************************
+ //**************************************창고로 입고할 정보 이동*************************************************
  
  function selectRow(event,checkbox) {
 	 
@@ -254,34 +254,67 @@ function whMove(){
 			return;
  		}
 		
+		const mv_wh_code = document.querySelector("#mv_wh_code").value;
 		const moveData = [];
 		checkedBoxes.forEach(box => {
    			const wh_code = box.getAttribute('data-wh_code');
    			const wh_type = box.getAttribute('data-wh_type');
-   			const product_code = box.getAttribute('data-product_code');
-   			const pd_qty = box.getAttribute('data-pd_qty');
    			const emp_code = box.getAttribute('data-emp_code');
-   			const pd_name = box.getAttribute('data-pd_name');
+			const inv_lot = box.getAttribute('data-inv_lot');
+			
+			const product_code = box.getAttribute('data-product_code');
+			const pd_qty = box.getAttribute('data-pd_qty');
+   			const plan_code = box.getAttribute('data-plan_code');
 			
 			const inbound_code = box.getAttribute('data-inbound_code');
-			const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
+			//const ind_pch_cd = box.getAttribute('data-ind_pch_cd');
 			
-			const mv_wh_code = document.querySelector("#wh_code").value;
-   
-   			if (wh_code && wh_type && product_code && pd_qty && emp_code && pd_name && mv_wh_code) {
-     			moveData.push({ 
-					wh_code, 
-					wh_type, 
-					product_code,
-					pd_qty, 
-					emp_code, 
-					pd_name, 
-					mv_wh_code,
-					inbound_code,
-					ind_pch_cd
-				});
-   			}
+			const wmt_code = box.getAttribute('data-mt_code');
+			const wfs_code = box.getAttribute('data-fs_code');
+			
+			console.log(wh_code)
+			console.log(wh_type)
+			console.log(emp_code)
+			console.log(inv_lot)
+			console.log(product_code)
+			console.log(pd_qty)
+			console.log(plan_code)
+			console.log(inbound_code)
+			console.log(wmt_code)
+			console.log(wfs_code)
+			
+			
+			
+			
+   			if (wh_code && wh_type && product_code && pd_qty && emp_code && mv_wh_code && inv_lot) {
+				if(plan_code && wfs_code){
+	     			moveData.push({ 
+						wh_code, 
+						wh_type, 
+						product_code,
+						pd_qty, 
+						emp_code, 
+						mv_wh_code,
+						plan_code,
+						wfs_code,
+						inv_lot
+					});
+				}else if(inbound_code && wmt_code){
+					moveData.push({ 
+						wh_code, 
+						wh_type, 
+						product_code,
+						pd_qty, 
+						emp_code, 
+						mv_wh_code,
+						inbound_code,
+						wmt_code,
+						inv_lot
+					});
+				}
+   			}			
  		});
+		console.log(moveData)
 		if (moveData.length === 0) {
 	       alert('선택한 항목의 데이터가 누락되었거나 유효하지 않습니다.');
 	       return;
@@ -605,3 +638,79 @@ function wh_save() {
         }).open();
     }
 	
+	
+/*--------------------------------------------------------------
+	완제품재고 수동조정 
+----------------------------------------------------------- */	
+//제품 정보 수정 
+function whStkSave(){
+	var fs_pdstock = [];
+	
+	var wh_code = document.querySelector("#wh_code");
+	var wh_name = document.querySelector("#wh_name");
+	var product_code = document.querySelector("#product_code");
+	var product_name = document.querySelector("#product_name");
+	var pd_qty = document.querySelector("#pd_qty");
+	var change_type = document.querySelector("#change_type");
+	var ecode = document.querySelector("#ecode");
+	
+	fs_pdstock.push({
+		WH_CODE : wh_code.value,
+		PLAN_CODE : "-",
+        PRODUCT_CODE: product_code.value,
+		PD_QTY: pd_qty.value,
+		CHANGE_TYPE:change_type.value,
+		EMPLOYEE_CODE: ecode.value,
+  	});
+	
+	if(wh_code.value ==""){
+		alert("창고를 선택하세요");
+		wh_name.focus();
+	}
+	else if(product_code.value ==""){
+		alert("제품을 선택하세요");
+		product_name.focus();
+	}
+	else if(pd_qty.value ==""){ 
+		alert("제품 수량을 입력하세요");
+		pd_qty.focus();
+	}
+	else if(change_type.value ==""){ 
+		alert("입/출고를 선택하세요");
+		change_type.focus();	
+			
+	}else if(ecode.value ==""){ 
+		alert("담당자가 등록되지 않았습니다.");
+				
+	}else {
+		fsPdstSaveOk(fs_pdstock);
+	}
+}
+
+//저장(ajax)
+function fsPdstSaveOk(fs_pdstock){
+	console.log(fs_pdstock)
+		
+	fetch("./stock_changeOk.do", {
+		method: "PUT",
+		headers: {'content-type': 'application/json'},
+		body : JSON.stringify(fs_pdstock)
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		console.log(result)
+		if(result=="save_complete"){
+			alert("재고 수동 조정이 완료되었습니다.");
+			
+		  	location.href="./warehouses_fs_list.do"
+			
+		}else if(result=="save_fail"){
+			alert("시스템문제로 재고 수동 입력을 실패했습니다.\n관리자에게 문의해주세요.");
+		}
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}

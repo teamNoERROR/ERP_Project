@@ -29,7 +29,7 @@
 				<a class="nav-link dropdown-toggle lmenu" role="button"  aria-expanded="false"> 입출고 관리 </a>
 				<ul class="dropdown-menu custom-menu">
 					<li><a class="dropdown-item" href="./inbound.do">자재 입고</a></li>
-					<li><a class="dropdown-item" href="./outbound.do">제품 출고</a></li>
+					<li><a class="dropdown-item" href="/outbound_insert.do">제품 출고</a></li>
 					<li><a class="dropdown-item" href="./inventory.do">재고 관리</a></li>
 				</ul>
 			</li>
@@ -55,8 +55,10 @@
 	</nav>
 	
 	<div class="userinfo">
-	<span class="login_user">[사원] 이명헌 님</span>
-	<a href="#contact" class="logout_btn">Logout</a>
+	<th:block >
+	<span class="login_user">[대리] 이명헌 님</span>
+	<a href="#contact" class="logout_btn" onclick="mlogOut()">Logout</a>
+	</th:block>
 	</div>
 	
 </header>

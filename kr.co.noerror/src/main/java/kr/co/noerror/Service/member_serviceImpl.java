@@ -45,6 +45,18 @@ public class member_serviceImpl implements member_service{
 		List<member_DTO> member_all_list  = this.mb_dao.member_all_list(mapinfo); 
 		return member_all_list;
 	}
+
+
+	@Override
+	public member_DTO login_member(member_DTO m_dto) {
+//		Map<String, String> member_info = new HashMap<String, String>();
+//		member_info.put("ECODE",m_dto.getECODE()); 
+//		member_info.put("EMP_PASSWD",m_dto.getEMP_PASSWD());
+		
+//		member_DTO member_login = this.mb_dao.login_member(member_info);
+		member_DTO member_login = this.mb_dao.login_member(m_dto);
+		return member_login;
+	}
 	
 	
 	

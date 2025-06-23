@@ -21,6 +21,10 @@ public interface goods_service {
 
 	products_DTO pd_one_detail(String pd_code, String type);  //제품 상세보기
 	int pd_delete(del_DTO d_dto); 	//제품 삭제 
-	String lclass_ck(String sclass);
+	String lclass_ck(String type,String sclass);
+	
+	String imgs_attach(String filenm);
+	
+	int goods_modifyok(products_DTO pdto, MultipartFile goodsImage);	//제품 정보 수정 
 	
 }

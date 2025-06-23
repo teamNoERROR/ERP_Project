@@ -160,10 +160,10 @@ public class client_serviceImpl implements client_service {
 					fileattach = this.m_file.cdn_filesave(this.f_dto, clientImage);
 					
 					if(fileattach == true) {  //FTP에 파일저장 완료 후 
-					//새 파일 첨부
-					cdto.setCOM_FILE_NM(this.f_dto.getFilenm());
-					cdto.setCOM_FILE_RENM(this.f_dto.getFileRenm());
-					cdto.setCOM_API_FNM(this.f_dto.getApinm());
+						//새 파일 첨부
+						cdto.setCOM_FILE_NM(this.f_dto.getFilenm());
+						cdto.setCOM_FILE_RENM(this.f_dto.getFileRenm());
+						cdto.setCOM_API_FNM(this.f_dto.getApinm());
 					}
 				}else {  //ftp 파일삭제 실패시
 					result = 0;

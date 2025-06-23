@@ -13,7 +13,7 @@ public class ordreq_DTO {
     private String ecode;
     private String order_status;
     private String pay_method;
-    private int pay_amount;
+    private Long pay_amount;
     private String due_date;
     private String memo;
     private String request_date;

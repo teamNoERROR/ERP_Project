@@ -638,3 +638,79 @@ function wh_save() {
         }).open();
     }
 	
+	
+/*--------------------------------------------------------------
+	완제품재고 수동조정 
+----------------------------------------------------------- */	
+//제품 정보 수정 
+function whStkSave(){
+	var fs_pdstock = [];
+	
+	var wh_code = document.querySelector("#wh_code");
+	var wh_name = document.querySelector("#wh_name");
+	var product_code = document.querySelector("#product_code");
+	var product_name = document.querySelector("#product_name");
+	var pd_qty = document.querySelector("#pd_qty");
+	var change_type = document.querySelector("#change_type");
+	var ecode = document.querySelector("#ecode");
+	
+	fs_pdstock.push({
+		WH_CODE : wh_code.value,
+		PLAN_CODE : "-",
+        PRODUCT_CODE: product_code.value,
+		PD_QTY: pd_qty.value,
+		CHANGE_TYPE:change_type.value,
+		EMPLOYEE_CODE: ecode.value,
+  	});
+	
+	if(wh_code.value ==""){
+		alert("창고를 선택하세요");
+		wh_name.focus();
+	}
+	else if(product_code.value ==""){
+		alert("제품을 선택하세요");
+		product_name.focus();
+	}
+	else if(pd_qty.value ==""){ 
+		alert("제품 수량을 입력하세요");
+		pd_qty.focus();
+	}
+	else if(change_type.value ==""){ 
+		alert("입/출고를 선택하세요");
+		change_type.focus();	
+			
+	}else if(ecode.value ==""){ 
+		alert("담당자가 등록되지 않았습니다.");
+				
+	}else {
+		fsPdstSaveOk(fs_pdstock);
+	}
+}
+
+//저장(ajax)
+function fsPdstSaveOk(fs_pdstock){
+	console.log(fs_pdstock)
+		
+	fetch("./stock_changeOk.do", {
+		method: "PUT",
+		headers: {'content-type': 'application/json'},
+		body : JSON.stringify(fs_pdstock)
+		
+	}).then(function(data) {
+		return data.text();
+
+	}).then(function(result) {
+		console.log(result)
+		if(result=="save_complete"){
+			alert("재고 수동 조정이 완료되었습니다.");
+			
+		  	location.href="./warehouses_fs_list.do"
+			
+		}else if(result=="save_fail"){
+			alert("시스템문제로 재고 수동 입력을 실패했습니다.\n관리자에게 문의해주세요.");
+		}
+
+	}).catch(function(error) {
+		console.log("통신오류발생" + error);
+	});
+}

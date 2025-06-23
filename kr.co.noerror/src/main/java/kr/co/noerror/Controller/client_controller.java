@@ -60,7 +60,6 @@ public class client_controller {
 		int client_total = this.clt_svc.client_total(type); //제품 총개수
 		List<client_DTO> client_list = this.clt_svc.client_list(type, pageno, post_ea);  //제품 리스트
 	
-		System.out.println("type : " + type);
 		
 		//거래처타입에 따른 url 분류 
 		if("client".equals(type) || type==null) {
@@ -80,7 +79,6 @@ public class client_controller {
 		//페이징 관련 
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, client_total);
 		int bno = this.m_pg.serial_no(client_total, pageno, post_ea); 
-		System.out.println(pageinfo);
 		
 		//페이지로 보낼 것들 
 		m.addAttribute("lmenu","기준정보관리");

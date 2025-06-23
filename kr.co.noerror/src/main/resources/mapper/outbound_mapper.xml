@@ -41,7 +41,7 @@
 
 <!-- 완제품 출고되는 제품의 창고 정보  -->
 <select id="outPd_info" resultType="kr.co.noerror.DTO.IOSF_DTO" parameterType="String">
-	SELECT * FROM WAREHOUSE_FINISH WHERE PRODUCT_CODE = #{product_code} AND CHANGE_TYPE = '입고'  AND (MOVE_TYPE IS NULL) 
+	SELECT * FROM WAREHOUSE_FINISH WHERE PRODUCT_CODE = #{product_code} AND CHANGE_TYPE = '입고'  AND PD_QTY > 0
 	ORDER BY INV_LOT
 </select>
 

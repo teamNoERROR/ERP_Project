@@ -56,7 +56,10 @@
 	
 	<div class="userinfo">
 	<th:block >
-	<span class="login_user">[대리] 이명헌 님</span>
+	<span class="Login_user">
+	  [<span th:text="${session.mposi}"></span>] 
+	  <span th:text="${session.mname}"></span>
+	</span>
 	<a href="#contact" class="logout_btn" onclick="mlogOut()">Logout</a>
 	</th:block>
 	</div>

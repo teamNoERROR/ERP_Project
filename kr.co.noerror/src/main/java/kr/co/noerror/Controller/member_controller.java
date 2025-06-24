@@ -107,7 +107,6 @@ public class member_controller {
 			String mname = login_member.getENAME();
 			String mposi = login_member.getEMP_POSITION();
 			int role = login_member.getROLE_ID();
-
 			this.se.setAttribute("mid", mid);  //아이디  
 			this.se.setAttribute("mname", mname);  //이름
 			this.se.setAttribute("mposi", mposi);  //직급
@@ -122,8 +121,7 @@ public class member_controller {
 	@GetMapping("/member_logoutOk.do")
 	public String member_logout(HttpServletResponse res) throws IOException {
 		this.pw = res.getWriter();
-String login_yn = this.login_ck.login_chk();  //로그인 체크
-		
+		String login_yn = this.login_ck.login_chk();  //로그인 체크
 		if(login_yn.equals("ok")){  //로그인 이미 되어있으면
 			this.se.invalidate(); //세션에 저장된 정보들 파기 
 			

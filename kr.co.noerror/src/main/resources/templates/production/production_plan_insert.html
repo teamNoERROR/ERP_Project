@@ -103,11 +103,11 @@
 							<div class="d-flex gap-2">
 								<div class="col-md-6 mb-3 mb-md-0">
 									<label class="form-label fw-semibold">생산계획담당자*</label>
-	                                <input type="text" class="form-control" name="ename" id="emp_name" value="이명헌" readonly>
+	                                <input type="text" class="form-control" name="ename" id="emp_name" th:value="${session.mname}" readonly>
 	                            </div>
 	                            <div class="col-md-6 mb-3 mb-md-0">
 	                            	<label class="form-label fw-semibold">사원코드*</label>
-	                                <input type="text" class="form-control" name="ecode" id="emp_code"  value="EMP-00001" readonly>
+	                                <input type="text" class="form-control" name="ecode" id="emp_code" th:value="${session.mid}" readonly>
 	                            </div>
                             </div>
 						</div>
@@ -195,11 +195,11 @@
 							<div class="d-flex gap-2">
 								<div class="col-md-6 mb-3 mb-md-0">
 									<label class="form-label fw-semibold">생산계획등록자*</label>
-	                                <input type="text" class="form-control" name="emp_name" id="stock_emp_name" value="이명헌" readonly>
+	                                <input type="text" class="form-control" name="emp_name" id="stock_emp_name" th:value="${session.mname}" readonly>
 	                            </div>
 	                            <div class="col-md-6 mb-3 mb-md-0">
 	                            	<label class="form-label fw-semibold">사원코드*</label>
-	                                <input type="text" class="form-control" name="emp_code" id="stock_emp_code"  value="EMP-00001" readonly>
+	                                <input type="text" class="form-control" name="emp_code" id="stock_emp_code" th:value="${session.mid}" readonly>
 	                            </div>
                             </div>
 						</div>

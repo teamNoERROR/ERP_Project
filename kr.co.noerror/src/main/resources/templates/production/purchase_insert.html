@@ -207,10 +207,10 @@
 <!-- 					</div> -->
 					<div class="d-flex gap-2">
 						<div class="col-md-5 mb-3 mb-md-0">
-                            <input type="text" class="form-control"  name="ename" id="ename" value="이명헌" readonly>
+                            <input type="text" class="form-control"  name="ename" id="ename" th:value="${session.mname}" readonly>
                         </div>
                         <div class="col-md-5 mb-3 mb-md-0">
-                            <input type="text" class="form-control" name="ecode" id="ecode"  value="EMP-00001" readonly>
+                            <input type="text" class="form-control" name="ecode" id="ecode" th:value="${session.mid}" readonly>
                         </div>
                    </div>
 				</div>

@@ -140,11 +140,11 @@
                         <!-- 작성자 라인 (로그인한 아이디 자동세팅) -->
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">작성자*</label>
-                                <input type="text" class="form-control readonly_text" value="이명헌" readonly>
+                                <input type="text" class="form-control readonly_text" th:value="${session.mname}" readonly>
                             </div>
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <label class="form-label fw-semibold">사원코드*</label>
-                                <input type="text" class="form-control readonly_text" id="employee_code" value="EMP-00001" readonly>
+                                <input type="text" class="form-control readonly_text" id="employee_code" th:value="${session.mid}" readonly>
                             </div>
                         </div>
                            

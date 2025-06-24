@@ -88,7 +88,8 @@ SELECT * FROM (
 		<if test="search_word != null and search_word != ''">
 		  AND (
 		      cmp.company_name LIKE '%' || #{search_word} || '%' OR
-		      cmp.manager_name LIKE '%' || #{search_word} || '%'
+		      cmp.manager_name LIKE '%' || #{search_word} || '%' OR
+		      pch.pch_code LIKE '%' || #{search_word} || '%'
 		  )
 		</if>
 	    <if test="statuses != null and statuses.size() > 0">
@@ -114,7 +115,8 @@ WHERE 1=1
 	  AND (
 	      
 	      cmp.company_name LIKE '%' || #{search_word} || '%' OR
-	      cmp.manager_name LIKE '%' || #{search_word} || '%'
+	      cmp.manager_name LIKE '%' || #{search_word} || '%' OR
+	      pch.pch_code LIKE '%' || #{search_word} || '%'
 	  )
 	</if>
     <if test="statuses != null and statuses.size() > 0">

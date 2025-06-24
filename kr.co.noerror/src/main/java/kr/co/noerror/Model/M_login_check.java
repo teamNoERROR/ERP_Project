@@ -18,7 +18,7 @@ public class M_login_check {
 		String mname = (String)this.se.getAttribute("mname");
 		String mphone = (String)this.se.getAttribute("mphone");
 		
-		if(mid==null || mname==null || mphone==null) {
+		if(mid==null || mname==null) {
 			this.msg = "no";
 			
 		}

@@ -37,7 +37,7 @@
 								<td class="info-label">담당자</td>
 								<td class="value-cell">[[${details[0].manager_name}]]</td>
 								<td class="info-label">연락처</td>
-								<td class="value-cell" colspan="2">[[${details[0].mng_phone_num}]]</td>
+								<td class="value-cell" colspan="2">[[${details[0].mng_phone}]]</td>
 							</tr>
 							<tr>
 								<td class="info-label">주소</td>
@@ -80,15 +80,11 @@
 						</tr>
 						<tr class="empinfo">
 							<td class="info-label">발주 담당자
-								<input type="hidden" class="form-control" name="ecode" id="ecode" th:value="${session.ecode}" readonly>
+								<input type="hidden" class="form-control" name="ecode" id="ecode" th:value="${session.mid}" readonly>
 							</td>
 							<td class="value-cell">
 							    <div class="input-group">
-							      <input type="text" class="form-control" name="ename" id="ename" th:value="${session.ename}" readonly>
-						          <button type="button" class="btn btn-outline-secondary modal-trigger" 
-						                  th:data-modal-url="@{/emps_modal.do}" data-modal-id="emps_modal" style="cursor: pointer;">
-						              <i class="bi bi-search"></i>
-						          </button>
+							      <input type="text" class="form-control" name="ename" id="ename" th:value="${session.mname}" readonly>
 							    </div>
 							</td>
 							<td class="info-label"></td>

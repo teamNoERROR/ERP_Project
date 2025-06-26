@@ -46,7 +46,7 @@ public class Warehouse_Controller {
     String check_insertOrModify;
    
     //창고 삭제 방지 
-    String [] no_del_wh = {"WHS-97265","WHS-13927"};
+    String [] no_del_wh = {"WHS-74634","WHS-62864"};
 
     
     

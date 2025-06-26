@@ -28,7 +28,7 @@
 			<!-- 미리보기 네모칸 -->
 		  <div class="image-box mb-2" >
 		    <img th:if="${client_one.COM_API_FNM} == null" id="previewImage" src="./img/no-image.svg" alt="회사 로고" style="max-width: 100%; max-height: 100%;">
-		    <img th:if="${client_one.COM_API_FNM} != null" id="previewImage" src="" alt="회사 로고" style="max-width: 100%; max-height: 100%;">
+		    <img th:if="${client_one.COM_API_FNM} != null" id="previewImage"  th:src="@{'http://210.178.108.186:83/imgfile/' + ${client_one.COM_FILE_RENM}}" alt="회사 로고" style="max-width: 100%; max-height: 100%;">
 		  </div>
 		
 		  <!-- 파일 선택 input -->

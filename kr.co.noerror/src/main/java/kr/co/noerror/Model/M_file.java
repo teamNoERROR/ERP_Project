@@ -41,10 +41,10 @@ public class M_file {
 	
 	String file_rnm = null;
 	
-	final String host = "210.178.108.186";
-	final String user="noerror";  
-	final String pass="noerror250513";
-	final int port = 60021;
+	final String host = "noerror.nnyong.world";
+	final String user="erp";  
+	final String pass="pPinyong0413";
+	final int port = 9021;
 	
 	FTPClient fc = null;
 	FTPClientConfig fcc = null;
@@ -71,7 +71,7 @@ public class M_file {
 					
 					this.fc.enterLocalPassiveMode();
 					this.fc.setFileType(FTP.BINARY_FILE_TYPE);  //바이너리인지 타입만 확인 (이미지, 동영상, ZIP, PDF..)
-					this.result = this.fc.storeFile("/home/noerror/html/imgfile/"+this.file_rnm, image_file.getInputStream());  //ftp디렉토리 경로 설정 후 해당 파일을 byte로 전송
+					this.result = this.fc.storeFile("/www/tomcat-10.1.41/webapps/ROOT/imgfile/"+this.file_rnm, image_file.getInputStream());  //ftp디렉토리 경로 설정 후 해당 파일을 byte로 전송
 					//파일 먼저 저장 후 DB저장
 					//파일저장되면 여기서  this.result = true가 됨
 					

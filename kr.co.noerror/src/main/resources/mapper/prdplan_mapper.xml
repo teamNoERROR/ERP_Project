@@ -123,15 +123,15 @@ SELECT * FROM employee ORDER BY eidx desc
     #{plan_code},
     #{order_code, jdbcType=VARCHAR},
     #{priority},
-    #{start_date},
-    #{end_date},
+    TO_DATE(#{start_date}, 'YYYY-MM-DD'),
+    TO_DATE(#{end_date}, 'YYYY-MM-DD'),
     #{company_code, jdbcType=VARCHAR},
     #{ecode},
     #{plan_status},
     #{mrp_status},
     #{memo}, 
-    SYSDATE,
-    SYSDATE 
+    SYSTIMESTAMP,
+    SYSTIMESTAMP 
   ) 
 </insert>
 
@@ -201,7 +201,7 @@ SET
 	end_date = #{end_date},
 	ecode = #{ecode},
 	memo = #{memo},
-	modify_date = SYSDATE
+	modify_date = SYSTIMESTAMP
 WHERE plan_code = #{plan_code}
 </update>
 

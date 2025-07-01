@@ -71,20 +71,20 @@ public class MultiDatabaseConfig {
 	}
 
 	// Mysql (second)
-	@Bean(name = "mysql")
-	public DataSource ds2() throws Exception {
-		return buildDataSource(loadProperties("spring.second.datasource"));
-	}
-
-	@Bean(name = "sqlfactory_mysql")
-	public SqlSessionFactory factory2(@Qualifier("mysql") DataSource ds, ApplicationContext ac) throws Exception {
-		Properties p = loadProperties("spring.second.datasource");
-		return buildSqlFactory(ds, p.getProperty("mappers"), ac);
-	}
-
-	@Bean(name = "sqltemplate_mysql")
-	public SqlSessionTemplate template2(@Qualifier("sqlfactory_mysql") SqlSessionFactory sf) {
-		return buildSqlTemplate(sf);
-	}	
+//	@Bean(name = "mysql")
+//	public DataSource ds2() throws Exception {
+//		return buildDataSource(loadProperties("spring.second.datasource"));
+//	}
+//
+//	@Bean(name = "sqlfactory_mysql")
+//	public SqlSessionFactory factory2(@Qualifier("mysql") DataSource ds, ApplicationContext ac) throws Exception {
+//		Properties p = loadProperties("spring.second.datasource");
+//		return buildSqlFactory(ds, p.getProperty("mappers"), ac);
+//	}
+//
+//	@Bean(name = "sqltemplate_mysql")
+//	public SqlSessionTemplate template2(@Qualifier("sqlfactory_mysql") SqlSessionFactory sf) {
+//		return buildSqlTemplate(sf);
+//	}	
 
 }

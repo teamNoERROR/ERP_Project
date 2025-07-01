@@ -113,7 +113,7 @@ FROM
     #{order_status},
     #{pay_method},
     #{pay_amount},
-    #{due_date},
+    TO_DATE(#{due_date}, 'YYYY-MM-DD'),
     #{memo},
     SYSDATE,
     SYSDATE 

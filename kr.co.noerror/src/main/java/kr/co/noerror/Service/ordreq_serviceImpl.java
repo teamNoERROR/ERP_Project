@@ -48,14 +48,11 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
         params.put("end", paging_info.getEnd());
         params.put("parent", parent);
         
-        System.out.println("params : " + params);
         return this.ordreq_dao.paged_list(params);
 	}
 	
 	@Override
     public Map<String, Object> ordreq_save(List<Map<String, Object>> orders) {
-		System.out.println("orders : " + orders);
-		System.out.println("orders2 : " + orders.size());
 		 Map<String, Object> response = new HashMap<>();
 	        
 	        //중복 없는 주문코드 생성
@@ -99,7 +96,7 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 
 	        } catch (Exception e) {
 	        	System.out.println(e);
-	            response.put("success", false);
+	            response.put("success", e);
 	        }
 
         return response;
@@ -135,7 +132,7 @@ public class ordreq_serviceImpl implements ordreq_service, generic_list_service<
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
+            response.put("fail", false);
         }
 
         return response;

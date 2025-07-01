@@ -99,14 +99,13 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
             	prdplan_detail_entity.setProduct_qty((long)pdto.getProduct_qty());
                 result2 += this.prdplan_dao.prdplan_detail_insert(prdplan_detail_entity);
             }
-
+           
             response.put("success", (result1 == 1) && (result2 == cnt));
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
+            response.put("success", e);
         }
-
 	    return response;
 	}
 	
@@ -205,10 +204,8 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     						outParams.put("wmt_code", outitminfo_result2.get(0).getWmt_code());
     						outParams.put("wh_type", "mt");
     						
-    						System.out.println("outParams : " + outParams);
     						this.prdplan_dao.out_mtwh_result(outParams);   //부자재 출고처리
     						this.prdplan_dao.IOSF_warehouse_move_up(outParams);  //출고처리 후 원입고건 체크박스 막기
-    						
 //    					}
     					
     				}
@@ -217,21 +214,6 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
     					throw new RuntimeException("재고 부족: " + itmCode);
     				}
     				
-    				/*
-    				 1. 완제품을 만들기 위한 각 부재 전체 수량(sum)
-    				 2. wherehouse_material => 출고  각 부재 전체 수량(sum) 
-    				*/
-    				
-    				
-    				/*    					if (itmQty <= 0) break;
-    					
-    			
-    					
-    					
-    				}
-    				
-    				
-    				*/
     			}
         	}
         	

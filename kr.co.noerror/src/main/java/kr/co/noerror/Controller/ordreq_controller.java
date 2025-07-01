@@ -74,6 +74,7 @@ public class ordreq_controller {
 	@PostMapping("/order_save.do")
 	@ResponseBody
     public Map<String, Object> saveOrder(@RequestBody List<Map<String, Object>> orders) {
+		System.out.println("orders : " + orders);
         return ordreq_service.ordreq_save(orders);
     }
 	

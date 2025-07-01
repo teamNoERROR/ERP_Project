@@ -93,7 +93,7 @@
                         	<input type="checkbox"  th:name="${mode == 'modal'} ? 'bomSelected' : 'bom_select'" class="sb" th:attr="data-etccode=${bomlist.BOM_CODE}, data-pdcode=${bomlist.PRODUCT_CODE}" data-type="bom"></td>
                         <td > [[${bno - idx.index}]]</td>
                         <td class="p-0">
-							<img th:if="${bomlist.PD_FILE_RENM != null}"  th:src="@{'http://210.178.108.186:83/imgfile/' + ${bomlist.PD_FILE_RENM}}" style="width:50px;">
+							<img th:if="${bomlist.PD_FILE_RENM != null}"  th:src="@{'http://noerror.nnyong.world/imgfile/' + ${bomlist.PD_FILE_RENM}}" style="width:50px;">
                         	<img th:if="${bomlist.PD_FILE_RENM == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
                         </td>
                         <td class="pd_code" >[[${bomlist.PRODUCT_CODE}]]</td>

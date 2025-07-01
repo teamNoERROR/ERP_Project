@@ -136,6 +136,7 @@ function submitOrderPlan() {
     })
     .then(response => response.json())
     .then(result => {
+		console.log(result)
         if (result.success) {
             alert("저장 성공!");
             window.location.href = "/production.do";

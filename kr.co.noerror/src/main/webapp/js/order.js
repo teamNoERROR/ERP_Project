@@ -312,12 +312,16 @@ function order_save() {
     return res.json();
   })
   .then(data => {
+	console.log(data)
+	
     if (data.success) {
       alert("저장 성공");
       window.location.href = "/order.do";
     } else {
+	alert(data);
       alert("저장 실패(알수없는 오류)");
     }
+	
   })
   .catch(err => {
     alert("저장 실패 (요청 실패): " + err.message);

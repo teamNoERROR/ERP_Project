@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.noerror.DAO.pchreq_DAO;
 import kr.co.noerror.DTO.paging_info_DTO;
@@ -50,6 +51,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
 	
 	
     @Override
+    @ResponseBody
     public Map<String, Object> pchreq_save(Map<String, pchreq_req_DTO> requestMap) {
 
         Map<String, Object> response = new HashMap<>();
@@ -102,7 +104,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
+            response.put("fail", e.getMessage());
         }
 
         return response;
@@ -137,7 +139,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
+            response.put("success", e);
         }
 
         return response;
@@ -153,7 +155,7 @@ public class pchreq_serviceImpl implements pchreq_service, generic_list_service<
     		response.put("success", (result == 1));
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        response.put("success", false);
+	        response.put("success", e);
 	    }
 	
 	    return response;

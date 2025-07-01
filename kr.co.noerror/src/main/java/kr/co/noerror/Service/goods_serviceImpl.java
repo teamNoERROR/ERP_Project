@@ -299,9 +299,20 @@ public class goods_serviceImpl implements goods_service {
 					
 					if(fileattach == true) {  //FTP에 파일저장 완료 후 
 					//새 파일 첨부
-						pdto.setPD_FILE_NM(this.f_dto.getFilenm());
-						pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
-						pdto.setPD_API_FNM(this.f_dto.getApinm());
+						if("product".equals(pdto.getPRODUCT_TYPE()) || "half".equals(pdto.getPRODUCT_TYPE())) {
+							
+							pdto.setPD_FILE_NM(this.f_dto.getFilenm());
+							pdto.setPD_FILE_RENM(this.f_dto.getFileRenm());
+							pdto.setPD_API_FNM(this.f_dto.getApinm());
+						}
+						else if("item".equals(pdto.getITEM_TYPE())) {
+							pdto.setITM_FILE_NM(this.f_dto.getFilenm());
+							pdto.setITM_FILE_RENM(this.f_dto.getFileRenm());
+							pdto.setITM_API_FNM(this.f_dto.getApinm());
+							
+							
+						}
+						
 					}
 				}else {  //ftp 파일삭제 실패시
 					result = 0;

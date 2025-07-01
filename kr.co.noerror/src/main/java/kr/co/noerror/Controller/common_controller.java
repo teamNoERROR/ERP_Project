@@ -157,7 +157,7 @@ public class common_controller {
 	//발주처리스트 모달 띄우기 
 	@GetMapping("/client_list2.do")
 	public String client_list2(Model m
-			 				,@RequestParam(value = "parent", required = true) String parent
+//			 				,@RequestParam(value = "parent", required = true) String parent
 							,@RequestParam(value="pageno", defaultValue="1", required=false) Integer pageno
 							,@RequestParam(value = "keyword", required = false) String keyword
 							,@RequestParam(value="post_ea", defaultValue="5", required=false) int post_ea 
@@ -170,7 +170,7 @@ public class common_controller {
 		Map<String, Integer> pageinfo = this.m_pg.page_ea(pageno, post_ea, client_total);
 		int bno = this.m_pg.serial_no(client_total, pageno, post_ea); 
 		
-		m.addAttribute("parentType",parent);
+//		m.addAttribute("parentType",parent);
 		m.addAttribute("keyword",keyword);
 		m.addAttribute("bno", bno);
 		m.addAttribute("clt_total", client_total);

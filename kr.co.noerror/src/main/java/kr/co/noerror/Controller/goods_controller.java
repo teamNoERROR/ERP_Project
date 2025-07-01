@@ -323,7 +323,6 @@ public class goods_controller {
 			for (int i = 0; i < sc_list.length(); i++) {
 				slist.add(sc_list.getString(i));
 			}
-			System.out.println(slist);
 			
 			m.addAttribute("lclass",this.list);  //대분류목록 
 			m.addAttribute("slist",slist);  //소분류목록 
@@ -335,25 +334,16 @@ public class goods_controller {
 			
 		//부재재인 경우
 		}else if("item".equals(type)) {
-			System.out.println(goods_one);
-			
 			String lclass_ck = this.g_svc.lclass_ck(type, goods_one.getITEM_CLASS2());
-			
-			System.out.println("lclass_ck : " + lclass_ck);
-			
 			JSONArray sc_list = this.g_svc.sc_class(type, lclass_ck);  //소분류 목록
-			System.out.println("sc_list : " + sc_list);
-			
 			List<String> slist = new ArrayList<>();
 			for (int i = 0; i < sc_list.length(); i++) {
 				slist.add(sc_list.getString(i));
 			}
-			System.out.println(slist);
 			
 			m.addAttribute("lclass_ck",lclass_ck);  //선택한 대분류항목
 			m.addAttribute("sclass",goods_one.getITEM_CLASS2());  //선택한 소분류항목
 			
-			System.out.println(slist);
 			m.addAttribute("lclass",this.list);  //대분류목록 
 			m.addAttribute("slist",slist);  //소분류목록 
 			

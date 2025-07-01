@@ -25,7 +25,7 @@
 			<!-- 미리보기 네모칸 -->
 		  <div class="image-box mb-2" >
 		    <img th:if="${goods_one.ITM_API_FNM} == null" id="previewImage" src="./img/no-image.svg" alt="제품 사진" style="max-width: 100%; max-height: 100%;">
-		    <img th:if="${goods_one.ITM_API_FNM} != null" id="previewImage" src="" alt="제품 사진" style="max-width: 100%; max-height: 100%;">		  
+		    <img th:if="${goods_one.ITM_API_FNM} != null" id="previewImage"  th:src="@{'http://noerror.nnyong.world/imgfile/' + ${goods_one.ITM_FILE_RENM}}" alt="제품 사진" style="max-width: 100%; max-height: 100%;">		  
 		  </div>
 		
 		  <!-- 파일 선택 input -->

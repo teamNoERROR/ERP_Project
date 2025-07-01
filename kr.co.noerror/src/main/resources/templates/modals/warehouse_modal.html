@@ -20,7 +20,7 @@
           <img id="previewImage" th:src="@{${wh_dtails[0].wh_file_url}}" alt="창고 사진" class="img-fluid border" />
 		 -->
 <!--  			<img id="previewImage" src="" th:src="@{${wh_dtails[0].wh_file_url}}" alt="창고 사진" style="max-width: 100%; max-height: 100%;"> -->
-				<img th:if="${wh_dtails[0].wh_file_new != null}"  th:src="@{'http://210.178.108.186:83/imgfile/' + ${wh_dtails[0].wh_file_new}}" style="width: 100%; height: 100%;">
+				<img th:if="${wh_dtails[0].wh_file_new != null}"  th:src="@{'http://noerror.nnyong.world/imgfile/' + ${wh_dtails[0].wh_file_new}}" style="width: 100%; height: 100%;">
                	<img th:if="${wh_dtails[0].wh_file_new == null}" th:src="@{./img/no-image.svg}" style="width:50px;">
     
 <!--           <p>창고사진</p> -->

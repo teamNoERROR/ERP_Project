@@ -1,5 +1,6 @@
 package kr.co.noerror.Controller;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +83,8 @@ public class mrp_controller {
 	
 	@GetMapping("/production_period.do")
 	public String production_period(Model m,
-			@RequestParam(name="start_date") String start_date,
-			@RequestParam(name="end_date") String end_date
+			@RequestParam(name="start_date") Date start_date,
+			@RequestParam(name="end_date") Date end_date
 			) {
 		System.out.println(start_date);
 		System.out.println(end_date);

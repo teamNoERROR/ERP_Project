@@ -279,6 +279,7 @@ function pchreq_save() {
     return res.json();
   })
   .then(response => {
+	console.log("서버 응답:", response);
     if (response.success) {
       alert("발주정보 결과 저장 완료!");
       window.location.href = "/pchreq_list.do";

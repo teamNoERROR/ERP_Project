@@ -99,14 +99,13 @@ public class prdplan_serviceImpl implements prdplan_service, generic_list_servic
             	prdplan_detail_entity.setProduct_qty((long)pdto.getProduct_qty());
                 result2 += this.prdplan_dao.prdplan_detail_insert(prdplan_detail_entity);
             }
-
+           
             response.put("success", (result1 == 1) && (result2 == cnt));
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
+            response.put("success", e);
         }
-
 	    return response;
 	}
 	
